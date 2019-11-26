@@ -1,8 +1,11 @@
 # Ecosystem Typology Map
 
 ### Issues & progress
+
 Track progress: [Projects/Features](https://github.com/ecosystem-science/typology-map/projects/1)
+
 View issues, including features: [Issues](https://github.com/ecosystem-science/typology-map/issues)
+
 Submit new issue: [New Issues](https://github.com/ecosystem-science/typology-map/issues/new)
 
 ### Related repositories
