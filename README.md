@@ -9,7 +9,7 @@ View issues, including features: [Issues](https://github.com/ecosystem-science/t
 Submit new issue: [New Issues](https://github.com/ecosystem-science/typology-map/issues/new)
 
 ### Related repositories
-Content: [typology-map-content](https://github.com/ecosystem-science/typology-map-content)
+Content: [ecosystem-science/typology-map-content](https://github.com/ecosystem-science/typology-map-content)
 
 ---
 
