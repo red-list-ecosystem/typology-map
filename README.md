@@ -18,4 +18,4 @@ See [CONTRIBUTORS.md](CONTRIBUTORS.md)
 
 ## License
 
-This project is licensed under the MIT license, see [LICENSE.md](LICENSE.md).
+This project is licensed under the MIT license, see [LICENSE](LICENSE).
