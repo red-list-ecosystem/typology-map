@@ -2,18 +2,18 @@
 
 ### Issues & progress
 
-Track progress: [Projects/Features](https://github.com/ecosystem-science/typology-map/projects/1)
+Track progress: [Projects/Features](https://github.com/red-list-ecosystem/typology-map/projects/1)
 
-View issues, including features: [Issues](https://github.com/ecosystem-science/typology-map/issues)
+View issues, including features: [Issues](https://github.com/red-list-ecosystem/typology-map/issues)
 
-Submit new issue: [New Issues](https://github.com/ecosystem-science/typology-map/issues/new)
+Submit new issue: [New Issues](https://github.com/red-list-ecosystem/typology-map/issues/new)
 
 ### Knowledge
 
-The project wiki: [Wiki](https://github.com/ecosystem-science/typology-map/wiki)
+The project wiki: [Wiki](https://github.com/red-list-ecosystem/typology-map/wiki)
 
 ### Related repositories
-Content: [ecosystem-science/typology-map-content](https://github.com/ecosystem-science/typology-map-content)
+Content: [red-list-ecosystem/typology-map-content](https://github.com/red-list-ecosystem/typology-map-content)
 
 ---
 
