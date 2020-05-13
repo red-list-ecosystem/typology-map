@@ -11,6 +11,12 @@ import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { Switch, Route } from 'react-router-dom';
 
+import { useInjectReducer } from 'utils/injectReducer';
+import { useInjectSaga } from 'utils/injectSaga';
+
+import reducer from 'containers/App/reducer';
+import saga from 'containers/App/saga';
+
 import HomePage from 'containers/HomePage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import Header from 'components/Header';
@@ -28,6 +34,8 @@ const AppWrapper = styled.div`
 `;
 
 export default function App() {
+  useInjectReducer({ key: 'global', reducer });
+  useInjectSaga({ key: 'default', saga });
   return (
     <AppWrapper>
       <Helmet

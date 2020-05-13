@@ -15,4 +15,54 @@
  *    }
  */
 
-// import {} from './constants';
+import {
+  LOAD_TYPOLOGY,
+  TYPOLOGY_REQUESTED,
+  TYPOLOGY_LOAD_SUCCESS,
+  TYPOLOGY_LOAD_ERROR,
+  TYPOLOGY_READY,
+} from './constants';
+
+/**
+ * Load the typology config data, this action starts the request saga
+ *
+ */
+export function loadTypologyConfig(key) {
+  return {
+    type: LOAD_TYPOLOGY,
+    key,
+  };
+}
+
+export function setTypologyLoadSuccess(key, data, time) {
+  return {
+    type: TYPOLOGY_LOAD_SUCCESS,
+    data,
+    key,
+    time,
+  };
+}
+
+export function setTypologyRequested(key, time) {
+  return {
+    type: TYPOLOGY_REQUESTED,
+    key,
+    time,
+  };
+}
+
+export function setTypologyLoadError(error, key) {
+  return {
+    type: TYPOLOGY_LOAD_ERROR,
+    error,
+    key,
+  };
+}
+
+export function setTypologyReady(key, time) {
+  return {
+    type: TYPOLOGY_READY,
+    key,
+    time,
+  };
+}
