@@ -18,7 +18,7 @@ import { compose } from 'redux';
 import H2 from 'components/H2';
 import CenteredSection from './CenteredSection';
 import Section from './Section';
-// import messages from './messages';
+// import commonMessages from 'messages';
 // import reducer from './reducer';
 // import saga from './saga';
 
