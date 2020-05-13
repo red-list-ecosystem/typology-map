@@ -26,3 +26,9 @@ See [CONTRIBUTORS.md](CONTRIBUTORS.md)
 ## License
 
 This project is licensed under the MIT license, see [LICENSE](LICENSE).
+
+---
+
+## Acknowledgement
+
+This project was bootstrapped using [react-boilerplate](https://github.com/react-boilerplate/react-boilerplate)
