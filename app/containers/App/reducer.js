@@ -8,12 +8,32 @@
  */
 
 import produce from 'immer';
-import { TYPOLOGY } from 'config';
+import { TYPOLOGY, PAGES } from 'config';
+import { appLocales } from 'i18n';
 import {
   TYPOLOGY_REQUESTED,
   TYPOLOGY_LOAD_SUCCESS,
   TYPOLOGY_LOAD_ERROR,
+  CONTENT_REQUESTED,
+  CONTENT_LOAD_SUCCESS,
+  CONTENT_LOAD_ERROR,
 } from './constants';
+
+/* eslint-disable no-param-reassign */
+const locales = appLocales.reduce((memo, locale) => {
+  memo[locale] = null;
+  return memo;
+}, {});
+
+const initialContent = {
+  pages: Object.keys(PAGES).reduce((memo, key) => {
+    memo[key] = Object.assign({}, locales);
+    return memo;
+  }, {}),
+  realms: {},
+  biomes: {},
+  groups: {},
+};
 
 // The initial state of the App
 export const initialState = {
@@ -37,6 +57,13 @@ export const initialState = {
   //   memo[key] = false;
   //   return memo;
   // }, {}),
+  content: Object.assign({}, initialContent),
+  // record request time
+  contentRequested: Object.assign({}, initialContent),
+  // record return time
+  contentReady: Object.assign({}, initialContent),
+  // // record error time
+  // contentError: Object.assign({}, initialContent),
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -53,6 +80,33 @@ const appReducer = (state = initialState, action) =>
       case TYPOLOGY_LOAD_ERROR:
         console.log('Error loading typology data... giving up!', action.key);
         draft.typologyConfigRequested[action.key] = action.time;
+        break;
+      case CONTENT_REQUESTED:
+        if (draft.contentRequested[action.contentType])
+          draft.contentRequested[action.contentType][action.key] = {
+            [action.locale]: action.time,
+          };
+        break;
+      case CONTENT_LOAD_SUCCESS:
+        if (draft.content[action.contentType])
+          draft.content[action.contentType][action.key] = {
+            [action.locale]: action.data,
+          };
+        if (draft.contentReady[action.contentType])
+          draft.contentReady[action.contentType][action.key] = {
+            [action.locale]: action.time,
+          };
+        break;
+      case CONTENT_LOAD_ERROR:
+        console.log(
+          'Error loading typology data... giving up!',
+          action.contentType,
+          action.key,
+        );
+        if (draft.contentRequested[action.contentType])
+          draft.contentRequested[action.contentType][action.key] = {
+            [action.locale]: action.time,
+          };
         break;
     }
   });

@@ -14,3 +14,12 @@ export const TYPOLOGY_REQUESTED = 'rle/App/LOAD_TYPOLOGY_REQUESTED';
 export const TYPOLOGY_LOAD_ERROR = 'rle/App/LOAD_TYPOLOGY_ERROR';
 export const TYPOLOGY_LOAD_SUCCESS = 'rle/App/LOAD_TYPOLOGY_SUCCESS';
 export const TYPOLOGY_READY = 'rle/App/TYPOLOGY_READY';
+
+export const LOAD_CONTENT = 'rle/App/LOAD_CONTENT';
+export const CONTENT_REQUESTED = 'rle/App/LOAD_CONTENT_REQUESTED';
+export const CONTENT_LOAD_ERROR = 'rle/App/LOAD_CONTENT_ERROR';
+export const CONTENT_LOAD_SUCCESS = 'rle/App/LOAD_CONTENT_SUCCESS';
+export const CONTENT_READY = 'rle/App/CONTENT_READY';
+
+export const PRIMARY = 1;
+export const SECONDARY = 2;

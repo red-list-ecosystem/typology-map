@@ -1,3 +1,12 @@
+import { PRIMARY, SECONDARY } from 'containers/App/constants';
+
+export const ROUTES = {
+  HOME: '',
+  EXPLORE: 'explore',
+  ANALYSE: 'analyse',
+  PAGE: 'page',
+};
+
 export const PATHS = {
   DATA: 'https://red-list-ecosystem.github.io/typology-map-data/data',
   CONTENT: 'https://red-list-ecosystem.github.io/typology-map-content',
@@ -5,13 +14,35 @@ export const PATHS = {
 
 export const TYPOLOGY = {
   realms: {
-    path: `${PATHS.DATA}/config/realms.json`,
+    path: 'config/realms.json',
+    contentPath: 'realms',
   },
   biomes: {
-    path: `${PATHS.DATA}/config/biomes.json`,
+    path: 'config/biomes.json',
+    contentPath: 'biomes',
   },
   groups: {
-    path: `${PATHS.DATA}/config/groups.json`,
+    path: 'config/groups.json',
+    contentPath: 'groups',
+  },
+};
+
+export const PAGES = {
+  typology: {
+    path: 'typology',
+    nav: PRIMARY,
+  },
+  about: {
+    path: 'about',
+    nav: SECONDARY,
+  },
+  methods: {
+    path: 'methods',
+    nav: SECONDARY,
+  },
+  glossary: {
+    path: 'glossary',
+    nav: SECONDARY,
   },
 };
 

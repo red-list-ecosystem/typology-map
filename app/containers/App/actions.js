@@ -21,6 +21,11 @@ import {
   TYPOLOGY_LOAD_SUCCESS,
   TYPOLOGY_LOAD_ERROR,
   TYPOLOGY_READY,
+  LOAD_CONTENT,
+  CONTENT_REQUESTED,
+  CONTENT_LOAD_SUCCESS,
+  CONTENT_LOAD_ERROR,
+  CONTENT_READY,
 } from './constants';
 
 /**
@@ -64,5 +69,53 @@ export function setTypologyReady(key, time) {
     type: TYPOLOGY_READY,
     key,
     time,
+  };
+}
+export function loadContent(contentType, key) {
+  return {
+    type: LOAD_CONTENT,
+    key,
+    contentType,
+  };
+}
+
+export function setContentLoadSuccess(contentType, locale, key, data, time) {
+  return {
+    type: CONTENT_LOAD_SUCCESS,
+    data,
+    key,
+    time,
+    contentType,
+    locale,
+  };
+}
+
+export function setContentRequested(contentType, locale, key, time) {
+  return {
+    type: CONTENT_REQUESTED,
+    key,
+    time,
+    contentType,
+    locale,
+  };
+}
+
+export function setContentLoadError(error, contentType, locale, key) {
+  return {
+    type: CONTENT_LOAD_ERROR,
+    error,
+    key,
+    contentType,
+    locale,
+  };
+}
+
+export function setContentReady(contentType, key, locale, time) {
+  return {
+    type: CONTENT_READY,
+    key,
+    time,
+    contentType,
+    locale,
   };
 }

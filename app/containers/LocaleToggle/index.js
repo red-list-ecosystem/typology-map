@@ -7,14 +7,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
+import { createStructuredSelector } from 'reselect';
 
 import Toggle from 'components/Toggle';
 import Wrapper from './Wrapper';
 import messages from './messages';
 import { appLocales } from '../../i18n';
 import { changeLocale } from '../LanguageProvider/actions';
-import { makeSelectLocale } from '../LanguageProvider/selectors';
+import { selectLocale } from '../LanguageProvider/selectors';
 
 export function LocaleToggle(props) {
   return appLocales.length < 2 ? null : (
@@ -34,12 +34,9 @@ LocaleToggle.propTypes = {
   locale: PropTypes.string,
 };
 
-const mapStateToProps = createSelector(
-  makeSelectLocale(),
-  locale => ({
-    locale,
-  }),
-);
+const mapStateToProps = createStructuredSelector({
+  locale: state => selectLocale(state),
+});
 
 export function mapDispatchToProps(dispatch) {
   return {
