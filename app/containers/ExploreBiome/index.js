@@ -52,7 +52,13 @@ export function ExploreBiome({
       <div>
         {groups &&
           groups
-            .sort((a, b) => (a.id > b.id ? 1 : -1))
+            .sort((a, b) => {
+              const aTrueId =
+                a.id.indexOf('.') > -1 ? parseInt(a.id.split('.')[1], 0) : a.id;
+              const bTrueId =
+                b.id.indexOf('.') > -1 ? parseInt(b.id.split('.')[1], 0) : a.id;
+              return aTrueId > bTrueId ? 1 : -1;
+            })
             .map(g => (
               <div key={g.id}>
                 <Button
