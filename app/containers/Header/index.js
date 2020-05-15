@@ -15,12 +15,12 @@ function Header({ nav, navHome, navPage, path }) {
     <header>
       <NavBar>
         <LocaleToggle />
-        <Button onClick={() => navHome()} label="Home" />
-        <Button onClick={() => nav('explore')} label="Explore" />
-        <Button onClick={() => navPage('typology')} label="Typology" />
-        <Button onClick={() => navPage('about')} label="About" />
-        <Button onClick={() => navPage('methods')} label="Methods" />
-        <Button onClick={() => navPage('glossary')} label="Glossary" />
+        <Button primary onClick={() => navHome()} label="Home" />
+        <Button primary onClick={() => nav('explore')} label="Explore" />
+        <Button primary onClick={() => navPage('typology')} label="Typology" />
+        <Button primary onClick={() => navPage('about')} label="About" />
+        <Button primary onClick={() => navPage('methods')} label="Methods" />
+        <Button primary onClick={() => navPage('glossary')} label="Glossary" />
       </NavBar>
     </header>
   );

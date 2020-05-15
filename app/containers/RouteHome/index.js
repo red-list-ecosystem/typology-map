@@ -13,10 +13,10 @@ import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { Button } from 'grommet';
 
-import { selectRealmsWithStats } from 'containers/App/selectors';
+import { selectRealmsWithStats, selectLocale } from 'containers/App/selectors';
 import { navigateTypology } from 'containers/App/actions';
 
-export function HomePage({ realms, navRealm }) {
+export function HomePage({ realms, navRealm, locale }) {
   return (
     <div>
       <Helmet>
@@ -34,7 +34,9 @@ export function HomePage({ realms, navRealm }) {
                 <Button
                   plain
                   onClick={() => navRealm(r.id)}
-                  label={`${r.id} (biomes: ${r.biomeNo}, groups: ${r.groupNo})`}
+                  label={`${r.id} ${r.title[locale]} (biomes: ${
+                    r.biomeNo
+                  }, groups: ${r.groupNo})`}
                 />
               </div>
             ))}
@@ -50,7 +52,9 @@ export function HomePage({ realms, navRealm }) {
                 <Button
                   plain
                   onClick={() => navRealm(r.id)}
-                  label={`${r.id} (biomes: ${r.biomeNo}, groups: ${r.groupNo})`}
+                  label={`${r.id} ${r.title[locale]} (biomes: ${
+                    r.biomeNo
+                  }, groups: ${r.groupNo})`}
                 />
               </div>
             ))}
@@ -62,10 +66,12 @@ export function HomePage({ realms, navRealm }) {
 HomePage.propTypes = {
   realms: PropTypes.array,
   navRealm: PropTypes.func,
+  locale: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({
   realms: state => selectRealmsWithStats(state),
+  locale: state => selectLocale(state),
 });
 
 export function mapDispatchToProps(dispatch) {

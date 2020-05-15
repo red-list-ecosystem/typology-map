@@ -1,6 +1,6 @@
 /**
  *
- * ExploreRealm
+ * ExploreGroup
  *
  */
 
@@ -16,18 +16,19 @@ import { Button } from 'grommet';
 import {
   selectLocale,
   selectContentByKey,
-  selectBiomesForRealmWithStats,
+  selectGroupsForBiome,
 } from 'containers/App/selectors';
 import { loadContent, navigateTypology } from 'containers/App/actions';
 
 import HTMLWrapper from 'components/HTMLWrapper';
 
-export function ExploreRealm({
+export function ExploreGroup({
   typology,
   onLoadContent,
   content,
-  biomes,
-  navBiome,
+  groups,
+  navGroup,
+  navParent,
   locale,
 }) {
   useEffect(() => {
@@ -37,56 +38,59 @@ export function ExploreRealm({
   return (
     <div>
       <Helmet>
-        <title>ExploreRealm</title>
-        <meta name="description" content="Description of ExploreRealm" />
+        <title>ExploreGroup</title>
+        <meta name="description" content="Description of ExploreGroup" />
       </Helmet>
-      <div>Realm</div>
+      <div>Ecological Functional Group</div>
       <h1>{`${typology.id} ${typology.title[locale]}`}</h1>
+      <Button
+        onClick={() => navParent(typology.biome)}
+        label={`Biome: ${typology.biome}`}
+      />
       <div>{content && <HTMLWrapper innerhtml={content} />}</div>
-      <h4>Biomes</h4>
+      <h4>Sibling Groups</h4>
       <div>
-        {biomes &&
-          biomes
-            .sort((a, b) => (a.id > b.id ? 1 : -1))
-            .map(b => (
-              <div key={b.id}>
-                <Button
-                  onClick={() => navBiome(b.id)}
-                  label={`${b.id} ${b.title[locale]} (groups: ${b.groupNo})`}
-                />
-              </div>
-            ))}
+        {groups &&
+          groups.map(g => (
+            <div key={g.id}>
+              <Button
+                onClick={() => navGroup(g.id)}
+                label={`${g.id} ${g.title[locale]}`}
+              />
+            </div>
+          ))}
       </div>
     </div>
   );
 }
 
-ExploreRealm.propTypes = {
+ExploreGroup.propTypes = {
   typology: PropTypes.object.isRequired,
-  biomes: PropTypes.array,
+  groups: PropTypes.array,
   locale: PropTypes.string,
   onLoadContent: PropTypes.func.isRequired,
-  navBiome: PropTypes.func.isRequired,
+  navGroup: PropTypes.func.isRequired,
+  navParent: PropTypes.func.isRequired,
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
 };
 
 const mapStateToProps = createStructuredSelector({
   content: (state, { typology }) =>
     selectContentByKey(state, {
-      contentType: 'realms',
+      contentType: 'groups',
       key: typology.path,
     }),
-  biomes: (state, { typology }) =>
-    selectBiomesForRealmWithStats(state, typology.id),
+  groups: (state, { typology }) => selectGroupsForBiome(state, typology.biome),
   locale: state => selectLocale(state),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     onLoadContent: path => {
-      dispatch(loadContent('realms', path));
+      dispatch(loadContent('groups', path));
     },
-    navBiome: id => dispatch(navigateTypology('biomes', id)),
+    navGroup: id => dispatch(navigateTypology('groups', id)),
+    navParent: id => dispatch(navigateTypology('biomes', id)),
   };
 }
 
@@ -95,4 +99,4 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-export default compose(withConnect)(ExploreRealm);
+export default compose(withConnect)(ExploreGroup);

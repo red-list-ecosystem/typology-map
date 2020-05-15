@@ -4,7 +4,7 @@
 import { createSelector } from 'reselect';
 import { DEFAULT_LOCALE, appLocales } from 'i18n';
 
-import { biomesForRealm, groupsForBiomes } from 'utils/store';
+import { biomesForRealm, groupsForBiome, groupsForBiomes } from 'utils/store';
 
 import { initialState } from './reducer';
 
@@ -50,6 +50,21 @@ export const selectTypologyByKey = createSelector(
   selectTypology,
   (key, data) => data[key],
 );
+export const selectRealm = createSelector(
+  (state, id) => id,
+  state => selectTypologyByKey(state, 'realms'),
+  (id, data) => data && data.find(d => d.id === id),
+);
+export const selectBiome = createSelector(
+  (state, id) => id,
+  state => selectTypologyByKey(state, 'biomes'),
+  (id, data) => data && data.find(d => d.id === id),
+);
+export const selectGroup = createSelector(
+  (state, id) => id,
+  state => selectTypologyByKey(state, 'groups'),
+  (id, data) => data && data.find(d => d.id === id),
+);
 
 export const selectRealmsWithStats = createSelector(
   state => selectTypologyByKey(state, 'realms'),
@@ -66,6 +81,29 @@ export const selectRealmsWithStats = createSelector(
         groupNo: rgroups && rgroups.length,
       };
     });
+  },
+);
+export const selectBiomesForRealmWithStats = createSelector(
+  (state, realmId) => realmId,
+  state => selectTypologyByKey(state, 'biomes'),
+  state => selectTypologyByKey(state, 'groups'),
+  (realmId, biomes, groups) => {
+    if (!biomes) return null;
+    return biomesForRealm(biomes, realmId).map(b => {
+      const bgroups = groupsForBiome(groups, b.id);
+      return {
+        ...b,
+        groupNo: bgroups && bgroups.length,
+      };
+    });
+  },
+);
+export const selectGroupsForBiome = createSelector(
+  (state, biomeId) => biomeId,
+  state => selectTypologyByKey(state, 'groups'),
+  (biomeId, groups) => {
+    if (!groups) return null;
+    return groupsForBiome(groups, biomeId);
   },
 );
 
