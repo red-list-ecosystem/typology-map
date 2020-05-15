@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { IntlProvider } from 'react-intl';
 
-import { selectLocale } from './selectors';
+import { selectLocale } from 'containers/App/selectors';
 
 export function LanguageProvider(props) {
   return (

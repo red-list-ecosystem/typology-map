@@ -99,9 +99,8 @@ const appReducer = (state = initialState, action) =>
         break;
       case CONTENT_LOAD_ERROR:
         console.log(
-          'Error loading typology data... giving up!',
-          action.contentType,
-          action.key,
+          'Error loading content ... giving up!',
+          `${action.contentType}/${action.key}`,
         );
         if (draft.contentRequested[action.contentType])
           draft.contentRequested[action.contentType][action.key] = {

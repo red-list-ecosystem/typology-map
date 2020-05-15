@@ -9,16 +9,19 @@
  * export const YOUR_ACTION_CONSTANT = 'yourproject/YourContainer/YOUR_ACTION_CONSTANT';
  */
 
+export const NAVIGATE = 'rle/App/NAVIGATE';
+export const CHANGE_LOCALE = 'app/App/CHANGE_LOCALE';
+
 export const LOAD_TYPOLOGY = 'rle/App/LOAD_TYPOLOGY';
-export const TYPOLOGY_REQUESTED = 'rle/App/LOAD_TYPOLOGY_REQUESTED';
-export const TYPOLOGY_LOAD_ERROR = 'rle/App/LOAD_TYPOLOGY_ERROR';
-export const TYPOLOGY_LOAD_SUCCESS = 'rle/App/LOAD_TYPOLOGY_SUCCESS';
+export const TYPOLOGY_REQUESTED = 'rle/App/TYPOLOGY_REQUESTED';
+export const TYPOLOGY_LOAD_ERROR = 'rle/App/TYPOLOGY_LOAD_ERROR';
+export const TYPOLOGY_LOAD_SUCCESS = 'rle/App/TYPOLOGY_LOAD_SUCCESS';
 export const TYPOLOGY_READY = 'rle/App/TYPOLOGY_READY';
 
 export const LOAD_CONTENT = 'rle/App/LOAD_CONTENT';
-export const CONTENT_REQUESTED = 'rle/App/LOAD_CONTENT_REQUESTED';
-export const CONTENT_LOAD_ERROR = 'rle/App/LOAD_CONTENT_ERROR';
-export const CONTENT_LOAD_SUCCESS = 'rle/App/LOAD_CONTENT_SUCCESS';
+export const CONTENT_REQUESTED = 'rle/App/CONTENT_REQUESTED';
+export const CONTENT_LOAD_ERROR = 'rle/App/CONTENT_LOAD_ERROR';
+export const CONTENT_LOAD_SUCCESS = 'rle/App/CONTENT_LOAD_SUCCESS';
 export const CONTENT_READY = 'rle/App/CONTENT_READY';
 
 export const PRIMARY = 1;

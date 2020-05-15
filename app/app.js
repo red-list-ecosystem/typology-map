@@ -20,17 +20,16 @@ import App from 'containers/App';
 
 // Import Language Provider
 import LanguageProvider from 'containers/LanguageProvider';
+// Import i18n messages
+import { translationMessages } from 'i18n';
+
+import configureStore from 'configureStore';
 
 // Load the favicon and the .htaccess file
 /* eslint-disable import/no-unresolved, import/extensions */
 import '!file-loader?name=[name].[ext]!./images/favicon.ico';
 import 'file-loader?name=.htaccess!./.htaccess';
 /* eslint-enable import/no-unresolved, import/extensions */
-
-import configureStore from './configureStore';
-
-// Import i18n messages
-import { translationMessages } from './i18n';
 
 // Create redux store with history
 const initialState = {};

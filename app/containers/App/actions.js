@@ -15,7 +15,11 @@
  *    }
  */
 
+import { ROUTES } from 'config';
+
 import {
+  CHANGE_LOCALE,
+  NAVIGATE,
   LOAD_TYPOLOGY,
   TYPOLOGY_REQUESTED,
   TYPOLOGY_LOAD_SUCCESS,
@@ -27,6 +31,49 @@ import {
   CONTENT_LOAD_ERROR,
   CONTENT_READY,
 } from './constants';
+
+export function setLocale(locale) {
+  return {
+    type: CHANGE_LOCALE,
+    locale,
+  };
+}
+
+/**
+ * navigate to new location
+ * @param {object || string} location new location { pathname, search } || pathname
+ * @param {object} args navigation arguments { replace = true, deleteSearchParams = false}
+ * @return {object} `{type: action id, location: new location, args: navigation arguments}`
+ */
+export function navigate(location, args) {
+  return {
+    type: NAVIGATE,
+    location,
+    args,
+  };
+}
+/**
+ * proxy action: navigate to new content page
+ * @param {object} id new page id
+ * @param {object} args navigation arguments { replace = true, deleteSearchParams = null}
+ * @return {object} `{type: action id, location: new location, args: navigation arguments}`
+ */
+export function navigatePage(id, args) {
+  return navigate(`${ROUTES.PAGE}/${id}`, args);
+}
+/**
+ * proxy action: navigate to new typology object
+ * @param {object} id
+ * @param {object} args navigation arguments { replace = true, deleteSearchParams = false}
+ * @return {object} `{type: action id, location: new location, args: navigation arguments}`
+ */
+export function navigateTypology(level, id, args) {
+  return navigate(`${ROUTES.EXPLORE}/${level}/${id}`, args);
+}
+// proxy action: navigate home, optionally resetting all search params
+export function navigateHome(reset = true) {
+  return navigate(ROUTES.HOME, reset ? { deleteSearchParams: true } : {});
+}
 
 /**
  * Load the typology config data, this action starts the request saga

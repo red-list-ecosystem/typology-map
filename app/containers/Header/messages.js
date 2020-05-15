@@ -5,6 +5,6 @@
  */
 import { defineMessages } from 'react-intl';
 
-export const scope = 'rle.components.Header';
+export const scope = 'rle.containers.Header';
 
 export default defineMessages({});

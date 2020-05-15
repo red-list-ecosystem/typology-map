@@ -9,12 +9,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
+import { setLocale } from 'containers/App/actions';
+import { selectLocale } from 'containers/App/selectors';
 import Toggle from 'components/Toggle';
+import { appLocales } from 'i18n';
 import Wrapper from './Wrapper';
 import messages from './messages';
-import { appLocales } from '../../i18n';
-import { changeLocale } from '../LanguageProvider/actions';
-import { selectLocale } from '../LanguageProvider/selectors';
 
 export function LocaleToggle(props) {
   return appLocales.length < 2 ? null : (
@@ -40,7 +40,7 @@ const mapStateToProps = createStructuredSelector({
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onLocaleToggle: evt => dispatch(changeLocale(evt.target.value)),
+    onLocaleToggle: evt => dispatch(setLocale(evt.target.value)),
     dispatch,
   };
 }
