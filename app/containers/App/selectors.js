@@ -72,15 +72,17 @@ export const selectRealmsWithStats = createSelector(
   state => selectTypologyByKey(state, 'groups'),
   (realms, biomes, groups) => {
     if (!realms) return null;
-    return realms.map(r => {
-      const rbiomes = biomesForRealm(biomes, r.id);
-      const rgroups = groupsForBiomes(groups, rbiomes);
-      return {
-        ...r,
-        biomeNo: rbiomes && rbiomes.length,
-        groupNo: rgroups && rgroups.length,
-      };
-    });
+    return realms
+      .map(r => {
+        const rbiomes = biomesForRealm(biomes, r.id);
+        const rgroups = groupsForBiomes(groups, rbiomes);
+        return {
+          ...r,
+          biomeNo: rbiomes && rbiomes.length,
+          groupNo: rgroups && rgroups.length,
+        };
+      })
+      .sort((a, b) => (a.biomeNo > b.biomeNo ? -1 : 1));
   },
 );
 export const selectBiomesForRealmWithStats = createSelector(

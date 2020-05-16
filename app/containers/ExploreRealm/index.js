@@ -42,21 +42,25 @@ export function ExploreRealm({
       </Helmet>
       <div>Realm</div>
       <h1>{`${typology.id} ${typology.title[locale]}`}</h1>
-      <div>{content && <HTMLWrapper innerhtml={content} />}</div>
-      <h4>Biomes</h4>
-      <div>
-        {biomes &&
-          biomes
-            .sort((a, b) => (a.id > b.id ? 1 : -1))
-            .map(b => (
-              <div key={b.id}>
-                <Button
-                  onClick={() => navBiome(b.id)}
-                  label={`${b.id} ${b.title[locale]} (groups: ${b.groupNo})`}
-                />
-              </div>
-            ))}
-      </div>
+      {content && (
+        <>
+          <HTMLWrapper innerhtml={content} />
+          <h4>Biomes</h4>
+          <div>
+            {biomes &&
+              biomes
+                .sort((a, b) => (a.id > b.id ? 1 : -1))
+                .map(b => (
+                  <div key={b.id}>
+                    <Button
+                      onClick={() => navBiome(b.id)}
+                      label={`${b.id} ${b.title[locale]}`}
+                    />
+                  </div>
+                ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

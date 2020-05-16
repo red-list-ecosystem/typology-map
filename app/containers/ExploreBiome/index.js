@@ -47,27 +47,35 @@ export function ExploreBiome({
         onClick={() => navParent(typology.realm)}
         label={`Realm: ${typology.realm}`}
       />
-      <div>{content && <HTMLWrapper innerhtml={content} />}</div>
-      <h4>Groups</h4>
-      <div>
-        {groups &&
-          groups
-            .sort((a, b) => {
-              const aTrueId =
-                a.id.indexOf('.') > -1 ? parseInt(a.id.split('.')[1], 0) : a.id;
-              const bTrueId =
-                b.id.indexOf('.') > -1 ? parseInt(b.id.split('.')[1], 0) : a.id;
-              return aTrueId > bTrueId ? 1 : -1;
-            })
-            .map(g => (
-              <div key={g.id}>
-                <Button
-                  onClick={() => navGroup(g.id)}
-                  label={`${g.id} ${g.title[locale]}`}
-                />
-              </div>
-            ))}
-      </div>
+      {content && (
+        <>
+          <HTMLWrapper innerhtml={content} />
+          <h4>Groups</h4>
+          <div>
+            {groups &&
+              groups
+                .sort((a, b) => {
+                  const aTrueId =
+                    a.id.indexOf('.') > -1
+                      ? parseInt(a.id.split('.')[1], 0)
+                      : a.id;
+                  const bTrueId =
+                    b.id.indexOf('.') > -1
+                      ? parseInt(b.id.split('.')[1], 0)
+                      : a.id;
+                  return aTrueId > bTrueId ? 1 : -1;
+                })
+                .map(g => (
+                  <div key={g.id}>
+                    <Button
+                      onClick={() => navGroup(g.id)}
+                      label={`${g.id} ${g.title[locale]}`}
+                    />
+                  </div>
+                ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -7,58 +7,37 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
-// import { FormattedMessage } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { Button } from 'grommet';
 
 import { selectRealmsWithStats, selectLocale } from 'containers/App/selectors';
 import { navigateTypology } from 'containers/App/actions';
 
-export function HomePage({ realms, navRealm, locale }) {
+import NavGridRealms from 'components/NavGridRealms';
+
+import commonMessages from 'messages';
+
+export function HomePage({ realms, navRealm, locale, intl }) {
   return (
     <div>
       <Helmet>
         <title>Home Page</title>
         <meta name="description" content="home" />
       </Helmet>
-      <h4>Core Realms</h4>
-      <div>
-        {realms &&
-          realms
-            .filter(r => r.type === 'core')
-            .sort((a, b) => (a.biomeNo > b.biomeNo ? -1 : 1))
-            .map(r => (
-              <div key={r.id}>
-                <Button
-                  plain
-                  onClick={() => navRealm(r.id)}
-                  label={`${r.id} ${r.title[locale]} (biomes: ${
-                    r.biomeNo
-                  }, groups: ${r.groupNo})`}
-                />
-              </div>
-            ))}
-      </div>
-      <h4>Transitional Realms</h4>
-      <div>
-        {realms &&
-          realms
-            .filter(r => r.type === 'trans')
-            .sort((a, b) => (a.biomeNo > b.biomeNo ? -1 : 1))
-            .map(r => (
-              <div key={r.id}>
-                <Button
-                  plain
-                  onClick={() => navRealm(r.id)}
-                  label={`${r.id} ${r.title[locale]} (biomes: ${
-                    r.biomeNo
-                  }, groups: ${r.groupNo})`}
-                />
-              </div>
-            ))}
-      </div>
+      <NavGridRealms
+        label={intl.formatMessage(commonMessages.typology['core-realms'])}
+        items={realms && realms.filter(r => r.type === 'core')}
+        itemClick={id => navRealm(id)}
+        locale={locale}
+      />
+      <NavGridRealms
+        label={intl.formatMessage(commonMessages.typology['trans-realms'])}
+        items={realms && realms.filter(r => r.type === 'trans')}
+        itemClick={id => navRealm(id)}
+        locale={locale}
+      />
     </div>
   );
 }
@@ -67,6 +46,7 @@ HomePage.propTypes = {
   realms: PropTypes.array,
   navRealm: PropTypes.func,
   locale: PropTypes.string,
+  intl: intlShape.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -88,4 +68,4 @@ const withConnect = connect(
 export default compose(
   withConnect,
   memo,
-)(HomePage);
+)(injectIntl(HomePage));

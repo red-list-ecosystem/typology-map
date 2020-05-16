@@ -47,19 +47,24 @@ export function ExploreGroup({
         onClick={() => navParent(typology.biome)}
         label={`Biome: ${typology.biome}`}
       />
-      <div>{content && <HTMLWrapper innerhtml={content} />}</div>
-      <h4>Sibling Groups</h4>
-      <div>
-        {groups &&
-          groups.map(g => (
-            <div key={g.id}>
-              <Button
-                onClick={() => navGroup(g.id)}
-                label={`${g.id} ${g.title[locale]}`}
-              />
-            </div>
-          ))}
-      </div>
+      {content && (
+        <>
+          <HTMLWrapper innerhtml={content} />
+          <h4>Sibling Groups</h4>
+          <div>
+            {groups &&
+              groups.map(g => (
+                <div key={g.id}>
+                  <Button
+                    onClick={() => navGroup(g.id)}
+                    label={`${g.id} ${g.title[locale]}`}
+                    active={g.id === typology.id}
+                  />
+                </div>
+              ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
