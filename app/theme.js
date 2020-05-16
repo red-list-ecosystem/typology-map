@@ -1,6 +1,7 @@
+import { reduce } from 'lodash/collection';
+
 // theme defining breakpoints, colors, sizes, grid gutters
-export const sizes = {};
-export const breakpoints = {
+export const sizes = {
   small: {
     min: 0,
     max: 720, // inclusive
@@ -30,6 +31,44 @@ export const breakpoints = {
     max: 99999999,
     name: 'large desktop',
     index: 4,
+  },
+};
+
+export const dimensions = {
+  header: {
+    // by breakpoint
+    height: [50, 50, 95, 95, 95],
+  },
+};
+
+export const colors = {
+  // used by grommet
+  // active, text, border, ...
+  // also see https://github.com/grommet/grommet/wiki/Grommet-v2-theming-documentation
+  // and https://github.com/grommet/grommet/blob/master/src/js/themes/base.js
+  black: '#000000',
+  white: '#ffffff',
+  // active: '#ffffff',
+  // brand: '#ffffff',
+  focus: '#ffffff',
+  // placeholder: '#ffffff',
+  text: {
+    dark: '#ffffff', // on dark background
+    light: '#000000', // on light background
+  },
+  border: {
+    dark: '#ffffff', // on dark background
+    light: '#dddddd', // on light background
+  },
+  // other custom colours (also udnerstood by grommet conmponents)
+  // realms: {
+  //   T: '',
+  //   M: '',
+  //   F: '',
+  //   S: '',
+  // },
+  header: {
+    background: '#000000',
   },
 };
 
@@ -69,23 +108,19 @@ const icon = {
 };
 
 const theme = {
-  sizes,
-  breakpoints: {
-    min: {
-      small: `${breakpoints.small.min}px`,
-      medium: `${breakpoints.medium.min}px`,
-      large: `${breakpoints.large.min}px`,
-      xlarge: `${breakpoints.xlarge.min}px`,
-      xxlarge: `${breakpoints.xxlarge.min}px`,
-    },
-    max: {
-      small: `${breakpoints.small.max}px`,
-      medium: `${breakpoints.medium.max}px`,
-      large: `${breakpoints.large.max}px`,
-      xlarge: `${breakpoints.xlarge.max}px`,
-      xxlarge: `${breakpoints.xxlarge.max}px`,
-    },
-  },
+  dimensions,
+  sizes: reduce(
+    sizes,
+    (sizespx, s, key) => ({
+      ...sizespx,
+      [key]: {
+        ...s,
+        minpx: `${s.min}px`,
+        maxpx: `${s.max}px`,
+      },
+    }),
+    {},
+  ),
   // used for grommet
   icon,
   text,
@@ -98,34 +133,23 @@ const theme = {
       height: '22px',
       size: '16px',
     },
-    colors: {
-      black: '#000000',
-      white: '#ffffff',
-      text: {
-        dark: '#ffffff', // on dark background
-        light: '#000000', // on light background
-      },
-      border: {
-        dark: '#ffffff', // on dark background
-        light: '#dddddd', // on light background
-      },
-    },
+    colors,
     input: {
       padding: '2px',
       weight: 400,
     },
     breakpoints: {
       small: {
-        value: breakpoints.small.max,
+        value: sizes.small.max,
       },
       medium: {
-        value: breakpoints.medium.max,
+        value: sizes.medium.max,
       },
       large: {
-        value: breakpoints.large.max,
+        value: sizes.large.max,
       },
       xlarge: {
-        value: breakpoints.xlarge.max,
+        value: sizes.xlarge.max,
       },
       xxlarge: {},
     },
