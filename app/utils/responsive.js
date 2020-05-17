@@ -55,3 +55,10 @@ export const getHeaderHeight = size => {
     ? dimensions.header.height[bp.index]
     : dimensions.header.height[0];
 };
+
+export const getAsideWidth = size => {
+  const bp = sizes[size];
+  return bp && size
+    ? dimensions.aside.width[bp.index]
+    : dimensions.aside.width[0];
+};

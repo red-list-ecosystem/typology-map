@@ -28,21 +28,17 @@ import ExploreGroup from 'containers/ExploreGroup/Loadable';
 export function RouteExplore({ match, typology }) {
   const { level } = match.params;
   return (
-    <div>
+    <>
       <Helmet>
         <title>RouteExplore</title>
         <meta name="description" content="Description of RouteExplore" />
       </Helmet>
       <>
         {level === 'realms' && typology && <ExploreRealm typology={typology} />}
-      </>
-      <>
         {level === 'biomes' && typology && <ExploreBiome typology={typology} />}
-      </>
-      <>
         {level === 'groups' && typology && <ExploreGroup typology={typology} />}
       </>
-    </div>
+    </>
   );
 }
 

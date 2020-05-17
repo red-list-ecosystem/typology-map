@@ -39,6 +39,9 @@ export const dimensions = {
     // by breakpoint
     height: [50, 50, 95, 95, 95],
   },
+  aside: {
+    width: [0, 0, 300, 400, 500],
+  },
 };
 
 export const colors = {

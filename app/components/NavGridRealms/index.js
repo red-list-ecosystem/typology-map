@@ -6,22 +6,22 @@
 
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Button, Box } from 'grommet';
+import { Box } from 'grommet';
 
-const CardButton = styled(props => <Button {...props} />)``;
+import CardRealm from './CardRealm';
 
 function NavGridRealms({ label, items, itemClick, locale }) {
   return (
     <div>
       <h4>{label}</h4>
-      <Box direction="row">
+      <Box direction="row" wrap>
         {items &&
           items.map(r => (
-            <CardButton
+            <CardRealm
               key={r.id}
-              onClick={() => itemClick(r.id)}
-              label={`${r.id} ${r.title[locale]}`}
+              onCardClick={() => itemClick(r.id)}
+              label={r.title[locale]}
+              realm={r}
             />
           ))}
       </Box>

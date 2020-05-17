@@ -11,6 +11,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
+import styled from 'styled-components';
 
 import { selectRealmsWithStats, selectLocale } from 'containers/App/selectors';
 import { navigateTypology } from 'containers/App/actions';
@@ -19,9 +20,13 @@ import NavGridRealms from 'components/NavGridRealms';
 
 import commonMessages from 'messages';
 
+const Styled = styled.div`
+  min-height: 100vh;
+`;
+
 export function HomePage({ realms, navRealm, locale, intl }) {
   return (
-    <div>
+    <Styled>
       <Helmet>
         <title>Home Page</title>
         <meta name="description" content="home" />
@@ -38,7 +43,7 @@ export function HomePage({ realms, navRealm, locale, intl }) {
         itemClick={id => navRealm(id)}
         locale={locale}
       />
-    </div>
+    </Styled>
   );
 }
 

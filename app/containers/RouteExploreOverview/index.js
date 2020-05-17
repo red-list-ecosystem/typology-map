@@ -11,6 +11,7 @@ import { Helmet } from 'react-helmet';
 import { intlShape, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
+import styled from 'styled-components';
 
 import { selectRealmsWithStats, selectLocale } from 'containers/App/selectors';
 import { navigateTypology } from 'containers/App/actions';
@@ -20,9 +21,13 @@ import NavGridRealms from 'components/NavGridRealms';
 
 import commonMessages from 'messages';
 
+const Styled = styled.div`
+  min-height: 100vh;
+`;
+
 export function RouteExploreOverview({ realms, navRealm, locale, intl }) {
   return (
-    <div>
+    <Styled>
       <Helmet>
         <title>RouteExploreOverview</title>
         <meta
@@ -42,7 +47,7 @@ export function RouteExploreOverview({ realms, navRealm, locale, intl }) {
         itemClick={id => navRealm(id)}
         locale={locale}
       />
-    </div>
+    </Styled>
   );
 }
 

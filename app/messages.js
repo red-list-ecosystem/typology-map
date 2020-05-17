@@ -61,7 +61,7 @@ export default defineMessages({
     },
     'trans-realms': {
       id: `${scope}.typology.trans-realms`,
-      defaultMessage: 'Transitionals realms',
+      defaultMessage: 'Transitional realms',
     },
   },
   components: {

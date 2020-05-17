@@ -60,6 +60,11 @@ export const selectBiome = createSelector(
   state => selectTypologyByKey(state, 'biomes'),
   (id, data) => data && data.find(d => d.id === id),
 );
+export const selectRealmForBiome = createSelector(
+  selectBiome,
+  state => selectTypologyByKey(state, 'realms'),
+  (biome, data) => biome && data && data.find(d => d.id === biome.realm),
+);
 export const selectGroup = createSelector(
   (state, id) => id,
   state => selectTypologyByKey(state, 'groups'),
