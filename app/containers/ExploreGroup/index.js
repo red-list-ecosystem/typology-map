@@ -55,8 +55,6 @@ import commonMessages from 'messages';
 const GroupButton = styled(props => <Button {...props} plain />)`
   padding: ${({ theme }) => theme.global.edgeSize.small};
   border-top: 1px solid;
-  border-right: 4px solid;
-  border-right-color: ${({ active }) => (active ? '#108314' : 'transparent')};
   border-top-color: ${({ theme }) => theme.global.colors.border.light};
   &:last-child {
     border-bottom: 1px solid;
@@ -149,7 +147,7 @@ export function ExploreGroup({
                       direction="row"
                       justify="between"
                       pad={{ vertical: 'small', horizontal: 'medium' }}
-                      background="light-1"
+                      border="horizontal"
                     >
                       <Button
                         plain
@@ -171,7 +169,7 @@ export function ExploreGroup({
                       direction="row"
                       justify="between"
                       pad={{ vertical: 'small', horizontal: 'medium' }}
-                      background="light-1"
+                      border="horizontal"
                     >
                       <Button
                         plain

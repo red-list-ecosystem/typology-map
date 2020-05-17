@@ -98,7 +98,8 @@ export function ExploreRealm({
                     direction="row"
                     justify="between"
                     pad={{ vertical: 'small', horizontal: 'medium' }}
-                    background="light-1"
+                    background="light-2"
+                    border="horizontal"
                   >
                     <Text>{`${typology.id} ${typology.title[locale]}`}</Text>
                     <Button
