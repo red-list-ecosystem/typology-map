@@ -14,6 +14,20 @@ export default defineMessages({
       defaultMessage: 'Global Ecosystem Typology',
     },
   },
+  nav: {
+    selectRealm: {
+      id: `${scope}.nav.selectRealm`,
+      defaultMessage: 'Select a Realm',
+    },
+    selectBiome: {
+      id: `${scope}.nav.selectBiome`,
+      defaultMessage: 'Select a Biome',
+    },
+    selectGroup: {
+      id: `${scope}.nav.selectGroup`,
+      defaultMessage: 'Select a Functional Group',
+    },
+  },
   typology: {
     realm: {
       id: `${scope}.typology.realm`,

@@ -11,9 +11,7 @@ import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { Box, Button, ResponsiveContext, Text } from 'grommet';
-import { Close } from 'grommet-icons';
-import styled from 'styled-components';
+import { Box, ResponsiveContext } from 'grommet';
 
 import {
   selectLocale,
@@ -31,20 +29,14 @@ import ColumnAside from 'components/ColumnAside';
 import Breadcrumb from 'components/Breadcrumb';
 import NavGridChildren from 'components/NavGridChildren';
 import HTMLWrapper from 'components/HTMLWrapper';
+import AsideNavSection from 'components/AsideNavSection';
+import AsideNavLabel from 'components/AsideNavLabel';
+import AsideNavTypologySelected from 'components/AsideNavTypologySelected';
+import AsideNavTypologyList from 'components/AsideNavTypologyList';
 
 import { isMinSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
-
-const BiomeButton = styled(props => <Button {...props} plain />)`
-  padding: ${({ theme }) => theme.global.edgeSize.small};
-  border-top: 1px solid;
-  border-top-color: ${({ theme }) => theme.global.colors.border.light};
-  &:last-child {
-    border-bottom: 1px solid;
-    border-bottom-color: ${({ theme }) => theme.global.colors.border.light};
-  }
-`;
 
 export function ExploreRealm({
   typology,
@@ -90,37 +82,33 @@ export function ExploreRealm({
             </ColumnMain>
             {isMinSize(size, 'large') && (
               <ColumnAside>
-                <Box margin={{ vertical: 'medium' }}>
-                  <Text>
-                    <FormattedMessage {...commonMessages.typology.realm} />
-                  </Text>
-                  <Box
-                    direction="row"
-                    justify="between"
-                    pad={{ vertical: 'small', horizontal: 'medium' }}
-                    background="light-2"
-                    border="horizontal"
-                  >
-                    <Text>{`${typology.id} ${typology.title[locale]}`}</Text>
-                    <Button
-                      plain
-                      onClick={() => navExplore()}
-                      icon={<Close size="large" />}
-                    />
-                  </Box>
-                  <Box margin={{ top: 'large' }}>
-                    <Text size="small">Select Biome</Text>
-                    {sortedBiomes &&
-                      sortedBiomes.map(b => (
-                        <BiomeButton
-                          plain
-                          key={b.id}
-                          onClick={() => navBiome(b.id)}
-                          label={`${b.id} ${b.title[locale]}`}
-                        />
-                      ))}
-                  </Box>
-                </Box>
+                <AsideNavSection>
+                  <AsideNavLabel
+                    label={
+                      <FormattedMessage {...commonMessages.typology.realm} />
+                    }
+                  />
+                  <AsideNavTypologySelected
+                    level={0}
+                    id={typology.id}
+                    name={typology.title[locale]}
+                    onDismiss={() => navExplore()}
+                    active
+                  />
+                </AsideNavSection>
+                <AsideNavSection>
+                  <AsideNavLabel
+                    label={
+                      <FormattedMessage {...commonMessages.nav.selectBiome} />
+                    }
+                  />
+                  <AsideNavTypologyList
+                    items={sortedBiomes}
+                    level={1}
+                    locale={locale}
+                    navItem={id => navBiome(id)}
+                  />
+                </AsideNavSection>
               </ColumnAside>
             )}
           </Box>

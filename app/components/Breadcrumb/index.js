@@ -10,20 +10,23 @@ import commonMessages from 'messages';
 // prettier-ignore
 const Styled = styled(Box)``;
 
+const StyledButton = styled(props => <Button {...props} plain />)`
+  text-decoration: underline;
+`;
+
 function Breadcrumb({ targets, level }) {
   return (
-    <Styled direction="row" wrap>
+    <Styled direction="row" wrap align="center">
       {level === 0 && (
         <Text>
           <FormattedMessage {...commonMessages.typology.realm} />
         </Text>
       )}
       {level > 0 && targets && targets.length > 0 && (
-        <Button onClick={() => targets[0]()}>
-          <Text>
-            <FormattedMessage {...commonMessages.typology.realm} />
-          </Text>
-        </Button>
+        <StyledButton
+          onClick={() => targets[0]()}
+          label={<FormattedMessage {...commonMessages.typology.realm} />}
+        />
       )}
       <FormNext />
       {level < 1 && (
@@ -37,11 +40,10 @@ function Breadcrumb({ targets, level }) {
         </Text>
       )}
       {level > 1 && targets && targets.length > 1 && (
-        <Button onClick={() => targets[1]()}>
-          <Text>
-            <FormattedMessage {...commonMessages.typology.biome} />
-          </Text>
-        </Button>
+        <StyledButton
+          onClick={() => targets[1]()}
+          label={<FormattedMessage {...commonMessages.typology.biome} />}
+        />
       )}
       <FormNext />
       {level < 2 && (

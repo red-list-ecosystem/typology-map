@@ -11,9 +11,7 @@ import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { Button, Box, Text, ResponsiveContext } from 'grommet';
-import { Close } from 'grommet-icons';
-import styled from 'styled-components';
+import { Box, ResponsiveContext } from 'grommet';
 
 import {
   selectLocale,
@@ -32,20 +30,15 @@ import ColumnAside from 'components/ColumnAside';
 import Breadcrumb from 'components/Breadcrumb';
 import NavGridChildren from 'components/NavGridChildren';
 import HTMLWrapper from 'components/HTMLWrapper';
+import AsideNavSection from 'components/AsideNavSection';
+import AsideNavLabel from 'components/AsideNavLabel';
+import AsideNavTypologySelected from 'components/AsideNavTypologySelected';
+import AsideNavTypologyList from 'components/AsideNavTypologyList';
+import NavAncestor from 'components/NavAncestor';
 
 import { isMinSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
-
-const GroupButton = styled(props => <Button {...props} plain />)`
-  padding: ${({ theme }) => theme.global.edgeSize.small};
-  border-top: 1px solid;
-  border-top-color: ${({ theme }) => theme.global.colors.border.light};
-  &:last-child {
-    border-bottom: 1px solid;
-    border-bottom-color: ${({ theme }) => theme.global.colors.border.light};
-  }
-`;
 
 export function ExploreBiome({
   typology,
@@ -88,19 +81,14 @@ export function ExploreBiome({
                   targets={[() => navRealm(typology.realm)]}
                 />
                 <h1>{`${typology.id} ${typology.title[locale]}`}</h1>
-                <Box direction="row" gap="small">
-                  <Text>
-                    <FormattedMessage {...commonMessages.typology.realm} />
-                    {`:`}
-                  </Text>
-                  {realm && (
-                    <Button
-                      plain
-                      onClick={() => navRealm(typology.realm)}
-                      label={`${realm.id} ${realm.title[locale]}`}
-                    />
-                  )}
-                </Box>
+                {realm && (
+                  <NavAncestor
+                    type="realm"
+                    onClick={() => navRealm(typology.realm)}
+                    id={realm.id}
+                    name={realm.title[locale]}
+                  />
+                )}
                 {content && groups && (
                   <>
                     <HTMLWrapper innerhtml={content} />
@@ -117,59 +105,49 @@ export function ExploreBiome({
             </ColumnMain>
             {isMinSize(size, 'large') && (
               <ColumnAside>
-                <Box margin={{ vertical: 'medium' }}>
-                  <Text>
-                    <FormattedMessage {...commonMessages.typology.realm} />
-                  </Text>
+                <AsideNavSection>
+                  <AsideNavLabel
+                    label={
+                      <FormattedMessage {...commonMessages.typology.realm} />
+                    }
+                  />
                   {realm && (
-                    <Box
-                      direction="row"
-                      justify="between"
-                      pad={{ vertical: 'small', horizontal: 'medium' }}
-                      border="horizontal"
-                    >
-                      <Button
-                        plain
-                        onClick={() => navRealm(typology.realm)}
-                        label={`${realm.id} ${realm.title[locale]}`}
-                      />
-                      <Button
-                        plain
-                        onClick={() => navExplore()}
-                        icon={<Close size="large" />}
-                      />
-                    </Box>
-                  )}
-                  <Text>
-                    <FormattedMessage {...commonMessages.typology.biome} />
-                  </Text>
-                  <Box
-                    direction="row"
-                    justify="between"
-                    pad={{ vertical: 'small', horizontal: 'medium' }}
-                    background="light-2"
-                    border="horizontal"
-                  >
-                    <Text>{`${typology.id} ${typology.title[locale]}`}</Text>
-                    <Button
-                      plain
-                      onClick={() => navRealm(typology.realm)}
-                      icon={<Close size="large" />}
+                    <AsideNavTypologySelected
+                      level={0}
+                      id={realm.id}
+                      name={realm.title[locale]}
+                      onDismiss={() => navExplore()}
+                      onTypologyClick={() => navRealm(typology.realm)}
                     />
-                  </Box>
-                  <Box margin={{ top: 'large' }}>
-                    <Text size="small">Select Functional Group</Text>
-                    {sortedGroups &&
-                      sortedGroups.map(g => (
-                        <GroupButton
-                          plain
-                          key={g.id}
-                          onClick={() => navGroup(g.id)}
-                          label={`${g.id} ${g.title[locale]}`}
-                        />
-                      ))}
-                  </Box>
-                </Box>
+                  )}
+                </AsideNavSection>
+                <AsideNavSection>
+                  <AsideNavLabel
+                    label={
+                      <FormattedMessage {...commonMessages.typology.biome} />
+                    }
+                  />
+                  <AsideNavTypologySelected
+                    level={1}
+                    id={typology.id}
+                    name={typology.title[locale]}
+                    onDismiss={() => navRealm(typology.realm)}
+                    active
+                  />
+                </AsideNavSection>
+                <AsideNavSection>
+                  <AsideNavLabel
+                    label={
+                      <FormattedMessage {...commonMessages.nav.selectGroup} />
+                    }
+                  />
+                  <AsideNavTypologyList
+                    items={sortedGroups}
+                    level={2}
+                    locale={locale}
+                    navItem={id => navGroup(id)}
+                  />
+                </AsideNavSection>
               </ColumnAside>
             )}
           </Box>
