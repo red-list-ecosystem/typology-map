@@ -4,14 +4,16 @@
  *
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { Box, ResponsiveContext } from 'grommet';
+import styled from 'styled-components';
+import { Box, ResponsiveContext, Button } from 'grommet';
+import { Expand, Contract } from 'grommet-icons';
 
 import {
   selectBiome,
@@ -26,6 +28,8 @@ import {
   navigate,
 } from 'containers/App/actions';
 
+import Map from 'containers/Map';
+
 import ColumnMain from 'components/ColumnMain';
 import ColumnAside from 'components/ColumnAside';
 import Breadcrumb from 'components/Breadcrumb';
@@ -36,24 +40,51 @@ import AsideNavTypologySelected from 'components/AsideNavTypologySelected';
 import AsideNavTypologyList from 'components/AsideNavTypologyList';
 import NavAncestor from 'components/NavAncestor';
 
-import { isMinSize } from 'utils/responsive';
+import { isMinSize, getHeaderHeight } from 'utils/responsive';
 
 import commonMessages from 'messages';
 
-// <h4>Sibling Groups</h4>
-// <div>
-//   {groups &&
-//     groups.map(g => (
-//       <div key={g.id}>
-//         <Button
-//           onClick={() => navGroup(g.id)}
-//           label={`${g.id} ${g.title[locale]}`}
-//           active={g.id === typology.id}
-//         />
-//       </div>
-//     ))}
-// </div>
-// </>
+const FSButtonWrapper = styled.div`
+  position: absolute;
+  right: ${({ theme }) => theme.global.edgeSize.small};
+  top: ${({ theme }) => theme.global.edgeSize.small};
+  z-index: 401;
+`;
+const FSButton = styled(props => <Button plain {...props} />)`
+  border-radius: 9999px;
+  padding: ${({ theme }) => theme.global.edgeSize.small};
+  background: ${({ theme }) => theme.global.colors['light-2']};
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+`;
+
+const MapWrapper = styled.div`
+  position: ${({ isFS }) => (isFS ? 'absolute' : 'relative')};
+  height: ${({ isFS }) => (isFS ? 'auto' : '400px')};
+  top: ${({ isFS }) => (isFS ? '0' : 'auto')};
+  bottom: ${({ isFS }) => (isFS ? '0' : 'auto')};
+  right: ${({ isFS }) => (isFS ? '0' : 'auto')};
+  left: ${({ isFS }) => (isFS ? '0' : 'auto')};
+`;
+
+const Styled = styled.div`
+  position: ${({ isFS }) => (isFS ? 'absolute' : 'relative')};
+  top: ${({ isFS, size }) => (isFS ? `${getHeaderHeight(size)}px` : 'auto')};
+  bottom: ${({ isFS }) => (isFS ? '0' : 'auto')};
+  right: ${({ isFS }) => (isFS ? '0' : 'auto')};
+  left: ${({ isFS }) => (isFS ? '0' : 'auto')};
+`;
+//
+// {isMapExpanded && (
+//   <MapWrapperFS size={size}>
+//     {map}
+//     <FSButtonWrapper>
+//       <FSButton
+//         icon={<Contract />}
+//         onClick={() => setIsMapExpanded(false)}
+//       />
+//     </FSButtonWrapper>
+//   </MapWrapperFS>
+// )}
 
 export function ExploreGroup({
   typology,
@@ -72,6 +103,9 @@ export function ExploreGroup({
     // kick off loading of page content
     onLoadContent(typology.path);
   }, [typology]);
+
+  const [isMapExpanded, setIsMapExpanded] = useState(false);
+
   const sortedGroups =
     groups &&
     groups.sort((a, b) => {
@@ -84,42 +118,59 @@ export function ExploreGroup({
   return (
     <ResponsiveContext.Consumer>
       {size => (
-        <>
+        <Styled isFS={isMapExpanded} size={size}>
           <Helmet>
             <title>ExploreGroup</title>
             <meta name="description" content="Description of ExploreGroup" />
           </Helmet>
           <Box direction="row" fill="horizontal">
-            <ColumnMain hasAside={isMinSize(size, 'large')}>
-              <Box margin={{ horizontal: 'medium', vertical: 'medium' }}>
-                <Breadcrumb
-                  level={2}
-                  targets={[
-                    () => navRealm(biome.realm),
-                    () => navBiome(typology.biome),
-                  ]}
-                />
-                <h1>{`${typology.id} ${typology.title[locale]}`}</h1>
-                {realm && biome && (
-                  <NavAncestor
-                    type="realm"
-                    onClick={() => navRealm(biome.realm)}
-                    id={realm.id}
-                    name={realm.title[locale]}
+            <ColumnMain
+              hasAside={isMinSize(size, 'large')}
+              style={{
+                position: isMapExpanded ? 'static' : 'relative',
+                minHeight: isMapExpanded ? 'auto' : '100vh',
+              }}
+            >
+              <MapWrapper isFS={isMapExpanded} size={size}>
+                <Map group={typology} fullscreen={isMapExpanded} />
+                <FSButtonWrapper>
+                  <FSButton
+                    icon={isMapExpanded ? <Contract /> : <Expand />}
+                    onClick={() => setIsMapExpanded(!isMapExpanded)}
                   />
-                )}
-                {biome && (
-                  <NavAncestor
-                    type="biome"
-                    onClick={() => navBiome(typology.biome)}
-                    id={biome.id}
-                    name={biome.title[locale]}
+                </FSButtonWrapper>
+              </MapWrapper>
+              {!isMapExpanded && (
+                <Box margin={{ horizontal: 'medium', vertical: 'medium' }}>
+                  <Breadcrumb
+                    level={2}
+                    targets={[
+                      () => navRealm(biome.realm),
+                      () => navBiome(typology.biome),
+                    ]}
                   />
-                )}
-                {content && <HTMLWrapper innerhtml={content} />}
-              </Box>
+                  <h1>{`${typology.id} ${typology.title[locale]}`}</h1>
+                  {realm && biome && (
+                    <NavAncestor
+                      type="realm"
+                      onClick={() => navRealm(biome.realm)}
+                      id={realm.id}
+                      name={realm.title[locale]}
+                    />
+                  )}
+                  {biome && (
+                    <NavAncestor
+                      type="biome"
+                      onClick={() => navBiome(typology.biome)}
+                      id={biome.id}
+                      name={biome.title[locale]}
+                    />
+                  )}
+                  {content && <HTMLWrapper innerhtml={content} />}
+                </Box>
+              )}
             </ColumnMain>
-            {isMinSize(size, 'large') && (
+            {isMinSize(size, 'large') && !isMapExpanded && (
               <ColumnAside>
                 <AsideNavSection>
                   <AsideNavLabel
@@ -171,7 +222,7 @@ export function ExploreGroup({
               </ColumnAside>
             )}
           </Box>
-        </>
+        </Styled>
       )}
     </ResponsiveContext.Consumer>
   );

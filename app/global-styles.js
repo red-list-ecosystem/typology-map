@@ -1,6 +1,8 @@
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
+  @import url('https://unpkg.com/leaflet@1.3.3/dist/leaflet.css');
+
   html,
   body {
     height: 100%;
