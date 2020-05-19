@@ -10,7 +10,7 @@
 const addLocaleData = require('react-intl').addLocaleData; //eslint-disable-line
 const enLocaleData = require('react-intl/locale-data/en');
 
-const enTranslationMessages = require('./labels/en.json');
+const enTranslationMessages = require('./translations/en.json');
 
 addLocaleData(enLocaleData);
 
