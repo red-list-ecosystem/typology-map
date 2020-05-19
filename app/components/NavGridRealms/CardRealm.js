@@ -45,17 +45,13 @@ export function CardRealm({ onCardClick, label, realm, ...rest }) {
           <Box direction="row" gap="xsmall">
             <Text>{realm.biomeNo}</Text>
             <FormattedMessage
-              {...commonMessages.typology[
-                realm.biomeNo === 1 ? 'biome' : 'biomes'
-              ]}
+              {...commonMessages[realm.biomeNo === 1 ? 'biome' : 'biomes']}
             />
           </Box>
           <Box direction="row" gap="xsmall">
             <Text>{realm.groupNo}</Text>
             <FormattedMessage
-              {...commonMessages.typology[
-                realm.groupNo === 1 ? 'group' : 'groups'
-              ]}
+              {...commonMessages[realm.groupNo === 1 ? 'group' : 'groups']}
             />
           </Box>
         </Box>

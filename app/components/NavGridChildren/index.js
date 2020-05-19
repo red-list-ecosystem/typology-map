@@ -18,7 +18,7 @@ function NavGridChildren({ type, items, itemClick, locale, parent }) {
     <div>
       <h4>
         <FormattedMessage
-          {...messages[type].title}
+          {...messages[`${type}Title`]}
           values={{
             no: items.length,
             parent: parent.title[locale],
@@ -26,10 +26,10 @@ function NavGridChildren({ type, items, itemClick, locale, parent }) {
         />
       </h4>
       <Paragraph>
-        <FormattedMessage {...messages[type].info} />
+        <FormattedMessage {...messages[`${type}Info`]} />
       </Paragraph>
       <h5>
-        <FormattedMessage {...messages[type].select} />
+        <FormattedMessage {...messages[`${type}Select`]} />
       </h5>
       <Box direction="row" wrap>
         {items &&

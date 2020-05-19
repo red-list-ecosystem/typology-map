@@ -5,101 +5,91 @@
  */
 import { defineMessages } from 'react-intl';
 
-export const scope = 'rle.common';
+export const scope = 'app.common';
 
 export default defineMessages({
-  app: {
-    title: {
-      id: `${scope}.app.title`,
-      defaultMessage: 'Global Ecosystem Typology',
-    },
+  appTitle: {
+    id: `${scope}.appTitle`,
+    defaultMessage: 'Global Ecosystem Typology',
   },
-  nav: {
-    selectRealm: {
-      id: `${scope}.nav.selectRealm`,
-      defaultMessage: 'Select a Realm',
-    },
-    selectBiome: {
-      id: `${scope}.nav.selectBiome`,
-      defaultMessage: 'Select a Biome',
-    },
-    selectGroup: {
-      id: `${scope}.nav.selectGroup`,
-      defaultMessage: 'Select a Functional Group',
-    },
+  realmSelect: {
+    id: `${scope}.realmSelect`,
+    defaultMessage: 'Select a Realm',
   },
-  typology: {
-    realm: {
-      id: `${scope}.typology.realm`,
-      defaultMessage: 'Realm',
-    },
-    realms: {
-      id: `${scope}.typology.realms`,
-      defaultMessage: 'Realms',
-    },
-    biome: {
-      id: `${scope}.typology.biome`,
-      defaultMessage: 'Biome',
-    },
-    biomes: {
-      id: `${scope}.typology.biomes`,
-      defaultMessage: 'Biomes',
-    },
-    group: {
-      id: `${scope}.typology.group`,
-      defaultMessage: 'Functional group',
-    },
-    'group-short': {
-      id: `${scope}.typology.group-short`,
-      defaultMessage: 'Group',
-    },
-    'group-long': {
-      id: `${scope}.typology.group-long`,
-      defaultMessage: 'Ecosystem functional group',
-    },
-    groups: {
-      id: `${scope}.typology.group`,
-      defaultMessage: 'Functional groups',
-    },
-    'groups-short': {
-      id: `${scope}.typology.group-short`,
-      defaultMessage: 'Groups',
-    },
-    'groups-long': {
-      id: `${scope}.typology.group-long`,
-      defaultMessage: 'Ecosystem functional groups',
-    },
-    'core-realms': {
-      id: `${scope}.typology.core-realms`,
-      defaultMessage: 'Core realms',
-    },
-    'trans-realms': {
-      id: `${scope}.typology.trans-realms`,
-      defaultMessage: 'Transitional realms',
-    },
+  biomeSelect: {
+    id: `${scope}.biomeSelect`,
+    defaultMessage: 'Select a Biome',
   },
-  components: {
-    explore: {
-      id: `${scope}.components.explore`,
-      defaultMessage: 'Explore',
-    },
+  groupSelect: {
+    id: `${scope}.groupSelect`,
+    defaultMessage: 'Select a Functional Group',
   },
-  pages: {
-    typology: {
-      id: `${scope}.pages.typology`,
-      defaultMessage: 'Typology',
-    },
-    about: {
-      id: `${scope}.pages.about`,
-      defaultMessage: 'About',
-    },
-    methods: {
-      id: `${scope}.pages.methods`,
-      defaultMessage: 'Methods',
-    },
-    glossary: {
-      id: `${scope}.pages.glossary`,
-      defaultMessage: 'Glossary',
-    },
+  realm: {
+    id: `${scope}.realm`,
+    defaultMessage: 'Realm',
+  },
+  realms: {
+    id: `${scope}.realms`,
+    defaultMessage: 'Realms',
+  },
+  biome: {
+    id: `${scope}.biome`,
+    defaultMessage: 'Biome',
+  },
+  biomes: {
+    id: `${scope}.biomes`,
+    defaultMessage: 'Biomes',
+  },
+  group: {
+    id: `${scope}.group`,
+    defaultMessage: 'Functional group',
+  },
+  groupShort: {
+    id: `${scope}.groupShort`,
+    defaultMessage: 'Group',
+  },
+  groupLong: {
+    id: `${scope}.groupLong`,
+    defaultMessage: 'Ecosystem functional group',
+  },
+  groups: {
+    id: `${scope}.groups`,
+    defaultMessage: 'Functional groups',
+  },
+  groupsShort: {
+    id: `${scope}.groupsShort`,
+    defaultMessage: 'Groups',
+  },
+  groupsLong: {
+    id: `${scope}.groupsLong`,
+    defaultMessage: 'Ecosystem functional groups',
+  },
+  realmsCore: {
+    id: `${scope}.realmsCore`,
+    defaultMessage: 'Core realms',
+  },
+  realmsTrans: {
+    id: `${scope}.realmsTrans`,
+    defaultMessage: 'Transitional realms',
+  },
+  navExplore: {
+    id: `${scope}.navExplore`,
+    defaultMessage: 'Explore',
+  },
+  page_typology: {
+    id: `${scope}.page_typology`,
+    defaultMessage: 'Typology',
+  },
+  page_about: {
+    id: `${scope}.page_about`,
+    defaultMessage: 'About',
+  },
+  page_methods: {
+    id: `${scope}.page_methods`,
+    defaultMessage: 'Methods',
+  },
+  page_glossary: {
+    id: `${scope}.page_glossary`,
+    defaultMessage: 'Glossary',
   },
 });

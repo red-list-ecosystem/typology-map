@@ -49,9 +49,7 @@ export function CardChild({ onCardClick, label, typology, type, ...rest }) {
             <Box direction="row" gap="xsmall">
               <Text>{typology.groupNo}</Text>
               <FormattedMessage
-                {...commonMessages.typology[
-                  typology.groupNo === 1 ? 'group' : 'groups'
-                ]}
+                {...commonMessages[typology.groupNo === 1 ? 'group' : 'groups']}
               />
             </Box>
           )}

@@ -84,9 +84,7 @@ export function ExploreRealm({
               <ColumnAside>
                 <AsideNavSection>
                   <AsideNavLabel
-                    label={
-                      <FormattedMessage {...commonMessages.typology.realm} />
-                    }
+                    label={<FormattedMessage {...commonMessages.realm} />}
                   />
                   <AsideNavTypologySelected
                     level={0}
@@ -98,9 +96,7 @@ export function ExploreRealm({
                 </AsideNavSection>
                 <AsideNavSection>
                   <AsideNavLabel
-                    label={
-                      <FormattedMessage {...commonMessages.nav.selectBiome} />
-                    }
+                    label={<FormattedMessage {...commonMessages.biomeSelect} />}
                   />
                   <AsideNavTypologyList
                     items={sortedBiomes}

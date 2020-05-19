@@ -174,9 +174,7 @@ export function ExploreGroup({
               <ColumnAside>
                 <AsideNavSection>
                   <AsideNavLabel
-                    label={
-                      <FormattedMessage {...commonMessages.typology.realm} />
-                    }
+                    label={<FormattedMessage {...commonMessages.realm} />}
                   />
                   {realm && biome && (
                     <AsideNavTypologySelected
@@ -190,9 +188,7 @@ export function ExploreGroup({
                 </AsideNavSection>
                 <AsideNavSection>
                   <AsideNavLabel
-                    label={
-                      <FormattedMessage {...commonMessages.typology.biome} />
-                    }
+                    label={<FormattedMessage {...commonMessages.biome} />}
                   />
                   {biome && (
                     <AsideNavTypologySelected
@@ -206,9 +202,7 @@ export function ExploreGroup({
                 </AsideNavSection>
                 <AsideNavSection>
                   <AsideNavLabel
-                    label={
-                      <FormattedMessage {...commonMessages.nav.selectGroup} />
-                    }
+                    label={<FormattedMessage {...commonMessages.groupSelect} />}
                   />
                   <AsideNavTypologyList
                     items={sortedGroups}

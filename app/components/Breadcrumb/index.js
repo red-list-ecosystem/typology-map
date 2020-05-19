@@ -19,41 +19,41 @@ function Breadcrumb({ targets, level }) {
     <Styled direction="row" wrap align="center">
       {level === 0 && (
         <Text>
-          <FormattedMessage {...commonMessages.typology.realm} />
+          <FormattedMessage {...commonMessages.realm} />
         </Text>
       )}
       {level > 0 && targets && targets.length > 0 && (
         <StyledButton
           onClick={() => targets[0]()}
-          label={<FormattedMessage {...commonMessages.typology.realm} />}
+          label={<FormattedMessage {...commonMessages.realm} />}
         />
       )}
       <FormNext />
       {level < 1 && (
         <Text color="dark-4">
-          <FormattedMessage {...commonMessages.typology.biome} />
+          <FormattedMessage {...commonMessages.biome} />
         </Text>
       )}
       {level === 1 && (
         <Text>
-          <FormattedMessage {...commonMessages.typology.biome} />
+          <FormattedMessage {...commonMessages.biome} />
         </Text>
       )}
       {level > 1 && targets && targets.length > 1 && (
         <StyledButton
           onClick={() => targets[1]()}
-          label={<FormattedMessage {...commonMessages.typology.biome} />}
+          label={<FormattedMessage {...commonMessages.biome} />}
         />
       )}
       <FormNext />
       {level < 2 && (
         <Text color="dark-4">
-          <FormattedMessage {...commonMessages.typology.group} />
+          <FormattedMessage {...commonMessages.group} />
         </Text>
       )}
       {level === 2 && (
         <Text>
-          <FormattedMessage {...commonMessages.typology.group} />
+          <FormattedMessage {...commonMessages.group} />
         </Text>
       )}
     </Styled>

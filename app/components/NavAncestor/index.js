@@ -20,7 +20,7 @@ function NavAncestor({ onClick, id, name, type }) {
   return (
     <Box direction="row" gap="small">
       <Text>
-        <FormattedMessage {...commonMessages.typology[type]} />
+        <FormattedMessage {...commonMessages[type]} />
         {`:`}
       </Text>
       <StyledButton onClick={() => onClick()} label={`${id} ${name}`} />

@@ -104,19 +104,19 @@ function Header({ nav, navHome, navPage, path }) {
     <NavBar>
       <Brand
         onClick={() => navHome()}
-        label={<FormattedMessage {...commonMessages.app.title} />}
+        label={<FormattedMessage {...commonMessages.appTitle} />}
       />
       <NavPrimary>
         <Primary
           onClick={() => nav('explore')}
-          label={<FormattedMessage {...commonMessages.components.explore} />}
+          label={<FormattedMessage {...commonMessages.navExplore} />}
           active={contentType === 'explore'}
         />
         {pagesPrimary.map(p => (
           <Primary
             key={p.key}
             onClick={() => navPage(p.key)}
-            label={<FormattedMessage {...commonMessages.pages[p.key]} />}
+            label={<FormattedMessage {...commonMessages[`page_${p.key}`]} />}
             active={contentType === 'page' && contentId === p.key}
           />
         ))}
@@ -126,7 +126,7 @@ function Header({ nav, navHome, navPage, path }) {
           <Secondary
             key={p.key}
             onClick={() => navPage(p.key)}
-            label={<FormattedMessage {...commonMessages.pages[p.key]} />}
+            label={<FormattedMessage {...commonMessages[`page_${p.key}`]} />}
             active={contentType === 'page' && contentId === p.key}
           />
         ))}

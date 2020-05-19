@@ -36,13 +36,13 @@ export function RouteExploreOverview({ realms, navRealm, locale, intl }) {
         />
       </Helmet>
       <NavGridRealms
-        label={intl.formatMessage(commonMessages.typology['core-realms'])}
+        label={intl.formatMessage(commonMessages.realmsCore)}
         items={realms && realms.filter(r => r.type === 'core')}
         itemClick={id => navRealm(id)}
         locale={locale}
       />
       <NavGridRealms
-        label={intl.formatMessage(commonMessages.typology['trans-realms'])}
+        label={intl.formatMessage(commonMessages.realmsTrans)}
         items={realms && realms.filter(r => r.type === 'trans')}
         itemClick={id => navRealm(id)}
         locale={locale}
