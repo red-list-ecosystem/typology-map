@@ -52,6 +52,6 @@ export const MAPBOX = {
   TOKEN: 'pk.eyJ1IjoidG1mcm56IiwiYSI6IkRNZURKUHcifQ._ljgPcF75Yig1Of8adL93A',
   USER: 'tmfrnz',
   BASEMAP_STYLES: {
-    light: 'ckadnx2yt0jl01imt924btcc3',
+    light: 'ckae0r0to0say1ir3a13wvscu',
   },
 };
