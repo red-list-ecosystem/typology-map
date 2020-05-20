@@ -55,3 +55,19 @@ export const MAPBOX = {
     light: 'ckae0r0to0say1ir3a13wvscu',
   },
 };
+
+export const GEOJSON = {
+  COLORS: {
+    property: 'occurrence',
+    values: {
+      1: 'rgb(255, 0, 0)', // primary
+      2: 'rgb(255, 255, 0)', // secondary
+    },
+  },
+  // leaflet path options
+  // https://leafletjs.com/reference-1.6.0.html#path-option
+  STYLE: {
+    weight: 0,
+    fillOpacity: 1,
+  },
+};

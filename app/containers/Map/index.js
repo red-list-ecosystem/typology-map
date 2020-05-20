@@ -13,13 +13,14 @@ import { compose } from 'redux';
 import styled from 'styled-components';
 import L from 'leaflet';
 
-import { MAPBOX } from 'config';
+import { MAPBOX, GEOJSON } from 'config';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
-import makeSelectMap from './selectors';
+import { selectLayers } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
+import { loadLayer } from './actions';
 // import messages from './messages';
 
 const Styled = styled.div`
@@ -31,7 +32,7 @@ const Styled = styled.div`
   left: 0;
 `;
 
-export function Map({ group, fullscreen }) {
+export function Map({ group, fullscreen, layers, onLoadLayer }) {
   useInjectReducer({ key: 'map', reducer });
   useInjectSaga({ key: 'map', saga });
 
@@ -67,14 +68,21 @@ export function Map({ group, fullscreen }) {
     }
   }, [fullscreen]);
 
+  // group change
   useEffect(() => {
+    // reset view
     if (mapRef) {
       mapRef.current.setZoom(1);
       mapRef.current.setView([30, 0]);
     }
+    // clear group layer
     if (groupLayerGroupRef) {
       groupLayerGroupRef.current.clearLayers();
-      if (group.layer && group.layer.source === 'mapbox') {
+    }
+
+    // add mapbox tile layer
+    if (group.layer && group.layer.source === 'mapbox') {
+      if (groupLayerGroupRef) {
         groupLayerGroupRef.current.addLayer(
           L.tileLayer(
             'https://api.mapbox.com/v4/{id}/{z}/{x}/{y}.png64?access_token={accessToken}',
@@ -89,21 +97,51 @@ export function Map({ group, fullscreen }) {
     }
   }, [group]);
 
+  useEffect(() => {
+    if (
+      group.layer &&
+      (group.layer.type === 'geojson' || group.layer.type === 'topojson')
+    ) {
+      if (layers && !layers[group.id]) {
+        onLoadLayer(group.id, group.layer);
+      }
+      if (layers && layers[group.id]) {
+        if (groupLayerGroupRef) {
+          groupLayerGroupRef.current.addLayer(
+            L.geoJSON(layers[group.id].data, {
+              style: feature => {
+                const value = feature.properties[GEOJSON.COLORS.property];
+                return {
+                  ...GEOJSON.STYLE,
+                  color: GEOJSON.COLORS.values[value],
+                };
+              },
+            }),
+          );
+        }
+      }
+    }
+  }, [group, layers]);
+
   return <Styled id="ll-map" />;
 }
 
 Map.propTypes = {
+  layers: PropTypes.object,
   group: PropTypes.object,
   fullscreen: PropTypes.bool,
+  onLoadLayer: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
-  map: makeSelectMap(),
+  layers: state => selectLayers(state),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
-    dispatch,
+    onLoadLayer: (key, config) => {
+      dispatch(loadLayer(key, config));
+    },
   };
 }
 

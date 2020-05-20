@@ -5,21 +5,39 @@ import { initialState } from './reducer';
  * Direct selector to the map state domain
  */
 
-const selectMapDomain = state => state.map || initialState;
+const selectDomain = state => state.map || initialState;
 
 /**
  * Other specific selectors
  */
 
-/**
- * Default selector used by Map
- */
+export const selectLayers = createSelector(
+  selectDomain,
+  domain => domain.layers,
+);
 
-const makeSelectMap = () =>
-  createSelector(
-    selectMapDomain,
-    substate => substate,
-  );
+export const selectLayerByKey = createSelector(
+  (state, key) => key,
+  selectLayers,
+  (key, data) => data[key],
+);
 
-export default makeSelectMap;
-export { selectMapDomain };
+const selectLayersRequested = createSelector(
+  selectDomain,
+  domain => domain.layersRequested,
+);
+export const selectLayerRequestedByKey = createSelector(
+  (state, key) => key,
+  selectLayersRequested,
+  (key, data) => data[key],
+);
+
+export const selectLayersReady = createSelector(
+  selectDomain,
+  domain => domain.layersReady,
+);
+export const selectLayerReadyByKey = createSelector(
+  (state, key) => key,
+  selectLayersReady,
+  (key, data) => data[key],
+);
