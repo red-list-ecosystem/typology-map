@@ -53,7 +53,12 @@ export const MAPBOX = {
   USER: 'tmfrnz',
   BASEMAP_STYLES: {
     light: 'ckae0r0to0say1ir3a13wvscu',
+    satellite: 'ckacdj3yp5pmb1iqky0khmlc8',
   },
+  RASTER_URL_TEMPLATE:
+    'https://api.mapbox.com/v4/{id}/{z}/{x}/{y}.png64?access_token={accessToken}',
+  STYLE_URL_TEMPLATE:
+    'https://api.mapbox.com/styles/v1/{username}/{style_id}/tiles/512/{z}/{x}/{y}?access_token={accessToken}',
 };
 
 export const GEOJSON = {
