@@ -10,8 +10,22 @@ import {
   LAYER_LOAD_SUCCESS,
   LAYER_LOAD_ERROR,
   LAYER_READY,
+  SET_BASEMAP,
+  SET_OPACITY,
 } from './constants';
 
+export function setBasemap(value) {
+  return {
+    type: SET_BASEMAP,
+    value,
+  };
+}
+export function setOpacity(value) {
+  return {
+    type: SET_OPACITY,
+    value,
+  };
+}
 export function loadLayer(key, config) {
   return {
     type: LOAD_LAYER,

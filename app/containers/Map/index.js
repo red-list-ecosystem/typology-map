@@ -4,24 +4,29 @@
  *
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import styled from 'styled-components';
-import { Button } from 'grommet';
+import { Button, Box, RangeInput } from 'grommet';
 import L from 'leaflet';
 
-import { MAPBOX, GEOJSON } from 'config';
+import {
+  MAPBOX,
+  GEOJSON,
+  GROUP_LAYER_PROPERTIES,
+  GROUP_LAYER_OPTIONS,
+} from 'config';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
-import { selectLayers } from './selectors';
+import { selectLayers, selectBasemap, selectOpacity } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
-import { loadLayer } from './actions';
+import { loadLayer, setOpacity, setBasemap } from './actions';
 // import messages from './messages';
 
 const Styled = styled.div`
@@ -40,65 +45,98 @@ const MapContainer = styled.div`
   left: 0;
 `;
 
-const BasemapToggle = styled.div`
+const MapSettings = styled(props => (
+  <Box direction="row" {...props} elevation="xsmall" />
+))`
   position: absolute;
-  bottom: ${({ theme }) => theme.global.edgeSize.small};
-  left: ${({ theme }) => theme.global.edgeSize.small};
   z-index: 401;
+  bottom: 0;
+  left: 0;
+  padding: ${({ theme }) => theme.global.edgeSize.small};
+  background: rgba(255, 255, 255, 0.9);
 `;
+const OpacityControl = styled(props => <Box pad="small" {...props} />)``;
+
+// const StyledRangeInput = styled(RangeInput)``;
+
+const BasemapToggle = styled(props => (
+  <Box pad="small" {...props} direction="row" />
+))``;
 const BasemapButton = styled(props => <Button plain {...props} />)`
   border-radius: 30px;
   margin-right: ${({ theme }) => theme.global.edgeSize.xsmall};
   padding: ${({ theme }) => theme.global.edgeSize.xsmall}
     ${({ theme }) => theme.global.edgeSize.small};
   background: ${({ theme, active }) =>
-    theme.global.colors[active ? 'dark-1' : 'light-2']};
+    theme.global.colors[active ? 'dark-1' : 'white']};
   color: ${({ theme, active }) =>
     theme.global.colors.text[active ? 'dark' : 'light']};
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   opacity: 1 !important;
 `;
 
-export function Map({ group, fullscreen, layers, onLoadLayer }) {
+export function Map({
+  group,
+  fullscreen,
+  layers,
+  onLoadLayer,
+  opacity,
+  basemap,
+  onSetOpacity,
+  onSetBasemap,
+}) {
   useInjectReducer({ key: 'map', reducer });
   useInjectSaga({ key: 'map', saga });
-  const [basemapStyle, setBasemapStyle] = useState(MAPBOX.BASEMAP_STYLES.light);
 
   const mapRef = useRef(null);
   const groupLayerGroupRef = useRef(null);
   const basemapLayerGroupRef = useRef(null);
 
-  const onSetBasemapStyle = style => {
-    if (basemapLayerGroupRef && style !== basemapStyle) {
-      basemapLayerGroupRef.current.clearLayers();
-      basemapLayerGroupRef.current.addLayer(
-        L.tileLayer(MAPBOX.STYLE_URL_TEMPLATE, {
-          style_id: style,
-          username: MAPBOX.USER,
-          accessToken: MAPBOX.TOKEN,
-        }),
-      );
-      if (groupLayerGroupRef)
-        groupLayerGroupRef.current.eachLayer(layer => layer.bringToFront());
-    }
-    setBasemapStyle(style);
-  };
+  // init map
   useEffect(() => {
     mapRef.current = L.map('ll-map', {
       center: [30, 0],
       zoom: 1,
     });
     basemapLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
-    basemapLayerGroupRef.current.addLayer(
-      L.tileLayer(MAPBOX.STYLE_URL_TEMPLATE, {
-        style_id: basemapStyle,
-        username: MAPBOX.USER,
-        accessToken: MAPBOX.TOKEN,
-      }),
-    );
     groupLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
   }, []);
 
+  // change basemap
+  useEffect(() => {
+    if (basemapLayerGroupRef.current) {
+      basemapLayerGroupRef.current.clearLayers();
+      basemapLayerGroupRef.current.addLayer(
+        L.tileLayer(MAPBOX.STYLE_URL_TEMPLATE, {
+          style_id: MAPBOX.BASEMAP_STYLES[basemap || 'light'],
+          username: MAPBOX.USER,
+          accessToken: MAPBOX.TOKEN,
+        }),
+      );
+      if (groupLayerGroupRef.current) {
+        groupLayerGroupRef.current.eachLayer(layer => layer.bringToFront());
+      }
+    }
+  }, [basemap]);
+
+  // change opacity
+  useEffect(() => {
+    if (groupLayerGroupRef.current && group.layer) {
+      groupLayerGroupRef.current.eachLayer(layer => {
+        if (group.layer.type === 'raster') {
+          layer.setOpacity(opacity);
+        }
+        if (group.layer.type === 'geojson' || group.layer.type === 'topojson') {
+          layer.setStyle({
+            opacity,
+            fillOpacity: opacity,
+          });
+        }
+      });
+    }
+  }, [opacity]);
+
+  // change full screen
   useEffect(() => {
     if (mapRef) {
       mapRef.current.invalidateSize();
@@ -110,7 +148,7 @@ export function Map({ group, fullscreen, layers, onLoadLayer }) {
     }
   }, [fullscreen]);
 
-  // group change
+  // change group
   useEffect(() => {
     // reset view
     if (mapRef) {
@@ -121,7 +159,10 @@ export function Map({ group, fullscreen, layers, onLoadLayer }) {
     if (groupLayerGroupRef) {
       groupLayerGroupRef.current.clearLayers();
     }
+  }, [group]);
 
+  // change group or stored vector layers
+  useEffect(() => {
     // add mapbox tile layer
     if (group.layer && group.layer.source === 'mapbox') {
       if (groupLayerGroupRef) {
@@ -131,34 +172,48 @@ export function Map({ group, fullscreen, layers, onLoadLayer }) {
             accessToken: MAPBOX.TOKEN,
             tileSize: 256,
             noWrap: true,
+            opacity,
+            ...GROUP_LAYER_OPTIONS.RASTER,
           }),
         );
       }
     }
-  }, [group]);
-
-  useEffect(() => {
+    // add vector layer
     if (
+      layers &&
       group.layer &&
       (group.layer.type === 'geojson' || group.layer.type === 'topojson')
     ) {
-      if (layers && !layers[group.id]) {
+      // kick of loading of vector data for group if not present
+      if (!layers[group.id]) {
         onLoadLayer(group.id, group.layer);
       }
-      if (layers && layers[group.id]) {
-        if (groupLayerGroupRef) {
-          groupLayerGroupRef.current.addLayer(
-            L.geoJSON(layers[group.id].data, {
-              style: feature => {
-                const value = feature.properties[GEOJSON.COLORS.property];
-                return {
-                  ...GEOJSON.STYLE,
-                  color: GEOJSON.COLORS.values[value],
-                };
-              },
-            }),
-          );
-        }
+      // display layer once loaded
+      if (layers[group.id] && groupLayerGroupRef.current) {
+        groupLayerGroupRef.current.addLayer(
+          L.geoJSON(layers[group.id].data, {
+            style: feature => {
+              const value = feature.properties[GEOJSON.PROPERTIES.OCCURRENCE];
+              if (value) {
+                const color =
+                  GROUP_LAYER_PROPERTIES.OCCURRENCE[value] &&
+                  GROUP_LAYER_PROPERTIES.OCCURRENCE[value].color;
+                if (color)
+                  return {
+                    ...GROUP_LAYER_OPTIONS.VECTOR,
+                    opacity,
+                    fillOpacity: opacity,
+                    color,
+                  };
+              }
+              return {
+                ...GROUP_LAYER_OPTIONS.VECTOR,
+                opacity,
+                fillOpacity: opacity,
+              };
+            },
+          }),
+        );
       }
     }
   }, [group, layers]);
@@ -166,20 +221,31 @@ export function Map({ group, fullscreen, layers, onLoadLayer }) {
   return (
     <Styled>
       <MapContainer id="ll-map" />
-      <BasemapToggle>
-        <BasemapButton
-          active={basemapStyle === MAPBOX.BASEMAP_STYLES.light}
-          disabled={basemapStyle === MAPBOX.BASEMAP_STYLES.light}
-          onClick={() => onSetBasemapStyle(MAPBOX.BASEMAP_STYLES.light)}
-          label="Light"
-        />
-        <BasemapButton
-          active={basemapStyle === MAPBOX.BASEMAP_STYLES.satellite}
-          disabled={basemapStyle === MAPBOX.BASEMAP_STYLES.satellite}
-          onClick={() => onSetBasemapStyle(MAPBOX.BASEMAP_STYLES.satellite)}
-          label="Satellite"
-        />
-      </BasemapToggle>
+      <MapSettings>
+        <OpacityControl>
+          <RangeInput
+            value={opacity}
+            onChange={event => onSetOpacity(event.target.value)}
+            min={0.1}
+            max={1}
+            step={0.05}
+          />
+        </OpacityControl>
+        <BasemapToggle>
+          <BasemapButton
+            active={basemap === 'light'}
+            disabled={basemap === 'light'}
+            onClick={() => onSetBasemap('light')}
+            label="Light"
+          />
+          <BasemapButton
+            active={basemap === 'satellite'}
+            disabled={basemap === 'satellite'}
+            onClick={() => onSetBasemap('satellite')}
+            label="Satellite"
+          />
+        </BasemapToggle>
+      </MapSettings>
     </Styled>
   );
 }
@@ -189,10 +255,16 @@ Map.propTypes = {
   group: PropTypes.object,
   fullscreen: PropTypes.bool,
   onLoadLayer: PropTypes.func,
+  onSetBasemap: PropTypes.func,
+  basemap: PropTypes.string,
+  onSetOpacity: PropTypes.func,
+  opacity: PropTypes.number,
 };
 
 const mapStateToProps = createStructuredSelector({
   layers: state => selectLayers(state),
+  opacity: state => selectOpacity(state),
+  basemap: state => selectBasemap(state),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -200,6 +272,8 @@ function mapDispatchToProps(dispatch) {
     onLoadLayer: (key, config) => {
       dispatch(loadLayer(key, config));
     },
+    onSetBasemap: value => dispatch(setBasemap(value)),
+    onSetOpacity: value => dispatch(setOpacity(value)),
   };
 }
 

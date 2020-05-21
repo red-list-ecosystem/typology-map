@@ -48,6 +48,30 @@ export const PAGES = {
 
 export const MAX_LOAD_ATTEMPTS = 5;
 
+export const GROUP_LAYER_PROPERTIES = {
+  OCCURRENCE: {
+    1: {
+      id: 'major',
+      color: 'rgb(255, 0, 0)',
+    },
+    2: {
+      id: 'minor',
+      color: 'rgb(255, 255, 0)',
+    },
+  },
+};
+
+// leaflet path options
+// https://leafletjs.com/reference-1.6.0.html#path-option
+export const GROUP_LAYER_OPTIONS = {
+  opacity: 0.75,
+  VECTOR: {
+    stroke: false,
+    weight: 0,
+  },
+  RASTER: {},
+};
+
 export const MAPBOX = {
   TOKEN: 'pk.eyJ1IjoidG1mcm56IiwiYSI6IkRNZURKUHcifQ._ljgPcF75Yig1Of8adL93A',
   USER: 'tmfrnz',
@@ -62,17 +86,7 @@ export const MAPBOX = {
 };
 
 export const GEOJSON = {
-  COLORS: {
-    property: 'occurrence',
-    values: {
-      1: 'rgb(255, 0, 0)', // primary
-      2: 'rgb(255, 255, 0)', // secondary
-    },
-  },
-  // leaflet path options
-  // https://leafletjs.com/reference-1.6.0.html#path-option
-  STYLE: {
-    weight: 0,
-    fillOpacity: 1,
+  PROPERTIES: {
+    OCCURRENCE: 'occurrence',
   },
 };

@@ -11,6 +11,14 @@ const selectDomain = state => state.map || initialState;
  * Other specific selectors
  */
 
+export const selectOpacity = createSelector(
+  selectDomain,
+  domain => domain.opacity,
+);
+export const selectBasemap = createSelector(
+  selectDomain,
+  domain => domain.basemap,
+);
 export const selectLayers = createSelector(
   selectDomain,
   domain => domain.layers,

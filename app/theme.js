@@ -50,6 +50,7 @@ export const colors = {
   // also see https://github.com/grommet/grommet/wiki/Grommet-v2-theming-documentation
   // and https://github.com/grommet/grommet/blob/master/src/js/themes/base.js
   black: '#000000',
+  dark: '#999999',
   white: '#ffffff',
   // active: '#ffffff',
   // brand: '#ffffff',
@@ -155,6 +156,16 @@ const theme = {
         value: sizes.xlarge.max,
       },
       xxlarge: {},
+    },
+    spacing: '18px',
+  },
+  rangeInput: {
+    thumb: {
+      color: 'black',
+    },
+    track: {
+      color: colors.dark,
+      //   height: '4px',
     },
   },
 };
