@@ -226,7 +226,7 @@ export function Map({
           <RangeInput
             value={opacity}
             onChange={event => onSetOpacity(event.target.value)}
-            min={0.1}
+            min={0}
             max={1}
             step={0.05}
           />
