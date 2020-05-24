@@ -11,22 +11,28 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import styled from 'styled-components';
-import { Button, Box, RangeInput } from 'grommet';
+import { Button, Box, RangeInput, CheckBox } from 'grommet';
 import L from 'leaflet';
 
 import {
   MAPBOX,
   GEOJSON,
+  LAYERS,
   GROUP_LAYER_PROPERTIES,
   GROUP_LAYER_OPTIONS,
 } from 'config';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
-import { selectLayers, selectBasemap, selectOpacity } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
-import { loadLayer, setOpacity, setBasemap } from './actions';
+import {
+  selectLayers,
+  selectBasemap,
+  selectOpacity,
+  selectCountry,
+} from './selectors';
+import { loadLayer, setOpacity, setBasemap, setCountry } from './actions';
 // import messages from './messages';
 
 const Styled = styled.div`
@@ -56,6 +62,7 @@ const MapSettings = styled(props => (
   background: rgba(255, 255, 255, 0.9);
 `;
 const OpacityControl = styled(props => <Box pad="small" {...props} />)``;
+const CountryControl = styled(props => <Box pad="small" {...props} />)``;
 
 // const StyledRangeInput = styled(RangeInput)``;
 
@@ -80,10 +87,12 @@ export function Map({
   fullscreen,
   layers,
   onLoadLayer,
-  opacity,
   basemap,
-  onSetOpacity,
   onSetBasemap,
+  opacity,
+  onSetOpacity,
+  country,
+  onSetCountry,
 }) {
   useInjectReducer({ key: 'map', reducer });
   useInjectSaga({ key: 'map', saga });
@@ -91,6 +100,7 @@ export function Map({
   const mapRef = useRef(null);
   const groupLayerGroupRef = useRef(null);
   const basemapLayerGroupRef = useRef(null);
+  const countryLayerGroupRef = useRef(null);
 
   // init map
   useEffect(() => {
@@ -98,8 +108,17 @@ export function Map({
       center: [30, 0],
       zoom: 1,
     });
+    // make sure group overlays are always rendered on top of basemap
+    mapRef.current.createPane('groupOverlay');
+    mapRef.current.getPane('groupOverlay').style.zIndex = 600;
+    mapRef.current.getPane('groupOverlay').style.pointerEvents = 'none';
+    // make sure country overlays are always rendered on top of basemap and groups
+    mapRef.current.createPane('countryOverlay');
+    mapRef.current.getPane('countryOverlay').style.zIndex = 650;
+    mapRef.current.getPane('countryOverlay').style.pointerEvents = 'none';
     basemapLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
     groupLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
+    countryLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
   }, []);
 
   // change basemap
@@ -113,9 +132,6 @@ export function Map({
           accessToken: MAPBOX.TOKEN,
         }),
       );
-      if (groupLayerGroupRef.current) {
-        groupLayerGroupRef.current.eachLayer(layer => layer.bringToFront());
-      }
     }
   }, [basemap]);
 
@@ -135,6 +151,39 @@ export function Map({
       });
     }
   }, [opacity]);
+
+  // change country
+  useEffect(() => {
+    if (countryLayerGroupRef.current) {
+      if (country && LAYERS.countries) {
+        if (LAYERS.countries.source === 'mapbox') {
+          if (LAYERS.countries.type === 'style') {
+            countryLayerGroupRef.current.addLayer(
+              L.tileLayer(MAPBOX.STYLE_URL_TEMPLATE, {
+                style_id: LAYERS.countries.style,
+                username: MAPBOX.USER,
+                accessToken: MAPBOX.TOKEN,
+                pane: 'countryOverlay',
+              }),
+            );
+          }
+          if (LAYERS.countries.type === 'raster') {
+            countryLayerGroupRef.current.addLayer(
+              L.tileLayer(MAPBOX.RASTER_URL_TEMPLATE, {
+                id: LAYERS.countries.tileset,
+                accessToken: MAPBOX.TOKEN,
+                tileSize: 256,
+                pane: 'countryOverlay',
+              }),
+            );
+          }
+          // TODO allow vector layer
+        }
+      } else {
+        countryLayerGroupRef.current.clearLayers();
+      }
+    }
+  }, [country]);
 
   // change full screen
   useEffect(() => {
@@ -170,9 +219,8 @@ export function Map({
           L.tileLayer(MAPBOX.RASTER_URL_TEMPLATE, {
             id: group.layer.tileset,
             accessToken: MAPBOX.TOKEN,
-            tileSize: 256,
-            noWrap: true,
             opacity,
+            pane: 'groupOverlay',
             ...GROUP_LAYER_OPTIONS.RASTER,
           }),
         );
@@ -192,6 +240,7 @@ export function Map({
       if (layers[group.id] && groupLayerGroupRef.current) {
         groupLayerGroupRef.current.addLayer(
           L.geoJSON(layers[group.id].data, {
+            pane: 'groupOverlay',
             style: feature => {
               const value = feature.properties[GEOJSON.PROPERTIES.OCCURRENCE];
               if (value) {
@@ -231,6 +280,13 @@ export function Map({
             step={0.05}
           />
         </OpacityControl>
+        <CountryControl>
+          <CheckBox
+            checked={country}
+            label="Countries"
+            onChange={() => onSetCountry(!country)}
+          />
+        </CountryControl>
         <BasemapToggle>
           <BasemapButton
             active={basemap === 'light'}
@@ -258,13 +314,16 @@ Map.propTypes = {
   onSetBasemap: PropTypes.func,
   basemap: PropTypes.string,
   onSetOpacity: PropTypes.func,
+  onSetCountry: PropTypes.func,
   opacity: PropTypes.number,
+  country: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({
   layers: state => selectLayers(state),
   opacity: state => selectOpacity(state),
   basemap: state => selectBasemap(state),
+  country: state => selectCountry(state),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -274,6 +333,7 @@ function mapDispatchToProps(dispatch) {
     },
     onSetBasemap: value => dispatch(setBasemap(value)),
     onSetOpacity: value => dispatch(setOpacity(value)),
+    onSetCountry: value => dispatch(setCountry(value)),
   };
 }
 

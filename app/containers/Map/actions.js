@@ -12,8 +12,15 @@ import {
   LAYER_READY,
   SET_BASEMAP,
   SET_OPACITY,
+  SET_COUNTRY,
 } from './constants';
 
+export function setCountry(value) {
+  return {
+    type: SET_COUNTRY,
+    value,
+  };
+}
 export function setBasemap(value) {
   return {
     type: SET_BASEMAP,

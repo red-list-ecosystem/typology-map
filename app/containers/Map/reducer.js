@@ -13,6 +13,7 @@ import {
   LAYER_LOAD_ERROR,
   SET_OPACITY,
   SET_BASEMAP,
+  SET_COUNTRY, // bool
 } from './constants';
 
 export const initialState = {
@@ -20,6 +21,7 @@ export const initialState = {
   layersRequested: {},
   layersReady: {},
   basemap: 'light',
+  country: false,
   opacity: GROUP_LAYER_OPTIONS.opacity,
 };
 
@@ -32,6 +34,9 @@ const mapReducer = (state = initialState, action) =>
         break;
       case SET_OPACITY:
         draft.opacity = action.value;
+        break;
+      case SET_COUNTRY:
+        draft.country = action.value; // bool
         break;
       case LAYER_REQUESTED:
         draft.layersRequested[action.key] = action.time;

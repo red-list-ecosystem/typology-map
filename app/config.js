@@ -71,7 +71,10 @@ export const GROUP_LAYER_OPTIONS = {
     stroke: false,
     weight: 0,
   },
-  RASTER: {},
+  RASTER: {
+    tileSize: 256,
+    noWrap: true,
+  },
 };
 
 export const MAPBOX = {
@@ -90,5 +93,13 @@ export const MAPBOX = {
 export const GEOJSON = {
   PROPERTIES: {
     OCCURRENCE: 'occurrence',
+  },
+};
+
+export const LAYERS = {
+  countries: {
+    source: 'mapbox',
+    type: 'style',
+    style: 'ckal0fn3y245s1jqe8np3kf1i',
   },
 };

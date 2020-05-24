@@ -54,7 +54,7 @@ export const colors = {
   white: '#ffffff',
   // active: '#ffffff',
   // brand: '#ffffff',
-  focus: '#ffffff',
+  focus: '#333333',
   // placeholder: '#ffffff',
   text: {
     dark: '#ffffff', // on dark background
@@ -64,7 +64,7 @@ export const colors = {
     dark: '#ffffff', // on dark background
     light: '#dddddd', // on light background
   },
-  // other custom colours (also udnerstood by grommet conmponents)
+  // other custom colours (also understood by grommet conmponents)
   // realms: {
   //   T: '',
   //   M: '',
@@ -158,6 +158,19 @@ const theme = {
       xxlarge: {},
     },
     spacing: '18px',
+    focus: {
+      // shadow or outline are required for accessibility
+      border: {
+        color: 'rgba(0, 0, 0, 0.7)',
+      },
+      // not effective?
+      outline: { color: 'red', size: '1px' },
+      // not effective?
+      shadow: {
+        color: 'rgb(255, 0, 0)',
+        size: '1px',
+      },
+    },
   },
   rangeInput: {
     thumb: {
@@ -166,6 +179,29 @@ const theme = {
     track: {
       color: colors.dark,
       //   height: '4px',
+    },
+  },
+  checkBox: {
+    size: '20px',
+    gap: 'xsmall',
+    // CHECKED: The stroke color for the CheckBox icon, and the border when checked.
+    color: 'black',
+    // HOVER
+    hover: {
+      border: {
+        color: 'black',
+      },
+    },
+    // UNCHECKED
+    border: {
+      // The border color when unchecked.
+      color: 'black',
+      // The border width when unchecked.
+      width: '1.5px',
+    },
+    check: {
+      radius: '4px',
+      thickness: '3px',
     },
   },
 };
