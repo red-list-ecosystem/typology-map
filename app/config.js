@@ -52,11 +52,13 @@ export const GROUP_LAYER_PROPERTIES = {
   OCCURRENCE: {
     1: {
       id: 'major',
-      color: 'rgb(255, 0, 0)',
+      // color: '#C10F02', // dark red
+      color: 'rgb(193, 15, 2)', // dark red
     },
     2: {
       id: 'minor',
-      color: 'rgb(255, 255, 0)',
+      // color: '#F79D96', // light red
+      color: 'rgb(247, 157, 150)',
     },
   },
 };
@@ -64,7 +66,7 @@ export const GROUP_LAYER_PROPERTIES = {
 // leaflet path options
 // https://leafletjs.com/reference-1.6.0.html#path-option
 export const GROUP_LAYER_OPTIONS = {
-  opacity: 0.75,
+  opacity: 0.8,
   VECTOR: {
     stroke: false,
     weight: 0,
