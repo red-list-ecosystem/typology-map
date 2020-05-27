@@ -198,11 +198,6 @@ export function Map({
 
   // change group
   useEffect(() => {
-    // reset view
-    if (mapRef) {
-      mapRef.current.setZoom(1);
-      mapRef.current.setView([30, 0]);
-    }
     // clear group layer
     if (groupLayerGroupRef) {
       groupLayerGroupRef.current.clearLayers();
