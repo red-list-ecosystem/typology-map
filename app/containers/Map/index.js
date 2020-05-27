@@ -119,6 +119,10 @@ export function Map({
     basemapLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
     groupLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
     countryLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
+
+    // mapRef.current.on('zoomend', event => {
+    //   console.log(mapRef.current.getZoom());
+    // });
   }, []);
 
   // change basemap

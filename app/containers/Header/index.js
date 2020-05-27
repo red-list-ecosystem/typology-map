@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -53,7 +53,10 @@ const NavPrimary = styled(props => <Box {...props} direction="row" />)`
   }
 `;
 const NavSecondary = styled(props => (
-  <Box {...props} direction="row" gap="small" />
+  <Box {...props} direction="row" gap="small" basis="1/2" />
+))``;
+const NavSearch = styled(props => (
+  <Box {...props} direction="row" gap="small" basis="1/2" align="center" />
 ))``;
 
 const Primary = styled(props => (
@@ -79,7 +82,7 @@ const Primary = styled(props => (
   }
 `;
 const Secondary = styled(props => <Button {...props} plain />)`
-  padding: 0 ${({ theme }) => theme.global.edgeSize.small};
+  padding: 0 ${({ theme, last }) => (last ? 0 : theme.global.edgeSize.small)};
   color: ${({ theme, active }) =>
     active ? '#dddddd' : theme.global.colors.white};
   &:hover {
@@ -92,6 +95,8 @@ const pagesArray = Object.keys(PAGES).map(key => ({
 }));
 
 function Header({ nav, navHome, navPage, path }) {
+  const [showSearch, setShowSearch] = useState(false);
+
   const paths = path.split('/');
   const contentType = paths[0] === '' ? paths[1] : paths[0];
   const contentId =
@@ -122,18 +127,26 @@ function Header({ nav, navHome, navPage, path }) {
           />
         ))}
       </NavPrimary>
-      <NavSecondary>
-        {pagesSecondary.map(p => (
-          <Secondary
-            key={p.key}
-            onClick={() => navPage(p.key)}
-            label={<FormattedMessage {...commonMessages[`page_${p.key}`]} />}
-            active={contentType === 'page' && contentId === p.key}
+      <Box fill="vertical" pad={{ horizontal: 'small' }}>
+        <NavSecondary justify="end">
+          {pagesSecondary.map((p, index) => (
+            <Secondary
+              key={p.key}
+              onClick={() => navPage(p.key)}
+              label={<FormattedMessage {...commonMessages[`page_${p.key}`]} />}
+              active={contentType === 'page' && contentId === p.key}
+              last={index === pagesSecondary.length - 1}
+            />
+          ))}
+          <LocaleToggle />
+        </NavSecondary>
+        <NavSearch onToggle justify="end">
+          <Search
+            expand={showSearch}
+            onToggle={() => setShowSearch(!showSearch)}
           />
-        ))}
-        <LocaleToggle />
-        <Search />
-      </NavSecondary>
+        </NavSearch>
+      </Box>
     </NavBar>
   );
 }

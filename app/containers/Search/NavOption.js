@@ -7,20 +7,21 @@ const OptionButton = React.forwardRef((props, ref) => (
 ));
 // prettier-ignore
 export default styled(OptionButton)`
-  border-top: 1px solid ${({ theme }) => theme.global.colors.border.light};
-  border-bottom: 1px solid transparent;
-  padding: 8px 12px;
-  position: relative;
-  background: transparent;
-  border-left: 4px solid
-    ${({ theme, active }) =>
-    active ? theme.global.colors.dark : 'transparent'};
+  padding: ${({ theme }) => theme.global.edgeSize.small};
+  border-top: 1px solid;
+  border-top-color: ${({ theme }) => theme.global.colors.border.light};
+  background: ${({ theme, active }) =>
+    active ? theme.global.colors['light-2'] : 'transparent'};
   &:last-child {
-    border-bottom: 1px solid ${({ theme }) => theme.global.colors.border.light};
+    border-bottom: 1px solid;
+    border-bottom-color: ${({ theme }) => theme.global.colors.border.light};
   }
   &:hover {
-    border-left: 4px solid ${({ theme }) => theme.global.colors.dark};
+    background: ${({ theme, active }) =>
+    active ? theme.global.colors['light-2'] : theme.global.colors['light-1']};
   }
+  /* &:hover {
+  } */
 `;
 // @media (min-width: ${({ theme }) => theme.breakpointsMin.medium}) {
 //   padding: 10px 16px 10px 12px;

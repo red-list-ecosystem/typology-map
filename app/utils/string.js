@@ -1,10 +1,8 @@
-import { toLower, deburr } from 'lodash/string';
+import { toLower } from 'lodash/string';
 import { reduce } from 'lodash/collection';
 
 export const lowerCase = str => toLower(str);
 export const upperCaseFirst = str => str.charAt(0).toUpperCase() + str.slice(1);
-
-export const cleanupSearchTarget = str => toLower(deburr(str));
 
 // match multiple words, incl substrings
 export const regExMultipleWords = str =>

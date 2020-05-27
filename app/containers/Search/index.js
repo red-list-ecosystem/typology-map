@@ -8,10 +8,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-// import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 
 // import { withTheme } from 'styled-components';
-import { Box, Button, Drop, Text } from 'grommet';
+import { Box, Button, Drop } from 'grommet';
 import { Close, Search as SearchIcon } from 'grommet-icons';
 
 import {
@@ -22,13 +22,12 @@ import {
 import { navigateTypology } from 'containers/App/actions';
 // import { isMinSize, isMaxSize } from 'utils/responsive';
 
-// import messages from './messages';
+import messages from './messages';
 import SearchResults from './SearchResults';
 import TextInput from './TextInput';
 import { prepTaxonomies } from './search';
 
 export function Search({
-  margin,
   stretch,
   expand,
   size = 'medium',
@@ -40,6 +39,8 @@ export function Search({
   biomes,
   realms,
   onNavigateTypology,
+  intl,
+  placeholder,
 }) {
   const [search, setSearch] = useState('');
   const [activeResult, setActiveResult] = useState(0);
@@ -56,88 +57,80 @@ export function Search({
   const filteredRealms = prepTaxonomies(realms, search);
   const filteredBiomes = prepTaxonomies(biomes, search);
   return (
-    <Box
-      margin={margin ? { horizontal: 'medium' } : null}
-      style={{ minWidth: expand ? '500px' : 0 }}
-    >
-      <Box
-        border={{
-          color: 'dark',
-          size: 'small',
-        }}
-        direction="row"
-        align="center"
-        round="xlarge"
-        ref={searchRef}
-        style={stretch ? null : { maxWidth: '500px' }}
-        height="50px"
-        pad={{ horizontal: 'ms' }}
-        margin={{ left: onToggle ? 'ms' : '0' }}
-        background="white"
-      >
-        {onToggle && !expand && (
-          <Button
+    <Box style={{ minWidth: !onToggle || expand ? '500px' : 0 }}>
+      {onToggle && !expand && (
+        <Button
+          plain
+          onClick={() => {
+            onToggle();
+            setActiveResult(0);
+          }}
+          reverse
+          icon={<SearchIcon size="xlarge" color="white" />}
+          style={{ textAlign: 'center' }}
+          gap="xsmall"
+        />
+      )}
+      {((onToggle && expand) || !onToggle) && (
+        <Box
+          direction="row"
+          align="center"
+          round="xxsmall"
+          ref={searchRef}
+          style={stretch ? null : { maxWidth: '500px' }}
+          pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}
+          margin={{ left: onToggle ? 'ms' : '0' }}
+          background="white"
+        >
+          <TextInput
             plain
-            onClick={() => {
-              onToggle();
-              setActiveResult(0);
+            value={search}
+            onChange={evt => {
+              if (evt && evt.target) {
+                setSearch(evt.target.value);
+                if (onSearch) onSearch(evt.target.value);
+                setActiveResult(0);
+              }
             }}
-            label={<Text weight={600}>Search</Text>}
-            reverse
-            icon={<SearchIcon size={size} color="dark" />}
-            style={{ textAlign: 'center' }}
-            gap="xsmall"
+            placeholder={
+              placeholder || intl.formatMessage(messages.placeholder)
+            }
+            ref={textInputRef}
           />
-        )}
-        {((onToggle && expand) || !onToggle) && (
-          <>
-            <TextInput
+          {!onToggle && search.length === 0 && (
+            <Box pad={{ right: 'xsmall' }}>
+              <SearchIcon size={size} color="dark" />
+            </Box>
+          )}
+          {(onToggle || search.length > 0) && (
+            <Button
               plain
-              value={search}
-              onChange={evt => {
-                if (evt && evt.target) {
-                  setSearch(evt.target.value);
-                  if (onSearch) onSearch(evt.target.value);
-                  setActiveResult(0);
-                }
+              fill="vertical"
+              onClick={() => {
+                setSearch('');
+                if (onSearch) onSearch('');
+                if (onToggle) onToggle();
+                setActiveResult(0);
               }}
-              placeholder="name or id"
-              ref={textInputRef}
+              icon={<Close size={size} color="dark" />}
+              style={{
+                textAlign: 'center',
+              }}
             />
-            {!onToggle && search.length === 0 && (
-              <Box pad={{ right: 'xsmall' }}>
-                <SearchIcon size={size} color="dark" />
-              </Box>
-            )}
-            {(onToggle || search.length > 0) && (
-              <Button
-                plain
-                fill="vertical"
-                onClick={() => {
-                  setSearch('');
-                  if (onSearch) onSearch('');
-                  if (onToggle) onToggle();
-                  setActiveResult(0);
-                }}
-                icon={<Close size={size} color="dark" />}
-                style={{
-                  textAlign: 'center',
-                  height: '50px',
-                }}
-              />
-            )}
-          </>
-        )}
-      </Box>
+          )}
+        </Box>
+      )}
       {drop && search.length > 0 && (
         <Drop
-          align={{ top: 'bottom', left: 'left' }}
+          align={{ top: 'bottom', right: 'right' }}
+          pad={{ top: 'xxsmall' }}
           target={searchRef.current}
           onClickOutside={() => {
             setSearch('');
             if (onSearch) onSearch('');
             setActiveResult(0);
           }}
+          plain
         >
           <SearchResults
             onClose={() => {
@@ -171,15 +164,16 @@ Search.propTypes = {
   onSearch: PropTypes.func,
   onToggle: PropTypes.func,
   onNavigateTypology: PropTypes.func,
-  margin: PropTypes.bool,
   stretch: PropTypes.bool,
   expand: PropTypes.bool,
   focus: PropTypes.bool,
   drop: PropTypes.bool,
   size: PropTypes.string,
+  placeholder: PropTypes.string,
   groups: PropTypes.array,
   realms: PropTypes.array,
   biomes: PropTypes.array,
+  intl: intlShape.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -199,4 +193,4 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-export default compose(withConnect)(Search);
+export default compose(withConnect)(injectIntl(Search));

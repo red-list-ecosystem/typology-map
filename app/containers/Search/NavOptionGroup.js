@@ -10,8 +10,8 @@ const NavOptionWrap = styled(Box)`
   padding-bottom: 30px;
 `;
 const StyledText = styled(Text)`
-  padding: 0 10px 0 16px;
-  margin-bottom: 2px;
+  padding: ${({ theme }) => theme.global.edgeSize.small};
+  padding-bottom: ${({ theme }) => theme.global.edgeSize.xxsmall};
 `;
 
 export function NavOptionGroup({
@@ -50,7 +50,7 @@ export function NavOptionGroup({
     <div>
       <NavOptionWrap>
         {label && (
-          <StyledText color="secondary" size="small">
+          <StyledText color="secondary" size="xsmall">
             {label}
           </StyledText>
         )}

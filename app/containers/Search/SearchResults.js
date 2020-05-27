@@ -1,9 +1,10 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Box } from 'grommet';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import { Box, Text } from 'grommet';
 
-// import rootMessages from 'messages';
-// import messages from './messages';
+import commonMessages from 'messages';
+import messages from './messages';
 
 import NavOptionGroup from './NavOptionGroup';
 
@@ -16,6 +17,8 @@ export function SearchResults({
   activeResult,
   setActiveResult,
   maxResult,
+  search,
+  intl,
 }) {
   const [focus, setFocus] = useState(false);
   const onKey = useCallback(
@@ -42,12 +45,17 @@ export function SearchResults({
       document.removeEventListener('keydown', onKey, false);
     };
   }, [activeResult, maxResult]);
-
+  const total = realms.length + biomes.length + groups.length;
   return (
-    <Box flex overflow="auto" pad={{ top: 'medium' }}>
+    <Box overflow="auto" elevation="small" background="white">
+      {total === 0 && search.length > 2 && (
+        <Text margin="small">
+          <FormattedMessage {...messages.noResults} />
+        </Text>
+      )}
       {realms.length > 0 && (
         <NavOptionGroup
-          label="Realms"
+          label={intl.formatMessage(commonMessages.realms)}
           options={realms}
           activeResult={activeResult}
           onClick={key => {
@@ -60,7 +68,7 @@ export function SearchResults({
       )}
       {biomes.length > 0 && (
         <NavOptionGroup
-          label="Biomes"
+          label={intl.formatMessage(commonMessages.biomes)}
           options={biomes}
           activeResult={activeResult - realms.length}
           onClick={key => {
@@ -73,7 +81,7 @@ export function SearchResults({
       )}
       {groups.length > 0 && (
         <NavOptionGroup
-          label="Groups"
+          label={intl.formatMessage(commonMessages.groups)}
           options={groups}
           activeResult={activeResult - realms.length - biomes.length}
           onClick={key => {
@@ -97,9 +105,10 @@ SearchResults.propTypes = {
   biomes: PropTypes.array,
   onClose: PropTypes.func,
   onSelect: PropTypes.func,
-  // search: PropTypes.string,
+  search: PropTypes.string,
   activeResult: PropTypes.number,
   maxResult: PropTypes.number,
+  intl: intlShape.isRequired,
 };
 
-export default SearchResults;
+export default injectIntl(SearchResults);
