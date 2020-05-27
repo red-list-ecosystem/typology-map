@@ -50,31 +50,43 @@ export const selectTypologyByKey = createSelector(
   selectTypology,
   (key, data) => data[key],
 );
+export const selectRealms = createSelector(
+  state => selectTypologyByKey(state, 'realms'),
+  data => data,
+);
+export const selectBiomes = createSelector(
+  state => selectTypologyByKey(state, 'biomes'),
+  data => data,
+);
+export const selectGroups = createSelector(
+  state => selectTypologyByKey(state, 'groups'),
+  data => data,
+);
 export const selectRealm = createSelector(
   (state, id) => id,
-  state => selectTypologyByKey(state, 'realms'),
+  selectRealms,
   (id, data) => data && data.find(d => d.id === id),
 );
 export const selectBiome = createSelector(
   (state, id) => id,
-  state => selectTypologyByKey(state, 'biomes'),
+  selectBiomes,
   (id, data) => data && data.find(d => d.id === id),
 );
 export const selectRealmForBiome = createSelector(
   selectBiome,
-  state => selectTypologyByKey(state, 'realms'),
+  selectRealms,
   (biome, data) => biome && data && data.find(d => d.id === biome.realm),
 );
 export const selectGroup = createSelector(
   (state, id) => id,
-  state => selectTypologyByKey(state, 'groups'),
+  selectGroups,
   (id, data) => data && data.find(d => d.id === id),
 );
 
 export const selectRealmsWithStats = createSelector(
-  state => selectTypologyByKey(state, 'realms'),
-  state => selectTypologyByKey(state, 'biomes'),
-  state => selectTypologyByKey(state, 'groups'),
+  selectRealms,
+  selectBiomes,
+  selectGroups,
   (realms, biomes, groups) => {
     if (!realms) return null;
     return realms
@@ -92,8 +104,8 @@ export const selectRealmsWithStats = createSelector(
 );
 export const selectBiomesForRealmWithStats = createSelector(
   (state, realmId) => realmId,
-  state => selectTypologyByKey(state, 'biomes'),
-  state => selectTypologyByKey(state, 'groups'),
+  selectBiomes,
+  selectGroups,
   (realmId, biomes, groups) => {
     if (!biomes) return null;
     return biomesForRealm(biomes, realmId).map(b => {
@@ -107,7 +119,7 @@ export const selectBiomesForRealmWithStats = createSelector(
 );
 export const selectGroupsForBiome = createSelector(
   (state, biomeId) => biomeId,
-  state => selectTypologyByKey(state, 'groups'),
+  selectGroups,
   (biomeId, groups) => {
     if (!groups) return null;
     return groupsForBiome(groups, biomeId);

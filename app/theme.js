@@ -175,6 +175,9 @@ const theme = {
         size: '1px',
       },
     },
+    drop: {
+      zIndex: 1000,
+    },
   },
   rangeInput: {
     thumb: {

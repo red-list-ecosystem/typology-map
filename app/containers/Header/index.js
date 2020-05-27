@@ -14,6 +14,7 @@ import { PRIMARY, SECONDARY } from 'containers/App/constants';
 import { PAGES } from 'config';
 
 import LocaleToggle from 'containers/LocaleToggle';
+import Search from 'containers/Search';
 
 import { getHeaderHeight } from 'utils/responsive';
 
@@ -131,6 +132,7 @@ function Header({ nav, navHome, navPage, path }) {
           />
         ))}
         <LocaleToggle />
+        <Search />
       </NavSecondary>
     </NavBar>
   );
