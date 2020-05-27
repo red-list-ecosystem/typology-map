@@ -16,7 +16,7 @@ import { ICONS } from 'config';
 const StyledBox = styled(props => (
   <Box direction="row" gap="xxsmall" align="center" {...props} />
 ))`
-  height: ${({ theme }) => theme.dimensions.realmIcons.single}px;
+  height: ${({ theme }) => theme.dimensions.realmIcons.single + 20}px;
 `;
 
 const IconImg = styled(Img)`

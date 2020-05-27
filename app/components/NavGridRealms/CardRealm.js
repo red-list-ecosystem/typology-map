@@ -41,7 +41,7 @@ export function CardRealm({ onCardClick, label, realm, icon, ...rest }) {
             horizontal: 'small',
           }}
         >
-          {icon}
+          <Box align="center">{icon}</Box>
           <h4>{label}</h4>
           <Box direction="row" gap="xsmall">
             <Text>{realm.biomeNo}</Text>
