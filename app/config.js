@@ -90,9 +90,9 @@ export const MAPBOX = {
     satellite: 'ckacdj3yp5pmb1iqky0khmlc8',
   },
   RASTER_URL_TEMPLATE:
-    'https://api.mapbox.com/v4/{id}/{z}/{x}/{y}.png64?access_token={accessToken}',
+    'https://api.mapbox.com/v4/{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}',
   STYLE_URL_TEMPLATE:
-    'https://api.mapbox.com/styles/v1/{username}/{style_id}/tiles/512/{z}/{x}/{y}?access_token={accessToken}',
+    'https://api.mapbox.com/styles/v1/{username}/{style_id}/tiles/256/{z}/{x}/{y}@2x?access_token={accessToken}',
 };
 
 export const GEOJSON = {
@@ -105,7 +105,7 @@ export const LAYERS = {
   countries: {
     source: 'mapbox',
     type: 'style',
-    style: 'ckal0fn3y245s1jqe8np3kf1i',
+    style: 'ckapdq83917dj1imw9jtqtjte',
   },
 };
 

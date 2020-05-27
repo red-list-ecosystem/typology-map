@@ -172,7 +172,6 @@ export function Map({
               L.tileLayer(MAPBOX.RASTER_URL_TEMPLATE, {
                 id: LAYERS.countries.tileset,
                 accessToken: MAPBOX.TOKEN,
-                tileSize: 256,
                 pane: 'countryOverlay',
               }),
             );
