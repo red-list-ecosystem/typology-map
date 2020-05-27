@@ -35,6 +35,7 @@ import AsideNavLabel from 'components/AsideNavLabel';
 import AsideNavTypologySelected from 'components/AsideNavTypologySelected';
 import AsideNavTypologyList from 'components/AsideNavTypologyList';
 import NavAncestor from 'components/NavAncestor';
+import IconRealm from 'components/IconRealm';
 
 import { isMinSize } from 'utils/responsive';
 
@@ -80,6 +81,7 @@ export function ExploreBiome({
                   level={1}
                   targets={[() => navRealm(typology.realm)]}
                 />
+                <IconRealm realmId={realm.id} />
                 <h1>{`${typology.id} ${typology.title[locale]}`}</h1>
                 {realm && (
                   <NavAncestor

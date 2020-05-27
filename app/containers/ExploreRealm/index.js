@@ -33,7 +33,7 @@ import AsideNavSection from 'components/AsideNavSection';
 import AsideNavLabel from 'components/AsideNavLabel';
 import AsideNavTypologySelected from 'components/AsideNavTypologySelected';
 import AsideNavTypologyList from 'components/AsideNavTypologyList';
-
+import IconRealm from 'components/IconRealm';
 import { isMinSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
@@ -65,6 +65,7 @@ export function ExploreRealm({
             <ColumnMain hasAside={isMinSize(size, 'large')}>
               <Box margin={{ horizontal: 'medium', vertical: 'medium' }}>
                 <Breadcrumb level={0} />
+                <IconRealm realmId={typology.id} />
                 <h1>{`${typology.id} ${typology.title[locale]}`}</h1>
                 {content && biomes && (
                   <>

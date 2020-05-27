@@ -42,6 +42,10 @@ export const dimensions = {
   aside: {
     width: [0, 0, 300, 400, 500],
   },
+  realmIcons: {
+    single: 68,
+    multi: 42,
+  },
 };
 
 export const colors = {

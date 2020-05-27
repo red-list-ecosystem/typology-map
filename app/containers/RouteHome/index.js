@@ -36,12 +36,14 @@ export function HomePage({ realms, navRealm, locale, intl }) {
         items={realms && realms.filter(r => r.type === 'core')}
         itemClick={id => navRealm(id)}
         locale={locale}
+        type="core"
       />
       <NavGridRealms
         label={intl.formatMessage(commonMessages.realmsTrans)}
         items={realms && realms.filter(r => r.type === 'trans')}
         itemClick={id => navRealm(id)}
         locale={locale}
+        type="trans"
       />
     </Styled>
   );

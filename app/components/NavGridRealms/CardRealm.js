@@ -20,7 +20,7 @@ const StyledButton = styled(Button)`
   }
 `;
 
-export function CardRealm({ onCardClick, label, realm, ...rest }) {
+export function CardRealm({ onCardClick, label, realm, icon, ...rest }) {
   return (
     <Box
       basis="1/4"
@@ -41,6 +41,7 @@ export function CardRealm({ onCardClick, label, realm, ...rest }) {
             horizontal: 'small',
           }}
         >
+          {icon}
           <h4>{label}</h4>
           <Box direction="row" gap="xsmall">
             <Text>{realm.biomeNo}</Text>
@@ -64,6 +65,7 @@ CardRealm.propTypes = {
   onCardClick: PropTypes.func,
   label: PropTypes.string,
   realm: PropTypes.object,
+  icon: PropTypes.node,
 };
 
 export default CardRealm;

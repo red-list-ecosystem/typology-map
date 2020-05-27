@@ -1,3 +1,8 @@
+import ICON_T from 'images/t.svg';
+import ICON_M from 'images/m.svg';
+import ICON_F from 'images/f.svg';
+import ICON_S from 'images/s.svg';
+
 import { PRIMARY, SECONDARY } from 'containers/App/constants';
 
 export const ROUTES = {
@@ -102,4 +107,17 @@ export const LAYERS = {
     type: 'style',
     style: 'ckal0fn3y245s1jqe8np3kf1i',
   },
+};
+
+export const ICONS = {
+  T: [ICON_T],
+  M: [ICON_M],
+  S: [ICON_S],
+  F: [ICON_F],
+  FM: [ICON_F, ICON_M],
+  MFT: [ICON_M, ICON_F, ICON_T],
+  MT: [ICON_M, ICON_T],
+  SF: [ICON_S, ICON_F],
+  SM: [ICON_S, ICON_M],
+  TF: [ICON_T, ICON_F],
 };
