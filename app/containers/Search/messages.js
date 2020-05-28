@@ -19,6 +19,6 @@ export default defineMessages({
   },
   placeholder: {
     id: `${scope}.placeholder`,
-    defaultMessage: 'Search typologies by name or id',
+    defaultMessage: 'Search typology by name or id',
   },
 });
