@@ -13,7 +13,7 @@ const regExMultipleWords = str =>
 
 // cleanup input string
 /* eslint-disable no-useless-escape */
-const invalid = /[°"§%()\[\]{}=\\?´`'#<>|,;.:+_]+/g;
+const invalid = /[°"§%()\[\]{}=\\?´`'#<>|;:+_]+/g;
 export const sanitise = str => str.replace(invalid, '');
 
 // cleanup search target
