@@ -25,7 +25,7 @@ import { navigateTypology } from 'containers/App/actions';
 import messages from './messages';
 import SearchResults from './SearchResults';
 import TextInput from './TextInput';
-import { prepTaxonomies } from './search';
+import { prepTaxonomies, sanitise } from './search';
 
 export function Search({
   stretch,
@@ -87,8 +87,8 @@ export function Search({
             value={search}
             onChange={evt => {
               if (evt && evt.target) {
-                setSearch(evt.target.value);
-                if (onSearch) onSearch(evt.target.value);
+                setSearch(sanitise(evt.target.value));
+                if (onSearch) onSearch(sanitise(evt.target.value));
                 setActiveResult(0);
               }
             }}
@@ -120,16 +120,11 @@ export function Search({
           )}
         </Box>
       )}
-      {drop && search.length > 0 && (
+      {drop && search.trim().length > 0 && (
         <Drop
           align={{ top: 'bottom', right: 'right' }}
           pad={{ top: 'xxsmall' }}
           target={searchRef.current}
-          onClickOutside={() => {
-            setSearch('');
-            if (onSearch) onSearch('');
-            setActiveResult(0);
-          }}
           plain
         >
           <SearchResults

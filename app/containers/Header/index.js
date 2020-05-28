@@ -140,7 +140,7 @@ function Header({ nav, navHome, navPage, path }) {
           ))}
           <LocaleToggle />
         </NavSecondary>
-        <NavSearch onToggle justify="end">
+        <NavSearch justify="end">
           <Search
             expand={showSearch}
             onToggle={() => setShowSearch(!showSearch)}

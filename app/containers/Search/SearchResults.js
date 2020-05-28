@@ -48,7 +48,7 @@ export function SearchResults({
   const total = realms.length + biomes.length + groups.length;
   return (
     <Box overflow="auto" elevation="small" background="white">
-      {total === 0 && search.length > 2 && (
+      {total === 0 && search.trim().length > 2 && (
         <Text margin="small">
           <FormattedMessage {...messages.noResults} />
         </Text>

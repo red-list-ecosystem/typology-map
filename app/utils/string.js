@@ -1,16 +1,7 @@
 import { toLower } from 'lodash/string';
-import { reduce } from 'lodash/collection';
 
 export const lowerCase = str => toLower(str);
 export const upperCaseFirst = str => str.charAt(0).toUpperCase() + str.slice(1);
-
-// match multiple words, incl substrings
-export const regExMultipleWords = str =>
-  reduce(str.split(' '), (words, s) => `${words}(?=.*${s})`, '');
-
-// match multiple words
-export const regExMultipleWordsMatchStart = str =>
-  reduce(str.split(' '), (words, s) => `${words}(?=.*\\b${s})`, '');
 
 export const truncateText = (text, limit = 6, keepWords = true) => {
   if (text.length > limit) {

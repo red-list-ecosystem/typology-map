@@ -46,6 +46,7 @@ export function NavOptionGroup({
       myRefs.current[activeResult].focus();
     }
   }, [options, activeResult, focus]);
+  /* eslint-disable react/no-danger */
   return (
     <div>
       <NavOptionWrap>
@@ -54,11 +55,10 @@ export function NavOptionGroup({
             {label}
           </StyledText>
         )}
-        {options.map((m, index) => (
+        {options.map((option, index) => (
           <NavOption
-            key={m.code}
-            onClick={() => onClick(m.code)}
-            special={m.special}
+            key={option.code}
+            onClick={() => onClick(option.code)}
             ref={el => {
               myRefs.current[index] = el;
             }}
@@ -72,12 +72,28 @@ export function NavOptionGroup({
               width="100%"
               gap="xsmall"
             >
-              <Box flex={{ shrink: 0 }} width="60px">
-                <Text>{m.code}</Text>
-              </Box>
-              <Box>
-                <Text>{m.label}</Text>
-              </Box>
+              {option.codeHTML && (
+                <Box flex={{ shrink: 0 }} width="60px">
+                  <span dangerouslySetInnerHTML={{ __html: option.codeHTML }} />
+                </Box>
+              )}
+              {!option.codeHTML && options.code && (
+                <Box flex={{ shrink: 0 }} width="60px">
+                  <Text>{option.code}</Text>
+                </Box>
+              )}
+              {!option.labelHTML && option.label && (
+                <Box>
+                  <Text>{option.label}</Text>
+                </Box>
+              )}
+              {option.labelHTML && (
+                <Box>
+                  <span
+                    dangerouslySetInnerHTML={{ __html: option.labelHTML }}
+                  />
+                </Box>
+              )}
             </Box>
           </NavOption>
         ))}

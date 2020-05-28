@@ -1,37 +1,74 @@
-import { toLower, deburr } from 'lodash/string';
+import { toLower, toUpper, deburr } from 'lodash/string';
+import { reduce } from 'lodash/collection';
 
-import { regExMultipleWords } from 'utils/string';
+import { startsWith } from 'utils/string';
+
+// match multiple words, incl substrings
+const regExMultipleWords = str =>
+  reduce(str.split(' '), (words, s) => `${words}(?=.*${s})`, '');
+
+// match multiple words
+// const regExMultipleWordsMatchStart = str =>
+//   reduce(str.split(' '), (words, s) => `${words}(?=.*\\b${s})`, '');
+
+// cleanup input string
 /* eslint-disable no-useless-escape */
-const invalid = /[°"§%()\[\]{}=\\?´`'#<>|,;.:+_-]+/g;
-const sanitise = str => str.replace(invalid, '');
-export const cleanupSearchTarget = str => toLower(deburr(sanitise(str)));
+const invalid = /[°"§%()\[\]{}=\\?´`'#<>|,;.:+_]+/g;
+export const sanitise = str => str.replace(invalid, '');
 
-const filterTaxonomy = (item, search, regex) => {
-  if (!search || search.length < 1) return true;
-  try {
-    return (
-      regex.test(item.code) ||
-      (search.length > 1 && regex.test(cleanupSearchTarget(item.label)))
-    );
-  } catch (e) {
-    return true;
+// cleanup search target
+export const cleanupSearchTarget = str => toLower(deburr(str));
+
+const filterTaxonomy = (item, search) => {
+  if (!search || search.trim().length < 1) return true;
+  if (startsWith(toLower(item.code), toLower(search))) return true;
+  if (search.trim().length > 1) {
+    try {
+      const regex = new RegExp(regExMultipleWords(search), 'i');
+      return regex.test(cleanupSearchTarget(item.label));
+    } catch (e) {
+      return true;
+    }
   }
+  return false;
 };
 
-export const prepTaxonomies = (items, search, locale) => {
-  const regex = new RegExp(regExMultipleWords(search), 'i');
-  return (
-    items &&
-    items
-      .map(item => ({
-        code: item.id,
-        label: item.title[locale || 'en'],
-      }))
-      .filter(item => filterTaxonomy(item, search, regex))
-      .sort((a, b) => {
-        if (a.code.length < b.code.length) return -1;
-        if (a.code.length === b.code.length && a.code < b.code) return -1;
-        return 1;
-      })
-  );
-};
+// make bold macthing substring
+const highlightCode = (str, search) =>
+  str.replace(toUpper(search), `<strong>${toUpper(search)}</strong>`);
+
+// make bold all matching substrings of all matching words
+const highlightLabel = (str, search) =>
+  reduce(
+    search.split(' '),
+    (highlighted, searchWord) => {
+      if (searchWord.length < 2) return highlighted;
+      const regex = new RegExp(searchWord, 'i');
+      return highlighted.replace(regex, s => `[${s}]`);
+    },
+    str,
+  )
+    .replace(/\[/g, '<strong>')
+    .replace(/\]/g, '</strong>');
+
+export const prepTaxonomies = (items, search, locale) =>
+  items &&
+  items
+    .map(item => ({
+      code: item.id,
+      label: item.title[locale || 'en'],
+    }))
+    .filter(item => filterTaxonomy(item, search))
+    .map(item => {
+      if (search.length === 0) return item;
+      return {
+        ...item,
+        codeHTML: highlightCode(item.code, search),
+        labelHTML: highlightLabel(item.label, search),
+      };
+    })
+    .sort((a, b) => {
+      if (a.code.length < b.code.length) return -1;
+      if (a.code.length === b.code.length && a.code < b.code) return -1;
+      return 1;
+    });
