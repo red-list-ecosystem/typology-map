@@ -23,6 +23,7 @@ export const CONTENT_REQUESTED = 'rle/App/CONTENT_REQUESTED';
 export const CONTENT_LOAD_ERROR = 'rle/App/CONTENT_LOAD_ERROR';
 export const CONTENT_LOAD_SUCCESS = 'rle/App/CONTENT_LOAD_SUCCESS';
 export const CONTENT_READY = 'rle/App/CONTENT_READY';
+export const DISMISS_DISCLAIMER = 'rle/App/DISMISS_DISCLAIMER';
 
 export const PRIMARY = 1;
 export const SECONDARY = 2;

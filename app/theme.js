@@ -57,7 +57,7 @@ export const colors = {
   dark: '#999999',
   white: '#ffffff',
   // active: '#ffffff',
-  // brand: '#ffffff',
+  brand: '#AD190F',
   focus: '#333333',
   // placeholder: '#ffffff',
   text: {
@@ -209,6 +209,11 @@ const theme = {
     check: {
       radius: '4px',
       thickness: '3px',
+    },
+  },
+  layer: {
+    overlay: {
+      background: 'rgba(0, 0, 0, 0.4)',
     },
   },
 };

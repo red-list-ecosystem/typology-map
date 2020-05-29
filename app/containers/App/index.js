@@ -13,6 +13,7 @@ import { Helmet } from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { createStructuredSelector } from 'reselect';
 import styled from 'styled-components';
 import { Grommet } from 'grommet';
 import theme from 'theme';
@@ -22,7 +23,12 @@ import { useInjectSaga } from 'utils/injectSaga';
 
 import reducer from 'containers/App/reducer';
 import saga from 'containers/App/saga';
-import { loadTypologyConfig } from 'containers/App/actions';
+import {
+  loadTypologyConfig,
+  dismissDisclaimer,
+  navigatePage,
+} from 'containers/App/actions';
+import { selectShowDisclaimer } from 'containers/App/selectors';
 
 import RouteHome from 'containers/RouteHome/Loadable';
 import RoutePage from 'containers/RoutePage/Loadable';
@@ -31,8 +37,9 @@ import RouteExplore from 'containers/RouteExplore/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import Header from 'containers/Header';
 import Footer from 'components/Footer';
+import Disclaimer from 'components/Disclaimer';
 
-import { ROUTES } from 'config';
+import { ROUTES, PAGES } from 'config';
 import GlobalStyle from 'global-styles';
 import { appLocales } from 'i18n';
 
@@ -41,7 +48,12 @@ const AppWrapper = styled.div`
   min-height: 100%;
 `;
 
-function App({ onLoadTypology }) {
+function App({
+  onLoadTypology,
+  showDisclaimer,
+  onDismissDisclaimer,
+  onNavigateAbout,
+}) {
   useInjectReducer({ key: 'global', reducer });
   useInjectSaga({ key: 'default', saga });
   // kick off loading of typology configuration files
@@ -89,6 +101,12 @@ function App({ onLoadTypology }) {
           />
           <Route path="" component={NotFoundPage} />
         </Switch>
+        {showDisclaimer && (
+          <Disclaimer
+            onDismiss={() => onDismissDisclaimer()}
+            onMore={() => onNavigateAbout()}
+          />
+        )}
         <Footer />
         <GlobalStyle />
       </AppWrapper>
@@ -105,7 +123,14 @@ function App({ onLoadTypology }) {
 
 App.propTypes = {
   onLoadTypology: PropTypes.func,
+  onDismissDisclaimer: PropTypes.func,
+  onNavigateAbout: PropTypes.func,
+  showDisclaimer: PropTypes.bool,
 };
+
+const mapStateToProps = createStructuredSelector({
+  showDisclaimer: state => selectShowDisclaimer(state),
+});
 
 export function mapDispatchToProps(dispatch) {
   return {
@@ -114,11 +139,13 @@ export function mapDispatchToProps(dispatch) {
       dispatch(loadTypologyConfig('biomes'));
       dispatch(loadTypologyConfig('groups'));
     },
+    onDismissDisclaimer: () => dispatch(dismissDisclaimer()),
+    onNavigateAbout: () => dispatch(navigatePage(PAGES.about.path)),
   };
 }
 
 const withConnect = connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
 );
 

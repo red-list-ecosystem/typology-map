@@ -17,6 +17,7 @@ import {
   CONTENT_REQUESTED,
   CONTENT_LOAD_SUCCESS,
   CONTENT_LOAD_ERROR,
+  DISMISS_DISCLAIMER,
 } from './constants';
 
 /* eslint-disable no-param-reassign */
@@ -64,6 +65,7 @@ export const initialState = {
   contentReady: Object.assign({}, initialContent),
   // // record error time
   // contentError: Object.assign({}, initialContent),
+  showDisclaimer: true,
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -106,6 +108,9 @@ const appReducer = (state = initialState, action) =>
           draft.contentRequested[action.contentType][action.key] = {
             [action.locale]: action.time,
           };
+        break;
+      case DISMISS_DISCLAIMER:
+        draft.showDisclaimer = false;
         break;
     }
   });

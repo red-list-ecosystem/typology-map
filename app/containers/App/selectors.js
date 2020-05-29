@@ -193,3 +193,8 @@ export const selectContentRequestedByKey = createSelector(
   selectContentRequestedByType,
   (key, locale, content) => content[key] && content[key][locale],
 );
+
+export const selectShowDisclaimer = createSelector(
+  selectGlobal,
+  global => global.showDisclaimer,
+);

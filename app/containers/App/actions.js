@@ -30,6 +30,7 @@ import {
   CONTENT_LOAD_SUCCESS,
   CONTENT_LOAD_ERROR,
   CONTENT_READY,
+  DISMISS_DISCLAIMER,
 } from './constants';
 
 export function setLocale(locale) {
@@ -164,5 +165,11 @@ export function setContentReady(contentType, key, locale, time) {
     time,
     contentType,
     locale,
+  };
+}
+
+export function dismissDisclaimer() {
+  return {
+    type: DISMISS_DISCLAIMER,
   };
 }
