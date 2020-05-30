@@ -241,10 +241,11 @@ export function Map({
             pane: 'groupOverlay',
             style: feature => {
               const value = feature.properties[GEOJSON.PROPERTIES.OCCURRENCE];
-              const defaultStyle =
+              const geometryType = feature.geometry.type;
+              const featureStyle =
                 GROUP_LAYER_OPTIONS.VECTOR[
-                  group.layer.geometryType === 'LineString' ||
-                  group.layer.geometryType === 'MultiLineString'
+                  geometryType === 'LineString' ||
+                  geometryType === 'MultiLineString'
                     ? 'line'
                     : 'area'
                 ];
@@ -254,14 +255,14 @@ export function Map({
                   GROUP_LAYER_PROPERTIES.OCCURRENCE[value].color;
                 if (color)
                   return {
-                    ...defaultStyle,
+                    ...featureStyle,
                     opacity,
                     fillOpacity: opacity,
                     color,
                   };
               }
               return {
-                ...defaultStyle,
+                ...featureStyle,
                 opacity,
                 fillOpacity: opacity,
               };
