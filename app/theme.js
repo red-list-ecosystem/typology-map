@@ -188,7 +188,7 @@ const theme = {
       },
     },
     drop: {
-      zIndex: 1100,
+      zIndex: 1200,
     },
   },
   rangeInput: {
