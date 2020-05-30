@@ -41,6 +41,7 @@ export const dimensions = {
     zIndex: 1200,
   },
   aside: {
+    // by breakpoint
     width: [0, 0, 350, 420, 550],
     zIndex: 1150,
   },
@@ -49,10 +50,13 @@ export const dimensions = {
     multi: 42,
   },
   topGraphic: {
+    // by breakpoint
     height: [300, 300, 350, 420, 550],
   },
   mainContent: {
     zIndex: 1100,
+    // by breakpoint
+    maxWidth: [700, 700, 700, 800, 900],
   },
 };
 

@@ -69,3 +69,9 @@ export const getTopGraphicHeight = size => {
     ? dimensions.topGraphic.height[bp.index]
     : dimensions.topGraphic.height[0];
 };
+export const getContentMaxWidth = size => {
+  const bp = sizes[size];
+  return bp && size
+    ? dimensions.mainContent.maxWidth[bp.index]
+    : dimensions.mainContent.maxWidth[0];
+};

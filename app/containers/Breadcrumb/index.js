@@ -23,11 +23,13 @@ const StyledButton = styled(props => <Button {...props} plain />)`
 
 const TextAncestor = styled(Text)``;
 const TextActive = styled(Text)``;
-const TextInactive = styled(props => <Text color="light-4" {...props} />)``;
+const TextInactive = styled(props => <Text color="dark-4" {...props} />)`
+  opacity: 0.8;
+`;
 
 function Breadcrumb({ targets, level, navExplore }) {
   return (
-    <Styled direction="row" wrap align="center">
+    <Styled direction="row" wrap align="center" gap="xsmall">
       <StyledButton
         onClick={() => navExplore()}
         label={
@@ -52,7 +54,7 @@ function Breadcrumb({ targets, level, navExplore }) {
           }
         />
       )}
-      <FormNext />
+      <FormNext color={level < 2 ? 'dark-4' : 'dark'} />
       {level < 1 && (
         <TextInactive>
           <FormattedMessage {...commonMessages.biome} />
@@ -73,7 +75,7 @@ function Breadcrumb({ targets, level, navExplore }) {
           }
         />
       )}
-      <FormNext />
+      <FormNext color={level < 2 ? 'dark-4' : 'dark'} />
       {level < 2 && (
         <TextInactive>
           <FormattedMessage {...commonMessages.group} />

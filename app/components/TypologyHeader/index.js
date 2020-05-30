@@ -22,6 +22,7 @@ function TypologyHeader({ typology, ancestors, locale }) {
       {ancestors &&
         ancestors.map(a => (
           <NavAncestor
+            key={a.id}
             type={a.typologyType}
             onClick={() => a.nav()}
             id={a.id}

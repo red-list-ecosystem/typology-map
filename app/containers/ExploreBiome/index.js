@@ -36,6 +36,7 @@ import AsideNavTypologySelected from 'components/AsideNavTypologySelected';
 import AsideNavTypologyList from 'components/AsideNavTypologyList';
 import TypologyHeader from 'components/TypologyHeader';
 import TypologyImage from 'components/TypologyImage';
+import TypologyContent from 'components/TypologyContent';
 
 import { isMinSize } from 'utils/responsive';
 
@@ -78,7 +79,7 @@ export function ExploreBiome({
             <ColumnMain hasAside={isMinSize(size, 'large')}>
               <TypologyImage typology={typology} locale={locale} />
               <ColumnMainContent>
-                <Box margin={{ horizontal: 'medium', vertical: 'medium' }}>
+                <TypologyContent>
                   <TypologyHeader
                     typology={typology}
                     locale={locale}
@@ -102,7 +103,7 @@ export function ExploreBiome({
                       />
                     </>
                   )}
-                </Box>
+                </TypologyContent>
               </ColumnMainContent>
             </ColumnMain>
             {isMinSize(size, 'large') && (
