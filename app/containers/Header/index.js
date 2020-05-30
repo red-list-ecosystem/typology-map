@@ -35,6 +35,9 @@ const Brand = styled(props => <Button {...props} plain color="white" />)`
   @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
     height: ${getHeaderHeight('xlarge')}px;
   }
+  @media (min-width: ${({ theme }) => theme.sizes.xxlarge.minpx}) {
+    height: ${getHeaderHeight('xxlarge')}px;
+  }
   &:hover {
     background: #666666;
   }
@@ -50,6 +53,9 @@ const NavPrimary = styled(props => <Box {...props} direction="row" />)`
   }
   @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
     height: ${getHeaderHeight('xlarge')}px;
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.xxlarge.minpx}) {
+    height: ${getHeaderHeight('xxlarge')}px;
   }
 `;
 const NavSecondary = styled(props => (
@@ -73,6 +79,9 @@ const Primary = styled(props => (
   }
   @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
     height: ${getHeaderHeight('xlarge')}px;
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.xxlarge.minpx}) {
+    height: ${getHeaderHeight('xxlarge')}px;
   }
   padding: 0 ${({ theme }) => theme.global.edgeSize.small};
   background: ${({ active }) => (active ? '#108314' : 'transparent')};

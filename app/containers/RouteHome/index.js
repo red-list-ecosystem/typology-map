@@ -17,6 +17,7 @@ import { selectRealmsWithStats, selectLocale } from 'containers/App/selectors';
 import { navigateTypology } from 'containers/App/actions';
 
 import NavGridRealms from 'components/NavGridRealms';
+import Footer from 'components/Footer';
 
 import commonMessages from 'messages';
 
@@ -45,6 +46,7 @@ export function HomePage({ realms, navRealm, locale, intl }) {
         locale={locale}
         type="trans"
       />
+      <Footer />
     </Styled>
   );
 }

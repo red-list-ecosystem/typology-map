@@ -123,7 +123,17 @@ export function Map({
     // mapRef.current.on('zoomend', event => {
     //   console.log(mapRef.current.getZoom());
     // });
+
+    mapRef.current.scrollWheelZoom.disable();
   }, []);
+
+  useEffect(() => {
+    if (fullscreen) {
+      mapRef.current.scrollWheelZoom.enable();
+    } else {
+      mapRef.current.scrollWheelZoom.disable();
+    }
+  }, [fullscreen]);
 
   // change basemap
   useEffect(() => {

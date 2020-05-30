@@ -25,15 +25,17 @@ import {
 } from 'containers/App/actions';
 
 import ColumnMain from 'components/ColumnMain';
+import ColumnMainContent from 'components/ColumnMainContent';
 import ColumnAside from 'components/ColumnAside';
-import Breadcrumb from 'components/Breadcrumb';
 import NavGridChildren from 'components/NavGridChildren';
 import HTMLWrapper from 'components/HTMLWrapper';
 import AsideNavSection from 'components/AsideNavSection';
 import AsideNavLabel from 'components/AsideNavLabel';
 import AsideNavTypologySelected from 'components/AsideNavTypologySelected';
 import AsideNavTypologyList from 'components/AsideNavTypologyList';
-import IconRealm from 'components/IconRealm';
+import TypologyHeader from 'components/TypologyHeader';
+import TypologyImage from 'components/TypologyImage';
+
 import { isMinSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
@@ -63,23 +65,24 @@ export function ExploreRealm({
           </Helmet>
           <Box direction="row" fill="horizontal">
             <ColumnMain hasAside={isMinSize(size, 'large')}>
-              <Box margin={{ horizontal: 'medium', vertical: 'medium' }}>
-                <Breadcrumb level={0} />
-                <IconRealm realmId={typology.id} />
-                <h1>{`${typology.id} ${typology.title[locale]}`}</h1>
-                {content && biomes && (
-                  <>
-                    <HTMLWrapper innerhtml={content} />
-                    <NavGridChildren
-                      items={sortedBiomes}
-                      type="biomes"
-                      itemClick={id => navBiome(id)}
-                      locale={locale}
-                      parent={typology}
-                    />
-                  </>
-                )}
-              </Box>
+              <TypologyImage typology={typology} locale={locale} />
+              <ColumnMainContent>
+                <Box margin={{ horizontal: 'medium', vertical: 'medium' }}>
+                  <TypologyHeader typology={typology} locale={locale} />
+                  {content && biomes && (
+                    <>
+                      <HTMLWrapper innerhtml={content} />
+                      <NavGridChildren
+                        items={sortedBiomes}
+                        type="biomes"
+                        itemClick={id => navBiome(id)}
+                        locale={locale}
+                        parent={typology}
+                      />
+                    </>
+                  )}
+                </Box>
+              </ColumnMainContent>
             </ColumnMain>
             {isMinSize(size, 'large') && (
               <ColumnAside>

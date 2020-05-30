@@ -62,3 +62,10 @@ export const getAsideWidth = size => {
     ? dimensions.aside.width[bp.index]
     : dimensions.aside.width[0];
 };
+
+export const getTopGraphicHeight = size => {
+  const bp = sizes[size];
+  return bp && size
+    ? dimensions.topGraphic.height[bp.index]
+    : dimensions.topGraphic.height[0];
+};

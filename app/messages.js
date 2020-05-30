@@ -92,4 +92,8 @@ export default defineMessages({
     id: `${scope}.page_glossary`,
     defaultMessage: 'Glossary',
   },
+  imageCreditBy: {
+    id: `${scope}.imageCreditBy`,
+    defaultMessage: 'Image by: ',
+  },
 });

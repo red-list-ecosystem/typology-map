@@ -26,16 +26,16 @@ import {
 } from 'containers/App/actions';
 
 import ColumnMain from 'components/ColumnMain';
+import ColumnMainContent from 'components/ColumnMainContent';
 import ColumnAside from 'components/ColumnAside';
-import Breadcrumb from 'components/Breadcrumb';
 import NavGridChildren from 'components/NavGridChildren';
 import HTMLWrapper from 'components/HTMLWrapper';
 import AsideNavSection from 'components/AsideNavSection';
 import AsideNavLabel from 'components/AsideNavLabel';
 import AsideNavTypologySelected from 'components/AsideNavTypologySelected';
 import AsideNavTypologyList from 'components/AsideNavTypologyList';
-import NavAncestor from 'components/NavAncestor';
-import IconRealm from 'components/IconRealm';
+import TypologyHeader from 'components/TypologyHeader';
+import TypologyImage from 'components/TypologyImage';
 
 import { isMinSize } from 'utils/responsive';
 
@@ -76,34 +76,34 @@ export function ExploreBiome({
           </Helmet>
           <Box direction="row" fill="horizontal">
             <ColumnMain hasAside={isMinSize(size, 'large')}>
-              <Box margin={{ horizontal: 'medium', vertical: 'medium' }}>
-                <Breadcrumb
-                  level={1}
-                  targets={[() => navRealm(typology.realm)]}
-                />
-                <IconRealm realmId={realm.id} />
-                <h1>{`${typology.id} ${typology.title[locale]}`}</h1>
-                {realm && (
-                  <NavAncestor
-                    type="realm"
-                    onClick={() => navRealm(typology.realm)}
-                    id={realm.id}
-                    name={realm.title[locale]}
+              <TypologyImage typology={typology} locale={locale} />
+              <ColumnMainContent>
+                <Box margin={{ horizontal: 'medium', vertical: 'medium' }}>
+                  <TypologyHeader
+                    typology={typology}
+                    locale={locale}
+                    ancestors={[
+                      {
+                        ...realm,
+                        typologyType: 'realm',
+                        nav: () => navRealm(realm.id),
+                      },
+                    ]}
                   />
-                )}
-                {content && groups && (
-                  <>
-                    <HTMLWrapper innerhtml={content} />
-                    <NavGridChildren
-                      items={sortedGroups}
-                      type="groups"
-                      itemClick={id => navGroup(id)}
-                      locale={locale}
-                      parent={typology}
-                    />
-                  </>
-                )}
-              </Box>
+                  {content && groups && (
+                    <>
+                      <HTMLWrapper innerhtml={content} />
+                      <NavGridChildren
+                        items={sortedGroups}
+                        type="groups"
+                        itemClick={id => navGroup(id)}
+                        locale={locale}
+                        parent={typology}
+                      />
+                    </>
+                  )}
+                </Box>
+              </ColumnMainContent>
             </ColumnMain>
             {isMinSize(size, 'large') && (
               <ColumnAside>

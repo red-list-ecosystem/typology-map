@@ -38,13 +38,21 @@ export const dimensions = {
   header: {
     // by breakpoint
     height: [50, 50, 95, 95, 95],
+    zIndex: 1200,
   },
   aside: {
-    width: [0, 0, 300, 400, 500],
+    width: [0, 0, 350, 420, 550],
+    zIndex: 1150,
   },
   realmIcons: {
     single: 68,
     multi: 42,
+  },
+  topGraphic: {
+    height: [300, 300, 350, 420, 550],
+  },
+  mainContent: {
+    zIndex: 1100,
   },
 };
 
@@ -176,7 +184,7 @@ const theme = {
       },
     },
     drop: {
-      zIndex: 1000,
+      zIndex: 1100,
     },
   },
   rangeInput: {
@@ -215,7 +223,7 @@ const theme = {
     overlay: {
       background: 'rgba(0, 0, 0, 0.5)',
     },
-    zIndex: 500,
+    zIndex: 1300,
   },
 };
 

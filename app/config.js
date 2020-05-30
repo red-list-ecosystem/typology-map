@@ -15,6 +15,8 @@ export const ROUTES = {
 export const PATHS = {
   DATA: 'https://red-list-ecosystem.github.io/typology-map-data/data',
   CONTENT: 'https://red-list-ecosystem.github.io/typology-map-content',
+  IMAGES:
+    'https://red-list-ecosystem.github.io/typology-map-content/assets/uploads',
 };
 
 export const TYPOLOGY = {

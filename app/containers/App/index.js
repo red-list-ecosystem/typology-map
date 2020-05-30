@@ -36,16 +36,35 @@ import RouteExploreOverview from 'containers/RouteExploreOverview/Loadable';
 import RouteExplore from 'containers/RouteExplore/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import Header from 'containers/Header';
-import Footer from 'components/Footer';
 import Disclaimer from 'components/Disclaimer';
+import { getHeaderHeight } from 'utils/responsive';
 
 import { ROUTES, PAGES } from 'config';
 import GlobalStyle from 'global-styles';
 import { appLocales } from 'i18n';
 
+import ScrollToTop from './ScrollToTop';
+
 const AppWrapper = styled.div`
   width: 100%;
   min-height: 100%;
+`;
+
+const Content = styled.div`
+  position: relative;
+  padding-top: ${getHeaderHeight('small')}px;
+  @media (min-width: ${props => props.theme.sizes.medium.minpx}) {
+    padding-top: ${getHeaderHeight('medium')}px;
+  }
+  @media (min-width: ${props => props.theme.sizes.large.minpx}) {
+    padding-top: ${getHeaderHeight('large')}px;
+  }
+  @media (min-width: ${props => props.theme.sizes.xlarge.minpx}) {
+    padding-top: ${getHeaderHeight('xlarge')}px;
+  }
+  @media (min-width: ${props => props.theme.sizes.xxlarge.minpx}) {
+    padding-top: ${getHeaderHeight('xxlarge')}px;
+  }
 `;
 
 function App({
@@ -69,45 +88,50 @@ function App({
         >
           <meta name="description" content="" />
         </Helmet>
-        <Header />
-        <Switch>
-          <Route
-            exact
-            path={[`/${ROUTES.HOME}`, `/:locale(${appLocales.join('|')})`]}
-            component={RouteHome}
-          />
-          <Route
-            exact
-            path={[
-              `/${ROUTES.EXPLORE}`,
-              `/:locale(${appLocales.join('|')})/${ROUTES.EXPLORE}`,
-            ]}
-            component={RouteExploreOverview}
-          />
-          <Route
-            exact
-            path={[
-              `/${ROUTES.EXPLORE}/:level/:id`,
-              `/:locale(${appLocales.join('|')})/${ROUTES.EXPLORE}/:level/:id`,
-            ]}
-            component={RouteExplore}
-          />
-          <Route
-            path={[
-              `/${ROUTES.PAGE}/:id`,
-              `/:locale(${appLocales.join('|')})/${ROUTES.PAGE}/:id`,
-            ]}
-            component={RoutePage}
-          />
-          <Route path="" component={NotFoundPage} />
-        </Switch>
         {showDisclaimer && (
           <Disclaimer
             onDismiss={() => onDismissDisclaimer()}
             onMore={() => onNavigateAbout()}
           />
         )}
-        <Footer />
+        <Header />
+        <Content>
+          <ScrollToTop>
+            <Switch>
+              <Route
+                exact
+                path={[`/${ROUTES.HOME}`, `/:locale(${appLocales.join('|')})`]}
+                component={RouteHome}
+              />
+              <Route
+                exact
+                path={[
+                  `/${ROUTES.EXPLORE}`,
+                  `/:locale(${appLocales.join('|')})/${ROUTES.EXPLORE}`,
+                ]}
+                component={RouteExploreOverview}
+              />
+              <Route
+                exact
+                path={[
+                  `/${ROUTES.EXPLORE}/:level/:id`,
+                  `/:locale(${appLocales.join('|')})/${
+                    ROUTES.EXPLORE
+                  }/:level/:id`,
+                ]}
+                component={RouteExplore}
+              />
+              <Route
+                path={[
+                  `/${ROUTES.PAGE}/:id`,
+                  `/:locale(${appLocales.join('|')})/${ROUTES.PAGE}/:id`,
+                ]}
+                component={RoutePage}
+              />
+              <Route path="" component={NotFoundPage} />
+            </Switch>
+          </ScrollToTop>
+        </Content>
         <GlobalStyle />
       </AppWrapper>
     </Grommet>
