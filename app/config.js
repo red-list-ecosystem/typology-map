@@ -73,8 +73,14 @@ export const GROUP_LAYER_PROPERTIES = {
 export const GROUP_LAYER_OPTIONS = {
   opacity: 0.8,
   VECTOR: {
-    stroke: false,
-    weight: 0,
+    area: {
+      stroke: false,
+      weight: 0,
+    },
+    line: {
+      stroke: true,
+      weight: 1.5,
+    },
   },
   RASTER: {
     tileSize: 256,

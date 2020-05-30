@@ -241,20 +241,27 @@ export function Map({
             pane: 'groupOverlay',
             style: feature => {
               const value = feature.properties[GEOJSON.PROPERTIES.OCCURRENCE];
+              const defaultStyle =
+                GROUP_LAYER_OPTIONS.VECTOR[
+                  group.layer.geometryType === 'LineString' ||
+                  group.layer.geometryType === 'MultiLineString'
+                    ? 'line'
+                    : 'area'
+                ];
               if (value) {
                 const color =
                   GROUP_LAYER_PROPERTIES.OCCURRENCE[value] &&
                   GROUP_LAYER_PROPERTIES.OCCURRENCE[value].color;
                 if (color)
                   return {
-                    ...GROUP_LAYER_OPTIONS.VECTOR,
+                    ...defaultStyle,
                     opacity,
                     fillOpacity: opacity,
                     color,
                   };
               }
               return {
-                ...GROUP_LAYER_OPTIONS.VECTOR,
+                ...defaultStyle,
                 opacity,
                 fillOpacity: opacity,
               };
