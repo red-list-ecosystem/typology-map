@@ -96,4 +96,8 @@ export default defineMessages({
     id: `${scope}.imageCreditBy`,
     defaultMessage: 'Image by: ',
   },
+  imageCreditHome: {
+    id: `${scope}.imageCreditHome`,
+    defaultMessage: 'Shifaaz Shamoon on Unsplash',
+  },
 });

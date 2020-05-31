@@ -39,6 +39,7 @@ export const dimensions = {
     // by breakpoint
     height: [50, 50, 95, 95, 95],
     zIndex: 1200,
+    primaryIcons: 40,
   },
   aside: {
     // by breakpoint
@@ -71,6 +72,7 @@ export const colors = {
   // active: '#ffffff',
   brand: '#AD190F',
   focus: '#333333',
+  hover: '#AD190F',
   // placeholder: '#ffffff',
   text: {
     dark: '#ffffff', // on dark background

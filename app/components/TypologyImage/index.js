@@ -6,34 +6,11 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
-import styled from 'styled-components';
-import { Box, Image } from 'grommet';
+import { Image } from 'grommet';
 
 import TopGraphic from 'components/TopGraphic';
+import ImageInfo from 'components/ImageInfo';
 import { PATHS } from 'config';
-
-import commonMessages from 'messages';
-
-const Info = styled(Box)`
-  position: absolute;
-  right: 0;
-  bottom: 0;
-`;
-
-const Caption = styled.div`
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  padding: 0px 5px;
-  text-transform: uppercase;
-  font-weight: 600;
-  font-size: 12px;
-`;
-
-const Credit = styled(Caption)`
-  text-transform: none;
-  padding: 0px 4px;
-`;
 
 const mapVerticalAlignment = align => {
   switch (align) {
@@ -64,17 +41,10 @@ function TypologyImage({ typology, locale }) {
             }
           />
           {(typology.image.credit || typology.image.caption) && (
-            <Info align="end">
-              {typology.image.caption && (
-                <Caption>{typology.image.caption[locale]}</Caption>
-              )}
-              {typology.image.caption && (
-                <Credit>
-                  <FormattedMessage {...commonMessages.imageCreditBy} />
-                  {typology.image.credit[locale]}
-                </Credit>
-              )}
-            </Info>
+            <ImageInfo
+              caption={typology.image.caption && typology.image.caption[locale]}
+              credit={typology.image.credit && typology.image.credit[locale]}
+            />
           )}
         </>
       )}

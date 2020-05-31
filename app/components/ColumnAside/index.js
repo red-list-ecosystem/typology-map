@@ -36,6 +36,7 @@ function ColumnAside({ children, ...other }) {
           direction="column"
           flex={{ shrink: 0 }}
           elevation="medium"
+          background="white"
           {...other}
         >
           {children}

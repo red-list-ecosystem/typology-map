@@ -2,6 +2,11 @@ import ICON_T from 'images/t.svg';
 import ICON_M from 'images/m.svg';
 import ICON_F from 'images/f.svg';
 import ICON_S from 'images/s.svg';
+import ICON_TYPOLOGY from 'images/typology.svg';
+import ICON_X from 'images/explore.svg';
+import ICON_X0 from 'images/explore_0.svg';
+import ICON_X1 from 'images/explore_1.svg';
+import ICON_X2 from 'images/explore_2.svg';
 
 import { PRIMARY, SECONDARY } from 'containers/App/constants';
 
@@ -38,6 +43,7 @@ export const PAGES = {
   typology: {
     path: 'typology',
     nav: PRIMARY,
+    icon: ICON_TYPOLOGY,
   },
   about: {
     path: 'about',
@@ -128,4 +134,8 @@ export const ICONS = {
   SF: [ICON_S, ICON_F],
   SM: [ICON_S, ICON_M],
   TF: [ICON_T, ICON_F],
+  EXPLORE: ICON_X,
+  EXPLORE_0: ICON_X0,
+  EXPLORE_1: ICON_X1,
+  EXPLORE_2: ICON_X2,
 };

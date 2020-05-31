@@ -6,13 +6,14 @@ import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
 import { filter } from 'lodash/collection';
 import styled from 'styled-components';
 
-import { Button, Box } from 'grommet';
+import { Button, Box, Text } from 'grommet';
 
 import { selectRouterPath } from 'containers/App/selectors';
 import { navigate, navigateHome, navigatePage } from 'containers/App/actions';
 import { PRIMARY, SECONDARY } from 'containers/App/constants';
-import { PAGES } from 'config';
+import { PAGES, ICONS } from 'config';
 
+import Img from 'components/Img';
 import LocaleToggle from 'containers/LocaleToggle';
 import Search from 'containers/Search';
 
@@ -24,6 +25,7 @@ import NavBar from './NavBar';
 
 const Brand = styled(props => <Button {...props} plain color="white" />)`
   /* responsive height */
+  padding: 0 ${({ theme }) => theme.global.edgeSize.xsmall};
   height: ${getHeaderHeight('small')}px;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
     height: ${getHeaderHeight('medium')}px;
@@ -31,6 +33,7 @@ const Brand = styled(props => <Button {...props} plain color="white" />)`
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     height: ${getHeaderHeight('large')}px;
     width: ${getHeaderHeight('large')}px;
+    margin-right: ${getHeaderHeight('large')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
     height: ${getHeaderHeight('xlarge')}px;
@@ -39,7 +42,7 @@ const Brand = styled(props => <Button {...props} plain color="white" />)`
     height: ${getHeaderHeight('xxlarge')}px;
   }
   &:hover {
-    background: #666666;
+    background: ${({ theme }) => theme.global.colors.brand};
   }
 `;
 
@@ -66,7 +69,12 @@ const NavSearch = styled(props => (
 ))``;
 
 const Primary = styled(props => (
-  <Button {...props} plain pad={{ horizontal: 'small' }} />
+  <Button
+    {...props}
+    plain
+    pad={{ horizontal: 'small' }}
+    margin={{ horizontal: 'hair' }}
+  />
 ))`
   text-align: center;
   height: ${getHeaderHeight('small')}px;
@@ -84,20 +92,40 @@ const Primary = styled(props => (
     height: ${getHeaderHeight('xxlarge')}px;
   }
   padding: 0 ${({ theme }) => theme.global.edgeSize.small};
-  background: ${({ active }) => (active ? '#108314' : 'transparent')};
+  background: ${({ theme, active }) =>
+    active ? theme.global.colors.brand : 'transparent'};
   color: ${({ theme }) => theme.global.colors.white};
   &:hover {
-    background: #108314;
+    background: ${({ theme }) => theme.global.colors.brand};
   }
 `;
 const Secondary = styled(props => <Button {...props} plain />)`
-  padding: 0 ${({ theme, last }) => (last ? 0 : theme.global.edgeSize.small)};
-  color: ${({ theme, active }) =>
-    active ? '#dddddd' : theme.global.colors.white};
+  padding: 0 ${({ theme }) => theme.global.edgeSize.small};
+  padding-right: ${({ theme, last }) =>
+    last ? 0 : theme.global.edgeSize.small};
+  color: ${({ theme }) => theme.global.colors.white};
+  text-decoration: ${({ active }) => (active ? 'underline' : 'none')};
+  background: transparent;
   &:hover {
-    color: #dddddd;
+    text-decoration: underline;
   }
 `;
+
+const IconImg = styled(Img)`
+  vertical-align: middle;
+`;
+const IconImgHelper = styled.div`
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+`;
+const IconImgWrap = styled.div`
+  height: ${({ theme }) => theme.dimensions.header.primaryIcons}px;
+`;
+const PrimaryLabel = styled(props => (
+  <Box {...props} justify="center" gap="xsmall" fill />
+))``;
+
 const pagesArray = Object.keys(PAGES).map(key => ({
   key,
   ...PAGES[key],
@@ -124,19 +152,43 @@ function Header({ nav, navHome, navPage, path }) {
       <NavPrimary>
         <Primary
           onClick={() => nav('explore')}
-          label={<FormattedMessage {...commonMessages.navExplore} />}
+          label={
+            <PrimaryLabel>
+              <IconImgWrap>
+                <IconImgHelper />
+                <IconImg src={ICONS.EXPLORE} alt="" />
+              </IconImgWrap>
+              <Text>
+                <FormattedMessage {...commonMessages.navExplore} />
+              </Text>
+            </PrimaryLabel>
+          }
           active={contentType === 'explore'}
         />
         {pagesPrimary.map(p => (
           <Primary
             key={p.key}
             onClick={() => navPage(p.key)}
-            label={<FormattedMessage {...commonMessages[`page_${p.key}`]} />}
+            label={
+              <PrimaryLabel>
+                <IconImgWrap>
+                  <IconImgHelper />
+                  <IconImg src={p.icon} alt="" />
+                </IconImgWrap>
+                <Text>
+                  <FormattedMessage {...commonMessages[`page_${p.key}`]} />
+                </Text>
+              </PrimaryLabel>
+            }
             active={contentType === 'page' && contentId === p.key}
           />
         ))}
       </NavPrimary>
-      <Box fill="vertical" pad={{ horizontal: 'small' }}>
+      <Box
+        fill="vertical"
+        pad={{ horizontal: 'small' }}
+        margin={{ left: 'auto' }}
+      >
         <NavSecondary justify="end">
           {pagesSecondary.map((p, index) => (
             <Secondary

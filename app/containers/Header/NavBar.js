@@ -3,7 +3,14 @@ import styled from 'styled-components';
 import { Header } from 'grommet';
 import { getHeaderHeight } from 'utils/responsive';
 
-export default styled(props => <Header {...props} align="start" />)`
+export default styled(props => (
+  <Header
+    {...props}
+    align="start"
+    justify="start"
+    pad={{ horizontal: 'medium' }}
+  />
+))`
   position: fixed;
   top: 0;
   left: 0;

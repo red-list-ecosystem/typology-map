@@ -40,6 +40,7 @@ import AsideNavTypologySelected from 'components/AsideNavTypologySelected';
 import AsideNavTypologyList from 'components/AsideNavTypologyList';
 import TopGraphic from 'components/TopGraphic';
 import TypologyHeader from 'components/TypologyHeader';
+import TypologyContent from 'components/TypologyContent';
 
 import { isMinSize, getHeaderHeight } from 'utils/responsive';
 
@@ -132,7 +133,7 @@ export function ExploreGroup({
               </MapWrapper>
               {!isMapExpanded && (
                 <ColumnMainContent>
-                  <Box margin={{ horizontal: 'medium', vertical: 'medium' }}>
+                  <TypologyContent>
                     <TypologyHeader
                       typology={typology}
                       locale={locale}
@@ -150,7 +151,7 @@ export function ExploreGroup({
                       ]}
                     />
                     {content && <HTMLWrapper innerhtml={content} />}
-                  </Box>
+                  </TypologyContent>
                 </ColumnMainContent>
               )}
             </ColumnMain>
