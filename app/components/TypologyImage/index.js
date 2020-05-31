@@ -31,7 +31,7 @@ function TypologyImage({ typology, locale }) {
       {typology.image && (
         <>
           <Image
-            fill="horizontal"
+            fill
             fit="cover"
             src={`${PATHS.IMAGES}/${typology.image.name || typology.path}.jpg`}
             alignSelf={

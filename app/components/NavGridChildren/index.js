@@ -31,7 +31,7 @@ function NavGridChildren({ type, items, itemClick, locale, parent }) {
       <h5>
         <FormattedMessage {...messages[`${type}Select`]} />
       </h5>
-      <Box direction="row" wrap>
+      <Box direction="row" wrap fill="horizontal">
         {items &&
           items.map(i => (
             <CardChild
