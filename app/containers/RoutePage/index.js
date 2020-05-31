@@ -30,6 +30,7 @@ const ContentWrap = styled.div`
   position: relative;
   z-index: 1;
   top: 50vh;
+  min-height: 100vh;
   background: ${({ theme }) => theme.global.colors['light-2']};
   margin-top: -${getHeaderHeight('small')}px;
   margin-right: auto;

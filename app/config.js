@@ -44,22 +44,22 @@ export const PAGES = {
     path: 'typology',
     nav: PRIMARY,
     icon: ICON_TYPOLOGY,
-    background: 'bg_typology',
+    background: 'bg_home',
   },
   about: {
     path: 'about',
     nav: SECONDARY,
-    background: 'bg_about',
+    background: 'bg_home',
   },
   methods: {
     path: 'methods',
     nav: SECONDARY,
-    background: 'bg_methods',
+    background: 'bg_home',
   },
   glossary: {
     path: 'glossary',
     nav: SECONDARY,
-    background: 'bg_glossary',
+    background: 'bg_home',
   },
 };
 
