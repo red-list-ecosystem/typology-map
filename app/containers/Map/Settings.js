@@ -4,15 +4,14 @@
  *
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
+// import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import styled from 'styled-components';
-import { Button, Box, RangeInput, CheckBox, Text } from 'grommet';
-import { Menu } from 'grommet-icons';
+import { Button, Box, RangeInput, CheckBox } from 'grommet';
 import L from 'leaflet';
 
 import {
@@ -25,10 +24,6 @@ import {
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
-import commonMessages from 'messages';
-
-import messages from './messages';
-
 import reducer from './reducer';
 import saga from './saga';
 import {
@@ -38,6 +33,7 @@ import {
   selectCountry,
 } from './selectors';
 import { loadLayer, setOpacity, setBasemap, setCountry } from './actions';
+// import messages from './messages';
 
 const Styled = styled.div`
   background: ${({ theme }) => theme.global.colors['light-1']};
@@ -56,55 +52,27 @@ const MapContainer = styled.div`
 `;
 
 const MapSettings = styled(props => (
-  <Box direction="row" {...props} elevation="xxsmall" />
+  <Box direction="row" {...props} elevation="xsmall" />
 ))`
   position: absolute;
   z-index: 401;
-  bottom: 4px;
+  bottom: 0;
   left: 0;
+  padding: ${({ theme }) => theme.global.edgeSize.small};
   background: rgba(255, 255, 255, 0.9);
-  height: ${({ theme, fs }) =>
-    theme.dimensions.settings.height[fs ? 'large' : 'small']}px;
 `;
-
-const SettingsToggle = styled(props => <Button {...props} plain />)`
-  width: ${({ theme }) => theme.dimensions.settings.height.small}px;
-  height: ${({ theme, fs }) =>
-    theme.dimensions.settings.height[fs ? 'large' : 'small']}px;
-`;
-
-const KeyColor = styled.span`
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  background: ${({ color }) => color};
-  opacity: ${({ opacity }) => opacity};
-`;
-
-const IconWrap = styled(Box)`
-  width: ${({ theme }) => theme.dimensions.settings.height.small}px;
-  height: ${({ theme }) => theme.dimensions.settings.height.small}px;
-  text-align: center;
-  vertical-align: middle;
-`;
-
-const MapSettingsInner = styled(props => (
-  <Box {...props} pad={{ horizontal: 'small' }} />
-))``;
-
-const MenuOpen = styled(Menu)`
-  transform: rotate(90deg);
-`;
-
-const WrapControl = styled(props => <Box justify="evenly" {...props} />)``;
+const OpacityControl = styled(props => <Box pad="small" {...props} />)``;
+const CountryControl = styled(props => <Box pad="small" {...props} />)``;
 
 // const StyledRangeInput = styled(RangeInput)``;
 
-const BasemapToggle = styled(props => <Box {...props} direction="row" />)``;
+const BasemapToggle = styled(props => (
+  <Box pad="small" {...props} direction="row" />
+))``;
 const BasemapButton = styled(props => <Button plain {...props} />)`
   border-radius: 30px;
   margin-right: ${({ theme }) => theme.global.edgeSize.xsmall};
-  padding: ${({ theme }) => theme.global.edgeSize.hair}
+  padding: ${({ theme }) => theme.global.edgeSize.xsmall}
     ${({ theme }) => theme.global.edgeSize.small};
   background: ${({ theme, active }) =>
     theme.global.colors[active ? 'dark-1' : 'white']};
@@ -113,13 +81,6 @@ const BasemapButton = styled(props => <Button plain {...props} />)`
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   opacity: 1 !important;
 `;
-
-const LayerTitle = styled(Text)`
-  font-weight: 600;
-`;
-const SettingTitle = styled(props => (
-  <Text size="small" {...props} margin={{ vertical: 'xxsmall' }} />
-))``;
 
 export function Map({
   group,
@@ -132,7 +93,6 @@ export function Map({
   onSetOpacity,
   country,
   onSetCountry,
-  locale,
 }) {
   useInjectReducer({ key: 'map', reducer });
   useInjectSaga({ key: 'map', saga });
@@ -142,7 +102,6 @@ export function Map({
   const basemapLayerGroupRef = useRef(null);
   const countryLayerGroupRef = useRef(null);
 
-  const [showSettings, setShowSettings] = useState(true);
   // init map
   useEffect(() => {
     mapRef.current = L.map('ll-map', {
@@ -327,107 +286,37 @@ export function Map({
   return (
     <Styled>
       <MapContainer id="ll-map" />
-      <MapSettings fs={fullscreen}>
-        <SettingsToggle
-          onClick={() => setShowSettings(!showSettings)}
-          fs={fullscreen}
-          label={
-            <Box alignContent="start" justify="center" direction="row" fill>
-              <IconWrap justify="center" direction="row" align="center">
-                {!showSettings && <Menu />}
-                {showSettings && <MenuOpen />}
-              </IconWrap>
-            </Box>
-          }
-        />
-        {showSettings && (
-          <MapSettingsInner justify="evenly">
-            {fullscreen && (
-              <Box alignContent="center" pad={{ vertical: 'xsmall' }}>
-                <LayerTitle>{group.title[locale]}</LayerTitle>
-              </Box>
-            )}
-            <Box direction="row" gap="medium">
-              <WrapControl>
-                <SettingTitle>
-                  <FormattedMessage {...commonMessages.occurrence} />
-                </SettingTitle>
-                <Box direction="row" gap="small">
-                  {Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).map(key => (
-                    <Box direction="row" align="center" gap="xsmall" key={key}>
-                      <KeyColor
-                        color={GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color}
-                        opacity={opacity}
-                      />
-                      <Text>
-                        <FormattedMessage
-                          {...commonMessages[
-                            `occurrence_${
-                              GROUP_LAYER_PROPERTIES.OCCURRENCE[key].id
-                            }`
-                          ]}
-                        />
-                      </Text>
-                    </Box>
-                  ))}
-                </Box>
-              </WrapControl>
-              {fullscreen && (
-                <WrapControl>
-                  <SettingTitle>
-                    <FormattedMessage {...messages.settingOpacity} />
-                  </SettingTitle>
-                  <RangeInput
-                    value={opacity}
-                    onChange={event => onSetOpacity(event.target.value)}
-                    min={0}
-                    max={1}
-                    step={0.05}
-                  />
-                </WrapControl>
-              )}
-              {fullscreen && (
-                <WrapControl>
-                  <SettingTitle>
-                    <FormattedMessage {...messages.settingCountries} />
-                  </SettingTitle>
-                  <CheckBox
-                    checked={country}
-                    label={
-                      <FormattedMessage {...messages.settingCountriesShow} />
-                    }
-                    onChange={() => onSetCountry(!country)}
-                  />
-                </WrapControl>
-              )}
-              {fullscreen && (
-                <WrapControl>
-                  <SettingTitle>
-                    <FormattedMessage {...messages.settingBasemap} />
-                  </SettingTitle>
-                  <BasemapToggle>
-                    <BasemapButton
-                      active={basemap === 'light'}
-                      disabled={basemap === 'light'}
-                      onClick={() => onSetBasemap('light')}
-                      label={
-                        <FormattedMessage {...messages.settingBasemapLight} />
-                      }
-                    />
-                    <BasemapButton
-                      active={basemap === 'satellite'}
-                      disabled={basemap === 'satellite'}
-                      onClick={() => onSetBasemap('satellite')}
-                      label={
-                        <FormattedMessage {...messages.settingBasemapSat} />
-                      }
-                    />
-                  </BasemapToggle>
-                </WrapControl>
-              )}
-            </Box>
-          </MapSettingsInner>
-        )}
+      <MapSettings>
+        <OpacityControl>
+          <RangeInput
+            value={opacity}
+            onChange={event => onSetOpacity(event.target.value)}
+            min={0}
+            max={1}
+            step={0.05}
+          />
+        </OpacityControl>
+        <CountryControl>
+          <CheckBox
+            checked={country}
+            label="Countries"
+            onChange={() => onSetCountry(!country)}
+          />
+        </CountryControl>
+        <BasemapToggle>
+          <BasemapButton
+            active={basemap === 'light'}
+            disabled={basemap === 'light'}
+            onClick={() => onSetBasemap('light')}
+            label="Light"
+          />
+          <BasemapButton
+            active={basemap === 'satellite'}
+            disabled={basemap === 'satellite'}
+            onClick={() => onSetBasemap('satellite')}
+            label="Satellite"
+          />
+        </BasemapToggle>
       </MapSettings>
     </Styled>
   );
@@ -440,7 +329,6 @@ Map.propTypes = {
   onLoadLayer: PropTypes.func,
   onSetBasemap: PropTypes.func,
   basemap: PropTypes.string,
-  locale: PropTypes.string,
   onSetOpacity: PropTypes.func,
   onSetCountry: PropTypes.func,
   opacity: PropTypes.number,

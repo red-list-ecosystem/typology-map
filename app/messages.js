@@ -116,4 +116,16 @@ export default defineMessages({
     id: `${scope}.imageCredit_glossary`,
     defaultMessage: 'Shifaaz Shamoon on Unsplash',
   },
+  occurrence: {
+    id: `${scope}.occurrence`,
+    defaultMessage: 'Occurrence',
+  },
+  occurrence_major: {
+    id: `${scope}.occurrence_major`,
+    defaultMessage: 'Major',
+  },
+  occurrence_minor: {
+    id: `${scope}.occurrence_minor`,
+    defaultMessage: 'Minor',
+  },
 });

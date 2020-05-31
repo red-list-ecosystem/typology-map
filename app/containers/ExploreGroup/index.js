@@ -55,7 +55,7 @@ const FSButtonWrapper = styled.div`
 const FSButton = styled(props => <Button plain {...props} />)`
   border-radius: 9999px;
   padding: ${({ theme }) => theme.global.edgeSize.small};
-  background: ${({ theme }) => theme.global.colors['light-2']};
+  background: ${({ theme }) => theme.global.colors.white};
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 `;
 
@@ -111,8 +111,8 @@ export function ExploreGroup({
       {size => (
         <Styled isFS={isMapExpanded} size={size}>
           <Helmet>
-            <title>ExploreGroup</title>
-            <meta name="description" content="Description of ExploreGroup" />
+            <title>Explore Group</title>
+            <meta name="description" content="Description of Explore Group" />
           </Helmet>
           <Box direction="row" fill="horizontal">
             <ColumnMain
@@ -123,7 +123,11 @@ export function ExploreGroup({
               }}
             >
               <MapWrapper isFS={isMapExpanded}>
-                <Map group={typology} fullscreen={isMapExpanded} />
+                <Map
+                  group={typology}
+                  fullscreen={isMapExpanded}
+                  locale={locale}
+                />
                 <FSButtonWrapper>
                   <FSButton
                     icon={isMapExpanded ? <Contract /> : <Expand />}

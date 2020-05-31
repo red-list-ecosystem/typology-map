@@ -62,6 +62,12 @@ export const dimensions = {
   home: {
     maxWidth: [700, 700, 1000, 1100, 1200],
   },
+  settings: {
+    height: {
+      small: 40,
+      large: 110,
+    },
+  },
 };
 
 export const colors = {
