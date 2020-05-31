@@ -15,6 +15,7 @@ import messages from './messages';
 import SectionTitle from './SectionTitle';
 import SectionTeaser from './SectionTeaser';
 import SectionInner from './SectionInner';
+import SectionOuter from './SectionOuter';
 
 export function SectionExplore({
   intl,
@@ -25,28 +26,30 @@ export function SectionExplore({
   teaser,
 }) {
   return (
-    <SectionInner>
-      <SectionTitle>
-        {title || <FormattedMessage {...messages.titleSectionExplore} />}
-      </SectionTitle>
-      <SectionTeaser>
-        {teaser || <FormattedMessage {...messages.teaserSectionExplore} />}
-      </SectionTeaser>
-      <NavGridRealms
-        label={intl.formatMessage(commonMessages.realmsCore)}
-        items={realms && realms.filter(r => r.type === 'core')}
-        itemClick={id => navRealm(id)}
-        locale={locale}
-        type="core"
-      />
-      <NavGridRealms
-        label={intl.formatMessage(commonMessages.realmsTrans)}
-        items={realms && realms.filter(r => r.type === 'trans')}
-        itemClick={id => navRealm(id)}
-        locale={locale}
-        type="trans"
-      />
-    </SectionInner>
+    <SectionOuter background="light-2">
+      <SectionInner>
+        <SectionTitle>
+          {title || <FormattedMessage {...messages.titleSectionExplore} />}
+        </SectionTitle>
+        <SectionTeaser>
+          {teaser || <FormattedMessage {...messages.teaserSectionExplore} />}
+        </SectionTeaser>
+        <NavGridRealms
+          label={intl.formatMessage(commonMessages.realmsCore)}
+          items={realms && realms.filter(r => r.type === 'core')}
+          itemClick={id => navRealm(id)}
+          locale={locale}
+          type="core"
+        />
+        <NavGridRealms
+          label={intl.formatMessage(commonMessages.realmsTrans)}
+          items={realms && realms.filter(r => r.type === 'trans')}
+          itemClick={id => navRealm(id)}
+          locale={locale}
+          type="trans"
+        />
+      </SectionInner>
+    </SectionOuter>
   );
 }
 

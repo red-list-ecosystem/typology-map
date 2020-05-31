@@ -39,7 +39,6 @@ const MainContent = styled.div`
   position: relative;
   z-index: 1;
   top: 100vh;
-  background: ${({ theme }) => theme.global.colors['light-2']};
   margin-top: -${getHeaderHeight('small')}px;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
     margin-top: -${getHeaderHeight('medium')}px;
