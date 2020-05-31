@@ -6,29 +6,42 @@
 
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Box } from 'grommet';
 
 import IconRealm from 'components/IconRealm';
 
 import CardRealm from './CardRealm';
 
+const WrapGrid = styled.div`
+  margin: 0 -${({ theme }) => theme.global.edgeSize.small};
+`;
+
+const Label = styled.h4`
+  text-transform: uppercase;
+  margin-top: ${({ theme }) => theme.global.edgeSize.medium};
+  margin-bottom: 0;
+`;
+
 function NavGridRealms({ label, items, itemClick, locale, type }) {
   /* eslint-disable react/no-array-index-key */
   return (
     <div>
-      <h4>{label}</h4>
-      <Box direction="row" wrap>
-        {items &&
-          items.map(r => (
-            <CardRealm
-              key={r.id}
-              onCardClick={() => itemClick(r.id)}
-              label={r.title[locale]}
-              realm={r}
-              icon={<IconRealm realmId={r.id} type={type} />}
-            />
-          ))}
-      </Box>
+      <Label>{label}</Label>
+      <WrapGrid>
+        <Box direction="row" wrap>
+          {items &&
+            items.map(r => (
+              <CardRealm
+                key={r.id}
+                onCardClick={() => itemClick(r.id)}
+                label={r.title[locale]}
+                realm={r}
+                icon={<IconRealm realmId={r.id} type={type} />}
+              />
+            ))}
+        </Box>
+      </WrapGrid>
     </div>
   );
   /* eslint-enable react/no-array-index-key */

@@ -59,6 +59,9 @@ export const dimensions = {
     // by breakpoint
     maxWidth: [700, 700, 700, 800, 900],
   },
+  home: {
+    maxWidth: [700, 700, 1000, 1100, 1200],
+  },
 };
 
 export const colors = {

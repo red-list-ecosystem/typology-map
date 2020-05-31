@@ -75,3 +75,9 @@ export const getContentMaxWidth = size => {
     ? dimensions.mainContent.maxWidth[bp.index]
     : dimensions.mainContent.maxWidth[0];
 };
+export const getHomeMaxWidth = size => {
+  const bp = sizes[size];
+  return bp && size
+    ? dimensions.home.maxWidth[bp.index]
+    : dimensions.home.maxWidth[0];
+};

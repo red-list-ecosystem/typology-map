@@ -13,7 +13,7 @@ import styled from 'styled-components';
 import commonMessages from 'messages';
 
 const StyledButton = styled(Button)`
-  background: #f5f6f5;
+  background: ${({ theme }) => theme.global.colors.white};
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   &:hover {
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);

@@ -27,12 +27,14 @@ const Brand = styled(props => <Button {...props} plain color="white" />)`
   /* responsive height */
   padding: 0 ${({ theme }) => theme.global.edgeSize.xsmall};
   height: ${getHeaderHeight('small')}px;
+  font-weight: 600;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
     height: ${getHeaderHeight('medium')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     height: ${getHeaderHeight('large')}px;
-    width: ${getHeaderHeight('large')}px;
+    min-width: ${getHeaderHeight('large')}px;
+    max-width: ${getHeaderHeight('large') + 20}px;
     margin-right: ${getHeaderHeight('large')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
@@ -77,6 +79,7 @@ const Primary = styled(props => (
   />
 ))`
   text-align: center;
+  font-weight: 600;
   height: ${getHeaderHeight('small')}px;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
     height: ${getHeaderHeight('medium')}px;
