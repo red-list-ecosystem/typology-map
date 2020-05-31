@@ -36,12 +36,13 @@ const ContentWrap = styled.div`
   margin-right: auto;
   margin-left: auto;
   margin-bottom: 50px;
-  padding: ${({ theme }) => theme.global.edgeSize.large};
+  padding: ${({ theme }) => theme.global.edgeSize.small};
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
     margin-top: -${getHeaderHeight('medium')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     margin-top: -${getHeaderHeight('large')}px;
+    padding: ${({ theme }) => theme.global.edgeSize.large};
   }
   @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
     margin-top: -${getHeaderHeight('xlarge')}px;

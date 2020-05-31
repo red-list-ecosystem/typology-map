@@ -6,7 +6,8 @@ import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
 import { filter } from 'lodash/collection';
 import styled from 'styled-components';
 
-import { Button, Box, Text } from 'grommet';
+import { Button, Box, Text, ResponsiveContext, Layer } from 'grommet';
+import { Menu } from 'grommet-icons';
 
 import { selectRouterPath } from 'containers/App/selectors';
 import { navigate, navigateHome, navigatePage } from 'containers/App/actions';
@@ -17,7 +18,7 @@ import Img from 'components/Img';
 import LocaleToggle from 'containers/LocaleToggle';
 import Search from 'containers/Search';
 
-import { getHeaderHeight } from 'utils/responsive';
+import { getHeaderHeight, isMinSize, isMaxSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
 
@@ -70,6 +71,18 @@ const NavSearch = styled(props => (
   <Box {...props} direction="row" gap="small" basis="1/2" align="center" />
 ))``;
 
+const MenuButton = styled(props => <Button plain {...props} fill="vertical" />)`
+  width: ${getHeaderHeight('small')}px;
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    width: ${getHeaderHeight('medium')}px;
+  }
+  text-align: center;
+`;
+
+const MenuOpen = styled(Menu)`
+  transform: rotate(90deg);
+`;
+
 const Primary = styled(props => (
   <Button
     {...props}
@@ -102,15 +115,19 @@ const Primary = styled(props => (
     background: ${({ theme }) => theme.global.colors.brand};
   }
 `;
+// prettier-ignore
 const Secondary = styled(props => <Button {...props} plain />)`
-  padding: 0 ${({ theme }) => theme.global.edgeSize.small};
-  padding-right: ${({ theme, last }) =>
-    last ? 0 : theme.global.edgeSize.small};
+  padding: ${({ theme }) => theme.global.edgeSize.small} ${({ theme }) => theme.global.edgeSize.medium};
   color: ${({ theme }) => theme.global.colors.white};
   text-decoration: ${({ active }) => (active ? 'underline' : 'none')};
   background: transparent;
   &:hover {
     text-decoration: underline;
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+    padding: 0 ${({ theme }) => theme.global.edgeSize.small};
+    padding-right: ${({ theme, last }) =>
+    last ? 0 : theme.global.edgeSize.small};
   }
 `;
 
@@ -136,6 +153,7 @@ const pagesArray = Object.keys(PAGES).map(key => ({
 
 function Header({ nav, navHome, navPage, path }) {
   const [showSearch, setShowSearch] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
   const paths = path.split('/');
   const contentType = paths[0] === '' ? paths[1] : paths[0];
@@ -147,71 +165,136 @@ function Header({ nav, navHome, navPage, path }) {
   const pagesSecondary = filter(pagesArray, p => p.nav === SECONDARY);
 
   return (
-    <NavBar>
-      <Brand
-        onClick={() => navHome()}
-        label={<FormattedMessage {...commonMessages.appTitle} />}
-      />
-      <NavPrimary>
-        <Primary
-          onClick={() => nav('explore')}
-          label={
-            <PrimaryLabel>
-              <IconImgWrap>
-                <IconImgHelper />
-                <IconImg src={ICONS.EXPLORE} alt="" />
-              </IconImgWrap>
-              <Text>
-                <FormattedMessage {...commonMessages.navExplore} />
-              </Text>
-            </PrimaryLabel>
-          }
-          active={contentType === 'explore'}
-        />
-        {pagesPrimary.map(p => (
-          <Primary
-            key={p.key}
-            onClick={() => navPage(p.key)}
-            label={
-              <PrimaryLabel>
-                <IconImgWrap>
-                  <IconImgHelper />
-                  <IconImg src={p.icon} alt="" />
-                </IconImgWrap>
-                <Text>
-                  <FormattedMessage {...commonMessages[`page_${p.key}`]} />
-                </Text>
-              </PrimaryLabel>
-            }
-            active={contentType === 'page' && contentId === p.key}
-          />
-        ))}
-      </NavPrimary>
-      <Box
-        fill="vertical"
-        pad={{ horizontal: 'small' }}
-        margin={{ left: 'auto' }}
-      >
-        <NavSecondary justify="end">
-          {pagesSecondary.map((p, index) => (
-            <Secondary
-              key={p.key}
-              onClick={() => navPage(p.key)}
-              label={<FormattedMessage {...commonMessages[`page_${p.key}`]} />}
-              active={contentType === 'page' && contentId === p.key}
-              last={index === pagesSecondary.length - 1}
+    <ResponsiveContext.Consumer>
+      {size => (
+        <>
+          <NavBar
+            justify={isMinSize(size, 'large') ? 'start' : 'between'}
+            alignContent="end"
+          >
+            <Brand
+              onClick={() => navHome()}
+              label={<FormattedMessage {...commonMessages.appTitle} />}
             />
-          ))}
-          <LocaleToggle />
-        </NavSecondary>
-        <NavSearch justify="end">
-          <Search
-            expand={showSearch}
-            onToggle={() => setShowSearch(!showSearch)}
-          />
-        </NavSearch>
-      </Box>
-    </NavBar>
+            {isMaxSize(size, 'medium') && (
+              <MenuButton
+                plain
+                onClick={() => setShowMenu(!showMenu)}
+                label={
+                  showMenu ? <MenuOpen color="white" /> : <Menu color="white" />
+                }
+              />
+            )}
+            {isMinSize(size, 'large') && (
+              <NavPrimary>
+                <Primary
+                  onClick={() => nav('explore')}
+                  label={
+                    <PrimaryLabel>
+                      <IconImgWrap>
+                        <IconImgHelper />
+                        <IconImg src={ICONS.EXPLORE} alt="" />
+                      </IconImgWrap>
+                      <Text>
+                        <FormattedMessage {...commonMessages.navExplore} />
+                      </Text>
+                    </PrimaryLabel>
+                  }
+                  active={contentType === 'explore'}
+                />
+                {pagesPrimary.map(p => (
+                  <Primary
+                    key={p.key}
+                    onClick={() => navPage(p.key)}
+                    label={
+                      <PrimaryLabel>
+                        <IconImgWrap>
+                          <IconImgHelper />
+                          <IconImg src={p.icon} alt="" />
+                        </IconImgWrap>
+                        <Text>
+                          <FormattedMessage
+                            {...commonMessages[`page_${p.key}`]}
+                          />
+                        </Text>
+                      </PrimaryLabel>
+                    }
+                    active={contentType === 'page' && contentId === p.key}
+                  />
+                ))}
+              </NavPrimary>
+            )}
+            {isMinSize(size, 'large') && (
+              <Box
+                fill="vertical"
+                pad={{ horizontal: 'small' }}
+                margin={{ left: 'auto' }}
+              >
+                <NavSecondary justify="end">
+                  {pagesSecondary.map((p, index) => (
+                    <Secondary
+                      key={p.key}
+                      onClick={() => navPage(p.key)}
+                      label={
+                        <FormattedMessage
+                          {...commonMessages[`page_${p.key}`]}
+                        />
+                      }
+                      active={contentType === 'page' && contentId === p.key}
+                      last={index === pagesSecondary.length - 1}
+                    />
+                  ))}
+                  <LocaleToggle />
+                </NavSecondary>
+                <NavSearch justify="end">
+                  <Search
+                    expand={showSearch}
+                    onToggle={() => setShowSearch(!showSearch)}
+                  />
+                </NavSearch>
+              </Box>
+            )}
+          </NavBar>
+          {isMaxSize(size, 'medium') && showMenu && (
+            <Layer
+              full="horizontal"
+              margin={{ top: '52px' }}
+              onClickOutside={() => setShowMenu(false)}
+              responsive={false}
+              modal={false}
+              animate={false}
+              background="black"
+              position="top"
+            >
+              <Box background="black">
+                <Secondary
+                  onClick={() => {
+                    setShowMenu(false);
+                    nav('explore');
+                  }}
+                  label={<FormattedMessage {...commonMessages.navExplore} />}
+                  active={contentType === 'explore'}
+                />
+                {pagesArray.map(p => (
+                  <Secondary
+                    key={p.key}
+                    onClick={() => {
+                      setShowMenu(false);
+                      navPage(p.key);
+                    }}
+                    label={
+                      <FormattedMessage {...commonMessages[`page_${p.key}`]} />
+                    }
+                    active={contentType === 'page' && contentId === p.key}
+                  />
+                ))}
+                <LocaleToggle />
+              </Box>
+            </Layer>
+          )}
+        </>
+      )}
+    </ResponsiveContext.Consumer>
   );
 }
 

@@ -7,7 +7,7 @@ export default styled(props => (
   <Header
     {...props}
     align="start"
-    justify="start"
+    justify="between"
     pad={{ horizontal: 'medium' }}
   />
 ))`

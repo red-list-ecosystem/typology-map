@@ -11,7 +11,14 @@ import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import styled from 'styled-components';
-import { Button, Box, RangeInput, CheckBox, Text } from 'grommet';
+import {
+  Button,
+  Box,
+  RangeInput,
+  CheckBox,
+  Text,
+  ResponsiveContext,
+} from 'grommet';
 import { Menu } from 'grommet-icons';
 import L from 'leaflet';
 
@@ -25,6 +32,7 @@ import {
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
+import { isMinSize } from 'utils/responsive';
 import commonMessages from 'messages';
 
 import messages from './messages';
@@ -327,108 +335,125 @@ export function Map({
   return (
     <Styled>
       <MapContainer id="ll-map" />
-      <MapSettings fs={fullscreen}>
-        <SettingsToggle
-          onClick={() => setShowSettings(!showSettings)}
-          fs={fullscreen}
-          label={
-            <Box alignContent="start" justify="center" direction="row" fill>
-              <IconWrap justify="center" direction="row" align="center">
-                {!showSettings && <Menu />}
-                {showSettings && <MenuOpen />}
-              </IconWrap>
-            </Box>
-          }
-        />
-        {showSettings && (
-          <MapSettingsInner justify="evenly">
-            {fullscreen && (
-              <Box alignContent="center" pad={{ vertical: 'xsmall' }}>
-                <LayerTitle>{group.title[locale]}</LayerTitle>
-              </Box>
-            )}
-            <Box direction="row" gap="medium">
-              <WrapControl>
-                <SettingTitle>
-                  <FormattedMessage {...commonMessages.occurrence} />
-                </SettingTitle>
-                <Box direction="row" gap="small">
-                  {Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).map(key => (
-                    <Box direction="row" align="center" gap="xsmall" key={key}>
-                      <KeyColor
-                        color={GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color}
-                        opacity={opacity}
-                      />
-                      <Text>
-                        <FormattedMessage
-                          {...commonMessages[
-                            `occurrence_${
-                              GROUP_LAYER_PROPERTIES.OCCURRENCE[key].id
-                            }`
-                          ]}
-                        />
-                      </Text>
-                    </Box>
-                  ))}
+      <ResponsiveContext.Consumer>
+        {size => (
+          <MapSettings fs={fullscreen}>
+            <SettingsToggle
+              onClick={() => setShowSettings(!showSettings)}
+              fs={fullscreen}
+              label={
+                <Box alignContent="start" justify="center" direction="row" fill>
+                  <IconWrap justify="center" direction="row" align="center">
+                    {!showSettings && <Menu />}
+                    {showSettings && <MenuOpen />}
+                  </IconWrap>
                 </Box>
-              </WrapControl>
-              {fullscreen && (
-                <WrapControl>
-                  <SettingTitle>
-                    <FormattedMessage {...messages.settingOpacity} />
-                  </SettingTitle>
-                  <RangeInput
-                    value={opacity}
-                    onChange={event => onSetOpacity(event.target.value)}
-                    min={0}
-                    max={1}
-                    step={0.05}
-                  />
-                </WrapControl>
-              )}
-              {fullscreen && (
-                <WrapControl>
-                  <SettingTitle>
-                    <FormattedMessage {...messages.settingCountries} />
-                  </SettingTitle>
-                  <CheckBox
-                    checked={country}
-                    label={
-                      <FormattedMessage {...messages.settingCountriesShow} />
-                    }
-                    onChange={() => onSetCountry(!country)}
-                  />
-                </WrapControl>
-              )}
-              {fullscreen && (
-                <WrapControl>
-                  <SettingTitle>
-                    <FormattedMessage {...messages.settingBasemap} />
-                  </SettingTitle>
-                  <BasemapToggle>
-                    <BasemapButton
-                      active={basemap === 'light'}
-                      disabled={basemap === 'light'}
-                      onClick={() => onSetBasemap('light')}
-                      label={
-                        <FormattedMessage {...messages.settingBasemapLight} />
-                      }
-                    />
-                    <BasemapButton
-                      active={basemap === 'satellite'}
-                      disabled={basemap === 'satellite'}
-                      onClick={() => onSetBasemap('satellite')}
-                      label={
-                        <FormattedMessage {...messages.settingBasemapSat} />
-                      }
-                    />
-                  </BasemapToggle>
-                </WrapControl>
-              )}
-            </Box>
-          </MapSettingsInner>
+              }
+            />
+            {showSettings && (
+              <MapSettingsInner justify="evenly">
+                {fullscreen && (
+                  <Box alignContent="center" pad={{ vertical: 'xsmall' }}>
+                    <LayerTitle>{group.title[locale]}</LayerTitle>
+                  </Box>
+                )}
+                <Box direction="row" gap="medium">
+                  <WrapControl>
+                    <SettingTitle>
+                      <FormattedMessage {...commonMessages.occurrence} />
+                    </SettingTitle>
+                    <Box direction="row" gap="small">
+                      {Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).map(
+                        key => (
+                          <Box
+                            direction="row"
+                            align="center"
+                            gap="xsmall"
+                            key={key}
+                          >
+                            <KeyColor
+                              color={
+                                GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color
+                              }
+                              opacity={opacity}
+                            />
+                            <Text>
+                              <FormattedMessage
+                                {...commonMessages[
+                                  `occurrence_${
+                                    GROUP_LAYER_PROPERTIES.OCCURRENCE[key].id
+                                  }`
+                                ]}
+                              />
+                            </Text>
+                          </Box>
+                        ),
+                      )}
+                    </Box>
+                  </WrapControl>
+                  {fullscreen && isMinSize(size, 'large') && (
+                    <WrapControl>
+                      <SettingTitle>
+                        <FormattedMessage {...messages.settingOpacity} />
+                      </SettingTitle>
+                      <RangeInput
+                        value={opacity}
+                        onChange={event => onSetOpacity(event.target.value)}
+                        min={0}
+                        max={1}
+                        step={0.05}
+                      />
+                    </WrapControl>
+                  )}
+                  {fullscreen && isMinSize(size, 'large') && (
+                    <WrapControl>
+                      <SettingTitle>
+                        <FormattedMessage {...messages.settingCountries} />
+                      </SettingTitle>
+                      <CheckBox
+                        checked={country}
+                        label={
+                          <FormattedMessage
+                            {...messages.settingCountriesShow}
+                          />
+                        }
+                        onChange={() => onSetCountry(!country)}
+                      />
+                    </WrapControl>
+                  )}
+                  {fullscreen && isMinSize(size, 'large') && (
+                    <WrapControl>
+                      <SettingTitle>
+                        <FormattedMessage {...messages.settingBasemap} />
+                      </SettingTitle>
+                      <BasemapToggle>
+                        <BasemapButton
+                          active={basemap === 'light'}
+                          disabled={basemap === 'light'}
+                          onClick={() => onSetBasemap('light')}
+                          label={
+                            <FormattedMessage
+                              {...messages.settingBasemapLight}
+                            />
+                          }
+                        />
+                        <BasemapButton
+                          active={basemap === 'satellite'}
+                          disabled={basemap === 'satellite'}
+                          onClick={() => onSetBasemap('satellite')}
+                          label={
+                            <FormattedMessage {...messages.settingBasemapSat} />
+                          }
+                        />
+                      </BasemapToggle>
+                    </WrapControl>
+                  )}
+                </Box>
+              </MapSettingsInner>
+            )}
+          </MapSettings>
         )}
-      </MapSettings>
+      </ResponsiveContext.Consumer>
     </Styled>
   );
 }

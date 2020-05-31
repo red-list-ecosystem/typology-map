@@ -7,8 +7,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
-import { Box, Button, Text } from 'grommet';
+import { Box, Button, Text, ResponsiveContext } from 'grommet';
 import styled from 'styled-components';
+
+import { isMinSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
 
@@ -22,40 +24,47 @@ const StyledButton = styled(Button)`
 
 export function CardChild({ onCardClick, label, typology, type, ...rest }) {
   return (
-    <Box
-      basis="1/3"
-      responsive={false}
-      pad="small"
-      align="start"
-      style={{ position: 'relative' }}
-      {...rest}
-    >
-      <StyledButton onClick={onCardClick} fill plain>
+    <ResponsiveContext.Consumer>
+      {size => (
         <Box
-          fill
-          margin={{
-            top: 'xsmall',
-            bottom: 'small',
-          }}
-          pad={{
-            horizontal: 'small',
-          }}
+          basis={isMinSize(size, 'large') ? '1/4' : 'auto'}
+          fill={isMinSize(size, 'large') ? false : 'horizontal'}
+          responsive={false}
+          pad="small"
+          align="start"
+          style={{ position: 'relative' }}
+          {...rest}
         >
-          <h4>
-            <Text margin={{ right: 'xsmall' }}>{typology.id}</Text>
-            <Text>{label}</Text>
-          </h4>
-          {type === 'biomes' && (
-            <Box direction="row" gap="xsmall">
-              <Text>{typology.groupNo}</Text>
-              <FormattedMessage
-                {...commonMessages[typology.groupNo === 1 ? 'group' : 'groups']}
-              />
+          <StyledButton onClick={onCardClick} fill plain>
+            <Box
+              fill
+              margin={{
+                top: 'xsmall',
+                bottom: 'small',
+              }}
+              pad={{
+                horizontal: 'small',
+              }}
+            >
+              <h4>
+                <Text margin={{ right: 'xsmall' }}>{typology.id}</Text>
+                <Text>{label}</Text>
+              </h4>
+              {type === 'biomes' && (
+                <Box direction="row" gap="xsmall">
+                  <Text>{typology.groupNo}</Text>
+                  <FormattedMessage
+                    {...commonMessages[
+                      typology.groupNo === 1 ? 'group' : 'groups'
+                    ]}
+                  />
+                </Box>
+              )}
             </Box>
-          )}
+          </StyledButton>
         </Box>
-      </StyledButton>
-    </Box>
+      )}
+    </ResponsiveContext.Consumer>
   );
 }
 

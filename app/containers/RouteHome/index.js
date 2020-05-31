@@ -31,9 +31,7 @@ import Intro from './Intro';
 import SectionExplore from './SectionExplore';
 import SectionAbout from './SectionAbout';
 
-const Styled = styled.div`
-  min-height: 100vh;
-`;
+const Styled = styled.div``;
 
 const MainContent = styled.div`
   position: relative;

@@ -50,7 +50,13 @@ const IntroContentWrap = styled(props => <Box {...props} justify="evenly" />)`
 `;
 
 const IntroWrap = styled.div`
-  max-width: 55%;
+  max-width: 80%;
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    max-width: 50%;
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+    max-width: 55%;
+  }
 `;
 const IntroTitleWrap = styled(props => (
   <Box pad={{ left: 'medium', right: 'small', vertical: 'hair' }} {...props} />
@@ -65,18 +71,26 @@ const IntroTitleWrap = styled(props => (
     left: 0;
     right: 0;
     width: 100%;
-    top: 50%;
-    height: 40px;
+    top: 30%;
+    height: 20px;
+    @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+      height: 40px;
+      top: 50%;
+    }
   }
 `;
 const IntroTitle = styled(H1)`
   position: relative;
   z-index: 1;
-  font-size: 56px;
-  line-height: 66px;
+  font-size: 22px;
+  line-height: 28px;
   display: inline;
   margin: 0;
   color: white;
+  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+    font-size: 56px;
+    line-height: 66px;
+  }
 `;
 const IntroParaWrap = styled(props => (
   <Box
@@ -90,24 +104,32 @@ const IntroParaWrap = styled(props => (
 `;
 const IntroPara = styled(Paragraph)`
   color: white;
-  font-size: 20px;
-  line-height: 28px;
+  font-size: 16px;
+  line-height: 20px;
   font-weight: 700;
+  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+    font-size: 20px;
+    line-height: 28px;
+  }
 `;
 
 const IntroScroll = styled(props => <Button plain {...props} />)`
-  position: absolute;
-  bottom: 5px;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  width: 70px;
-  height: 70px;
-  border-radius: 9999px;
-  vertical-align: middle;
-  text-align: center;
-  &:hover {
-    background: rgba(0, 0, 0, 0.4);
+  display: none;
+  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+    display: inline-block;
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 70px;
+    height: 70px;
+    border-radius: 9999px;
+    vertical-align: middle;
+    text-align: center;
+    &:hover {
+      background: rgba(0, 0, 0, 0.4);
+    }
   }
 `;
 export function Intro({ onScroll }) {
