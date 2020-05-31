@@ -96,8 +96,24 @@ export default defineMessages({
     id: `${scope}.imageCreditBy`,
     defaultMessage: 'Image by: ',
   },
-  imageCreditHome: {
-    id: `${scope}.imageCreditHome`,
+  imageCredit_home: {
+    id: `${scope}.imageCredit_home`,
+    defaultMessage: 'Shifaaz Shamoon on Unsplash',
+  },
+  imageCredit_typology: {
+    id: `${scope}.imageCredit_typology`,
+    defaultMessage: 'Shifaaz Shamoon on Unsplash',
+  },
+  imageCredit_about: {
+    id: `${scope}.imageCredit_about`,
+    defaultMessage: 'Shifaaz Shamoon on Unsplash',
+  },
+  imageCredit_methods: {
+    id: `${scope}.imageCredit_methods`,
+    defaultMessage: 'Shifaaz Shamoon on Unsplash',
+  },
+  imageCredit_glossary: {
+    id: `${scope}.imageCredit_glossary`,
     defaultMessage: 'Shifaaz Shamoon on Unsplash',
   },
 });

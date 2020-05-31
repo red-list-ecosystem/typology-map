@@ -17,9 +17,9 @@ import { selectRealmsWithStats, selectLocale } from 'containers/App/selectors';
 import { navigateTypology } from 'containers/App/actions';
 // import messages from './messages';
 
-import NavGridRealms from 'components/NavGridRealms';
+import SectionExplore from 'containers/RouteHome/SectionExplore';
 
-import commonMessages from 'messages';
+import messages from './messages';
 
 const Styled = styled.div`
   min-height: 100vh;
@@ -29,25 +29,18 @@ export function RouteExploreOverview({ realms, navRealm, locale, intl }) {
   return (
     <Styled>
       <Helmet>
-        <title>RouteExploreOverview</title>
+        <title>{intl.formatMessage(messages.title)}</title>
         <meta
           name="description"
-          content="Description of RouteExploreOverview"
+          content={intl.formatMessage(messages.descriptionMeta)}
         />
       </Helmet>
-      <NavGridRealms
-        label={intl.formatMessage(commonMessages.realmsCore)}
-        items={realms && realms.filter(r => r.type === 'core')}
-        itemClick={id => navRealm(id)}
+      <SectionExplore
+        realms={realms}
+        navRealm={navRealm}
         locale={locale}
-        type="core"
-      />
-      <NavGridRealms
-        label={intl.formatMessage(commonMessages.realmsTrans)}
-        items={realms && realms.filter(r => r.type === 'trans')}
-        itemClick={id => navRealm(id)}
-        locale={locale}
-        type="trans"
+        title={intl.formatMessage(messages.title)}
+        teaser={intl.formatMessage(messages.teaser)}
       />
     </Styled>
   );

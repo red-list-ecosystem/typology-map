@@ -13,7 +13,7 @@ import ImageInfo from 'components/ImageInfo';
 
 import { getHeaderHeight, getAsideWidth } from 'utils/responsive';
 const Styled = styled.div`
-  background: ${({ theme }) => theme.global.colors['light-1']};
+  background: ${({ theme }) => theme.global.colors.black};
   position: fixed;
   left: 0;
   right: 0;

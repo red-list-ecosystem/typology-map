@@ -9,29 +9,86 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Helmet } from 'react-helmet';
-// import { FormattedMessage } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import { compose } from 'redux';
+import styled from 'styled-components';
+
+import { PATHS, PAGES } from 'config';
 
 import { selectContentByKey } from 'containers/App/selectors';
 import { loadContent } from 'containers/App/actions';
 
 import HTMLWrapper from 'components/HTMLWrapper';
+import PageBackground from 'components/PageBackground';
+
+import { getHeaderHeight, getHomeMaxWidth } from 'utils/responsive';
 
 // import messages from './messages';
+import commonMessages from 'messages';
 
-export function RoutePage({ match, onLoadContent, content }) {
+const ContentWrap = styled.div`
+  position: relative;
+  z-index: 1;
+  top: 50vh;
+  background: ${({ theme }) => theme.global.colors['light-2']};
+  margin-top: -${getHeaderHeight('small')}px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 50px;
+  padding: ${({ theme }) => theme.global.edgeSize.large};
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    margin-top: -${getHeaderHeight('medium')}px;
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+    margin-top: -${getHeaderHeight('large')}px;
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
+    margin-top: -${getHeaderHeight('xlarge')}px;
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.xxlarge.minpx}) {
+    margin-top: -${getHeaderHeight('xxlarge')}px;
+  }
+  max-width: ${getHomeMaxWidth('small')}px;
+  /* responsive height */
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    max-width: ${getHomeMaxWidth('medium')}px;
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+    max-width: ${getHomeMaxWidth('large')}px;
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
+    max-width: ${getHomeMaxWidth('xlarge')}px;
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.xxlarge.minpx}) {
+    max-width: ${getHomeMaxWidth('xxlarge')}px;
+  }
+`;
+
+export function RoutePage({ match, onLoadContent, content, intl }) {
   useEffect(() => {
     // kick off loading of page content
     onLoadContent(match.params.id);
   }, [match.params.id]);
-
+  const config = PAGES[match.params.id];
   return (
     <div>
       <Helmet>
         <title>RoutePage</title>
         <meta name="description" content="Description of RoutePage" />
       </Helmet>
-      <div>{content && <HTMLWrapper innerhtml={content} />}</div>
+      <PageBackground
+        image={{
+          src: `${PATHS.IMAGES}/${config.background}.jpg`,
+          credit:
+            commonMessages[`imageCredit_${match.params.id}`] &&
+            intl.formatMessage(
+              commonMessages[`imageCredit_${match.params.id}`],
+            ),
+        }}
+      />
+      <ContentWrap>
+        {content && <HTMLWrapper innerhtml={content} />}
+      </ContentWrap>
     </div>
   );
 }
@@ -40,6 +97,7 @@ RoutePage.propTypes = {
   onLoadContent: PropTypes.func.isRequired,
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   match: PropTypes.object,
+  intl: intlShape.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -63,4 +121,4 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-export default compose(withConnect)(RoutePage);
+export default compose(withConnect)(injectIntl(RoutePage));

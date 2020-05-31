@@ -16,14 +16,21 @@ import SectionTitle from './SectionTitle';
 import SectionTeaser from './SectionTeaser';
 import SectionInner from './SectionInner';
 
-export function SectionExplore({ intl, locale, realms, navRealm }) {
+export function SectionExplore({
+  intl,
+  locale,
+  realms,
+  navRealm,
+  title,
+  teaser,
+}) {
   return (
     <SectionInner>
       <SectionTitle>
-        <FormattedMessage {...messages.titleSectionExplore} />
+        {title || <FormattedMessage {...messages.titleSectionExplore} />}
       </SectionTitle>
       <SectionTeaser>
-        <FormattedMessage {...messages.teaserSectionExplore} />
+        {teaser || <FormattedMessage {...messages.teaserSectionExplore} />}
       </SectionTeaser>
       <NavGridRealms
         label={intl.formatMessage(commonMessages.realmsCore)}
@@ -47,6 +54,8 @@ SectionExplore.propTypes = {
   navRealm: PropTypes.func,
   intl: intlShape.isRequired,
   locale: PropTypes.string,
+  title: PropTypes.string,
+  teaser: PropTypes.string,
   realms: PropTypes.array,
 };
 

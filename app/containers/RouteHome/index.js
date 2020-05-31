@@ -71,8 +71,8 @@ export function HomePage({ realms, navRealm, navPage, locale, intl }) {
           </Helmet>
           <PageBackground
             image={{
-              src: `${PATHS.IMAGES}/home.jpg`,
-              credit: intl.formatMessage(commonMessages.imageCreditHome),
+              src: `${PATHS.IMAGES}/bg_home.jpg`,
+              credit: intl.formatMessage(commonMessages.imageCredit_home),
             }}
           />
           <Intro onScroll={() => onScroll(size)} />
