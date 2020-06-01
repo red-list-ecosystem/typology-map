@@ -5,7 +5,7 @@
  */
 import { defineMessages } from 'react-intl';
 
-export const scope = 'rle.containers.HomePage';
+export const scope = 'app.containers.RouteHome';
 
 export default defineMessages({
   introTitle: {

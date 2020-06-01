@@ -6,7 +6,7 @@
 
 import { defineMessages } from 'react-intl';
 
-export const scope = 'hrmi.containers.Search';
+export const scope = 'app.containers.Search';
 
 export default defineMessages({
   search: {
