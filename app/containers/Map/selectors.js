@@ -17,7 +17,7 @@ export const selectCountry = createSelector(
 );
 export const selectOpacity = createSelector(
   selectDomain,
-  domain => domain.opacity,
+  domain => parseFloat(domain.opacity),
 );
 export const selectBasemap = createSelector(
   selectDomain,

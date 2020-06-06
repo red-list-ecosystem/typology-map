@@ -33,7 +33,7 @@ const mapReducer = (state = initialState, action) =>
         draft.basemap = action.value;
         break;
       case SET_OPACITY:
-        draft.opacity = action.value;
+        draft.opacity = parseFloat(action.value);
         break;
       case SET_COUNTRY:
         draft.country = action.value; // bool
