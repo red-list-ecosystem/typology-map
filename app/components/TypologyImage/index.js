@@ -4,13 +4,20 @@
  *
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Image } from 'grommet';
+import { Image, Box } from 'grommet';
+import styled from 'styled-components';
 
-import TopGraphic from 'components/TopGraphic';
 import ImageInfo from 'components/ImageInfo';
 import { PATHS } from 'config';
+
+const ImageWrap = styled(props => (
+  <Box margin={props.inText ? { vertical: 'medium' } : {}} {...props} />
+))`
+  position: relative;
+  max-height: ${({ inText }) => (inText ? 400 : 'auto')}px;
+`;
 
 const mapVerticalAlignment = align => {
   switch (align) {
@@ -25,36 +32,36 @@ const mapVerticalAlignment = align => {
   }
 };
 
-function TypologyImage({ typology, locale }) {
-  return (
-    <TopGraphic direction="row">
-      {typology.image && (
-        <>
-          <Image
-            fill
-            fit="cover"
-            src={`${PATHS.IMAGES}/${typology.image.name || typology.path}.jpg`}
-            alignSelf={
-              typology.image.verticalAlign
-                ? mapVerticalAlignment(typology.image.verticalAlign)
-                : 'center'
-            }
-          />
-          {(typology.image.credit || typology.image.caption) && (
-            <ImageInfo
-              caption={typology.image.caption && typology.image.caption[locale]}
-              credit={typology.image.credit && typology.image.credit[locale]}
-            />
-          )}
-        </>
+function TypologyImage({ typology, inText, locale }) {
+  const { image } = typology;
+  const [imageExists, setImageExists] = useState(true);
+  return !imageExists ? null : (
+    <ImageWrap inText={inText}>
+      <Image
+        fill
+        fit="cover"
+        src={`${PATHS.IMAGES}/${image ? image.name : typology.path}.jpg`}
+        onError={() => setImageExists(false)}
+        alignSelf={
+          image && image.verticalAlign
+            ? mapVerticalAlignment(typology.image.verticalAlign)
+            : 'center'
+        }
+      />
+      {image && (image.credit || image.caption) && (
+        <ImageInfo
+          caption={image.caption && image.caption[locale]}
+          credit={image.credit && image.credit[locale]}
+        />
       )}
-    </TopGraphic>
+    </ImageWrap>
   );
 }
 
 TypologyImage.propTypes = {
   typology: PropTypes.object,
   locale: PropTypes.string,
+  inText: PropTypes.bool,
 };
 
 export default TypologyImage;

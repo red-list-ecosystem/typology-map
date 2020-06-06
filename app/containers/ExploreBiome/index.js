@@ -35,6 +35,7 @@ import AsideNavLabel from 'components/AsideNavLabel';
 import AsideNavTypologySelected from 'components/AsideNavTypologySelected';
 import AsideNavTypologyList from 'components/AsideNavTypologyList';
 import TypologyHeader from 'components/TypologyHeader';
+import TopGraphic from 'components/TopGraphic';
 import TypologyImage from 'components/TypologyImage';
 import TypologyContent from 'components/TypologyContent';
 
@@ -77,7 +78,9 @@ export function ExploreBiome({
           </Helmet>
           <Box direction="row" fill="horizontal">
             <ColumnMain hasAside={isMinSize(size, 'large')}>
-              <TypologyImage typology={typology} locale={locale} />
+              <TopGraphic direction="row">
+                <TypologyImage typology={typology} locale={locale} />
+              </TopGraphic>
               <ColumnMainContent>
                 <TypologyContent>
                   <TypologyHeader

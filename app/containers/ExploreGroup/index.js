@@ -41,6 +41,7 @@ import AsideNavTypologyList from 'components/AsideNavTypologyList';
 import TopGraphic from 'components/TopGraphic';
 import TypologyHeader from 'components/TypologyHeader';
 import TypologyContent from 'components/TypologyContent';
+import TypologyImage from 'components/TypologyImage';
 
 import { isMinSize, getHeaderHeight } from 'utils/responsive';
 
@@ -154,6 +155,7 @@ export function ExploreGroup({
                         },
                       ]}
                     />
+                    <TypologyImage inText typology={typology} locale={locale} />
                     {content && <HTMLWrapper innerhtml={content} />}
                   </TypologyContent>
                 </ColumnMainContent>
