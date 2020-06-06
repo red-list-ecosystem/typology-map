@@ -35,12 +35,15 @@ const mapVerticalAlignment = align => {
 function TypologyImage({ typology, inText, locale }) {
   const { image } = typology;
   const [imageExists, setImageExists] = useState(true);
+  const src = `${PATHS.IMAGES}/${
+    image && image.name ? image.name : typology.path
+  }`;
   return !imageExists ? null : (
     <ImageWrap inText={inText}>
       <Image
         fill
         fit="cover"
-        src={`${PATHS.IMAGES}/${image ? image.name : typology.path}.jpg`}
+        src={`${src}.jpg`}
         onError={() => setImageExists(false)}
         alignSelf={
           image && image.verticalAlign
@@ -50,8 +53,18 @@ function TypologyImage({ typology, inText, locale }) {
       />
       {image && (image.credit || image.caption) && (
         <ImageInfo
-          caption={image.caption && image.caption[locale]}
-          credit={image.credit && image.credit[locale]}
+          caption={
+            image.caption &&
+            image.caption[locale] &&
+            image.caption[locale].trim() !== '' &&
+            image.caption[locale]
+          }
+          credit={
+            image.credit &&
+            image.credit[locale] &&
+            image.credit[locale].trim() !== '' &&
+            image.credit[locale]
+          }
         />
       )}
     </ImageWrap>
