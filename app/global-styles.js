@@ -32,6 +32,10 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     line-height: 1.5em;
   }
+
+  .rle-caption-markdown p {
+    margin: 0;
+  }
 `;
 
 export default GlobalStyle;

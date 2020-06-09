@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import styled from 'styled-components';
 import { Box } from 'grommet';
+import Markdown from 'react-remarkable';
 
 import commonMessages from 'messages';
 
@@ -35,7 +36,11 @@ const Credit = styled(Caption)`
 function ImageInfo({ caption, credit }) {
   return (
     <Styled align="end">
-      {caption && <Caption>{caption}</Caption>}
+      {caption && (
+        <Caption className="rle-caption-markdown">
+          <Markdown source={caption} />
+        </Caption>
+      )}
       {credit && (
         <Credit>
           <FormattedMessage {...commonMessages.imageCreditBy} />
