@@ -33,13 +33,20 @@ const GlobalStyle = createGlobalStyle`
     line-height: 1.5em;
   }
 
+  .rle-content h1,
+  .rle-content h2,
+  .rle-content h3,
+  .rle-content h4 {
+    line-height: 1.15;
+  }
+
   .rle-caption-markdown p {
     margin: 0;
   }
   .rle-iframe-feedback-form-wrapper {
     position: relative;
     overflow: hidden;
-    padding-top: 133%;
+    padding-top: 166%;
   }
   .rle-iframe-feedback-form {
     position: absolute;
