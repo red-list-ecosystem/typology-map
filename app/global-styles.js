@@ -39,7 +39,7 @@ const GlobalStyle = createGlobalStyle`
   .rle-iframe-feedback-form-wrapper {
     position: relative;
     overflow: hidden;
-    padding-top: 120%;
+    padding-top: 133%;
   }
   .rle-iframe-feedback-form {
     position: absolute;
