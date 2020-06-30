@@ -64,9 +64,12 @@ export const dimensions = {
   },
   settings: {
     height: {
-      small: 40,
+      small: 75,
       large: 110,
     },
+  },
+  settingsToggle: {
+    width: 40,
   },
 };
 
