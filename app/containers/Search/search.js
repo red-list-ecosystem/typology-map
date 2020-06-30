@@ -25,7 +25,7 @@ const filterTaxonomy = (item, search) => {
   if (search.trim().length > 1) {
     try {
       const regex = new RegExp(regExMultipleWords(search), 'i');
-      return regex.test(cleanupSearchTarget(item.label));
+      return regex.test(cleanupSearchTarget(`${item.label} ${item.keywords}`));
     } catch (e) {
       return true;
     }
@@ -51,24 +51,27 @@ const highlightLabel = (str, search) =>
     .replace(/\[/g, '<strong>')
     .replace(/\]/g, '</strong>');
 
+// prettier-ignore
 export const prepTaxonomies = (items, search, locale) =>
-  items &&
   items
-    .map(item => ({
-      code: item.id,
-      label: item.title[locale || 'en'],
-    }))
-    .filter(item => filterTaxonomy(item, search))
-    .map(item => {
-      if (search.length === 0) return item;
-      return {
-        ...item,
-        codeHTML: highlightCode(item.code, search),
-        labelHTML: highlightLabel(item.label, search),
-      };
-    })
-    .sort((a, b) => {
-      if (a.code.length < b.code.length) return -1;
-      if (a.code.length === b.code.length && a.code < b.code) return -1;
-      return 1;
-    });
+    ? items
+      .map(item => ({
+        code: item.id,
+        label: item.title ? item.title[locale || 'en'] : '',
+        keywords: item.keywords ? item.keywords[locale || 'en'] : '',
+      }))
+      .filter(item => filterTaxonomy(item, search))
+      .map(item => {
+        if (search.length === 0) return item;
+        return {
+          ...item,
+          codeHTML: highlightCode(item.code, search),
+          labelHTML: highlightLabel(item.label, search),
+        };
+      })
+      .sort((a, b) => {
+        if (a.code.length < b.code.length) return -1;
+        if (a.code.length === b.code.length && a.code < b.code) return -1;
+        return 1;
+      })
+    : [];
