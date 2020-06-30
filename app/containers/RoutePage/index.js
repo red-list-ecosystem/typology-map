@@ -21,7 +21,7 @@ import { loadContent } from 'containers/App/actions';
 import HTMLWrapper from 'components/HTMLWrapper';
 import PageBackground from 'components/PageBackground';
 
-import { getHeaderHeight, getHomeMaxWidth } from 'utils/responsive';
+import { getHeaderHeight, getContentMaxWidth } from 'utils/responsive';
 
 // import messages from './messages';
 import commonMessages from 'messages';
@@ -50,19 +50,19 @@ const ContentWrap = styled.div`
   @media (min-width: ${({ theme }) => theme.sizes.xxlarge.minpx}) {
     margin-top: -${getHeaderHeight('xxlarge')}px;
   }
-  max-width: ${getHomeMaxWidth('small')}px;
+  max-width: ${getContentMaxWidth('small')}px;
   /* responsive height */
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
-    max-width: ${getHomeMaxWidth('medium')}px;
+    max-width: ${getContentMaxWidth('medium')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
-    max-width: ${getHomeMaxWidth('large')}px;
+    max-width: ${getContentMaxWidth('large')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
-    max-width: ${getHomeMaxWidth('xlarge')}px;
+    max-width: ${getContentMaxWidth('xlarge')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.xxlarge.minpx}) {
-    max-width: ${getHomeMaxWidth('xxlarge')}px;
+    max-width: ${getContentMaxWidth('xxlarge')}px;
   }
 `;
 
@@ -80,7 +80,7 @@ export function RoutePage({ match, onLoadContent, content, intl }) {
       </Helmet>
       <PageBackground
         image={{
-          src: `${PATHS.IMAGES}/${config.background}.jpg`,
+          src: `${PATHS.IMAGES}/${config.backgroundImage}.jpg`,
           credit:
             commonMessages[`imageCredit_${match.params.id}`] &&
             intl.formatMessage(
