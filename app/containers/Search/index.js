@@ -36,7 +36,7 @@ export function Search({
   onClose,
   drop = true,
   onSearch,
-  focus,
+  focus = true,
   groups,
   biomes,
   realms,

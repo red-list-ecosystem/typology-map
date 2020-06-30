@@ -58,7 +58,12 @@ export const prepTaxonomies = (items, search, locale) =>
       .map(item => ({
         code: item.id,
         label: item.title ? item.title[locale || 'en'] : '',
-        keywords: item.keywords ? item.keywords[locale || 'en'] : '',
+        keywords: item.keywords
+          ? item.keywords[locale || 'en']
+            .split(',')
+            .map(w => w.trim())
+            .join(', ') 
+          : '',
       }))
       .filter(item => filterTaxonomy(item, search))
       .map(item => {
