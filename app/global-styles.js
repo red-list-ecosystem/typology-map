@@ -36,6 +36,19 @@ const GlobalStyle = createGlobalStyle`
   .rle-caption-markdown p {
     margin: 0;
   }
+  .rle-iframe-feedback-form-wrapper {
+    position: relative;
+    overflow: hidden;
+    padding-top: 120%;
+  }
+  .rle-iframe-feedback-form {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
 `;
 
 export default GlobalStyle;

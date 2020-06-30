@@ -213,9 +213,11 @@ function Header({ nav, navHome, navPage, path }) {
                           <IconImg src={p.icon} alt="" />
                         </IconImgWrap>
                         <Text>
-                          <FormattedMessage
-                            {...commonMessages[`page_${p.key}`]}
-                          />
+                          {commonMessages[`page_${p.key}`] && (
+                            <FormattedMessage
+                              {...commonMessages[`page_${p.key}`]}
+                            />
+                          )}
                         </Text>
                       </PrimaryLabel>
                     }

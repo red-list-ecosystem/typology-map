@@ -61,6 +61,11 @@ export const PAGES = {
     nav: SECONDARY,
     background: 'bg_home',
   },
+  feedback: {
+    path: 'feedback',
+    nav: SECONDARY,
+    background: 'bg_home',
+  },
 };
 
 export const MAX_LOAD_ATTEMPTS = 5;

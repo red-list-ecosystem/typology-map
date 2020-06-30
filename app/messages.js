@@ -92,6 +92,10 @@ export default defineMessages({
     id: `${scope}.page_glossary`,
     defaultMessage: 'Glossary',
   },
+  page_feedback: {
+    id: `${scope}.page_feedback`,
+    defaultMessage: 'Feedback',
+  },
   imageCreditBy: {
     id: `${scope}.imageCreditBy`,
     defaultMessage: 'Image by: ',
