@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { injectIntl, intlShape } from 'react-intl';
 
-// import { withTheme } from 'styled-components';
+import styled from 'styled-components';
 import { Box, Button, Drop } from 'grommet';
 import { Close, Search as SearchIcon } from 'grommet-icons';
 
@@ -27,11 +27,13 @@ import SearchResults from './SearchResults';
 import TextInput from './TextInput';
 import { prepTaxonomies, sanitise } from './search';
 
+const Styled = styled(Box)``;
+
 export function Search({
   stretch,
   expand,
   size = 'medium',
-  onToggle,
+  onClose,
   drop = true,
   onSearch,
   focus,
@@ -57,69 +59,52 @@ export function Search({
   const filteredRealms = prepTaxonomies(realms, search);
   const filteredBiomes = prepTaxonomies(biomes, search);
   return (
-    <Box style={{ minWidth: !onToggle || expand ? '500px' : 0 }}>
-      {onToggle && !expand && (
-        <Button
+    <Styled fill="horizontal">
+      <Box
+        direction="row"
+        align="center"
+        round="xxsmall"
+        ref={searchRef}
+        style={stretch ? null : { maxWidth: '500px' }}
+        pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}
+        margin={{ right: onClose ? 'ms' : '0', left: '0' }}
+        background="white"
+      >
+        <TextInput
           plain
-          onClick={() => {
-            onToggle();
-            setActiveResult(0);
-          }}
-          reverse
-          icon={<SearchIcon size="xlarge" color="white" />}
-          style={{ textAlign: 'center' }}
-          gap="xsmall"
-        />
-      )}
-      {((onToggle && expand) || !onToggle) && (
-        <Box
-          direction="row"
-          align="center"
-          round="xxsmall"
-          ref={searchRef}
-          style={stretch ? null : { maxWidth: '500px' }}
-          pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}
-          margin={{ left: onToggle ? 'ms' : '0' }}
-          background="white"
-        >
-          <TextInput
-            plain
-            value={search}
-            onChange={evt => {
-              if (evt && evt.target) {
-                setSearch(sanitise(evt.target.value));
-                if (onSearch) onSearch(sanitise(evt.target.value));
-                setActiveResult(0);
-              }
-            }}
-            placeholder={
-              placeholder || intl.formatMessage(messages.placeholder)
+          value={search}
+          onChange={evt => {
+            if (evt && evt.target) {
+              setSearch(sanitise(evt.target.value));
+              if (onSearch) onSearch(sanitise(evt.target.value));
+              setActiveResult(0);
             }
-            ref={textInputRef}
+          }}
+          placeholder={placeholder || intl.formatMessage(messages.placeholder)}
+          ref={textInputRef}
+        />
+        {!onClose && search.length === 0 && (
+          <Box pad={{ right: 'xsmall' }}>
+            <SearchIcon size={size} color="dark" />
+          </Box>
+        )}
+        {(onClose || search.length > 0) && (
+          <Button
+            plain
+            fill="vertical"
+            onClick={() => {
+              setSearch('');
+              if (onSearch) onSearch('');
+              if (onClose) onClose();
+              setActiveResult(0);
+            }}
+            icon={<Close size={size} color="dark" />}
+            style={{
+              textAlign: 'center',
+            }}
           />
-          {!onToggle && search.length === 0 && (
-            <Box pad={{ right: 'xsmall' }}>
-              <SearchIcon size={size} color="dark" />
-            </Box>
-          )}
-          {(onToggle || search.length > 0) && (
-            <Button
-              plain
-              fill="vertical"
-              onClick={() => {
-                setSearch('');
-                if (onSearch) onSearch('');
-                if (onToggle) onToggle();
-                setActiveResult(0);
-              }}
-              icon={<Close size={size} color="dark" />}
-              style={{
-                textAlign: 'center',
-              }}
-            />
-          )}
-        </Box>
-      )}
+        )}
+      </Box>
       {drop && search.trim().length > 0 && (
         <Drop
           align={{ top: 'bottom', right: 'right' }}
@@ -135,7 +120,7 @@ export function Search({
             }}
             search={search}
             onSelect={(level, id) => {
-              if (onToggle) onToggle();
+              if (onClose) onClose();
               onNavigateTypology(level, id);
             }}
             activeResult={activeResult}
@@ -151,13 +136,13 @@ export function Search({
           />
         </Drop>
       )}
-    </Box>
+    </Styled>
   );
 }
 
 Search.propTypes = {
   onSearch: PropTypes.func,
-  onToggle: PropTypes.func,
+  onClose: PropTypes.func,
   onNavigateTypology: PropTypes.func,
   stretch: PropTypes.bool,
   expand: PropTypes.bool,

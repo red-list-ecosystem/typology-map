@@ -7,7 +7,7 @@ import { filter } from 'lodash/collection';
 import styled from 'styled-components';
 
 import { Button, Box, Text, ResponsiveContext, Layer } from 'grommet';
-import { Menu } from 'grommet-icons';
+import { Menu, Search as SearchIcon } from 'grommet-icons';
 
 import { selectRouterPath } from 'containers/App/selectors';
 import { navigate, navigateHome, navigatePage } from 'containers/App/actions';
@@ -68,10 +68,24 @@ const NavSecondary = styled(props => (
   <Box {...props} direction="row" gap="small" basis="1/2" />
 ))``;
 const NavSearch = styled(props => (
-  <Box {...props} direction="row" gap="small" basis="1/2" align="center" />
+  <Box {...props} direction="row" basis="1/2" align="center" />
 ))``;
+const NavSearchSmall = styled(props => (
+  <Box {...props} direction="row" align="center" fill="horizontal" />
+))`
+  height: ${getHeaderHeight('small')}px;
+`;
 
 const MenuButton = styled(props => <Button plain {...props} fill="vertical" />)`
+  width: ${getHeaderHeight('small')}px;
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    width: ${getHeaderHeight('medium')}px;
+  }
+  text-align: center;
+`;
+const SearchButton = styled(props => (
+  <Button plain {...props} fill="vertical" />
+))`
   width: ${getHeaderHeight('small')}px;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
     width: ${getHeaderHeight('medium')}px;
@@ -171,19 +185,49 @@ function Header({ nav, navHome, navPage, path }) {
           <NavBar
             justify={isMinSize(size, 'large') ? 'start' : 'between'}
             alignContent="end"
+            fill
           >
-            <Brand
-              onClick={() => navHome()}
-              label={<FormattedMessage {...commonMessages.appTitle} />}
-            />
+            {(isMinSize(size, 'medium') || !showSearch) && (
+              <Box flex={{ shrink: false }}>
+                <Brand
+                  onClick={() => navHome()}
+                  label={<FormattedMessage {...commonMessages.appTitle} />}
+                />
+              </Box>
+            )}
             {isMaxSize(size, 'medium') && (
-              <MenuButton
-                plain
-                onClick={() => setShowMenu(!showMenu)}
-                label={
-                  showMenu ? <MenuOpen color="white" /> : <Menu color="white" />
-                }
-              />
+              <Box
+                direction="row"
+                justify="end"
+                fill={{
+                  vertical: true,
+                  horizontal: false,
+                }}
+              >
+                {!showSearch && (
+                  <SearchButton
+                    plain
+                    onClick={() => setShowSearch(!showSearch)}
+                    label={<SearchIcon color="white" />}
+                  />
+                )}
+                {showSearch && (
+                  <NavSearchSmall>
+                    <Search onClose={() => setShowSearch(false)} />
+                  </NavSearchSmall>
+                )}
+                <MenuButton
+                  plain
+                  onClick={() => setShowMenu(!showMenu)}
+                  label={
+                    showMenu ? (
+                      <MenuOpen color="white" />
+                    ) : (
+                      <Menu color="white" />
+                    )
+                  }
+                />
+              </Box>
             )}
             {isMinSize(size, 'large') && (
               <NavPrimary>
@@ -249,10 +293,16 @@ function Header({ nav, navHome, navPage, path }) {
                   <LocaleToggle />
                 </NavSecondary>
                 <NavSearch justify="end">
-                  <Search
-                    expand={showSearch}
-                    onToggle={() => setShowSearch(!showSearch)}
-                  />
+                  {!showSearch && (
+                    <Button
+                      onClick={() => setShowSearch(true)}
+                      icon={<SearchIcon size="xlarge" color="white" />}
+                      style={{ textAlign: 'center' }}
+                    />
+                  )}
+                  {showSearch && (
+                    <Search onClose={() => setShowSearch(false)} />
+                  )}
                 </NavSearch>
               </Box>
             )}
