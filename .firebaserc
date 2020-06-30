@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "rle-typology"
+    "default": "global-ecosystems-dev",
+    "dev": "global-ecosystems-dev",
+    "production": "rle-typology"
   }
 }
