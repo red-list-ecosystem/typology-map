@@ -188,7 +188,7 @@ function Header({ nav, navHome, navPage, path }) {
             fill
           >
             {(isMinSize(size, 'medium') || !showSearch) && (
-              <Box flex={{ shrink: false }}>
+              <Box flex={{ shrink: 0 }}>
                 <Brand
                   onClick={() => navHome()}
                   label={<FormattedMessage {...commonMessages.appTitle} />}
@@ -196,14 +196,7 @@ function Header({ nav, navHome, navPage, path }) {
               </Box>
             )}
             {isMaxSize(size, 'medium') && (
-              <Box
-                direction="row"
-                justify="end"
-                fill={{
-                  vertical: true,
-                  horizontal: false,
-                }}
-              >
+              <Box direction="row" justify="end" fill="vertical">
                 {!showSearch && (
                   <SearchButton
                     plain
