@@ -43,6 +43,9 @@ const GlobalStyle = createGlobalStyle`
   .rle-caption-markdown p {
     margin: 0;
   }
+  .rle-caption-markdown a {
+    color: white;
+  }
   .rle-iframe-feedback-form-wrapper {
     position: relative;
     overflow: hidden;

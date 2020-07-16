@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import styled from 'styled-components';
 import { Box } from 'grommet';
 import Markdown from 'react-remarkable';
@@ -21,7 +21,7 @@ const Styled = styled(Box)`
 
 const Caption = styled.div`
   background: rgba(0, 0, 0, 0.6);
-  color: white;
+  color: white !important;
   padding: 0px 5px;
   text-transform: uppercase;
   font-weight: 600;
@@ -33,18 +33,26 @@ const Credit = styled(Caption)`
   padding: 0px 4px;
 `;
 
-function ImageInfo({ caption, credit }) {
+const mdOptions = {
+  linkTarge: '_blank',
+};
+
+function ImageInfo({ caption, credit, intl }) {
   return (
     <Styled align="end">
       {caption && (
         <Caption className="rle-caption-markdown">
-          <Markdown source={caption} />
+          <Markdown options={mdOptions} source={caption} />
         </Caption>
       )}
       {credit && (
-        <Credit>
-          <FormattedMessage {...commonMessages.imageCreditBy} />
-          {credit}
+        <Credit className="rle-caption-markdown">
+          <Markdown
+            options={mdOptions}
+            source={`${intl.formatMessage(
+              commonMessages.imageCreditBy,
+            )} ${credit}`}
+          />
         </Credit>
       )}
     </Styled>
@@ -54,6 +62,7 @@ function ImageInfo({ caption, credit }) {
 ImageInfo.propTypes = {
   credit: PropTypes.string,
   caption: PropTypes.string,
+  intl: intlShape.isRequired,
 };
 
-export default ImageInfo;
+export default injectIntl(ImageInfo);
