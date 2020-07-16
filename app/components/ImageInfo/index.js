@@ -34,7 +34,7 @@ const Credit = styled(Caption)`
 `;
 
 const mdOptions = {
-  linkTarge: '_blank',
+  linkTarget: '_blank',
 };
 
 function ImageInfo({ caption, credit, intl }) {
