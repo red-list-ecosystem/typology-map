@@ -11,6 +11,7 @@ import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import styled from 'styled-components';
 import L from 'leaflet';
+// import { cloneDeep } from 'lodash/lang';
 
 import {
   MAPBOX,
@@ -52,6 +53,62 @@ const MapContainer = styled.div`
   left: 0;
 `;
 
+const getVectorStyle = (feature, opacity) => {
+  const value = feature.properties[GEOJSON.PROPERTIES.OCCURRENCE];
+  const geometryType = feature.geometry.type;
+  const featureStyle =
+    GROUP_LAYER_OPTIONS.VECTOR[
+      geometryType === 'LineString' || geometryType === 'MultiLineString'
+        ? 'line'
+        : 'area'
+    ];
+  if (value) {
+    const color =
+      GROUP_LAYER_PROPERTIES.OCCURRENCE[value] &&
+      GROUP_LAYER_PROPERTIES.OCCURRENCE[value].color;
+    if (color)
+      return {
+        ...featureStyle,
+        opacity,
+        fillOpacity: opacity,
+        color,
+      };
+  }
+  return {
+    ...featureStyle,
+    opacity,
+    fillOpacity: opacity,
+  };
+};
+
+// const coordinatesToLatLon = (coordinates, offsetLon = 0) => {
+//   // console.log(coordinates)
+//   if (coordinates && coordinates.length > 0) {
+//     return coordinates.map(c =>
+//       c.map(coord =>
+//         coord.length === 2 ? [coord[0] + offsetLon, coord[1]] : null,
+//       ),
+//     );
+//   }
+//   return [];
+// };
+//
+// const shiftData = (data, shiftLon = 0) => {
+//   const dataShifted = cloneDeep(data);
+//   dataShifted.features = dataShifted.features.map(feature => {
+//     const featureShifted = cloneDeep(feature);
+//     if (featureShifted.geometry && featureShifted.geometry.coordinates) {
+//       featureShifted.geometry.coordinates = coordinatesToLatLon(
+//         featureShifted.geometry.coordinates,
+//         shiftLon,
+//       );
+//       return featureShifted;
+//     }
+//     return featureShifted;
+//   });
+//   return dataShifted;
+// };
+
 export function Map({
   group,
   fullscreen,
@@ -76,6 +133,7 @@ export function Map({
       center: [30, 0],
       zoom: 1,
       minZoom: 1,
+      maxBounds: [[-90, -270], [90, 270]],
     });
     // make sure group overlays are always rendered on top of basemap
     mapRef.current.createPane('groupOverlay');
@@ -219,43 +277,29 @@ export function Map({
       }
       // display layer once loaded
       if (layers[group.id] && groupLayerGroupRef.current) {
-        const jsonLayer = L.geoJSON(layers[group.id].data, {
+        const layer = layers[group.id];
+        const jsonLayerGroup = L.featureGroup(null);
+        const jsonLayer = L.geoJSON(layer.data, {
           pane: 'groupOverlay',
-          style: feature => {
-            const value = feature.properties[GEOJSON.PROPERTIES.OCCURRENCE];
-            const geometryType = feature.geometry.type;
-            const featureStyle =
-              GROUP_LAYER_OPTIONS.VECTOR[
-                geometryType === 'LineString' ||
-                geometryType === 'MultiLineString'
-                  ? 'line'
-                  : 'area'
-              ];
-            if (value) {
-              const color =
-                GROUP_LAYER_PROPERTIES.OCCURRENCE[value] &&
-                GROUP_LAYER_PROPERTIES.OCCURRENCE[value].color;
-              if (color)
-                return {
-                  ...featureStyle,
-                  opacity,
-                  fillOpacity: opacity,
-                  color,
-                };
-            }
-            return {
-              ...featureStyle,
-              opacity,
-              fillOpacity: opacity,
-            };
-          },
+          style: feature => getVectorStyle(feature, opacity),
         });
+        // const jsonLayerEast = L.geoJSON(shiftData(layer.data, 360), {
+        //   pane: 'groupOverlay',
+        //   style: feature => getVectorStyle(feature, opacity),
+        // });
+        // const jsonLayerWest = L.geoJSON(shiftData(layer.data, -360), {
+        //   pane: 'groupOverlay',
+        //   style: feature => getVectorStyle(feature, opacity),
+        // });
+        jsonLayerGroup.addLayer(jsonLayer);
+        // jsonLayerGroup.addLayer(jsonLayerEast);
+        // jsonLayerGroup.addLayer(jsonLayerWest);
         if (zoomToBounds) {
           mapRef.current.fitBounds(jsonLayer.getBounds(), {
             paddingBottomRight: [0, 75],
           });
         }
-        groupLayerGroupRef.current.addLayer(jsonLayer);
+        groupLayerGroupRef.current.addLayer(jsonLayerGroup);
       }
     }
   }, [group, layers]);
