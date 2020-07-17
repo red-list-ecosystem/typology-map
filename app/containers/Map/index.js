@@ -32,6 +32,7 @@ import {
   selectBasemap,
   selectOpacity,
   selectCountry,
+  selectZoomToBounds,
 } from './selectors';
 import { loadLayer } from './actions';
 
@@ -59,6 +60,7 @@ export function Map({
   basemap,
   opacity,
   country,
+  zoomToBounds,
 }) {
   useInjectReducer({ key: 'map', reducer });
   useInjectSaga({ key: 'map', saga });
@@ -73,6 +75,7 @@ export function Map({
     mapRef.current = L.map('ll-map', {
       center: [30, 0],
       zoom: 1,
+      minZoom: 1,
     });
     // make sure group overlays are always rendered on top of basemap
     mapRef.current.createPane('groupOverlay');
@@ -117,7 +120,7 @@ export function Map({
 
   // change opacity
   useEffect(() => {
-    if (groupLayerGroupRef.current && group.layer) {
+    if (group && groupLayerGroupRef.current && group.layer) {
       groupLayerGroupRef.current.eachLayer(layer => {
         if (group.layer.type === 'raster') {
           layer.setOpacity(opacity);
@@ -187,7 +190,7 @@ export function Map({
   // change group or stored vector layers
   useEffect(() => {
     // add mapbox tile layer
-    if (group.layer && group.layer.source === 'mapbox') {
+    if (group && group.layer && group.layer.source === 'mapbox') {
       if (groupLayerGroupRef) {
         groupLayerGroupRef.current.addLayer(
           L.tileLayer(MAPBOX.RASTER_URL_TEMPLATE, {
@@ -199,9 +202,13 @@ export function Map({
           }),
         );
       }
+      if (zoomToBounds) {
+        mapRef.current.setView([30, 0], 1);
+      }
     }
     // add vector layer
     if (
+      group &&
       layers &&
       group.layer &&
       (group.layer.type === 'geojson' || group.layer.type === 'topojson')
@@ -212,39 +219,43 @@ export function Map({
       }
       // display layer once loaded
       if (layers[group.id] && groupLayerGroupRef.current) {
-        groupLayerGroupRef.current.addLayer(
-          L.geoJSON(layers[group.id].data, {
-            pane: 'groupOverlay',
-            style: feature => {
-              const value = feature.properties[GEOJSON.PROPERTIES.OCCURRENCE];
-              const geometryType = feature.geometry.type;
-              const featureStyle =
-                GROUP_LAYER_OPTIONS.VECTOR[
-                  geometryType === 'LineString' ||
-                  geometryType === 'MultiLineString'
-                    ? 'line'
-                    : 'area'
-                ];
-              if (value) {
-                const color =
-                  GROUP_LAYER_PROPERTIES.OCCURRENCE[value] &&
-                  GROUP_LAYER_PROPERTIES.OCCURRENCE[value].color;
-                if (color)
-                  return {
-                    ...featureStyle,
-                    opacity,
-                    fillOpacity: opacity,
-                    color,
-                  };
-              }
-              return {
-                ...featureStyle,
-                opacity,
-                fillOpacity: opacity,
-              };
-            },
-          }),
-        );
+        const jsonLayer = L.geoJSON(layers[group.id].data, {
+          pane: 'groupOverlay',
+          style: feature => {
+            const value = feature.properties[GEOJSON.PROPERTIES.OCCURRENCE];
+            const geometryType = feature.geometry.type;
+            const featureStyle =
+              GROUP_LAYER_OPTIONS.VECTOR[
+                geometryType === 'LineString' ||
+                geometryType === 'MultiLineString'
+                  ? 'line'
+                  : 'area'
+              ];
+            if (value) {
+              const color =
+                GROUP_LAYER_PROPERTIES.OCCURRENCE[value] &&
+                GROUP_LAYER_PROPERTIES.OCCURRENCE[value].color;
+              if (color)
+                return {
+                  ...featureStyle,
+                  opacity,
+                  fillOpacity: opacity,
+                  color,
+                };
+            }
+            return {
+              ...featureStyle,
+              opacity,
+              fillOpacity: opacity,
+            };
+          },
+        });
+        if (zoomToBounds) {
+          mapRef.current.fitBounds(jsonLayer.getBounds(), {
+            paddingBottomRight: [0, 75],
+          });
+        }
+        groupLayerGroupRef.current.addLayer(jsonLayer);
       }
     }
   }, [group, layers]);
@@ -252,7 +263,7 @@ export function Map({
   return (
     <Styled>
       <MapContainer id="ll-map" />
-      <Settings group={group} fullscreen={fullscreen} />
+      {group && <Settings group={group} fullscreen={fullscreen} />}
     </Styled>
   );
 }
@@ -265,6 +276,7 @@ Map.propTypes = {
   basemap: PropTypes.string,
   opacity: PropTypes.number,
   country: PropTypes.bool,
+  zoomToBounds: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -272,6 +284,7 @@ const mapStateToProps = createStructuredSelector({
   opacity: state => selectOpacity(state),
   basemap: state => selectBasemap(state),
   country: state => selectCountry(state),
+  zoomToBounds: state => selectZoomToBounds(state),
 });
 
 function mapDispatchToProps(dispatch) {

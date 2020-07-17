@@ -28,13 +28,17 @@ import {
   dismissDisclaimer,
   navigatePage,
 } from 'containers/App/actions';
-import { selectShowDisclaimer } from 'containers/App/selectors';
+import {
+  selectShowDisclaimer,
+  selectRouterPathNamed,
+} from 'containers/App/selectors';
 
 import RouteHome from 'containers/RouteHome/Loadable';
 import RoutePage from 'containers/RoutePage/Loadable';
 import RouteExploreOverview from 'containers/RouteExploreOverview/Loadable';
 import RouteExplore from 'containers/RouteExplore/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
+import MapContainer from 'containers/MapContainer';
 import Header from 'containers/Header';
 import Disclaimer from 'components/Disclaimer';
 import { getHeaderHeight } from 'utils/responsive';
@@ -72,6 +76,7 @@ function App({
   showDisclaimer,
   onDismissDisclaimer,
   onNavigateAbout,
+  path,
 }) {
   useInjectReducer({ key: 'global', reducer });
   useInjectSaga({ key: 'default', saga });
@@ -79,6 +84,8 @@ function App({
   useEffect(() => {
     onLoadTypology();
   }, []);
+  const groupId =
+    path.route === ROUTES.EXPLORE && path.level === 'groups' ? path.id : null;
   return (
     <Grommet theme={theme}>
       <AppWrapper>
@@ -96,6 +103,7 @@ function App({
         )}
         <Header />
         <Content>
+          <MapContainer groupId={groupId} />
           <ScrollToTop>
             <Switch>
               <Route
@@ -150,10 +158,12 @@ App.propTypes = {
   onDismissDisclaimer: PropTypes.func,
   onNavigateAbout: PropTypes.func,
   showDisclaimer: PropTypes.bool,
+  path: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
   showDisclaimer: state => selectShowDisclaimer(state),
+  path: state => selectRouterPathNamed(state),
 });
 
 export function mapDispatchToProps(dispatch) {

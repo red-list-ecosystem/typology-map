@@ -5,16 +5,17 @@ import { createSelector } from 'reselect';
 import { DEFAULT_LOCALE, appLocales } from 'i18n';
 
 import { biomesForRealm, groupsForBiome, groupsForBiomes } from 'utils/store';
+import { startsWith } from 'utils/string';
 
 import { initialState } from './reducer';
 
-const selectGlobal = state => state.global || initialState;
+const selectGlobal = state => (state && state.global) || initialState;
 
-const selectRouter = state => state.router;
+const selectRouter = state => state && state.router;
 
 export const selectRouterLocation = createSelector(
   selectRouter,
-  routerState => routerState.location,
+  routerState => routerState && routerState.location,
 );
 export const selectRouterSearchParams = createSelector(
   selectRouterLocation,
@@ -23,6 +24,19 @@ export const selectRouterSearchParams = createSelector(
 export const selectRouterPath = createSelector(
   selectRouterLocation,
   location => location && location.pathname,
+);
+
+export const selectRouterPathNamed = createSelector(
+  selectRouterLocation,
+  location => {
+    if (!location || !location.pathname) return false;
+    console.log(location.pathname);
+    const path = startsWith(location.pathname, '/')
+      ? location.pathname.substr(1)
+      : location.pathname;
+    const [route, level, id] = path.split('/');
+    return { route, level, id };
+  },
 );
 
 /**

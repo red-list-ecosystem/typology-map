@@ -7,6 +7,7 @@ import { getAsideWidth } from 'utils/responsive';
 
 // prettier-ignore
 const Styled = styled(Box)`
+  pointer-events: all;
   position: relative;
   min-height: 100vh;
   margin-right: ${getAsideWidth('small')}px;

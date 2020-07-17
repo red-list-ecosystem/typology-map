@@ -6,6 +6,7 @@ import { getAsideWidth, getHeaderHeight } from 'utils/responsive';
 
 // prettier-ignore
 const Styled = styled(Box)`
+  pointer-events: all;
   position: fixed;
   z-index: ${({ theme }) => theme.dimensions.aside.zIndex};
   right: 0;

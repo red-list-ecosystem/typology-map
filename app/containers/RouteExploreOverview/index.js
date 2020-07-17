@@ -23,6 +23,8 @@ import messages from './messages';
 
 const Styled = styled.div`
   min-height: 100vh;
+  position: relative;
+  z-index: 2;
 `;
 
 export function RouteExploreOverview({ realms, navRealm, locale, intl }) {

@@ -31,7 +31,10 @@ import Intro from './Intro';
 import SectionExplore from './SectionExplore';
 import SectionAbout from './SectionAbout';
 
-const Styled = styled.div``;
+const Styled = styled.div`
+  position: relative;
+  z-index: 2;
+`;
 
 const MainContent = styled.div`
   position: relative;

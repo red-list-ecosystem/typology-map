@@ -101,7 +101,7 @@ export const GROUP_LAYER_OPTIONS = {
   },
   RASTER: {
     tileSize: 256,
-    noWrap: true,
+    noWrap: false,
   },
 };
 

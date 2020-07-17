@@ -21,6 +21,14 @@ export default defineMessages({
     id: `${scope}.settingCountriesShow`,
     defaultMessage: 'Show on map',
   },
+  settingZoomToBounds: {
+    id: `${scope}.settingZoomToBounds`,
+    defaultMessage: 'Zoom to layer',
+  },
+  settingZoomToBoundsEnabled: {
+    id: `${scope}.settingZoomToBoundsEnabled`,
+    defaultMessage: 'Enabled',
+  },
   settingBasemap: {
     id: `${scope}.settingBasemap`,
     defaultMessage: 'Basemap',
