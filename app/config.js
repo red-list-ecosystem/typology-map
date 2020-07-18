@@ -94,6 +94,7 @@ export const GROUP_LAYER_OPTIONS = {
       stroke: false,
       weight: 0,
       fill: true,
+      fillOpacity: 1,
     },
     line: {
       stroke: true,

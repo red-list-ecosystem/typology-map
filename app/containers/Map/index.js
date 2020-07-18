@@ -99,7 +99,7 @@ const getVectorGridStyle = (properties, opacity, type) => {
         ? { ...featureStyle, opacity, color }
         : {
           ...featureStyle,
-          fillOpacity: opacity,
+          opacity,
           fillColor: color,
           color,
         };
@@ -144,7 +144,9 @@ export function Map({
     // make sure country overlays are always rendered on top of basemap and groups
     mapRef.current.createPane('countryOverlay');
     mapRef.current.getPane('countryOverlay').style.zIndex = 650;
-    mapRef.current.getPane('countryOverlay').style.pointerEvents = 'none';
+    mapRef.current.createPane('basemapPane');
+    mapRef.current.getPane('basemapPane').style.zIndex = 100;
+    mapRef.current.getPane('tilePane').style.zIndex = 600;
     basemapLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
     groupLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
     countryLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
@@ -170,6 +172,7 @@ export function Map({
       basemapLayerGroupRef.current.clearLayers();
       basemapLayerGroupRef.current.addLayer(
         L.tileLayer(MAPBOX.STYLE_URL_TEMPLATE, {
+          pane: 'basemapPane',
           style_id: MAPBOX.BASEMAP_STYLES[basemap || 'light'],
           username: MAPBOX.USER,
           accessToken: MAPBOX.TOKEN,
@@ -186,10 +189,13 @@ export function Map({
           layer.setOpacity(opacity);
         }
         if (group.layer.type === 'geojson' || group.layer.type === 'topojson') {
-          layer.setStyle({
-            opacity,
-            fillOpacity: opacity,
-          });
+          layer.setOpacity(opacity);
+          if (layer.setStyle) {
+            layer.setStyle({
+              opacity,
+              fillOpacity: opacity,
+            });
+          }
         }
       });
     }
@@ -263,7 +269,19 @@ export function Map({
         );
       }
       if (zoomToBounds) {
-        mapRef.current.setView([30, 0], 1);
+        let latlngs;
+        if (group.layer.extent) {
+          const { N, S, W, E } = group.layer.extent;
+          latlngs = [
+            [parseInt(N || 85, 10), -parseInt(W || 180, 10)],
+            [-parseInt(S || 85, 10), parseInt(E || 180, 10)],
+          ];
+        } else {
+          latlngs = [[85, -180], [-85, 180]];
+        }
+        mapRef.current.fitBounds(latlngs, {
+          paddingBottomRight: [0, 40],
+        });
       }
     }
     // add vector layer
@@ -280,12 +298,6 @@ export function Map({
       // display layer once loaded
       if (layers[group.id] && groupLayerGroupRef.current) {
         const layer = layers[group.id];
-        if (zoomToBounds) {
-          const jsonLayer = L.geoJSON(layer.data);
-          mapRef.current.fitBounds(jsonLayer.getBounds(), {
-            paddingBottomRight: [0, 75],
-          });
-        }
         const geoType = getGeometryType(group.layer.geometryType);
         const vectorGrid = L.vectorGrid.slicer(layer.data, {
           rendererFactory: L.svg.tile,
@@ -295,6 +307,22 @@ export function Map({
           },
         });
         groupLayerGroupRef.current.addLayer(vectorGrid);
+        if (zoomToBounds) {
+          let latlngs;
+          if (group.layer.extent) {
+            const { N, S, W, E } = group.layer.extent;
+            latlngs = [
+              [parseInt(N || 85, 10), -parseInt(W || 180, 10)],
+              [-parseInt(S || 85, 10), parseInt(E || 180, 10)],
+            ];
+          } else {
+            const jsonLayer = L.geoJSON(layer.data);
+            latlngs = jsonLayer.getBounds();
+          }
+          mapRef.current.fitBounds(latlngs, {
+            paddingBottomRight: [0, 40],
+          });
+        }
       }
     }
   }, [group, layers]);

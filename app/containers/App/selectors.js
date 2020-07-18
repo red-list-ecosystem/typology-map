@@ -30,7 +30,6 @@ export const selectRouterPathNamed = createSelector(
   selectRouterLocation,
   location => {
     if (!location || !location.pathname) return false;
-    console.log(location.pathname);
     const path = startsWith(location.pathname, '/')
       ? location.pathname.substr(1)
       : location.pathname;
