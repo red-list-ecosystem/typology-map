@@ -11,6 +11,8 @@ import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import styled from 'styled-components';
 import L from 'leaflet';
+import 'leaflet.vectorgrid';
+// import { cloneDeep } from 'lodash/lang';
 
 import {
   MAPBOX,
@@ -52,6 +54,63 @@ const MapContainer = styled.div`
   left: 0;
 `;
 
+// const getVectorStyle = (feature, opacity) => {
+//   const value = feature.properties[GEOJSON.PROPERTIES.OCCURRENCE];
+//   const geometryType = feature.geometry.type;
+//   const featureStyle =
+//     GROUP_LAYER_OPTIONS.VECTOR[
+//       geometryType === 'LineString' || geometryType === 'MultiLineString'
+//         ? 'line'
+//         : 'area'
+//     ];
+//   if (value) {
+//     const color =
+//       GROUP_LAYER_PROPERTIES.OCCURRENCE[value] &&
+//       GROUP_LAYER_PROPERTIES.OCCURRENCE[value].color;
+//     if (color)
+//       return {
+//         ...featureStyle,
+//         opacity,
+//         fillOpacity: opacity,
+//         color,
+//       };
+//   }
+//   return {
+//     ...featureStyle,
+//     opacity,
+//     fillOpacity: opacity,
+//   };
+// };
+const getGeometryType = type =>
+  type === 'LineString' || type === 'MultiLineString' || type === 'line'
+    ? 'line'
+    : 'area';
+
+const getVectorGridStyle = (properties, opacity, type) => {
+  const value = properties[GEOJSON.PROPERTIES.OCCURRENCE];
+  const featureStyle = GROUP_LAYER_OPTIONS.VECTOR[type];
+  if (value) {
+    const color =
+      GROUP_LAYER_PROPERTIES.OCCURRENCE[value] &&
+      GROUP_LAYER_PROPERTIES.OCCURRENCE[value].color;
+    if (color)
+      // prettier-ignore
+      return type === 'line'
+        ? { ...featureStyle, opacity, color }
+        : {
+          ...featureStyle,
+          fillOpacity: opacity,
+          fillColor: color,
+          color,
+        };
+  }
+  return {
+    ...featureStyle,
+    opacity,
+    fillOpacity: opacity,
+  };
+};
+
 export function Map({
   group,
   fullscreen,
@@ -76,6 +135,7 @@ export function Map({
       center: [30, 0],
       zoom: 1,
       minZoom: 1,
+      maxBounds: [[-90, -315], [90, 315]],
     });
     // make sure group overlays are always rendered on top of basemap
     mapRef.current.createPane('groupOverlay');
@@ -219,43 +279,22 @@ export function Map({
       }
       // display layer once loaded
       if (layers[group.id] && groupLayerGroupRef.current) {
-        const jsonLayer = L.geoJSON(layers[group.id].data, {
-          pane: 'groupOverlay',
-          style: feature => {
-            const value = feature.properties[GEOJSON.PROPERTIES.OCCURRENCE];
-            const geometryType = feature.geometry.type;
-            const featureStyle =
-              GROUP_LAYER_OPTIONS.VECTOR[
-                geometryType === 'LineString' ||
-                geometryType === 'MultiLineString'
-                  ? 'line'
-                  : 'area'
-              ];
-            if (value) {
-              const color =
-                GROUP_LAYER_PROPERTIES.OCCURRENCE[value] &&
-                GROUP_LAYER_PROPERTIES.OCCURRENCE[value].color;
-              if (color)
-                return {
-                  ...featureStyle,
-                  opacity,
-                  fillOpacity: opacity,
-                  color,
-                };
-            }
-            return {
-              ...featureStyle,
-              opacity,
-              fillOpacity: opacity,
-            };
-          },
-        });
+        const layer = layers[group.id];
         if (zoomToBounds) {
+          const jsonLayer = L.geoJSON(layer.data);
           mapRef.current.fitBounds(jsonLayer.getBounds(), {
             paddingBottomRight: [0, 75],
           });
         }
-        groupLayerGroupRef.current.addLayer(jsonLayer);
+        const geoType = getGeometryType(group.layer.geometryType);
+        const vectorGrid = L.vectorGrid.slicer(layer.data, {
+          rendererFactory: L.svg.tile,
+          vectorTileLayerStyles: {
+            sliced: properties =>
+              getVectorGridStyle(properties, opacity, geoType),
+          },
+        });
+        groupLayerGroupRef.current.addLayer(vectorGrid);
       }
     }
   }, [group, layers]);
