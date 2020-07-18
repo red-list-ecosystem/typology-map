@@ -93,6 +93,7 @@ export const GROUP_LAYER_OPTIONS = {
     area: {
       stroke: false,
       weight: 0,
+      fill: true,
     },
     line: {
       stroke: true,
