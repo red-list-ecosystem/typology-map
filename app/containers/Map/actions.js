@@ -13,8 +13,15 @@ import {
   SET_BASEMAP,
   SET_OPACITY,
   SET_COUNTRY,
+  SET_ZOOM_TO_BOUNDS,
 } from './constants';
 
+export function setZoomToBounds(value) {
+  return {
+    type: SET_ZOOM_TO_BOUNDS,
+    value,
+  };
+}
 export function setCountry(value) {
   return {
     type: SET_COUNTRY,

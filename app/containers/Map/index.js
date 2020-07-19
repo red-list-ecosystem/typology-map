@@ -11,6 +11,8 @@ import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import styled from 'styled-components';
 import L from 'leaflet';
+import 'leaflet.vectorgrid';
+// import { cloneDeep } from 'lodash/lang';
 
 import {
   MAPBOX,
@@ -32,6 +34,7 @@ import {
   selectBasemap,
   selectOpacity,
   selectCountry,
+  selectZoomToBounds,
 } from './selectors';
 import { loadLayer } from './actions';
 
@@ -51,6 +54,63 @@ const MapContainer = styled.div`
   left: 0;
 `;
 
+// const getVectorStyle = (feature, opacity) => {
+//   const value = feature.properties[GEOJSON.PROPERTIES.OCCURRENCE];
+//   const geometryType = feature.geometry.type;
+//   const featureStyle =
+//     GROUP_LAYER_OPTIONS.VECTOR[
+//       geometryType === 'LineString' || geometryType === 'MultiLineString'
+//         ? 'line'
+//         : 'area'
+//     ];
+//   if (value) {
+//     const color =
+//       GROUP_LAYER_PROPERTIES.OCCURRENCE[value] &&
+//       GROUP_LAYER_PROPERTIES.OCCURRENCE[value].color;
+//     if (color)
+//       return {
+//         ...featureStyle,
+//         opacity,
+//         fillOpacity: opacity,
+//         color,
+//       };
+//   }
+//   return {
+//     ...featureStyle,
+//     opacity,
+//     fillOpacity: opacity,
+//   };
+// };
+const getGeometryType = type =>
+  type === 'LineString' || type === 'MultiLineString' || type === 'line'
+    ? 'line'
+    : 'area';
+
+const getVectorGridStyle = (properties, opacity, type) => {
+  const value = properties[GEOJSON.PROPERTIES.OCCURRENCE];
+  const featureStyle = GROUP_LAYER_OPTIONS.VECTOR[type];
+  if (value) {
+    const color =
+      GROUP_LAYER_PROPERTIES.OCCURRENCE[value] &&
+      GROUP_LAYER_PROPERTIES.OCCURRENCE[value].color;
+    if (color)
+      // prettier-ignore
+      return type === 'line'
+        ? { ...featureStyle, opacity, color }
+        : {
+          ...featureStyle,
+          opacity,
+          fillColor: color,
+          color,
+        };
+  }
+  return {
+    ...featureStyle,
+    opacity,
+    fillOpacity: opacity,
+  };
+};
+
 export function Map({
   group,
   fullscreen,
@@ -59,6 +119,7 @@ export function Map({
   basemap,
   opacity,
   country,
+  zoomToBounds,
 }) {
   useInjectReducer({ key: 'map', reducer });
   useInjectSaga({ key: 'map', saga });
@@ -73,6 +134,8 @@ export function Map({
     mapRef.current = L.map('ll-map', {
       center: [30, 0],
       zoom: 1,
+      minZoom: 1,
+      maxBounds: [[-90, -315], [90, 315]],
     });
     // make sure group overlays are always rendered on top of basemap
     mapRef.current.createPane('groupOverlay');
@@ -81,7 +144,9 @@ export function Map({
     // make sure country overlays are always rendered on top of basemap and groups
     mapRef.current.createPane('countryOverlay');
     mapRef.current.getPane('countryOverlay').style.zIndex = 650;
-    mapRef.current.getPane('countryOverlay').style.pointerEvents = 'none';
+    mapRef.current.createPane('basemapPane');
+    mapRef.current.getPane('basemapPane').style.zIndex = 100;
+    mapRef.current.getPane('tilePane').style.zIndex = 600;
     basemapLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
     groupLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
     countryLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
@@ -107,6 +172,7 @@ export function Map({
       basemapLayerGroupRef.current.clearLayers();
       basemapLayerGroupRef.current.addLayer(
         L.tileLayer(MAPBOX.STYLE_URL_TEMPLATE, {
+          pane: 'basemapPane',
           style_id: MAPBOX.BASEMAP_STYLES[basemap || 'light'],
           username: MAPBOX.USER,
           accessToken: MAPBOX.TOKEN,
@@ -117,16 +183,19 @@ export function Map({
 
   // change opacity
   useEffect(() => {
-    if (groupLayerGroupRef.current && group.layer) {
+    if (group && groupLayerGroupRef.current && group.layer) {
       groupLayerGroupRef.current.eachLayer(layer => {
         if (group.layer.type === 'raster') {
           layer.setOpacity(opacity);
         }
         if (group.layer.type === 'geojson' || group.layer.type === 'topojson') {
-          layer.setStyle({
-            opacity,
-            fillOpacity: opacity,
-          });
+          layer.setOpacity(opacity);
+          if (layer.setStyle) {
+            layer.setStyle({
+              opacity,
+              fillOpacity: opacity,
+            });
+          }
         }
       });
     }
@@ -187,7 +256,7 @@ export function Map({
   // change group or stored vector layers
   useEffect(() => {
     // add mapbox tile layer
-    if (group.layer && group.layer.source === 'mapbox') {
+    if (group && group.layer && group.layer.source === 'mapbox') {
       if (groupLayerGroupRef) {
         groupLayerGroupRef.current.addLayer(
           L.tileLayer(MAPBOX.RASTER_URL_TEMPLATE, {
@@ -199,9 +268,25 @@ export function Map({
           }),
         );
       }
+      if (zoomToBounds) {
+        let latlngs;
+        if (group.layer.extent) {
+          const { N, S, W, E } = group.layer.extent;
+          latlngs = [
+            [parseInt(N || 85, 10), -parseInt(W || 180, 10)],
+            [-parseInt(S || 85, 10), parseInt(E || 180, 10)],
+          ];
+        } else {
+          latlngs = [[85, -180], [-85, 180]];
+        }
+        mapRef.current.fitBounds(latlngs, {
+          paddingBottomRight: [0, 40],
+        });
+      }
     }
     // add vector layer
     if (
+      group &&
       layers &&
       group.layer &&
       (group.layer.type === 'geojson' || group.layer.type === 'topojson')
@@ -212,39 +297,32 @@ export function Map({
       }
       // display layer once loaded
       if (layers[group.id] && groupLayerGroupRef.current) {
-        groupLayerGroupRef.current.addLayer(
-          L.geoJSON(layers[group.id].data, {
-            pane: 'groupOverlay',
-            style: feature => {
-              const value = feature.properties[GEOJSON.PROPERTIES.OCCURRENCE];
-              const geometryType = feature.geometry.type;
-              const featureStyle =
-                GROUP_LAYER_OPTIONS.VECTOR[
-                  geometryType === 'LineString' ||
-                  geometryType === 'MultiLineString'
-                    ? 'line'
-                    : 'area'
-                ];
-              if (value) {
-                const color =
-                  GROUP_LAYER_PROPERTIES.OCCURRENCE[value] &&
-                  GROUP_LAYER_PROPERTIES.OCCURRENCE[value].color;
-                if (color)
-                  return {
-                    ...featureStyle,
-                    opacity,
-                    fillOpacity: opacity,
-                    color,
-                  };
-              }
-              return {
-                ...featureStyle,
-                opacity,
-                fillOpacity: opacity,
-              };
-            },
-          }),
-        );
+        const layer = layers[group.id];
+        const geoType = getGeometryType(group.layer.geometryType);
+        const vectorGrid = L.vectorGrid.slicer(layer.data, {
+          rendererFactory: L.svg.tile,
+          vectorTileLayerStyles: {
+            sliced: properties =>
+              getVectorGridStyle(properties, opacity, geoType),
+          },
+        });
+        groupLayerGroupRef.current.addLayer(vectorGrid);
+        if (zoomToBounds) {
+          let latlngs;
+          if (group.layer.extent) {
+            const { N, S, W, E } = group.layer.extent;
+            latlngs = [
+              [parseInt(N || 85, 10), -parseInt(W || 180, 10)],
+              [-parseInt(S || 85, 10), parseInt(E || 180, 10)],
+            ];
+          } else {
+            const jsonLayer = L.geoJSON(layer.data);
+            latlngs = jsonLayer.getBounds();
+          }
+          mapRef.current.fitBounds(latlngs, {
+            paddingBottomRight: [0, 40],
+          });
+        }
       }
     }
   }, [group, layers]);
@@ -252,7 +330,7 @@ export function Map({
   return (
     <Styled>
       <MapContainer id="ll-map" />
-      <Settings group={group} fullscreen={fullscreen} />
+      {group && <Settings group={group} fullscreen={fullscreen} />}
     </Styled>
   );
 }
@@ -265,6 +343,7 @@ Map.propTypes = {
   basemap: PropTypes.string,
   opacity: PropTypes.number,
   country: PropTypes.bool,
+  zoomToBounds: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -272,6 +351,7 @@ const mapStateToProps = createStructuredSelector({
   opacity: state => selectOpacity(state),
   basemap: state => selectBasemap(state),
   country: state => selectCountry(state),
+  zoomToBounds: state => selectZoomToBounds(state),
 });
 
 function mapDispatchToProps(dispatch) {

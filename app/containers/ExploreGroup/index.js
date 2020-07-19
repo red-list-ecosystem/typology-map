@@ -4,16 +4,15 @@
  *
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import styled, { css } from 'styled-components';
-import { Box, ResponsiveContext, Button } from 'grommet';
-import { Expand, Contract } from 'grommet-icons';
+import styled from 'styled-components';
+import { Box, ResponsiveContext } from 'grommet';
 
 import {
   selectBiome,
@@ -28,8 +27,6 @@ import {
   navigate,
 } from 'containers/App/actions';
 
-import Map from 'containers/Map';
-
 import ColumnMain from 'components/ColumnMain';
 import ColumnMainContent from 'components/ColumnMainContent';
 import ColumnAside from 'components/ColumnAside';
@@ -38,44 +35,16 @@ import AsideNavSection from 'components/AsideNavSection';
 import AsideNavLabel from 'components/AsideNavLabel';
 import AsideNavTypologySelected from 'components/AsideNavTypologySelected';
 import AsideNavTypologyList from 'components/AsideNavTypologyList';
-import TopGraphic from 'components/TopGraphic';
 import TypologyHeader from 'components/TypologyHeader';
 import TypologyContent from 'components/TypologyContent';
 import TypologyImage from 'components/TypologyImage';
 
-import { isMinSize, getHeaderHeight } from 'utils/responsive';
+import { isMinSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
 
-const FSButtonWrapper = styled.div`
-  position: absolute;
-  right: ${({ theme }) => theme.global.edgeSize.small};
-  top: ${({ theme }) => theme.global.edgeSize.small};
-  z-index: 401;
-`;
-const FSButton = styled(props => <Button plain {...props} />)`
-  border-radius: 9999px;
-  padding: ${({ theme }) => theme.global.edgeSize.small};
-  background: ${({ theme }) => theme.global.colors.white};
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-`;
-
-const MapWrapper = styled(TopGraphic)`
-  ${({ isFS }) =>
-    isFS &&
-    css`
-      bottom: 0 !important;
-      right: 0 !important;
-      height: auto !important;
-    `}
-`;
-
 const Styled = styled.div`
-  position: ${({ isFS }) => (isFS ? 'absolute' : 'relative')};
-  top: ${({ isFS, size }) => (isFS ? `${getHeaderHeight(size)}px` : 'auto')};
-  bottom: ${({ isFS }) => (isFS ? '0' : 'auto')};
-  right: ${({ isFS }) => (isFS ? '0' : 'auto')};
-  left: ${({ isFS }) => (isFS ? '0' : 'auto')};
+  pointer-events: none;
 `;
 
 export function ExploreGroup({
@@ -96,8 +65,6 @@ export function ExploreGroup({
     onLoadContent(typology.path);
   }, [typology]);
 
-  const [isMapExpanded, setIsMapExpanded] = useState(false);
-
   const sortedGroups =
     groups &&
     groups.sort((a, b) => {
@@ -110,58 +77,48 @@ export function ExploreGroup({
   return (
     <ResponsiveContext.Consumer>
       {size => (
-        <Styled isFS={isMapExpanded} size={size}>
+        <Styled size={size}>
           <Helmet>
             <title>Explore Group</title>
             <meta name="description" content="Description of Explore Group" />
           </Helmet>
-          <Box direction="row" fill="horizontal">
+          <Box
+            direction="row"
+            fill="horizontal"
+            style={{ pointerEvents: 'none' }}
+          >
             <ColumnMain
               hasAside={isMinSize(size, 'large')}
               style={{
-                position: isMapExpanded ? 'static' : 'relative',
-                minHeight: isMapExpanded ? 'auto' : '100vh',
+                pointerEvents: 'none',
+                position: 'relative',
+                minHeight: '100vh',
               }}
             >
-              <MapWrapper isFS={isMapExpanded}>
-                <Map
-                  group={typology}
-                  fullscreen={isMapExpanded}
-                  locale={locale}
-                />
-                <FSButtonWrapper>
-                  <FSButton
-                    icon={isMapExpanded ? <Contract /> : <Expand />}
-                    onClick={() => setIsMapExpanded(!isMapExpanded)}
+              <ColumnMainContent>
+                <TypologyContent>
+                  <TypologyHeader
+                    typology={typology}
+                    locale={locale}
+                    ancestors={[
+                      {
+                        ...realm,
+                        typologyType: 'realm',
+                        nav: () => navRealm(realm.id),
+                      },
+                      {
+                        ...biome,
+                        typologyType: 'biome',
+                        nav: () => navBiome(typology.biome),
+                      },
+                    ]}
                   />
-                </FSButtonWrapper>
-              </MapWrapper>
-              {!isMapExpanded && (
-                <ColumnMainContent>
-                  <TypologyContent>
-                    <TypologyHeader
-                      typology={typology}
-                      locale={locale}
-                      ancestors={[
-                        {
-                          ...realm,
-                          typologyType: 'realm',
-                          nav: () => navRealm(realm.id),
-                        },
-                        {
-                          ...biome,
-                          typologyType: 'biome',
-                          nav: () => navBiome(typology.biome),
-                        },
-                      ]}
-                    />
-                    <TypologyImage inText typology={typology} locale={locale} />
-                    {content && <HTMLWrapper innerhtml={content} />}
-                  </TypologyContent>
-                </ColumnMainContent>
-              )}
+                  <TypologyImage inText typology={typology} locale={locale} />
+                  {content && <HTMLWrapper innerhtml={content} />}
+                </TypologyContent>
+              </ColumnMainContent>
             </ColumnMain>
-            {isMinSize(size, 'large') && !isMapExpanded && (
+            {isMinSize(size, 'large') && (
               <ColumnAside>
                 <AsideNavSection>
                   <AsideNavLabel

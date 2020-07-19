@@ -7,6 +7,10 @@ import ICON_X from 'images/explore.svg';
 import ICON_X0 from 'images/explore_0.svg';
 import ICON_X1 from 'images/explore_1.svg';
 import ICON_X2 from 'images/explore_2.svg';
+import LOGO_1 from 'images/logo_IUCN.jpg';
+import LOGO_2 from 'images/logo_CEM.jpg';
+import LOGO_3 from 'images/logo_CES.png';
+import LOGO_4 from 'images/logo_UNSW.png';
 
 import { PRIMARY, SECONDARY } from 'containers/App/constants';
 
@@ -88,6 +92,8 @@ export const GROUP_LAYER_OPTIONS = {
     area: {
       stroke: false,
       weight: 0,
+      fill: true,
+      fillOpacity: 1,
     },
     line: {
       stroke: true,
@@ -96,7 +102,7 @@ export const GROUP_LAYER_OPTIONS = {
   },
   RASTER: {
     tileSize: 256,
-    noWrap: true,
+    noWrap: false,
   },
 };
 
@@ -143,3 +149,22 @@ export const ICONS = {
   EXPLORE_1: ICON_X1,
   EXPLORE_2: ICON_X2,
 };
+
+export const LOGOS = [
+  {
+    id: '1',
+    src: LOGO_1,
+  },
+  {
+    id: '2',
+    src: LOGO_2,
+  },
+  {
+    id: '4',
+    src: LOGO_4,
+  },
+  {
+    id: '3',
+    src: LOGO_3,
+  },
+];
