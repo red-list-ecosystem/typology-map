@@ -132,4 +132,37 @@ export default defineMessages({
     id: `${scope}.occurrence_minor`,
     defaultMessage: 'Minor',
   },
+  partner_1: {
+    id: `${scope}.partner_1`,
+    defaultMessage: 'International Union for Conservation of Nature',
+  },
+  partner_2: {
+    id: `${scope}.partner_2`,
+    defaultMessage: 'Commission on Ecosystem Management',
+  },
+  partner_3: {
+    id: `${scope}.partner_3`,
+    defaultMessage: 'Centre for Ecosystem Science',
+  },
+  partner_4: {
+    id: `${scope}.partner_4`,
+    defaultMessage: 'University of New South Wales',
+  },
+  partner_1_url: {
+    id: `${scope}.partner_1_url`,
+    defaultMessage: 'https://www.iucn.org/',
+  },
+  partner_2_url: {
+    id: `${scope}.partner_2_url`,
+    defaultMessage:
+      'https://www.iucn.org/commissions/commission-ecosystem-management',
+  },
+  partner_3_url: {
+    id: `${scope}.partner_3_url`,
+    defaultMessage: 'https://www.ecosystem.unsw.edu.au/',
+  },
+  partner_4_url: {
+    id: `${scope}.partner_4_url`,
+    defaultMessage: 'https://www.unsw.edu.au/',
+  },
 });
