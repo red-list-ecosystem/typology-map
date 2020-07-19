@@ -10,6 +10,7 @@ import { getTopGraphicHeight } from 'utils/responsive';
 
 export default styled.div`
   position: relative;
+  pointer-events: all;
   z-index: ${({ theme }) => theme.dimensions.mainContent.zIndex};
   background: ${({ theme }) => theme.global.colors.white};
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);

@@ -7,7 +7,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
-// import { FormattedMessage } from 'react-intl';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -25,10 +25,16 @@ import ExploreRealm from 'containers/ExploreRealm/Loadable';
 import ExploreBiome from 'containers/ExploreBiome/Loadable';
 import ExploreGroup from 'containers/ExploreGroup/Loadable';
 
+const Styled = styled.div`
+  pointer-events: none;
+  position: relative;
+  z-index: 2;
+`;
+
 export function RouteExplore({ match, typology }) {
   const { level } = match.params;
   return (
-    <>
+    <Styled>
       <Helmet>
         <title>RouteExplore</title>
         <meta name="description" content="Description of RouteExplore" />
@@ -38,7 +44,7 @@ export function RouteExplore({ match, typology }) {
         {level === 'biomes' && typology && <ExploreBiome typology={typology} />}
         {level === 'groups' && typology && <ExploreGroup typology={typology} />}
       </>
-    </>
+    </Styled>
   );
 }
 

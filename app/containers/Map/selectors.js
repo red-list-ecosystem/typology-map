@@ -11,6 +11,10 @@ const selectDomain = state => state.map || initialState;
  * Other specific selectors
  */
 
+export const selectZoomToBounds = createSelector(
+  selectDomain,
+  domain => domain.zoomToBounds,
+);
 export const selectCountry = createSelector(
   selectDomain,
   domain => domain.country,

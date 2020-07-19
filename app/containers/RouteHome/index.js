@@ -30,8 +30,12 @@ import messages from './messages';
 import Intro from './Intro';
 import SectionExplore from './SectionExplore';
 import SectionAbout from './SectionAbout';
+import SectionThanks from './SectionThanks';
 
-const Styled = styled.div``;
+const Styled = styled.div`
+  position: relative;
+  z-index: 2;
+`;
 
 const MainContent = styled.div`
   position: relative;
@@ -93,6 +97,7 @@ export function HomePage({ realms, navRealm, navPage, locale, intl }) {
                 },
               ]}
             />
+            <SectionThanks />
             <Footer />
           </MainContent>
         </Styled>

@@ -47,4 +47,8 @@ export default defineMessages({
     id: `${scope}.linkAboutSite`,
     defaultMessage: 'Learn more about this site',
   },
+  titleSectionThanks: {
+    id: `${scope}.titleSectionThanks`,
+    defaultMessage: 'Thanks to',
+  },
 });

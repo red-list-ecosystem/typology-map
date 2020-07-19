@@ -28,8 +28,13 @@ import commonMessages from 'messages';
 
 import { useInjectReducer } from 'utils/injectReducer';
 import reducer from './reducer';
-import { selectBasemap, selectOpacity, selectCountry } from './selectors';
-import { setOpacity, setBasemap, setCountry } from './actions';
+import {
+  selectBasemap,
+  selectOpacity,
+  selectCountry,
+  selectZoomToBounds,
+} from './selectors';
+import { setOpacity, setBasemap, setCountry, setZoomToBounds } from './actions';
 
 import messages from './messages';
 
@@ -108,6 +113,8 @@ export function Settings({
   onSetOpacity,
   country,
   onSetCountry,
+  zoomToBounds,
+  onSetZoomToBounds,
   intl,
 }) {
   useInjectReducer({ key: 'map', reducer });
@@ -221,6 +228,22 @@ export function Settings({
                     </BasemapToggle>
                   </WrapControl>
                 )}
+                {isMinSize(size, 'large') && (
+                  <WrapControl>
+                    <SettingTitle>
+                      <FormattedMessage {...messages.settingZoomToBounds} />
+                    </SettingTitle>
+                    <CheckBox
+                      checked={zoomToBounds}
+                      label={
+                        <FormattedMessage
+                          {...messages.settingZoomToBoundsEnabled}
+                        />
+                      }
+                      onChange={() => onSetZoomToBounds(!zoomToBounds)}
+                    />
+                  </WrapControl>
+                )}
               </Box>
             </StyledInner>
           )}
@@ -237,16 +260,19 @@ Settings.propTypes = {
   locale: PropTypes.string,
   opacity: PropTypes.number,
   country: PropTypes.bool,
+  zoomToBounds: PropTypes.bool,
   intl: intlShape.isRequired,
   onSetOpacity: PropTypes.func,
   onSetBasemap: PropTypes.func,
   onSetCountry: PropTypes.func,
+  onSetZoomToBounds: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
   opacity: state => selectOpacity(state),
   basemap: state => selectBasemap(state),
   country: state => selectCountry(state),
+  zoomToBounds: state => selectZoomToBounds(state),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -254,6 +280,7 @@ function mapDispatchToProps(dispatch) {
     onSetBasemap: value => dispatch(setBasemap(value)),
     onSetOpacity: value => dispatch(setOpacity(value)),
     onSetCountry: value => dispatch(setCountry(value)),
+    onSetZoomToBounds: value => dispatch(setZoomToBounds(value)),
   };
 }
 

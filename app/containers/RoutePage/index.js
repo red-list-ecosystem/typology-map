@@ -26,9 +26,12 @@ import { getHeaderHeight, getContentMaxWidth } from 'utils/responsive';
 // import messages from './messages';
 import commonMessages from 'messages';
 
+const Styled = styled.div`
+  position: relative;
+  z-index: 2;
+`;
 const ContentWrap = styled.div`
   position: relative;
-  z-index: 1;
   top: 50vh;
   min-height: 100vh;
   background: ${({ theme }) => theme.global.colors['light-2']};
@@ -73,7 +76,7 @@ export function RoutePage({ match, onLoadContent, content, intl }) {
   }, [match.params.id]);
   const config = PAGES[match.params.id];
   return (
-    <div>
+    <Styled>
       <Helmet>
         <title>RoutePage</title>
         <meta name="description" content="Description of RoutePage" />
@@ -91,7 +94,7 @@ export function RoutePage({ match, onLoadContent, content, intl }) {
       <ContentWrap>
         {content && <HTMLWrapper innerhtml={content} />}
       </ContentWrap>
-    </div>
+    </Styled>
   );
 }
 

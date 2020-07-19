@@ -14,6 +14,7 @@ import {
   SET_OPACITY,
   SET_BASEMAP,
   SET_COUNTRY, // bool
+  SET_ZOOM_TO_BOUNDS, // bool
 } from './constants';
 
 export const initialState = {
@@ -23,6 +24,7 @@ export const initialState = {
   basemap: 'light',
   country: false,
   opacity: GROUP_LAYER_OPTIONS.opacity,
+  zoomToBounds: true,
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -37,6 +39,9 @@ const mapReducer = (state = initialState, action) =>
         break;
       case SET_COUNTRY:
         draft.country = action.value; // bool
+        break;
+      case SET_ZOOM_TO_BOUNDS:
+        draft.zoomToBounds = action.value; // bool
         break;
       case LAYER_REQUESTED:
         draft.layersRequested[action.key] = action.time;
