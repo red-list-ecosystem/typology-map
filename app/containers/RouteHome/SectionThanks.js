@@ -77,7 +77,7 @@ export function SectionThanks({ intl }) {
   );
 }
 SectionThanks.propTypes = {
-  intl: intlShape.isRequried,
+  intl: intlShape.isRequired,
 };
 
 export default injectIntl(SectionThanks);
