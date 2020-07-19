@@ -111,6 +111,28 @@ const getVectorGridStyle = (properties, opacity, type) => {
   };
 };
 
+// const initTileLayer = () => {
+//   if (!L || !L.TileLayer || !L.TileLayer.prototype) return;
+//   /* eslint-disable no-underscore-dangle */
+//   const originalInitTile = L.TileLayer.prototype._initTile;
+//
+//   L.TileLayer.include({
+//     _initTile: tile => {
+//       if (originalInitTile) {
+//         originalInitTile.call(this, tile);
+//
+//         const tileSize = this.getTileSize();
+//         /* eslint-disable no-param-reassign */
+//         tile.style.width = `${tileSize.x + 1}px`;
+//         tile.style.height = `${tileSize.y + 1}px`;
+//       }
+//       return tile;
+//     },
+//   });
+// };
+//
+// initTileLayer();
+
 export function Map({
   group,
   fullscreen,
@@ -170,14 +192,13 @@ export function Map({
   useEffect(() => {
     if (basemapLayerGroupRef.current) {
       basemapLayerGroupRef.current.clearLayers();
-      basemapLayerGroupRef.current.addLayer(
-        L.tileLayer(MAPBOX.STYLE_URL_TEMPLATE, {
-          pane: 'basemapPane',
-          style_id: MAPBOX.BASEMAP_STYLES[basemap || 'light'],
-          username: MAPBOX.USER,
-          accessToken: MAPBOX.TOKEN,
-        }),
-      );
+      const tileLayer = L.tileLayer(MAPBOX.STYLE_URL_TEMPLATE, {
+        pane: 'basemapPane',
+        style_id: MAPBOX.BASEMAP_STYLES[basemap || 'light'],
+        username: MAPBOX.USER,
+        accessToken: MAPBOX.TOKEN,
+      });
+      basemapLayerGroupRef.current.addLayer(tileLayer);
     }
   }, [basemap]);
 
