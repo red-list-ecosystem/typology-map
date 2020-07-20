@@ -192,20 +192,6 @@ export function Settings({
                 {isMinSize(size, 'large') && (
                   <WrapControl>
                     <SettingTitle>
-                      <FormattedMessage {...messages.settingCountries} />
-                    </SettingTitle>
-                    <CheckBox
-                      checked={country}
-                      label={
-                        <FormattedMessage {...messages.settingCountriesShow} />
-                      }
-                      onChange={() => onSetCountry(!country)}
-                    />
-                  </WrapControl>
-                )}
-                {isMinSize(size, 'large') && (
-                  <WrapControl>
-                    <SettingTitle>
                       <FormattedMessage {...messages.settingBasemap} />
                     </SettingTitle>
                     <BasemapToggle>
@@ -226,6 +212,20 @@ export function Settings({
                         }
                       />
                     </BasemapToggle>
+                  </WrapControl>
+                )}
+                {isMinSize(size, 'large') && (
+                  <WrapControl>
+                    <SettingTitle>
+                      <FormattedMessage {...messages.settingCountries} />
+                    </SettingTitle>
+                    <CheckBox
+                      checked={country}
+                      label={
+                        <FormattedMessage {...messages.settingCountriesShow} />
+                      }
+                      onChange={() => onSetCountry(!country)}
+                    />
                   </WrapControl>
                 )}
                 {isMinSize(size, 'large') && (

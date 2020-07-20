@@ -26,6 +26,7 @@ import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
 
 import Settings from './Settings';
+import Attribution from './Attribution';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -54,33 +55,6 @@ const MapContainer = styled.div`
   left: 0;
 `;
 
-// const getVectorStyle = (feature, opacity) => {
-//   const value = feature.properties[GEOJSON.PROPERTIES.OCCURRENCE];
-//   const geometryType = feature.geometry.type;
-//   const featureStyle =
-//     GROUP_LAYER_OPTIONS.VECTOR[
-//       geometryType === 'LineString' || geometryType === 'MultiLineString'
-//         ? 'line'
-//         : 'area'
-//     ];
-//   if (value) {
-//     const color =
-//       GROUP_LAYER_PROPERTIES.OCCURRENCE[value] &&
-//       GROUP_LAYER_PROPERTIES.OCCURRENCE[value].color;
-//     if (color)
-//       return {
-//         ...featureStyle,
-//         opacity,
-//         fillOpacity: opacity,
-//         color,
-//       };
-//   }
-//   return {
-//     ...featureStyle,
-//     opacity,
-//     fillOpacity: opacity,
-//   };
-// };
 const getGeometryType = type =>
   type === 'LineString' || type === 'MultiLineString' || type === 'line'
     ? 'line'
@@ -136,6 +110,7 @@ export function Map({
       zoom: 1,
       minZoom: 1,
       maxBounds: [[-90, -315], [90, 315]],
+      attributionControl: false,
     });
     // make sure group overlays are always rendered on top of basemap
     mapRef.current.createPane('groupOverlay');
@@ -331,6 +306,7 @@ export function Map({
     <Styled>
       <MapContainer id="ll-map" />
       {group && <Settings group={group} fullscreen={fullscreen} />}
+      <Attribution />
     </Styled>
   );
 }

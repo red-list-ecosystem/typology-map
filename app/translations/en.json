@@ -50,6 +50,7 @@
   "app.components.NavGridChildren.groupsTitle": "The {no} functional {no, select, 1 {group} other {groups}} of the {parent}",
   "app.containers.Breadcrumb.explore": "Explore",
   "app.containers.LocaleToggle.en": "en",
+  "app.containers.Map.basemapAttribution": "Basemap attribution",
   "app.containers.Map.settingBasemap": "Basemap",
   "app.containers.Map.settingBasemapLight": "Terrain",
   "app.containers.Map.settingBasemapSat": "Satellite",
