@@ -59,7 +59,7 @@ export function CardChild({ onCardClick, label, typology, type, ...rest }) {
           {...rest}
         >
           <StyledButton onClick={onCardClick} fill plain>
-            {type === 'biomes' && (
+            {typology.image && (
               <ImageWrap>
                 <Image
                   fit="cover"
