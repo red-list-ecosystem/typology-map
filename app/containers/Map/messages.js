@@ -41,4 +41,8 @@ export default defineMessages({
     id: `${scope}.settingBasemapSat`,
     defaultMessage: 'Satellite',
   },
+  basemapAttribution: {
+    id: `${scope}.basemapAttribution`,
+    defaultMessage: 'Basemap attribution',
+  },
 });

@@ -16,7 +16,8 @@ const ImageWrap = styled(props => (
   <Box margin={props.inText ? { vertical: 'medium' } : {}} {...props} />
 ))`
   position: relative;
-  max-height: ${({ inText }) => (inText ? 400 : 'auto')}px;
+  max-height: ${({ inText }) => (inText ? '400px' : 'none')};
+  width: 100%;
 `;
 
 const mapVerticalAlignment = align => {
