@@ -17,6 +17,7 @@ export default styled.div`
   top: ${getTopGraphicHeight('small')}px;
   width: 100%;
   padding: ${({ theme }) => theme.global.edgeSize.small};
+  min-height: 66vh;
   /* responsive height */
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
     top: ${getTopGraphicHeight('medium')}px;
