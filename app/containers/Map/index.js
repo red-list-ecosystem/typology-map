@@ -4,7 +4,7 @@
  *
  */
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -23,6 +23,8 @@ import {
   GROUP_LAYER_OPTIONS,
 } from 'config';
 
+import LoadingIndicator from 'components/LoadingIndicator';
+
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
 
@@ -37,6 +39,7 @@ import {
   selectOpacity,
   selectCountry,
   selectZoomToBounds,
+  selectLayersLoading,
 } from './selectors';
 import { loadLayer } from './actions';
 
@@ -48,12 +51,16 @@ const Styled = styled.div`
   right: 0;
   left: 0;
 `;
-const MapContainer = styled.div`
+const LeafletContainer = styled.div`
   position: absolute;
   top: 0;
   bottom: 0;
   right: 0;
   left: 0;
+`;
+
+const LoadingWrap = styled(LeafletContainer)`
+  z-index: 999;
 `;
 
 const getGeometryType = type =>
@@ -95,6 +102,7 @@ export function Map({
   opacity,
   country,
   zoomToBounds,
+  loading,
 }) {
   useInjectReducer({ key: 'map', reducer });
   useInjectSaga({ key: 'map', saga });
@@ -104,6 +112,7 @@ export function Map({
   const basemapLayerGroupRef = useRef(null);
   const countryLayerGroupRef = useRef(null);
 
+  const [tilesLoading, setTilesLoading] = useState(false);
   // init map
   useEffect(() => {
     mapRef.current = L.map('ll-map', {
@@ -241,6 +250,9 @@ export function Map({
             opacity,
             pane: 'groupOverlay',
             ...GROUP_LAYER_OPTIONS.RASTER,
+          }).on({
+            loading: () => setTilesLoading(true),
+            load: () => setTilesLoading(false),
           }),
         );
       }
@@ -305,9 +317,14 @@ export function Map({
 
   return (
     <Styled>
-      <MapContainer id="ll-map" />
+      <LeafletContainer id="ll-map" />
       {group && <Settings group={group} fullscreen={fullscreen} />}
       <Attribution />
+      {(tilesLoading || loading) && (
+        <LoadingWrap>
+          <LoadingIndicator />
+        </LoadingWrap>
+      )}
     </Styled>
   );
 }
@@ -321,6 +338,7 @@ Map.propTypes = {
   opacity: PropTypes.number,
   country: PropTypes.bool,
   zoomToBounds: PropTypes.bool,
+  loading: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -329,6 +347,7 @@ const mapStateToProps = createStructuredSelector({
   basemap: state => selectBasemap(state),
   country: state => selectCountry(state),
   zoomToBounds: state => selectZoomToBounds(state),
+  loading: state => selectLayersLoading(state),
 });
 
 function mapDispatchToProps(dispatch) {

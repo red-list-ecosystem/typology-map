@@ -92,9 +92,7 @@ export function RoutePage({ match, onLoadContent, content, intl }) {
         }}
       />
       <ContentWrap>
-        {content && (
-          <HTMLWrapper innerhtml={content} classNames={['rle-html-page']} />
-        )}
+        <HTMLWrapper innerhtml={content} classNames={['rle-html-page']} />
       </ContentWrap>
     </Styled>
   );

@@ -36,7 +36,7 @@ import {
 import RouteHome from 'containers/RouteHome/Loadable';
 import RoutePage from 'containers/RoutePage/Loadable';
 import RouteExploreOverview from 'containers/RouteExploreOverview/Loadable';
-import RouteExplore from 'containers/RouteExplore/Loadable';
+import RouteExplore from 'containers/RouteExplore';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import MapContainer from 'containers/MapContainer';
 import Header from 'containers/Header';

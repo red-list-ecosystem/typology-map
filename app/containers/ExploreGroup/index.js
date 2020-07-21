@@ -114,12 +114,10 @@ export function ExploreGroup({
                     ]}
                   />
                   <TypologyImage inText typology={typology} locale={locale} />
-                  {content && (
-                    <HTMLWrapper
-                      innerhtml={content}
-                      classNames={['rle-html-group']}
-                    />
-                  )}
+                  <HTMLWrapper
+                    innerhtml={content}
+                    classNames={['rle-html-group']}
+                  />
                 </TypologyContent>
               </ColumnMainContent>
             </ColumnMain>

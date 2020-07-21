@@ -73,20 +73,18 @@ export function ExploreRealm({
               <ColumnMainContent>
                 <TypologyContent>
                   <TypologyHeader typology={typology} locale={locale} />
-                  {content && biomes && (
-                    <>
-                      <HTMLWrapper
-                        innerhtml={content}
-                        classNames={['rle-html-realm']}
-                      />
-                      <NavGridChildren
-                        items={sortedBiomes}
-                        type="biomes"
-                        itemClick={id => navBiome(id)}
-                        locale={locale}
-                        parent={typology}
-                      />
-                    </>
+                  <HTMLWrapper
+                    innerhtml={content}
+                    classNames={['rle-html-realm']}
+                  />
+                  {biomes && (
+                    <NavGridChildren
+                      items={sortedBiomes}
+                      type="biomes"
+                      itemClick={id => navBiome(id)}
+                      locale={locale}
+                      parent={typology}
+                    />
                   )}
                 </TypologyContent>
               </ColumnMainContent>

@@ -94,20 +94,18 @@ export function ExploreBiome({
                       },
                     ]}
                   />
-                  {content && groups && (
-                    <>
-                      <HTMLWrapper
-                        innerhtml={content}
-                        classNames={['rle-html-biome']}
-                      />
-                      <NavGridChildren
-                        items={sortedGroups}
-                        type="groups"
-                        itemClick={id => navGroup(id)}
-                        locale={locale}
-                        parent={typology}
-                      />
-                    </>
+                  <HTMLWrapper
+                    innerhtml={content}
+                    classNames={['rle-html-biome']}
+                  />
+                  {groups && (
+                    <NavGridChildren
+                      items={sortedGroups}
+                      type="groups"
+                      itemClick={id => navGroup(id)}
+                      locale={locale}
+                      parent={typology}
+                    />
                   )}
                 </TypologyContent>
               </ColumnMainContent>
