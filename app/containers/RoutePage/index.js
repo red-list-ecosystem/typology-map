@@ -20,6 +20,8 @@ import { loadContent } from 'containers/App/actions';
 
 import HTMLWrapper from 'components/HTMLWrapper';
 import PageBackground from 'components/PageBackground';
+import Footer from 'components/Footer';
+import Partners from 'components/Partners';
 
 import { getHeaderHeight, getContentMaxWidth } from 'utils/responsive';
 
@@ -30,28 +32,33 @@ const Styled = styled.div`
   position: relative;
   z-index: 2;
 `;
+
+// prettier-ignore
 const ContentWrap = styled.div`
   position: relative;
-  top: 50vh;
+  margin-bottom: 150px;
   min-height: 100vh;
   background: ${({ theme }) => theme.global.colors['light-2']};
-  margin-top: -${getHeaderHeight('small')}px;
+  margin-top: ${250 - getHeaderHeight('small')}px;
   margin-right: auto;
   margin-left: auto;
-  margin-bottom: 50px;
   padding: ${({ theme }) => theme.global.edgeSize.small};
+  padding-bottom: ${({ theme, hasPad }) =>
+    hasPad ? '0' : theme.global.edgeSize.small};
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
-    margin-top: -${getHeaderHeight('medium')}px;
+    margin-top: ${250 - getHeaderHeight('medium')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
-    margin-top: -${getHeaderHeight('large')}px;
+    margin-top: ${250 - getHeaderHeight('large')}px;
     padding: ${({ theme }) => theme.global.edgeSize.large};
+    padding-bottom: ${({ theme, hasPad }) =>
+    hasPad ? '0' : theme.global.edgeSize.large};
   }
   @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
-    margin-top: -${getHeaderHeight('xlarge')}px;
+    margin-top: ${250 - getHeaderHeight('xlarge')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.xxlarge.minpx}) {
-    margin-top: -${getHeaderHeight('xxlarge')}px;
+    margin-top: ${250 - getHeaderHeight('xxlarge')}px;
   }
   max-width: ${getContentMaxWidth('small')}px;
   /* responsive height */
@@ -75,6 +82,7 @@ export function RoutePage({ match, onLoadContent, content, intl }) {
     onLoadContent(match.params.id);
   }, [match.params.id]);
   const config = PAGES[match.params.id];
+  const partners = config.partners && config.partners === 'true';
   return (
     <Styled>
       <Helmet>
@@ -91,9 +99,11 @@ export function RoutePage({ match, onLoadContent, content, intl }) {
             ),
         }}
       />
-      <ContentWrap>
+      <ContentWrap hasPad={partners}>
         <HTMLWrapper innerhtml={content} classNames={['rle-html-page']} />
+        {partners && <Partners />}
       </ContentWrap>
+      <Footer />
     </Styled>
   );
 }

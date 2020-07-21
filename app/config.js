@@ -54,6 +54,7 @@ export const PAGES = {
     path: 'about',
     nav: SECONDARY,
     backgroundImage: 'bg_home',
+    partners: 'true',
   },
   methods: {
     path: 'methods',

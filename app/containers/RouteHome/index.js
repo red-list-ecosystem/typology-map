@@ -19,6 +19,7 @@ import { PATHS, PAGES } from 'config';
 import { selectRealmsWithStats, selectLocale } from 'containers/App/selectors';
 import { navigateTypology, navigatePage } from 'containers/App/actions';
 
+import Partners from 'components/Partners';
 import Footer from 'components/Footer';
 import PageBackground from 'components/PageBackground';
 
@@ -30,7 +31,6 @@ import messages from './messages';
 import Intro from './Intro';
 import SectionExplore from './SectionExplore';
 import SectionAbout from './SectionAbout';
-import SectionThanks from './SectionThanks';
 
 const Styled = styled.div`
   position: relative;
@@ -97,7 +97,7 @@ export function HomePage({ realms, navRealm, navPage, locale, intl }) {
                 },
               ]}
             />
-            <SectionThanks />
+            <Partners />
             <Footer />
           </MainContent>
         </Styled>

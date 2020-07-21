@@ -11,11 +11,11 @@ import styled from 'styled-components';
 
 import coreMessages from 'messages';
 
-import messages from './messages';
+import SectionTitle from 'components/styled/SectionTitle';
+import SectionInner from 'components/styled/SectionInner';
+import SectionOuter from 'components/styled/SectionOuter';
 
-import SectionTitle from './SectionTitle';
-import SectionInner from './SectionInner';
-import SectionOuter from './SectionOuter';
+import messages from './messages';
 
 const ImageButton = styled(Button)`
   height: 65px;
@@ -39,13 +39,13 @@ const ImageWrap = styled(Box)`
   }
 `;
 
-export function SectionThanks({ intl }) {
+export function Partners({ intl }) {
   return (
     <SectionOuter background="light-2">
       <SectionInner>
         <Box>
           <SectionTitle small>
-            <FormattedMessage {...messages.titleSectionThanks} />
+            <FormattedMessage {...messages.titleThanks} />
           </SectionTitle>
         </Box>
         <Box direction="row" align="center" wrap>
@@ -76,8 +76,8 @@ export function SectionThanks({ intl }) {
     </SectionOuter>
   );
 }
-SectionThanks.propTypes = {
+Partners.propTypes = {
   intl: intlShape.isRequired,
 };
 
-export default injectIntl(SectionThanks);
+export default injectIntl(Partners);

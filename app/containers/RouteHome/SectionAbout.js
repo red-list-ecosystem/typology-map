@@ -10,12 +10,12 @@ import styled from 'styled-components';
 
 import ButtonText from 'components/ButtonText';
 
-import messages from './messages';
+import SectionTitle from 'components/styled/SectionTitle';
+import SectionInner from 'components/styled/SectionInner';
+import SectionOuter from 'components/styled/SectionOuter';
+import SectionTeaser from 'components/styled/SectionTeaser';
 
-import SectionTitle from './SectionTitle';
-import SectionTeaser from './SectionTeaser';
-import SectionInner from './SectionInner';
-import SectionOuter from './SectionOuter';
+import messages from './messages';
 
 const ButtonAbout = styled(ButtonText)`
   display: block;
