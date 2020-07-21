@@ -59,45 +59,47 @@ export function CardChild({ onCardClick, label, typology, type, ...rest }) {
           {...rest}
         >
           <StyledButton onClick={onCardClick} fill plain>
-            {typology.image && (
-              <ImageWrap>
-                <Image
-                  fit="cover"
-                  fill
-                  src={`${PATHS.IMAGES}/${typology.image.name ||
-                    typology.path}.jpg`}
-                  alignSelf={
-                    typology.image.verticalAlign
-                      ? mapVerticalAlignment(typology.image.verticalAlign)
-                      : 'center'
-                  }
-                />
-              </ImageWrap>
-            )}
-            <ContentWrap
-              margin={{
-                top: 'xsmall',
-                bottom: 'small',
-              }}
-              pad={{
-                horizontal: 'small',
-              }}
-            >
-              <h4>
-                <Text margin={{ right: 'xsmall' }}>{typology.id}</Text>
-                <Text>{label}</Text>
-              </h4>
-              {type === 'biomes' && (
-                <Box direction="row" gap="xsmall">
-                  <Text>{typology.groupNo}</Text>
-                  <FormattedMessage
-                    {...commonMessages[
-                      typology.groupNo === 1 ? 'group' : 'groups'
-                    ]}
+            <Box fill align="start">
+              {typology.image && (
+                <ImageWrap>
+                  <Image
+                    fit="cover"
+                    fill
+                    src={`${PATHS.IMAGES}/${typology.image.name ||
+                      typology.path}.jpg`}
+                    alignSelf={
+                      typology.image.verticalAlign
+                        ? mapVerticalAlignment(typology.image.verticalAlign)
+                        : 'center'
+                    }
                   />
-                </Box>
+                </ImageWrap>
               )}
-            </ContentWrap>
+              <ContentWrap
+                margin={{
+                  top: 'xsmall',
+                  bottom: 'small',
+                }}
+                pad={{
+                  horizontal: 'small',
+                }}
+              >
+                <h4>
+                  <Text margin={{ right: 'xsmall' }}>{typology.id}</Text>
+                  <Text>{label}</Text>
+                </h4>
+                {type === 'biomes' && (
+                  <Box direction="row" gap="xsmall">
+                    <Text>{typology.groupNo}</Text>
+                    <FormattedMessage
+                      {...commonMessages[
+                        typology.groupNo === 1 ? 'group' : 'groups'
+                      ]}
+                    />
+                  </Box>
+                )}
+              </ContentWrap>
+            </Box>
           </StyledButton>
         </Box>
       )}
