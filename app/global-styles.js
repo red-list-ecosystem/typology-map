@@ -1,10 +1,10 @@
 import { createGlobalStyle } from 'styled-components';
+// html {
+//   scroll-behavior: smooth;
+// }
 
 const GlobalStyle = createGlobalStyle`
 
-  html {
-    scroll-behavior: smooth;
-  }
 
   html,
   body {
@@ -14,6 +14,7 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    overflow-y: scroll !important;
   }
 
   body.fontLoaded {
