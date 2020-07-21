@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import styled from 'styled-components';
+import { Add, Subtract } from 'grommet-icons';
 import L from 'leaflet';
 import 'leaflet.vectorgrid';
 import 'leaflet/dist/leaflet.css';
@@ -21,9 +22,12 @@ import {
   LAYERS,
   GROUP_LAYER_PROPERTIES,
   GROUP_LAYER_OPTIONS,
+  MAP_OPTIONS,
 } from 'config';
 
 import LoadingIndicator from 'components/LoadingIndicator';
+import MapControls from 'components/MapControls';
+import MapControl from 'components/MapControl';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
@@ -61,6 +65,7 @@ const LeafletContainer = styled.div`
 
 const LoadingWrap = styled(LeafletContainer)`
   z-index: 999;
+  pointer-events: none;
 `;
 
 const getGeometryType = type =>
@@ -113,15 +118,11 @@ export function Map({
   const countryLayerGroupRef = useRef(null);
 
   const [tilesLoading, setTilesLoading] = useState(false);
+  const [zoom, setZoom] = useState(MAP_OPTIONS.zoom);
+
   // init map
   useEffect(() => {
-    mapRef.current = L.map('ll-map', {
-      center: [30, 0],
-      zoom: 1,
-      minZoom: 1,
-      maxBounds: [[-90, -315], [90, 315]],
-      attributionControl: false,
-    });
+    mapRef.current = L.map('ll-map', MAP_OPTIONS);
     // make sure group overlays are always rendered on top of basemap
     mapRef.current.createPane('groupOverlay');
     mapRef.current.getPane('groupOverlay').style.zIndex = 600;
@@ -136,9 +137,9 @@ export function Map({
     groupLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
     countryLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
 
-    // mapRef.current.on('zoomend', event => {
-    //   console.log(mapRef.current.getZoom());
-    // });
+    mapRef.current.on('zoomend', () => {
+      setZoom(mapRef.current.getZoom());
+    });
 
     mapRef.current.scrollWheelZoom.disable();
   }, []);
@@ -150,6 +151,12 @@ export function Map({
       mapRef.current.scrollWheelZoom.disable();
     }
   }, [fullscreen]);
+
+  useEffect(() => {
+    if (mapRef.current.getZoom() !== zoom) {
+      mapRef.current.setZoom(zoom);
+    }
+  }, [zoom]);
 
   // change basemap
   useEffect(() => {
@@ -325,6 +332,24 @@ export function Map({
           <LoadingIndicator />
         </LoadingWrap>
       )}
+      <MapControls position="left">
+        <MapControl
+          disabled={MAP_OPTIONS.maxZoom === zoom}
+          icon={
+            <Add color={MAP_OPTIONS.maxZoom === zoom ? 'dark-4' : 'black'} />
+          }
+          onClick={() => setZoom(zoom + 1)}
+        />
+        <MapControl
+          disabled={MAP_OPTIONS.minZoom === zoom}
+          icon={
+            <Subtract
+              color={MAP_OPTIONS.minZoom === zoom ? 'dark-4' : 'black'}
+            />
+          }
+          onClick={() => setZoom(zoom - 1)}
+        />
+      </MapControls>
     </Styled>
   );
 }

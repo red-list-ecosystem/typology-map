@@ -125,6 +125,16 @@ export const MAPBOX = {
     'https://api.mapbox.com/styles/v1/{username}/{style_id}/tiles/256/{z}/{x}/{y}@2x?access_token={accessToken}',
 };
 
+export const MAP_OPTIONS = {
+  center: [30, 0],
+  zoom: 1,
+  minZoom: 1,
+  maxZoom: 7,
+  maxBounds: [[-90, -315], [90, 315]],
+  attributionControl: false,
+  zoomControl: false,
+};
+
 export const GEOJSON = {
   PROPERTIES: {
     OCCURRENCE: 'occurrence',
