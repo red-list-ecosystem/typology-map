@@ -12,7 +12,7 @@ import LOGO_2 from 'images/logo_CEM.jpg';
 import LOGO_3 from 'images/logo_CES.png';
 import LOGO_4 from 'images/logo_UNSW.png';
 
-import { PRIMARY, SECONDARY } from 'containers/App/constants';
+import { PRIMARY, SECONDARY, FOOTER } from 'containers/App/constants';
 
 export const ROUTES = {
   HOME: '',
@@ -69,6 +69,11 @@ export const PAGES = {
   feedback: {
     path: 'feedback',
     nav: SECONDARY,
+    backgroundImage: 'bg_home',
+  },
+  privacy: {
+    path: 'privacy',
+    nav: FOOTER,
     backgroundImage: 'bg_home',
   },
 };

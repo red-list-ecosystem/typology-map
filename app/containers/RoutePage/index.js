@@ -20,7 +20,7 @@ import { loadContent } from 'containers/App/actions';
 
 import HTMLWrapper from 'components/HTMLWrapper';
 import PageBackground from 'components/PageBackground';
-import Footer from 'components/Footer';
+import Footer from 'containers/Footer';
 import Partners from 'components/Partners';
 
 import { getHeaderHeight, getContentMaxWidth } from 'utils/responsive';

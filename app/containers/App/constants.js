@@ -27,3 +27,4 @@ export const DISMISS_DISCLAIMER = 'rle/App/DISMISS_DISCLAIMER';
 
 export const PRIMARY = 1;
 export const SECONDARY = 2;
+export const FOOTER = 3;

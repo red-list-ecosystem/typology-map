@@ -100,6 +100,10 @@ export default defineMessages({
     id: `${scope}.page_feedback`,
     defaultMessage: 'Feedback',
   },
+  page_privacy: {
+    id: `${scope}.page_privacy`,
+    defaultMessage: 'Privacy policy',
+  },
   imageCreditBy: {
     id: `${scope}.imageCreditBy`,
     defaultMessage: 'Image by: ',

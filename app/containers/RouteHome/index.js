@@ -19,7 +19,7 @@ import { selectRealmsWithStats, selectLocale } from 'containers/App/selectors';
 import { navigateTypology, navigatePage } from 'containers/App/actions';
 
 import Partners from 'components/Partners';
-import Footer from 'components/Footer';
+import Footer from 'containers/Footer';
 import PageBackground from 'components/PageBackground';
 
 import { getHeaderHeight } from 'utils/responsive';
