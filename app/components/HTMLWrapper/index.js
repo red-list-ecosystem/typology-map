@@ -17,8 +17,8 @@ import { navigate } from 'containers/App/actions';
 // className="rle-html"
 // dangerouslySetInnerHTML={{ __html: setLinkTarget(innerhtml) }}
 // />
-const HTMLWrapper = ({ innerhtml, onNavigate }) => (
-  <div className="rle-html">
+const HTMLWrapper = ({ innerhtml, onNavigate, classNames = [] }) => (
+  <div className={`rle-html ${classNames.join(' ')}`}>
     {ReactHtmlParser(innerhtml, {
       transform: (node, index) => {
         if (node.name === 'a' && node.attribs && node.attribs.href) {
@@ -52,6 +52,7 @@ HTMLWrapper.propTypes = {
   /* the inner HTML text */
   innerhtml: PropTypes.string.isRequired,
   onNavigate: PropTypes.func,
+  classNames: PropTypes.array,
 };
 
 function mapDispatchToProps(dispatch) {

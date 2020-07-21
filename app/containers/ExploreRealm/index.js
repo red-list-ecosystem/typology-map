@@ -75,7 +75,10 @@ export function ExploreRealm({
                   <TypologyHeader typology={typology} locale={locale} />
                   {content && biomes && (
                     <>
-                      <HTMLWrapper innerhtml={content} />
+                      <HTMLWrapper
+                        innerhtml={content}
+                        classNames={['rle-html-realm']}
+                      />
                       <NavGridChildren
                         items={sortedBiomes}
                         type="biomes"

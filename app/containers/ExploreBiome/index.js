@@ -96,7 +96,10 @@ export function ExploreBiome({
                   />
                   {content && groups && (
                     <>
-                      <HTMLWrapper innerhtml={content} />
+                      <HTMLWrapper
+                        innerhtml={content}
+                        classNames={['rle-html-biome']}
+                      />
                       <NavGridChildren
                         items={sortedGroups}
                         type="groups"

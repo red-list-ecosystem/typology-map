@@ -59,6 +59,33 @@ const GlobalStyle = createGlobalStyle`
     height: 100%;
     border: 0;
   }
+  .rle-html .rle-content {
+    font-size: 15px;
+  }
+  .rle-content p.lead,
+  .rle-html-group .rle-content blockquote,
+  .rle-html-group .rle-content blockquote p,
+  .rle-html-group .rle-content > p:first-of-type {
+    font-size: 22px;
+  }
+  .rle-html-group .rle-content blockquote {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+    quotes: none;
+    &:after {
+      content: '';
+      content: none;
+    }
+    &:before {
+      content: '';
+      content: none;
+    }
+  }
 `;
 
 export default GlobalStyle;
