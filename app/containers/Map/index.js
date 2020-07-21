@@ -12,6 +12,7 @@ import { compose } from 'redux';
 import styled from 'styled-components';
 import L from 'leaflet';
 import 'leaflet.vectorgrid';
+import 'leaflet/dist/leaflet.css';
 // import { cloneDeep } from 'lodash/lang';
 
 import {
