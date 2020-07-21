@@ -103,7 +103,7 @@ export function RoutePage({ match, onLoadContent, content, intl }) {
       />
       <ContentWrap hasPad={partners}>
         <HTMLWrapper innerhtml={content} classNames={['rle-html-page']} />
-        {partners && <Partners />}
+        {content && partners && <Partners />}
       </ContentWrap>
       <Footer />
     </Styled>
