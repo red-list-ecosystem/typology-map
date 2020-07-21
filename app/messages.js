@@ -12,6 +12,10 @@ export default defineMessages({
     id: `${scope}.appTitle`,
     defaultMessage: 'Global Ecosystem Typology',
   },
+  metaDescription: {
+    id: `${scope}.metaDescription`,
+    defaultMessage: 'Global Ecosystem Typology',
+  },
   realmSelect: {
     id: `${scope}.realmSelect`,
     defaultMessage: 'Select a Realm',

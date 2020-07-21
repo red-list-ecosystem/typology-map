@@ -83,11 +83,13 @@ export function RoutePage({ match, onLoadContent, content, intl }) {
   }, [match.params.id]);
   const config = PAGES[match.params.id];
   const partners = config.partners && config.partners === 'true';
+  const title = commonMessages[`page_${match.params.id}`]
+    ? intl.formatMessage(commonMessages[`page_${match.params.id}`])
+    : '';
   return (
     <Styled>
       <Helmet>
-        <title>RoutePage</title>
-        <meta name="description" content="Description of RoutePage" />
+        <title>{title}</title>
       </Helmet>
       <PageBackground
         image={{

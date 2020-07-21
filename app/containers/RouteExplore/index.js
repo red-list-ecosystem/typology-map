@@ -6,7 +6,6 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -35,15 +34,9 @@ export function RouteExplore({ match, typology }) {
   const { level } = match.params;
   return (
     <Styled>
-      <Helmet>
-        <title>RouteExplore</title>
-        <meta name="description" content="Description of RouteExplore" />
-      </Helmet>
-      <>
-        {level === 'realms' && typology && <ExploreRealm typology={typology} />}
-        {level === 'biomes' && typology && <ExploreBiome typology={typology} />}
-        {level === 'groups' && typology && <ExploreGroup typology={typology} />}
-      </>
+      {level === 'realms' && typology && <ExploreRealm typology={typology} />}
+      {level === 'biomes' && typology && <ExploreBiome typology={typology} />}
+      {level === 'groups' && typology && <ExploreGroup typology={typology} />}
     </Styled>
   );
 }

@@ -6,7 +6,6 @@
 
 import React, { memo, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Helmet } from 'react-helmet';
 import { injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -66,10 +65,6 @@ export function HomePage({ realms, navRealm, navPage, locale, intl }) {
     <ResponsiveContext.Consumer>
       {size => (
         <Styled>
-          <Helmet>
-            <title>Home Page</title>
-            <meta name="description" content="home" />
-          </Helmet>
           <PageBackground
             image={{
               src: `${PATHS.IMAGES}/bg_home.jpg`,

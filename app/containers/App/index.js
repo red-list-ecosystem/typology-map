@@ -8,7 +8,7 @@
 
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-// import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import { Helmet } from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -47,6 +47,8 @@ import { ROUTES, PAGES } from 'config';
 import GlobalStyle from 'global-styles';
 import { appLocales } from 'i18n';
 
+import commonMessages from 'messages';
+
 import ScrollToTop from './ScrollToTop';
 
 const AppWrapper = styled.div`
@@ -77,6 +79,7 @@ function App({
   onDismissDisclaimer,
   onNavigateAbout,
   path,
+  intl,
 }) {
   useInjectReducer({ key: 'global', reducer });
   useInjectSaga({ key: 'default', saga });
@@ -90,10 +93,13 @@ function App({
     <Grommet theme={theme}>
       <AppWrapper>
         <Helmet
-          titleTemplate="%s - Global Ecosystem Typology"
-          defaultTitle="Global Ecosystem Typology"
+          titleTemplate={`%s - ${intl.formatMessage(commonMessages.appTitle)}`}
+          defaultTitle={intl.formatMessage(commonMessages.appTitle)}
         >
-          <meta name="description" content="" />
+          <meta
+            name="description"
+            content={intl.formatMessage(commonMessages.metaDescription)}
+          />
         </Helmet>
         {showDisclaimer && (
           <Disclaimer
@@ -159,6 +165,7 @@ App.propTypes = {
   onNavigateAbout: PropTypes.func,
   showDisclaimer: PropTypes.bool,
   path: PropTypes.object,
+  intl: intlShape.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -183,4 +190,4 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-export default compose(withConnect)(App);
+export default compose(withConnect)(injectIntl(App));

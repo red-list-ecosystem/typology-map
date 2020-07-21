@@ -7,14 +7,13 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { Box, ResponsiveContext } from 'grommet';
 
 import {
-  selectLocale,
   selectRealm,
   selectContentByKey,
   selectGroupsForBiome,
@@ -43,6 +42,8 @@ import { isMinSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
 
+import messages from './messages';
+
 export function ExploreBiome({
   typology,
   onLoadContent,
@@ -51,13 +52,15 @@ export function ExploreBiome({
   navGroup,
   navRealm,
   navExplore,
-  locale,
+  intl,
   realm,
 }) {
   useEffect(() => {
     // kick off loading of page content
     onLoadContent(typology.path);
   }, [typology]);
+
+  const { locale } = intl;
 
   const sortedGroups =
     groups &&
@@ -73,8 +76,11 @@ export function ExploreBiome({
       {size => (
         <>
           <Helmet>
-            <title>ExploreBiome</title>
-            <meta name="description" content="Description of ExploreBiome" />
+            <title>
+              {intl.formatMessage(messages.metaTitle, {
+                biome: typology.title[locale],
+              })}
+            </title>
           </Helmet>
           <Box direction="row" fill="horizontal">
             <ColumnMain hasAside={isMinSize(size, 'large')}>
@@ -162,12 +168,12 @@ ExploreBiome.propTypes = {
   typology: PropTypes.object.isRequired,
   realm: PropTypes.object,
   groups: PropTypes.array,
-  locale: PropTypes.string,
   onLoadContent: PropTypes.func.isRequired,
   navGroup: PropTypes.func.isRequired,
   navRealm: PropTypes.func.isRequired,
   navExplore: PropTypes.func.isRequired,
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  intl: intlShape.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -178,7 +184,6 @@ const mapStateToProps = createStructuredSelector({
     }),
   realm: (state, { typology }) => selectRealm(state, typology.realm),
   groups: (state, { typology }) => selectGroupsForBiome(state, typology.id),
-  locale: state => selectLocale(state),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -197,4 +202,4 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-export default compose(withConnect)(ExploreBiome);
+export default compose(withConnect)(injectIntl(ExploreBiome));

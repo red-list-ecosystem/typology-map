@@ -18,8 +18,12 @@ export default defineMessages({
     defaultMessage:
       'Start by selecting a Realm of interest, then drill down to learn more about its Biomes and Ecosystem Functional Groups',
   },
-  descriptionMeta: {
-    id: `${scope}.descriptionMeta`,
+  metaDescription: {
+    id: `${scope}.metaDescription`,
     defaultMessage: 'Explore the global ecosystem typology',
+  },
+  metaTitle: {
+    id: `${scope}.metaTitle`,
+    defaultMessage: 'Explore',
   },
 });

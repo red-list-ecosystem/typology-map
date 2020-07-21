@@ -31,10 +31,10 @@ export function RouteExploreOverview({ realms, navRealm, locale, intl }) {
   return (
     <Styled>
       <Helmet>
-        <title>{intl.formatMessage(messages.title)}</title>
+        <title>{intl.formatMessage(messages.metaTitle)}</title>
         <meta
           name="description"
-          content={intl.formatMessage(messages.descriptionMeta)}
+          content={intl.formatMessage(messages.metaDescription)}
         />
       </Helmet>
       <SectionExplore

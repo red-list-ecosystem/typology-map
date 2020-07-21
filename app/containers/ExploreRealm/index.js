@@ -7,14 +7,13 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { Box, ResponsiveContext } from 'grommet';
 
 import {
-  selectLocale,
   selectContentByKey,
   selectBiomesForRealmWithStats,
 } from 'containers/App/selectors';
@@ -41,6 +40,7 @@ import TypologyContent from 'components/TypologyContent';
 import { isMinSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
+import messages from './messages';
 
 export function ExploreRealm({
   typology,
@@ -49,21 +49,24 @@ export function ExploreRealm({
   biomes,
   navBiome,
   navExplore,
-  locale,
+  intl,
 }) {
   useEffect(() => {
     // kick off loading of page content
     onLoadContent(typology.path);
   }, [typology]);
-
+  const { locale } = intl;
   const sortedBiomes = biomes && biomes.sort((a, b) => (a.id > b.id ? 1 : -1));
   return (
     <ResponsiveContext.Consumer>
       {size => (
         <>
           <Helmet>
-            <title>ExploreRealm</title>
-            <meta name="description" content="Description of ExploreRealm" />
+            <title>
+              {intl.formatMessage(messages.metaTitle, {
+                realm: typology.title[locale],
+              })}
+            </title>
           </Helmet>
           <Box direction="row" fill="horizontal">
             <ColumnMain hasAside={isMinSize(size, 'large')}>
@@ -126,11 +129,11 @@ export function ExploreRealm({
 ExploreRealm.propTypes = {
   typology: PropTypes.object.isRequired,
   biomes: PropTypes.array,
-  locale: PropTypes.string,
   onLoadContent: PropTypes.func.isRequired,
   navBiome: PropTypes.func.isRequired,
   navExplore: PropTypes.func.isRequired,
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  intl: intlShape.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -141,7 +144,6 @@ const mapStateToProps = createStructuredSelector({
     }),
   biomes: (state, { typology }) =>
     selectBiomesForRealmWithStats(state, typology.id),
-  locale: state => selectLocale(state),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -159,4 +161,4 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-export default compose(withConnect)(ExploreRealm);
+export default compose(withConnect)(injectIntl(ExploreRealm));
