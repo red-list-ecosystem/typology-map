@@ -72,8 +72,10 @@
   "app.containers.RouteHome.teaserSectionExplore": "Start by selecting a Realm of interest, then drill down to learn more about its Biomes and Ecosystem Functional Groups",
   "app.containers.RouteHome.titleSectionAbout": "About",
   "app.containers.RouteHome.titleSectionExplore": "Explore the global ecosystem typology",
+  "app.containers.RouteHome.titleSectionThanks": "Thanks to",
   "app.containers.Search.noResults": "We are sorry! Your search did not return any results.",
   "app.containers.Search.placeholder": "Search typology by name or id",
+  "app.containers.Search.resultHint": "Search typology by name or id",
   "app.containers.Search.search": "Search",
   "rle.components.Partners.titleThanks": "Thanks to"
 }

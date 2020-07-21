@@ -77,19 +77,13 @@ const NavSearchSmall = styled(props => (
 `;
 
 const MenuButton = styled(props => <Button plain {...props} fill="vertical" />)`
-  width: ${getHeaderHeight('small')}px;
-  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
-    width: ${getHeaderHeight('medium')}px;
-  }
+  width: 100%;
   text-align: center;
 `;
 const SearchButton = styled(props => (
   <Button plain {...props} fill="vertical" />
 ))`
-  width: ${getHeaderHeight('small')}px;
-  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
-    width: ${getHeaderHeight('medium')}px;
-  }
+  width: 100%;
   text-align: center;
 `;
 
@@ -187,7 +181,7 @@ function Header({ nav, navHome, navPage, path }) {
             alignContent="end"
             fill
           >
-            {(isMinSize(size, 'medium') || !showSearch) && (
+            {(isMinSize(size, 'large') || !showSearch) && (
               <Box flex={{ shrink: 0 }}>
                 <Brand
                   onClick={() => navHome()}
@@ -196,30 +190,34 @@ function Header({ nav, navHome, navPage, path }) {
               </Box>
             )}
             {isMaxSize(size, 'medium') && (
-              <Box direction="row" justify="end" fill="vertical">
+              <Box direction="row" justify="end" fill>
                 {!showSearch && (
-                  <SearchButton
-                    plain
-                    onClick={() => setShowSearch(!showSearch)}
-                    label={<SearchIcon color="white" />}
-                  />
+                  <Box flex={false} style={{ width: '40px' }}>
+                    <SearchButton
+                      plain
+                      onClick={() => setShowSearch(!showSearch)}
+                      label={<SearchIcon color="white" />}
+                    />
+                  </Box>
                 )}
                 {showSearch && (
-                  <NavSearchSmall>
+                  <NavSearchSmall flex>
                     <Search onClose={() => setShowSearch(false)} />
                   </NavSearchSmall>
                 )}
-                <MenuButton
-                  plain
-                  onClick={() => setShowMenu(!showMenu)}
-                  label={
-                    showMenu ? (
-                      <MenuOpen color="white" />
-                    ) : (
-                      <Menu color="white" />
-                    )
-                  }
-                />
+                <Box flex={false} style={{ width: '40px' }}>
+                  <MenuButton
+                    plain
+                    onClick={() => setShowMenu(!showMenu)}
+                    label={
+                      showMenu ? (
+                        <MenuOpen color="white" />
+                      ) : (
+                        <Menu color="white" />
+                      )
+                    }
+                  />
+                </Box>
               </Box>
             )}
             {isMinSize(size, 'large') && (

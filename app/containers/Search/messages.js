@@ -21,4 +21,8 @@ export default defineMessages({
     id: `${scope}.placeholder`,
     defaultMessage: 'Search typology by name or id',
   },
+  resultHint: {
+    id: `${scope}.resultHint`,
+    defaultMessage: 'Search typology by name or id',
+  },
 });
