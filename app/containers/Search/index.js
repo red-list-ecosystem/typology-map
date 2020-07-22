@@ -91,8 +91,7 @@ export function Search({
             align="center"
             round="xxsmall"
             style={stretch ? null : { maxWidth: '500px' }}
-            pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}
-            margin={{ right: onClose ? '16px' : '0', left: '0' }}
+            pad={{ horizontal: 'small', vertical: 'xxsmall' }}
             background="white"
           >
             <TextInput
@@ -111,7 +110,7 @@ export function Search({
               ref={textInputRef}
             />
             {!onClose && search.length === 0 && (
-              <Box pad={{ right: 'xsmall' }}>
+              <Box pad={{ right: 'small' }}>
                 <SearchIcon size="medium" color="dark" />
               </Box>
             )}

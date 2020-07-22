@@ -11,8 +11,6 @@ import styled from 'styled-components';
 import { Paragraph, Box, Button } from 'grommet';
 import { Down } from 'grommet-icons';
 
-import H1 from 'components/H1';
-
 import { getHeaderHeight, getAsideWidth } from 'utils/responsive';
 
 import messages from './messages';
@@ -49,64 +47,77 @@ const IntroContentWrap = styled(props => <Box {...props} justify="evenly" />)`
   bottom: 0;
 `;
 
-const IntroWrap = styled.div`
-  max-width: 80%;
-  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
-    max-width: 50%;
-  }
-  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
-    max-width: 55%;
-  }
-`;
 const IntroTitleWrap = styled(props => (
   <Box pad={{ left: 'medium', right: 'small', vertical: 'hair' }} {...props} />
 ))`
   position: relative;
-  display: inline-block;
+  display: block;
+`;
+const IntroTitle = styled.h1`
+  position: relative;
+  z-index: 1;
+  font-size: 24px;
+  line-height: 29px;
+  display: inline;
+  margin: 0;
+  color: white;
+  @media (min-width: 500px) {
+    font-size: 32px;
+    line-height: 39px;
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    font-size: 42px;
+    line-height: 50px;
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+    font-size: 56px;
+    line-height: 66px;
+  }
   &::before {
     content: '';
     background: rgba(0, 24, 58, 0.7);
     position: absolute;
     display: block;
-    left: 0;
-    right: 0;
-    width: 100%;
-    top: 30%;
-    height: 20px;
-    @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
-      height: 40px;
-      top: 50%;
+    left: -${({ theme }) => theme.global.edgeSize.small};
+    right: -${({ theme }) => theme.global.edgeSize.small};
+    height: 90%;
+    top: 20%;
+    z-index: -1;
+    @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+      left: -${({ theme }) => theme.global.edgeSize.medium};
+      right: -${({ theme }) => theme.global.edgeSize.medium};
+      height: 40%;
+      top: 70%;
     }
-  }
-`;
-const IntroTitle = styled(H1)`
-  position: relative;
-  z-index: 1;
-  font-size: 22px;
-  line-height: 28px;
-  display: inline;
-  margin: 0;
-  color: white;
-  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
-    font-size: 56px;
-    line-height: 66px;
   }
 `;
 const IntroParaWrap = styled(props => (
   <Box
     pad={{ left: 'medium', right: 'small', vertical: 'xxsmall' }}
-    margin={{ bottom: 'medium' }}
+    margin={{ top: 'small', bottom: 'large' }}
     {...props}
   />
 ))`
   display: inline-block;
   background: rgba(0, 24, 58, 0.7);
+  max-width: 80%;
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    max-width: 65%;
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+    max-width: 55%;
+  }
 `;
 const IntroPara = styled(Paragraph)`
   color: white;
   font-size: 16px;
-  line-height: 20px;
-  font-weight: 700;
+  line-height: 21px;
+  font-weight: 600;
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 24px;
+  }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     font-size: 20px;
     line-height: 28px;
@@ -114,32 +125,29 @@ const IntroPara = styled(Paragraph)`
 `;
 
 const IntroScroll = styled(props => <Button plain {...props} />)`
-  display: none;
-  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
-    display: inline-block;
-    position: absolute;
-    bottom: ${({ theme }) => theme.global.edgeSize.small};
-    left: 0;
-    right: 0;
-    margin: 0 auto;
-    width: 70px;
-    height: 70px;
-    border-radius: 9999px;
-    vertical-align: middle;
-    text-align: center;
-    &:hover {
-      background: rgba(198, 0, 0, 0.8);
-    }
-    &:focus {
-      background: rgba(198, 0, 0, 0.8);
-    }
+  display: inline-block;
+  position: absolute;
+  bottom: ${({ theme }) => theme.global.edgeSize.small};
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 70px;
+  height: 70px;
+  border-radius: 9999px;
+  vertical-align: middle;
+  text-align: center;
+  &:hover {
+    background: rgba(198, 0, 0, 0.8);
+  }
+  &:focus {
+    background: rgba(198, 0, 0, 0.8);
   }
 `;
 export function Intro({ onScroll }) {
   return (
     <Styled>
       <IntroContentWrap onClick={() => onScroll()}>
-        <IntroWrap>
+        <Box gap="xsmall">
           <IntroTitleWrap>
             <IntroTitle>
               <FormattedMessage {...messages.introTitle} />
@@ -150,14 +158,12 @@ export function Intro({ onScroll }) {
               <FormattedMessage {...messages.introTitle2} />
             </IntroTitle>
           </IntroTitleWrap>
-        </IntroWrap>
-        <IntroWrap>
-          <IntroParaWrap>
-            <IntroPara>
-              <FormattedMessage {...messages.introParagraph} />
-            </IntroPara>
-          </IntroParaWrap>
-        </IntroWrap>
+        </Box>
+        <IntroParaWrap>
+          <IntroPara>
+            <FormattedMessage {...messages.introParagraph} />
+          </IntroPara>
+        </IntroParaWrap>
         <IntroScroll
           icon={<Down size="50px" color="white" />}
           onClick={() => onScroll()}

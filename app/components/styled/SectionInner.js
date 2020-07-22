@@ -14,7 +14,8 @@ export default styled(props => <Box {...props} />)`
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     max-width: ${getHomeMaxWidth('large')}px;
-    padding: ${({ theme }) => theme.global.edgeSize.large} 0;
+    padding: ${({ theme }) => theme.global.edgeSize.large}
+      ${({ theme }) => theme.global.edgeSize.small};
   }
   @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
     max-width: ${getHomeMaxWidth('xlarge')}px;

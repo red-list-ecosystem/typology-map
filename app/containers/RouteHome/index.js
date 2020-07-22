@@ -40,6 +40,7 @@ const MainContent = styled.div`
   position: relative;
   z-index: 1;
   top: 100vh;
+  width: 100%;
   margin-top: -${getHeaderHeight('small')}px;
   box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.2);
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {

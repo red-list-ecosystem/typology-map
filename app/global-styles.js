@@ -33,6 +33,10 @@ const GlobalStyle = createGlobalStyle`
     line-height: 1.5em;
   }
 
+  p {
+    margin: 10px 0;
+  }
+
   a {
     color: #C60000;
     text-decoration: none;

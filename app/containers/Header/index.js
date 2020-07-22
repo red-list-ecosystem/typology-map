@@ -76,8 +76,8 @@ const NavSecondary = styled(props => (
 const NavSearch = styled(props => (
   <Box {...props} direction="row" basis="1/2" align="center" />
 ))``;
-const NavSearchSmall = styled(props => (
-  <Box {...props} direction="row" align="center" fill="horizontal" />
+const NavSearchSmall = styled(p => (
+  <Box direction="row" align="center" fill="horizontal" flex {...p} />
 ))`
   height: ${getHeaderHeight('small')}px;
 `;
@@ -212,15 +212,15 @@ function Header({ nav, navHome, navPage, path }) {
               <Box direction="row" justify="end" fill>
                 {!showSearch && (
                   <Box flex={false} style={{ width: '40px' }}>
-                    <SearchButton
+                    <MenuButton
                       onClick={() => setShowSearch(!showSearch)}
                       label={<SearchIcon color="white" />}
                     />
                   </Box>
                 )}
                 {showSearch && (
-                  <NavSearchSmall flex>
-                    <Search onClose={() => setShowSearch(false)} />
+                  <NavSearchSmall>
+                    <Search onClose={() => setShowSearch(false)} stretch />
                   </NavSearchSmall>
                 )}
                 <Box flex={false} style={{ width: '40px' }}>
