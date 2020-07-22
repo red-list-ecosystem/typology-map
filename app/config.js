@@ -136,7 +136,7 @@ export const MAP_OPTIONS = {
   center: [30, 0],
   zoom: 1,
   minZoom: 1,
-  maxZoom: 7,
+  maxZoom: 10,
   maxBounds: [[-90, -315], [90, 315]],
   attributionControl: false,
   zoomControl: false,
