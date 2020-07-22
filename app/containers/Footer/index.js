@@ -16,6 +16,8 @@ import commonMessages from 'messages';
 
 const Styled = styled.footer`
   position: relative;
+  box-shadow: ${({ elevated }) =>
+    elevated ? '0px -4px 8px rgba(0, 0, 0, 0.2)' : 'none'};
 `;
 
 // prettier-ignore
@@ -27,6 +29,9 @@ const FooterLink = styled(props => <Button {...props} plain />)`
   &:hover {
     text-decoration: underline;
   }
+  &:focus {
+    text-decoration: underline;
+  }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     padding: ${({ theme }) => theme.global.edgeSize.small};
   }
@@ -35,7 +40,7 @@ const FooterLink = styled(props => <Button {...props} plain />)`
 const FooterBar = styled.div`
   display: flex;
   padding: 0 ${({ theme }) => theme.global.edgeSize.medium};
-  background: black;
+  background: ${({ theme }) => theme.global.colors.footer.background};
 `;
 
 const NavFooter = styled(props => (
@@ -47,7 +52,7 @@ const pagesArray = Object.keys(PAGES).map(key => ({
   ...PAGES[key],
 }));
 
-function Footer({ navPage, path }) {
+function Footer({ navPage, path, elevated }) {
   const paths = path.split('/');
   const contentType = paths[0] === '' ? paths[1] : paths[0];
   const contentId =
@@ -56,7 +61,7 @@ function Footer({ navPage, path }) {
       : paths.length > 0 && paths[1];
   const pagesFooter = filter(pagesArray, p => p.nav === FOOTER);
   return (
-    <Styled>
+    <Styled elevated={elevated}>
       <FooterBar>
         <NavFooter justify="end">
           {pagesFooter.map((p, index) => (
@@ -81,6 +86,7 @@ function Footer({ navPage, path }) {
 Footer.propTypes = {
   navPage: PropTypes.func,
   path: PropTypes.string,
+  elevated: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({

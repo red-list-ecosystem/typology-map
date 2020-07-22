@@ -33,6 +33,27 @@ const GlobalStyle = createGlobalStyle`
     line-height: 1.5em;
   }
 
+  a {
+    color: #C60000;
+    text-decoration: none;
+    &:visited {
+      color: #C60000;
+    }
+    &:hover {
+      text-decoration: underline;
+      color: #8D0202;
+    }
+    &:focus {
+      text-decoration: underline;
+      color: #8D0202;
+      outline: 0;
+    }
+  }
+
+  .rle-content a {
+    font-weight: 600;
+  }
+
   .rle-content h1,
   .rle-content h2,
   .rle-content h3,

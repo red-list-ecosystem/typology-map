@@ -35,6 +35,7 @@ const Styled = styled.div`
 
 // prettier-ignore
 const ContentWrap = styled.div`
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
   position: relative;
   margin-bottom: 150px;
   min-height: 100vh;
@@ -105,7 +106,7 @@ export function RoutePage({ match, onLoadContent, content, intl }) {
         <HTMLWrapper innerhtml={content} classNames={['rle-html-page']} />
         {content && partners && <Partners />}
       </ContentWrap>
-      <Footer />
+      <Footer elevated />
     </Styled>
   );
 }

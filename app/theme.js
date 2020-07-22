@@ -69,7 +69,7 @@ export const dimensions = {
     },
   },
   settingsToggle: {
-    width: 40,
+    width: 41, // align with map controls (icon (17px) + (padding) 2*12px)
   },
 };
 
@@ -79,10 +79,13 @@ export const colors = {
   // also see https://github.com/grommet/grommet/wiki/Grommet-v2-theming-documentation
   // and https://github.com/grommet/grommet/blob/master/src/js/themes/base.js
   black: '#000000',
-  dark: '#999999',
+  dark: '#333333',
   white: '#ffffff',
   // active: '#ffffff',
-  brand: '#AD190F',
+  brand: '#C60000', // rle red
+  'brand-2': '#00183A', // rle blue
+  'brand-dark': '#8D0202', // rle red
+  'brand-2-dark': '#011126', // rle blue
   focus: '#333333',
   hover: '#AD190F',
   // placeholder: '#ffffff',
@@ -102,7 +105,10 @@ export const colors = {
   //   S: '',
   // },
   header: {
-    background: '#000000',
+    background: '#00183A',
+  },
+  footer: {
+    background: '#011126',
   },
 };
 
@@ -189,17 +195,12 @@ const theme = {
     },
     spacing: '18px',
     focus: {
-      // shadow or outline are required for accessibility
-      border: {
-        color: 'rgba(0, 0, 0, 0.7)',
-      },
+      // disable focus and instead deal with it in css
+      border: { color: 'transparent' },
       // not effective?
-      outline: { color: 'red', size: '1px' },
+      outline: { color: 'transparent' },
       // not effective?
-      shadow: {
-        color: 'rgb(255, 0, 0)',
-        size: '1px',
-      },
+      shadow: { color: 'transparent' },
     },
     drop: {
       zIndex: 1200,

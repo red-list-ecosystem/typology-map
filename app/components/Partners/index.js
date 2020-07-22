@@ -30,6 +30,11 @@ const ImageButton = styled(Button)`
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     height: 120px;
   }
+  border-bottom: 1px solid transparent;
+  &:focus {
+    outline: 0;
+    border-bottom: 1px solid ${({ theme }) => theme.global.colors.brand};
+  }
 `;
 
 const ImageWrap = styled(Box)`

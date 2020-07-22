@@ -7,20 +7,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
-import { Box, Button, Text, ResponsiveContext, Image } from 'grommet';
+import { Box, Text, ResponsiveContext, Image } from 'grommet';
 import styled from 'styled-components';
 
 import { isMinSize } from 'utils/responsive';
 import { PATHS } from 'config';
 import commonMessages from 'messages';
 
-const StyledButton = styled(Button)`
-  background: #f5f6f5;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  &:hover {
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  }
-`;
+import ButtonCard from 'components/ButtonCard';
 
 const ContentWrap = styled(Box)``;
 
@@ -58,7 +52,7 @@ export function CardChild({ onCardClick, label, typology, type, ...rest }) {
           pad="small"
           {...rest}
         >
-          <StyledButton onClick={onCardClick} fill plain>
+          <ButtonCard onClick={onCardClick} background="light-2">
             <Box fill align="start">
               {typology.image && (
                 <ImageWrap>
@@ -100,7 +94,7 @@ export function CardChild({ onCardClick, label, typology, type, ...rest }) {
                 )}
               </ContentWrap>
             </Box>
-          </StyledButton>
+          </ButtonCard>
         </Box>
       )}
     </ResponsiveContext.Consumer>

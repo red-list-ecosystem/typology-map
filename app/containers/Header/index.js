@@ -23,8 +23,8 @@ import { getHeaderHeight, isMinSize, isMaxSize } from 'utils/responsive';
 import commonMessages from 'messages';
 
 import NavBar from './NavBar';
-
-const Brand = styled(props => <Button {...props} plain color="white" />)`
+// prettier-ignore
+const Brand = styled(props => <Button plain color="white" {...props} />)`
   /* responsive height */
   padding: 0 ${({ theme }) => theme.global.edgeSize.xsmall};
   height: ${getHeaderHeight('small')}px;
@@ -44,8 +44,14 @@ const Brand = styled(props => <Button {...props} plain color="white" />)`
   @media (min-width: ${({ theme }) => theme.sizes.xxlarge.minpx}) {
     height: ${getHeaderHeight('xxlarge')}px;
   }
+  color: ${({ theme }) => theme.global.colors.white};
+  background: transparent;
   &:hover {
     background: ${({ theme }) => theme.global.colors.brand};
+  }
+  &:focus {
+    background: ${({ theme, active }) =>
+    active ? 'transparent' : theme.global.colors['brand-dark']};
   }
 `;
 
@@ -79,25 +85,32 @@ const NavSearchSmall = styled(props => (
 const MenuButton = styled(props => <Button plain {...props} fill="vertical" />)`
   width: 100%;
   text-align: center;
+  &:hover {
+    background: ${({ theme }) => theme.global.colors.brand};
+  }
+  &:focus {
+    background: ${({ theme }) => theme.global.colors.brand};
+  }
 `;
-const SearchButton = styled(props => (
-  <Button plain {...props} fill="vertical" />
-))`
-  width: 100%;
+const SearchButton = styled(props => <Button plain {...props} />)`
   text-align: center;
+  border-radius: 9999px;
+  padding: ${({ theme }) => theme.global.edgeSize.xsmall};
+  &:hover {
+    background: ${({ theme }) => theme.global.colors.brand};
+  }
+  &:focus {
+    background: ${({ theme }) => theme.global.colors.brand};
+  }
 `;
 
 const MenuOpen = styled(Menu)`
   transform: rotate(90deg);
 `;
 
+// prettier-ignore
 const Primary = styled(props => (
-  <Button
-    {...props}
-    plain
-    pad={{ horizontal: 'small' }}
-    margin={{ horizontal: 'hair' }}
-  />
+  <Button plain margin={{ horizontal: 'hair' }} {...props} />
 ))`
   text-align: center;
   font-weight: 600;
@@ -122,6 +135,9 @@ const Primary = styled(props => (
   &:hover {
     background: ${({ theme }) => theme.global.colors.brand};
   }
+  &:focus {
+    background: ${({ theme, active }) => theme.global.colors[active ? 'brand' : 'brand-dark']};
+  }
 `;
 // prettier-ignore
 const Secondary = styled(props => <Button {...props} plain />)`
@@ -130,6 +146,9 @@ const Secondary = styled(props => <Button {...props} plain />)`
   text-decoration: ${({ active }) => (active ? 'underline' : 'none')};
   background: transparent;
   &:hover {
+    text-decoration: underline;
+  }
+  &:focus {
     text-decoration: underline;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
@@ -171,7 +190,6 @@ function Header({ nav, navHome, navPage, path }) {
       : paths.length > 0 && paths[1];
   const pagesPrimary = filter(pagesArray, p => p.nav === PRIMARY);
   const pagesSecondary = filter(pagesArray, p => p.nav === SECONDARY);
-
   return (
     <ResponsiveContext.Consumer>
       {size => (
@@ -185,6 +203,7 @@ function Header({ nav, navHome, navPage, path }) {
               <Box flex={{ shrink: 0 }}>
                 <Brand
                   onClick={() => navHome()}
+                  active={contentType === ''}
                   label={<FormattedMessage {...commonMessages.appTitle} />}
                 />
               </Box>
@@ -194,7 +213,6 @@ function Header({ nav, navHome, navPage, path }) {
                 {!showSearch && (
                   <Box flex={false} style={{ width: '40px' }}>
                     <SearchButton
-                      plain
                       onClick={() => setShowSearch(!showSearch)}
                       label={<SearchIcon color="white" />}
                     />
@@ -285,10 +303,9 @@ function Header({ nav, navHome, navPage, path }) {
                 </NavSecondary>
                 <NavSearch justify="end">
                   {!showSearch && (
-                    <Button
-                      onClick={() => setShowSearch(true)}
+                    <SearchButton
                       icon={<SearchIcon size="xlarge" color="white" />}
-                      style={{ textAlign: 'center' }}
+                      onClick={() => setShowSearch(true)}
                     />
                   )}
                   {showSearch && (

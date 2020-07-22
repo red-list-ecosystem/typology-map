@@ -41,6 +41,7 @@ const MainContent = styled.div`
   z-index: 1;
   top: 100vh;
   margin-top: -${getHeaderHeight('small')}px;
+  box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.2);
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
     margin-top: -${getHeaderHeight('medium')}px;
   }

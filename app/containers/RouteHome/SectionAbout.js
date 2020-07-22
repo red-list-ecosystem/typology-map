@@ -20,6 +20,9 @@ import messages from './messages';
 const ButtonAbout = styled(ButtonText)`
   display: block;
   margin-bottom: 6px;
+  &:focus {
+    color: ${({ theme }) => theme.global.colors.brand};
+  }
 `;
 
 export function SectionAbout({ links }) {

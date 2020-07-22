@@ -38,22 +38,25 @@ import { setOpacity, setBasemap, setCountry, setZoomToBounds } from './actions';
 
 import messages from './messages';
 
-const Styled = styled(props => (
-  <Box direction="row" {...props} elevation="xxsmall" />
-))`
+const Styled = styled(props => <Box direction="row" {...props} />)`
   position: absolute;
   z-index: 401;
-  bottom: 4px;
-  left: 0;
-  background: rgba(255, 255, 255, 0.9);
+  bottom: ${({ theme }) => theme.global.edgeSize.xsmall};
+  left: ${({ theme }) => theme.global.edgeSize.xsmall};
   height: ${({ theme, fs }) =>
     theme.dimensions.settings.height[fs ? 'large' : 'small']}px;
 `;
 
+// background: ${({ theme }) => theme.global.colors['brand-2']};
 const SettingsToggle = styled(props => <Button {...props} plain />)`
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   width: ${({ theme }) => theme.dimensions.settingsToggle.width}px;
+  background: rgba(255, 255, 255, 0.85);
   height: ${({ theme, fs }) =>
     theme.dimensions.settings.height[fs ? 'large' : 'small']}px;
+  &:hover {
+    background: ${({ theme }) => theme.global.colors.white};
+  }
 `;
 
 const KeyColor = styled.span`
@@ -73,7 +76,11 @@ const IconWrap = styled(Box)`
 
 const StyledInner = styled(props => (
   <Box {...props} pad={{ horizontal: 'small' }} />
-))``;
+))`
+  margin-left: 1px;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+`;
 
 const MenuOpen = styled(Menu)`
   transform: rotate(90deg);
@@ -84,17 +91,22 @@ const WrapControl = styled(props => <Box justify="evenly" {...props} />)``;
 // const StyledRangeInput = styled(RangeInput)``;
 
 const BasemapToggle = styled(props => <Box {...props} direction="row" />)``;
+// prettier-ignore
 const BasemapButton = styled(props => <Button plain {...props} />)`
-  border-radius: 30px;
-  margin-right: ${({ theme }) => theme.global.edgeSize.xsmall};
+  border-radius: ${({ left }) => (left ? '5px 0 0 5px' : '0 5px 5px 0')};
   padding: ${({ theme }) => theme.global.edgeSize.hair}
     ${({ theme }) => theme.global.edgeSize.small};
   background: ${({ theme, active }) =>
-    theme.global.colors[active ? 'dark-1' : 'white']};
+    active ? theme.global.colors['brand-2'] : 'transparent'};
   color: ${({ theme, active }) =>
-    theme.global.colors.text[active ? 'dark' : 'light']};
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    active ? theme.global.colors.text.dark : theme.global.colors.text.light};
   opacity: 1 !important;
+  border: 1px solid;
+  border-color: ${({ theme }) => theme.global.colors['brand-2']};
+  &:hover {
+    background: ${({ theme, active }) =>
+    theme.global.colors[active ? 'brand-2-dark' : 'white']};
+  }
 `;
 
 const LayerTitle = styled(Text)`
@@ -132,8 +144,8 @@ export function Settings({
             label={
               <Box alignContent="start" justify="center" direction="row" fill>
                 <IconWrap justify="center" direction="row" align="center">
-                  {!showSettings && <Menu />}
-                  {showSettings && <MenuOpen />}
+                  {!showSettings && <Menu color="black" />}
+                  {showSettings && <MenuOpen color="black" />}
                 </IconWrap>
               </Box>
             }
@@ -202,6 +214,7 @@ export function Settings({
                         label={
                           <FormattedMessage {...messages.settingBasemapLight} />
                         }
+                        left
                       />
                       <BasemapButton
                         active={basemap === 'satellite'}
@@ -210,6 +223,7 @@ export function Settings({
                         label={
                           <FormattedMessage {...messages.settingBasemapSat} />
                         }
+                        right
                       />
                     </BasemapToggle>
                   </WrapControl>

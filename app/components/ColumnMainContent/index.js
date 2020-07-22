@@ -5,7 +5,6 @@
  */
 
 import styled from 'styled-components';
-
 import { getTopGraphicHeight } from 'utils/responsive';
 
 export default styled.div`
@@ -13,7 +12,7 @@ export default styled.div`
   pointer-events: all;
   z-index: ${({ theme }) => theme.dimensions.mainContent.zIndex};
   background: ${({ theme }) => theme.global.colors.white};
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
   top: ${getTopGraphicHeight('small')}px;
   width: 100%;
   padding: ${({ theme }) => theme.global.edgeSize.small};

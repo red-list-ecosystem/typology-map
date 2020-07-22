@@ -65,7 +65,7 @@ const IntroTitleWrap = styled(props => (
   display: inline-block;
   &::before {
     content: '';
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 24, 58, 0.7);
     position: absolute;
     display: block;
     left: 0;
@@ -100,7 +100,7 @@ const IntroParaWrap = styled(props => (
   />
 ))`
   display: inline-block;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 24, 58, 0.7);
 `;
 const IntroPara = styled(Paragraph)`
   color: white;
@@ -118,7 +118,7 @@ const IntroScroll = styled(props => <Button plain {...props} />)`
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     display: inline-block;
     position: absolute;
-    bottom: 5px;
+    bottom: ${({ theme }) => theme.global.edgeSize.small};
     left: 0;
     right: 0;
     margin: 0 auto;
@@ -128,7 +128,10 @@ const IntroScroll = styled(props => <Button plain {...props} />)`
     vertical-align: middle;
     text-align: center;
     &:hover {
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(198, 0, 0, 0.8);
+    }
+    &:focus {
+      background: rgba(198, 0, 0, 0.8);
     }
   }
 `;

@@ -14,6 +14,9 @@ const TypologyButton = styled(props => <Button plain {...props} />)`
   &:hover {
     text-decoration: underline;
   }
+  &:focus {
+    text-decoration: underline;
+  }
 `;
 // prettier-ignore
 const CloseButton = styled(props => <Button plain {...props} />)`
@@ -24,6 +27,10 @@ const CloseButton = styled(props => <Button plain {...props} />)`
   background: transparent;
   margin: -20px 0;
   &:hover {
+    background: ${({ theme, active }) =>
+    active ? theme.global.colors['light-4'] : theme.global.colors['light-3']};
+  }
+  &:focus {
     background: ${({ theme, active }) =>
     active ? theme.global.colors['light-4'] : theme.global.colors['light-3']};
   }

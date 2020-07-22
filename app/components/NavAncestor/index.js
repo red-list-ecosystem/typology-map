@@ -14,6 +14,12 @@ import commonMessages from 'messages';
 
 const StyledButton = styled(props => <Button plain {...props} />)`
   text-decoration: underline;
+  &:hover {
+    color: ${({ theme }) => theme.global.colors.brand};
+  }
+  &:focus {
+    color: ${({ theme }) => theme.global.colors.brand};
+  }
 `;
 
 function NavAncestor({ onClick, id, name, type }) {

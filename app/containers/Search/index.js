@@ -44,6 +44,13 @@ const SearchResultWrap = styled.div`
   overflow-y: auto;
 `;
 
+const CloseButton = styled(p => <Button plain fill="vertical" {...p} />)`
+  stroke: black;
+  &:focus {
+    stroke: ${({ theme }) => theme.global.colors.brand};
+  }
+`;
+
 export function Search({
   stretch,
   expand,
@@ -109,19 +116,14 @@ export function Search({
               </Box>
             )}
             {(onClose || search.length > 0) && (
-              <Button
-                plain
-                fill="vertical"
+              <CloseButton
                 onClick={() => {
                   setSearch('');
                   if (onSearch) onSearch('');
                   if (onClose) onClose();
                   setActiveResult(0);
                 }}
-                icon={<Close size="medium" color="dark" />}
-                style={{
-                  textAlign: 'center',
-                }}
+                icon={<Close size="medium" style={{ stroke: 'inherit' }} />}
               />
             )}
           </Box>

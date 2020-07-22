@@ -18,6 +18,11 @@ const Styled = styled(Box)``;
 const StyledButton = styled(props => <Button {...props} plain />)`
   &:hover {
     text-decoration: underline;
+    color: ${({ theme }) => theme.global.colors.brand};
+  }
+  &:focus {
+    text-decoration: underline;
+    color: ${({ theme }) => theme.global.colors.brand};
   }
 `;
 

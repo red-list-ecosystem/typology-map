@@ -5,9 +5,9 @@ import { Box } from 'grommet';
 export default styled(p => <Box gap="xsmall" {...p} />)`
   position: absolute;
   left: ${({ theme, position }) =>
-    position === 'left' ? theme.global.edgeSize.small : 'auto'};
+    position === 'left' ? theme.global.edgeSize.xsmall : 'auto'};
   right: ${({ theme, position }) =>
-    position === 'right' ? theme.global.edgeSize.small : 'auto'};
-  top: ${({ theme }) => theme.global.edgeSize.small};
+    position === 'right' ? theme.global.edgeSize.xsmall : 'auto'};
+  top: ${({ theme }) => theme.global.edgeSize.xsmall};
   z-index: 401;
 `;

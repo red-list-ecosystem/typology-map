@@ -16,8 +16,8 @@ const Styled = styled(p => (
   <Box direction="row" align="center" gap="xsmall" {...p} />
 ))`
   position: absolute;
-  right: 5px;
-  bottom: 5px;
+  bottom: ${({ theme }) => theme.global.edgeSize.xsmall};
+  right: ${({ theme }) => theme.global.edgeSize.xsmall};
   z-index: 99999;
 `;
 
@@ -26,14 +26,23 @@ const StyledHeading = styled(Heading)`
 `;
 
 const StyledButton = styled(Button)`
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.85);
   padding: 2px;
   border-radius: 9999px;
+  &:hover {
+    background: ${({ theme }) => theme.global.colors.white};
+  }
 `;
 
 const AttLink = styled.a`
-  color: ${({ theme }) => theme.global.colors.text.light};
   text-decoration: none;
+  color: ${({ theme }) => theme.global.colors.text.light};
+  &:visited {
+    color: ${({ theme }) => theme.global.colors.text.light};
+  }
+  &:hover {
+    color: ${({ theme }) => theme.global.colors.brand};
+  }
 `;
 
 const LinkWordMark = styled.a`
@@ -69,7 +78,7 @@ export function Attribution() {
         <StyledButton
           ref={attributionButtonRef}
           plain
-          icon={<CircleInformation size="small" />}
+          icon={<CircleInformation size="small" color="dark" />}
           onClick={() => setShowAttribution(!showAttribution)}
         />
         {showAttribution && attributionButtonRef.current && (

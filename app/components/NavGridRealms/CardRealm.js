@@ -7,20 +7,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
-import { Box, Button, Text, ResponsiveContext } from 'grommet';
-import styled from 'styled-components';
+import { Box, Text, ResponsiveContext } from 'grommet';
 
 import { isMinSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
 
-const StyledButton = styled(Button)`
-  background: ${({ theme }) => theme.global.colors.white};
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  &:hover {
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  }
-`;
+import ButtonCard from 'components/ButtonCard';
 
 export function CardRealm({ onCardClick, label, realm, icon, ...rest }) {
   return (
@@ -35,7 +28,7 @@ export function CardRealm({ onCardClick, label, realm, icon, ...rest }) {
           style={{ position: 'relative' }}
           {...rest}
         >
-          <StyledButton onClick={onCardClick} fill plain>
+          <ButtonCard onClick={onCardClick}>
             <Box
               fill
               margin={{
@@ -75,7 +68,7 @@ export function CardRealm({ onCardClick, label, realm, icon, ...rest }) {
                 </Box>
               </Box>
             </Box>
-          </StyledButton>
+          </ButtonCard>
         </Box>
       )}
     </ResponsiveContext.Consumer>
