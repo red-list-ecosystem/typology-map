@@ -34,7 +34,6 @@ const Brand = styled(props => <Button plain color="white" {...props} />)`
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     height: ${getHeaderHeight('large')}px;
     min-width: ${getHeaderHeight('large')}px;
-    margin-right: ${getHeaderHeight('large')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
     height: ${getHeaderHeight('xlarge')}px;
@@ -53,7 +52,11 @@ const Brand = styled(props => <Button plain color="white" {...props} />)`
   }
 `;
 
-const BrandWrap = styled(Box)``;
+const BrandWrap = styled(Box)`
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    margin-right: 50px;
+  }
+`;
 
 const LogoWrap = styled(p => <Box flex={{ shrink: 0 }} {...p} />)`
   width: 50px;
@@ -68,7 +71,6 @@ const TitleWrap = styled(Box)`
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     min-width: ${getHeaderHeight('large')}px;
     max-width: ${getHeaderHeight('large') + 20}px;
-    margin-right: ${getHeaderHeight('large')}px;
     line-height: 19px;
   }
 `;
@@ -132,7 +134,7 @@ const Primary = styled(props => (
 ))`
   text-align: center;
   font-weight: 600;
-  padding: 0 ${({ theme }) => theme.global.edgeSize.small};
+  padding: ${({ theme }) => theme.global.edgeSize.small};
   background: ${({ theme, active }) =>
     active ? theme.global.colors.brand : 'transparent'};
   color: ${({ theme }) => theme.global.colors.white};
@@ -224,7 +226,7 @@ function Header({ nav, navHome, navPage, path }) {
                   onClick={() => navHome()}
                   active={contentType === ''}
                   label={
-                    <Box direction="row" fill align="center">
+                    <Box direction="row" fill="vertical" align="center">
                       <LogoWrap>
                         <IconImg src={ICONS.LOGO} alt="" />
                       </LogoWrap>
