@@ -7,6 +7,8 @@ import ICON_X from 'images/explore.svg';
 import ICON_X0 from 'images/explore_0.svg';
 import ICON_X1 from 'images/explore_1.svg';
 import ICON_X2 from 'images/explore_2.svg';
+import ICON_LOGO from 'images/logo_RLE_icon.svg';
+import LOGO_0 from 'images/logo_RLE.png';
 import LOGO_1 from 'images/logo_IUCN.jpg';
 import LOGO_2 from 'images/logo_CEM.jpg';
 import LOGO_3 from 'images/logo_CES.png';
@@ -169,9 +171,14 @@ export const ICONS = {
   EXPLORE_0: ICON_X0,
   EXPLORE_1: ICON_X1,
   EXPLORE_2: ICON_X2,
+  LOGO: ICON_LOGO,
 };
 
 export const LOGOS = [
+  {
+    id: '0',
+    src: LOGO_0,
+  },
   {
     id: '1',
     src: LOGO_1,

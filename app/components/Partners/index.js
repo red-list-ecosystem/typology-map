@@ -38,9 +38,9 @@ const ImageButton = styled(Button)`
 `;
 
 const ImageWrap = styled(Box)`
-  width: 50%;
+  width: 33%;
   @media (min-width: 500px) {
-    width: 25%;
+    width: ${({ count }) => 100 / count}%;
   }
 `;
 
@@ -63,6 +63,7 @@ export function Partners({ intl }) {
                   key={logo.id}
                   pad="xsmall"
                   margin={{ bottom: 'medium' }}
+                  count={Object.keys(LOGOS).length}
                 >
                   <ImageButton
                     plain

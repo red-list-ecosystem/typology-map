@@ -140,6 +140,10 @@ export default defineMessages({
     id: `${scope}.occurrence_minor`,
     defaultMessage: 'Minor',
   },
+  partner_0: {
+    id: `${scope}.partner_0`,
+    defaultMessage: 'IUCN Red List of Ecosystems',
+  },
   partner_1: {
     id: `${scope}.partner_1`,
     defaultMessage: 'International Union for Conservation of Nature',
@@ -155,6 +159,10 @@ export default defineMessages({
   partner_4: {
     id: `${scope}.partner_4`,
     defaultMessage: 'University of New South Wales',
+  },
+  partner_0_url: {
+    id: `${scope}.partner_0_url`,
+    defaultMessage: 'https://iucnrle.org/',
   },
   partner_1_url: {
     id: `${scope}.partner_1_url`,
