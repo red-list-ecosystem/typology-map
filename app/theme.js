@@ -60,7 +60,7 @@ export const dimensions = {
     maxWidth: [700, 700, 700, 800, 900],
   },
   home: {
-    maxWidth: [700, 700, 1000, 1100, 1200],
+    maxWidth: [700, 900, 1000, 1100, 1200],
   },
   settings: {
     height: {
@@ -117,7 +117,7 @@ const text = {
   xxsmall: { size: '12px', height: '14px', maxWidth: '500px' },
   xsmall: { size: '13px', height: '16px', maxWidth: '600px' },
   small: { size: '14px', height: '18px', maxWidth: '700px' },
-  medium: { size: '16px', height: '21px', maxWidth: '800px' },
+  medium: { size: '16px', height: '22px', maxWidth: '800px' },
   large: { size: '18px', height: '24px', maxWidth: '800px' },
   xlarge: { size: '22px', height: '30px', maxWidth: '800px' },
   xxlarge: { size: '30px', height: '36px', maxWidth: '800px' },

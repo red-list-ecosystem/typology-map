@@ -15,6 +15,7 @@ const GlobalStyle = createGlobalStyle`
   body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     overflow-y: scroll !important;
+    color: black;
   }
 
   body.fontLoaded {

@@ -14,7 +14,7 @@ import Img from 'components/Img';
 import { ICONS } from 'config';
 
 const StyledBox = styled(props => (
-  <Box direction="row" gap="xxsmall" align="center" {...props} />
+  <Box direction="row" gap="xxsmall" align="center" {...props} wrap />
 ))`
   height: ${({ theme }) => theme.dimensions.realmIcons.single + 20}px;
 `;

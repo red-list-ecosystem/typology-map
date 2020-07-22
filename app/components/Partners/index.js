@@ -11,7 +11,6 @@ import styled from 'styled-components';
 
 import coreMessages from 'messages';
 
-import SectionTitle from 'components/styled/SectionTitle';
 import SectionInner from 'components/styled/SectionInner';
 import SectionOuter from 'components/styled/SectionOuter';
 
@@ -44,12 +43,18 @@ const ImageWrap = styled(Box)`
   }
 `;
 
+const SectionTitle = styled.h3`
+  font-size: 18px;
+  line-height: 24px;
+  margin: 20px 0;
+`;
+
 export function Partners({ intl }) {
   return (
     <SectionOuter background="light-2">
       <SectionInner>
         <Box>
-          <SectionTitle small>
+          <SectionTitle>
             <FormattedMessage {...messages.titleThanks} />
           </SectionTitle>
         </Box>
