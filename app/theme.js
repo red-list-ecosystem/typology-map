@@ -48,7 +48,11 @@ export const dimensions = {
   },
   realmIcons: {
     single: 68,
-    multi: 42,
+    multi: 56,
+  },
+  realmIconsSmall: {
+    single: 68,
+    multi: 48,
   },
   topGraphic: {
     // by breakpoint

@@ -26,7 +26,7 @@ function NavGridRealms({ label, items, itemClick, locale, type }) {
   /* eslint-disable react/no-array-index-key */
   return (
     <div>
-      <Label>{label}</Label>
+      <Label>{`${items.length} ${label}`}</Label>
       <WrapGrid>
         <Box direction="row" wrap margin={{ bottom: 'large' }}>
           {items &&

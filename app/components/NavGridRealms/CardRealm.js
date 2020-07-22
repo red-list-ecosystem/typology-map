@@ -30,10 +30,11 @@ const Label = styled(Text)`
   font-weight: 600;
 `;
 
-const IconWrap = styled(p => <Box align="center" {...p} />)`
-  width: 88px;
+const IconWrap = styled(p => <Box align="center" flex={false} {...p} />)`
+  min-width: 100px;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
     width: 100%;
+    padding: ${({ theme }) => theme.global.edgeSize.ms} 0;
   }
 `;
 
@@ -59,13 +60,8 @@ export function CardRealm({ onCardClick, label, realm, icon, ...rest }) {
           <ButtonCard onClick={onCardClick}>
             <Box
               fill
-              margin={{
-                top: 'xsmall',
-                bottom: 'small',
-              }}
-              pad={{
-                horizontal: 'small',
-              }}
+              margin={{ vertical: 'xsmall' }}
+              pad={{ horizontal: 'small' }}
               direction={isMinSize(size, 'medium') ? 'column' : 'row'}
               gap={isMinSize(size, 'medium') ? 'hair' : 'small'}
               align={isMinSize(size, 'medium') ? 'start' : 'center'}
@@ -75,7 +71,7 @@ export function CardRealm({ onCardClick, label, realm, icon, ...rest }) {
                 {icon}
               </IconWrap>
               <Box
-                flex={{ shrink: 0, grow: 1 }}
+                flex={isMinSize(size, 'medium')}
                 pad={{
                   horizontal: 'small',
                   vertical: 'small',
