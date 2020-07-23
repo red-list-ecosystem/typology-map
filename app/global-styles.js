@@ -92,7 +92,7 @@ const GlobalStyle = createGlobalStyle`
   .rle-html-group .rle-content blockquote,
   .rle-html-group .rle-content blockquote p,
   .rle-html-group .rle-content > p:first-of-type {
-    font-size: 22px;
+    font-size: 20px;
   }
   .rle-html-group .rle-content blockquote {
     margin: 0;
