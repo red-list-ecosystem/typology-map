@@ -93,6 +93,7 @@ export const colors = {
   focus: '#333333',
   hover: '#AD190F',
   // placeholder: '#ffffff',
+  inactive: '#adadad',
   text: {
     dark: '#ffffff', // on dark background
     light: '#000000', // on light background
@@ -222,24 +223,19 @@ const theme = {
   checkBox: {
     size: '20px',
     gap: 'xsmall',
-    // CHECKED: The stroke color for the CheckBox icon, and the border when checked.
-    color: 'black',
-    // HOVER
-    hover: {
-      border: {
-        color: 'black',
+    toggle: {
+      extend: () => ({
+        background: 'transparent',
+        border: `1.5px solid ${colors['brand-2']}`,
+      }),
+      knob: {
+        extend: ({ checked }) => ({
+          background: `${colors[checked ? 'brand-2' : 'inactive']} !important`,
+          border: `2px solid ${
+            colors[checked ? 'brand-2' : 'inactive']
+          } !important`,
+        }),
       },
-    },
-    // UNCHECKED
-    border: {
-      // The border color when unchecked.
-      color: 'black',
-      // The border width when unchecked.
-      width: '1.5px',
-    },
-    check: {
-      radius: '4px',
-      thickness: '3px',
     },
   },
   layer: {

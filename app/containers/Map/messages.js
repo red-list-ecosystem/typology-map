@@ -31,15 +31,15 @@ export default defineMessages({
   },
   settingBasemap: {
     id: `${scope}.settingBasemap`,
-    defaultMessage: 'Basemap',
-  },
-  settingBasemapLight: {
-    id: `${scope}.settingBasemapLight`,
-    defaultMessage: 'Terrain',
-  },
-  settingBasemapSat: {
-    id: `${scope}.settingBasemapSat`,
     defaultMessage: 'Satellite',
+  },
+  settingOn: {
+    id: `${scope}.settingOn`,
+    defaultMessage: 'On',
+  },
+  settingOff: {
+    id: `${scope}.settingOff`,
+    defaultMessage: 'Off',
   },
   basemapAttribution: {
     id: `${scope}.basemapAttribution`,

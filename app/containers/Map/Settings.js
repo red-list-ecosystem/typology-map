@@ -90,25 +90,6 @@ const WrapControl = styled(props => <Box justify="evenly" {...props} />)``;
 
 // const StyledRangeInput = styled(RangeInput)``;
 
-const BasemapToggle = styled(props => <Box {...props} direction="row" />)``;
-// prettier-ignore
-const BasemapButton = styled(props => <Button plain {...props} />)`
-  border-radius: ${({ left }) => (left ? '5px 0 0 5px' : '0 5px 5px 0')};
-  padding: ${({ theme }) => theme.global.edgeSize.hair}
-    ${({ theme }) => theme.global.edgeSize.small};
-  background: ${({ theme, active }) =>
-    active ? theme.global.colors['brand-2'] : 'transparent'};
-  color: ${({ theme, active }) =>
-    active ? theme.global.colors.text.dark : theme.global.colors.text.light};
-  opacity: 1 !important;
-  border: 1px solid;
-  border-color: ${({ theme }) => theme.global.colors['brand-2']};
-  &:hover {
-    background: ${({ theme, active }) =>
-    theme.global.colors[active ? 'brand-2-dark' : 'white']};
-  }
-`;
-
 const LayerTitle = styled(Text)`
   font-weight: 600;
 `;
@@ -133,7 +114,7 @@ export function Settings({
 
   const [showSettings, setShowSettings] = useState(true);
   const { locale } = intl;
-
+  const satellite = basemap === 'satellite';
   return (
     <ResponsiveContext.Consumer>
       {size => (
@@ -206,26 +187,16 @@ export function Settings({
                     <SettingTitle>
                       <FormattedMessage {...messages.settingBasemap} />
                     </SettingTitle>
-                    <BasemapToggle>
-                      <BasemapButton
-                        active={basemap === 'light'}
-                        disabled={basemap === 'light'}
-                        onClick={() => onSetBasemap('light')}
-                        label={
-                          <FormattedMessage {...messages.settingBasemapLight} />
-                        }
-                        left
-                      />
-                      <BasemapButton
-                        active={basemap === 'satellite'}
-                        disabled={basemap === 'satellite'}
-                        onClick={() => onSetBasemap('satellite')}
-                        label={
-                          <FormattedMessage {...messages.settingBasemapSat} />
-                        }
-                        right
-                      />
-                    </BasemapToggle>
+                    <CheckBox
+                      toggle
+                      checked={satellite}
+                      label={intl.formatMessage(
+                        messages[satellite ? 'settingOn' : 'settingOff'],
+                      )}
+                      onChange={() =>
+                        onSetBasemap(satellite ? 'light' : 'satellite')
+                      }
+                    />
                   </WrapControl>
                 )}
                 {isMinSize(size, 'large') && (
@@ -234,10 +205,11 @@ export function Settings({
                       <FormattedMessage {...messages.settingCountries} />
                     </SettingTitle>
                     <CheckBox
+                      toggle
                       checked={country}
-                      label={
-                        <FormattedMessage {...messages.settingCountriesShow} />
-                      }
+                      label={intl.formatMessage(
+                        messages[country ? 'settingOn' : 'settingOff'],
+                      )}
                       onChange={() => onSetCountry(!country)}
                     />
                   </WrapControl>
@@ -248,12 +220,11 @@ export function Settings({
                       <FormattedMessage {...messages.settingZoomToBounds} />
                     </SettingTitle>
                     <CheckBox
+                      toggle
                       checked={zoomToBounds}
-                      label={
-                        <FormattedMessage
-                          {...messages.settingZoomToBoundsEnabled}
-                        />
-                      }
+                      label={intl.formatMessage(
+                        messages[zoomToBounds ? 'settingOn' : 'settingOff'],
+                      )}
                       onChange={() => onSetZoomToBounds(!zoomToBounds)}
                     />
                   </WrapControl>
