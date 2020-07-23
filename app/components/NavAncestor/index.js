@@ -22,14 +22,21 @@ const StyledButton = styled(props => <Button plain {...props} />)`
   }
 `;
 
+const Label = styled(p => <Text size="small" {...p} />)`
+  min-width: 50px;
+  margin-right: ${({ theme }) => theme.global.edgeSize.small};
+`;
+
 function NavAncestor({ onClick, id, name, type }) {
   return (
-    <Box direction="row" gap="small">
-      <Text>
+    <Box direction="row" gap="small" align="center">
+      <Label>
         <FormattedMessage {...commonMessages[type]} />
-        {`:`}
-      </Text>
-      <StyledButton onClick={() => onClick()} label={`${id} ${name}`} />
+      </Label>
+      <StyledButton
+        onClick={() => onClick()}
+        label={<Text size="small">{`${id} ${name}`}</Text>}
+      />
     </Box>
   );
 }

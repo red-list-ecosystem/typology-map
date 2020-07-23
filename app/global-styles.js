@@ -85,6 +85,20 @@ const GlobalStyle = createGlobalStyle`
     height: 100%;
     border: 0;
   }
+  .rle-html .rle-content h1,
+  .rle-html .rle-content h2 {
+    font-size: 20px;
+    margin: 30px 0 10px;
+  }
+  .rle-html-page .rle-content h1:first-of-type {
+    font-size: 35px;
+    margin: 0 0 40px;
+  }
+  .rle-html .rle-content h3,
+  .rle-html .rle-content h4 {
+    font-size: 16px;
+    margin: 20px 0 5px;
+  }
   .rle-html .rle-content {
     font-size: 15px;
   }
@@ -94,8 +108,12 @@ const GlobalStyle = createGlobalStyle`
   .rle-html-group .rle-content > p:first-of-type {
     font-size: 20px;
   }
+  .rle-html-group .rle-content > p:first-of-type {
+    margin-bottom: 40px;
+  }
+
   .rle-html-group .rle-content blockquote {
-    margin: 0;
+    margin: 0 0 40px;
     padding: 0;
     border: 0;
     outline: 0;

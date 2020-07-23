@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export default styled.h2`
-  font-size: 24px;
+  font-size: ${({ theme }) => theme.text.xlarge.size};
   line-height: 30px;
   margin: 40px 0 14px 0;
   position: relative;
@@ -15,7 +15,7 @@ export default styled.h2`
   }
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
     margin-bottom: 20px;
-    font-size: 36px;
-    line-height: 48px;
+    font-size: ${({ theme }) => theme.text.xxlarge.size};
+    line-height: ${({ theme }) => theme.text.xxlarge.height};
   }
 `;

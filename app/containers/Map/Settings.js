@@ -170,7 +170,7 @@ export function Settings({
                 direction="row"
                 gap="medium"
                 margin={{
-                  top: !fullscreen ? 'small' : 0,
+                  top: !fullscreen ? 'small' : '0',
                 }}
               >
                 <WrapControl>

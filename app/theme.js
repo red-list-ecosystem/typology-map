@@ -133,7 +133,7 @@ const text = {
   medium: { size: '16px', height: '22px', maxWidth: '800px' },
   large: { size: '18px', height: '24px', maxWidth: '800px' },
   xlarge: { size: '22px', height: '30px', maxWidth: '800px' },
-  xxlarge: { size: '30px', height: '36px', maxWidth: '800px' },
+  xxlarge: { size: '35px', height: '48px', maxWidth: '800px' },
   xxxlarge: { size: '60px', height: '75px', maxWidth: '800px' },
 };
 // grommet paddings and margins
