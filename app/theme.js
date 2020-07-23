@@ -68,12 +68,15 @@ export const dimensions = {
   },
   settings: {
     height: {
-      small: 75,
+      small: 55,
       large: 110,
     },
   },
-  settingsToggle: {
+  panelToggle: {
     width: 41, // align with map controls (icon (17px) + (padding) 2*12px)
+  },
+  settingsToggle: {
+    width: 60, // align with map controls (icon (17px) + (padding) 2*12px)
   },
 };
 
@@ -94,6 +97,11 @@ export const colors = {
   hover: '#AD190F',
   // placeholder: '#ffffff',
   inactive: '#adadad',
+  secondary: '#6e787d',
+  grey: '#c4c8c9',
+  'dark-grey': '#6E787D',
+  'light-grey': '#F5F5F5',
+  'light-grey-transparent': 'rgba(245, 245, 245, 0.9)',
   text: {
     dark: '#ffffff', // on dark background
     light: '#000000', // on light background
@@ -213,26 +221,37 @@ const theme = {
   },
   rangeInput: {
     thumb: {
-      color: 'black',
+      color: colors['brand-2'],
+      extend: () => ({
+        width: '18px !important',
+        height: '18px !important',
+        border: 'none !important',
+        outline: 'none !important',
+        boxShadow: 'none !important',
+      }),
     },
     track: {
-      color: colors.dark,
-      //   height: '4px',
+      color: colors.grey,
+      height: '6px',
+      extend: () => ({
+        borderRadius: '3px',
+      }),
     },
   },
   checkBox: {
-    size: '20px',
+    size: '18px',
     gap: 'xsmall',
     toggle: {
       extend: () => ({
-        background: 'transparent',
-        border: `1.5px solid ${colors['brand-2']}`,
+        background: colors.grey,
+        border: `1.5px solid ${colors.grey} !important`,
       }),
+      size: '36px',
       knob: {
         extend: ({ checked }) => ({
-          background: `${colors[checked ? 'brand-2' : 'inactive']} !important`,
+          background: `${colors[checked ? 'brand-2' : 'dark-grey']} !important`,
           border: `2px solid ${
-            colors[checked ? 'brand-2' : 'inactive']
+            colors[checked ? 'brand-2' : 'dark-grey']
           } !important`,
         }),
       },

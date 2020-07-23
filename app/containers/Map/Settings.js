@@ -47,15 +47,25 @@ const Styled = styled(props => <Box direction="row" {...props} />)`
     theme.dimensions.settings.height[fs ? 'large' : 'small']}px;
 `;
 
-// background: ${({ theme }) => theme.global.colors['brand-2']};
-const SettingsToggle = styled(props => <Button {...props} plain />)`
+const PanelToggle = styled(props => <Button plain {...props} />)`
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-  width: ${({ theme }) => theme.dimensions.settingsToggle.width}px;
+  width: ${({ theme }) => theme.dimensions.panelToggle.width}px;
   background: rgba(255, 255, 255, 0.85);
   height: ${({ theme, fs }) =>
     theme.dimensions.settings.height[fs ? 'large' : 'small']}px;
   &:hover {
     background: ${({ theme }) => theme.global.colors.white};
+  }
+`;
+const SettingsToggle = styled(props => <Button plain {...props} />)`
+  box-shadow: 2 0 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: ${({ theme }) => theme.dimensions.settingsToggle.width}px;
+  background: ${({ theme }) => theme.global.colors['light-grey-transparent']};
+  height: ${({ theme, fs }) =>
+    theme.dimensions.settings.height[fs ? 'large' : 'small']}px;
+  &:hover {
+    background: ${({ theme }) => theme.global.colors['light-grey']};
   }
 `;
 
@@ -68,8 +78,8 @@ const KeyColor = styled.span`
 `;
 
 const IconWrap = styled(Box)`
-  width: ${({ theme }) => theme.dimensions.settingsToggle.width}px;
-  height: ${({ theme }) => theme.dimensions.settingsToggle.width}px;
+  width: ${({ theme }) => theme.dimensions.panelToggle.width}px;
+  height: ${({ theme }) => theme.dimensions.panelToggle.width}px;
   text-align: center;
   vertical-align: middle;
 `;
@@ -77,8 +87,8 @@ const IconWrap = styled(Box)`
 const StyledInner = styled(props => (
   <Box {...props} pad={{ horizontal: 'small' }} />
 ))`
-  margin-left: 1px;
-  background: rgba(255, 255, 255, 0.85);
+  margin: 0 1px;
+  background: ${({ theme }) => theme.global.colors['light-grey-transparent']};
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 `;
 
@@ -94,8 +104,11 @@ const LayerTitle = styled(Text)`
   font-weight: 600;
 `;
 const SettingTitle = styled(props => (
-  <Text size="small" {...props} margin={{ vertical: 'xxsmall' }} />
-))``;
+  <Text size="xsmall" {...props} margin={{ bottom: 'xsmall' }} />
+))`
+  font-weight: 600;
+`;
+const TextLabel = styled(props => <Text size="xsmall" {...props} />)``;
 
 export function Settings({
   group,
@@ -112,26 +125,27 @@ export function Settings({
 }) {
   useInjectReducer({ key: 'map', reducer });
 
-  const [showSettings, setShowSettings] = useState(true);
+  const [showPanel, setShowPanel] = useState(true);
+  const [showSettings, setShowSettings] = useState(false);
   const { locale } = intl;
   const satellite = basemap === 'satellite';
   return (
     <ResponsiveContext.Consumer>
       {size => (
         <Styled fs={fullscreen}>
-          <SettingsToggle
-            onClick={() => setShowSettings(!showSettings)}
+          <PanelToggle
+            onClick={() => setShowPanel(!showPanel)}
             fs={fullscreen}
             label={
               <Box alignContent="start" justify="center" direction="row" fill>
                 <IconWrap justify="center" direction="row" align="center">
-                  {!showSettings && <Menu color="black" />}
-                  {showSettings && <MenuOpen color="black" />}
+                  {!showPanel && <Menu color="black" />}
+                  {showPanel && <MenuOpen color="black" />}
                 </IconWrap>
               </Box>
             }
           />
-          {showSettings && (
+          {showPanel && (
             <StyledInner justify="evenly">
               {fullscreen && (
                 <Box alignContent="center" pad={{ vertical: 'xsmall' }}>
@@ -155,7 +169,7 @@ export function Settings({
                           color={GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color}
                           opacity={opacity}
                         />
-                        <Text>
+                        <TextLabel>
                           <FormattedMessage
                             {...commonMessages[
                               `occurrence_${
@@ -163,12 +177,12 @@ export function Settings({
                               }`
                             ]}
                           />
-                        </Text>
+                        </TextLabel>
                       </Box>
                     ))}
                   </Box>
                 </WrapControl>
-                {isMinSize(size, 'large') && (
+                {isMinSize(size, 'large') && (fullscreen || showSettings) && (
                   <WrapControl>
                     <SettingTitle>
                       <FormattedMessage {...messages.settingOpacity} />
@@ -182,7 +196,7 @@ export function Settings({
                     />
                   </WrapControl>
                 )}
-                {isMinSize(size, 'large') && (
+                {isMinSize(size, 'large') && (fullscreen || showSettings) && (
                   <WrapControl>
                     <SettingTitle>
                       <FormattedMessage {...messages.settingBasemap} />
@@ -190,16 +204,20 @@ export function Settings({
                     <CheckBox
                       toggle
                       checked={satellite}
-                      label={intl.formatMessage(
-                        messages[satellite ? 'settingOn' : 'settingOff'],
-                      )}
+                      label={
+                        <TextLabel>
+                          {intl.formatMessage(
+                            messages[satellite ? 'settingOn' : 'settingOff'],
+                          )}
+                        </TextLabel>
+                      }
                       onChange={() =>
                         onSetBasemap(satellite ? 'light' : 'satellite')
                       }
                     />
                   </WrapControl>
                 )}
-                {isMinSize(size, 'large') && (
+                {isMinSize(size, 'large') && (fullscreen || showSettings) && (
                   <WrapControl>
                     <SettingTitle>
                       <FormattedMessage {...messages.settingCountries} />
@@ -207,14 +225,18 @@ export function Settings({
                     <CheckBox
                       toggle
                       checked={country}
-                      label={intl.formatMessage(
-                        messages[country ? 'settingOn' : 'settingOff'],
-                      )}
+                      label={
+                        <TextLabel>
+                          {intl.formatMessage(
+                            messages[country ? 'settingOn' : 'settingOff'],
+                          )}
+                        </TextLabel>
+                      }
                       onChange={() => onSetCountry(!country)}
                     />
                   </WrapControl>
                 )}
-                {isMinSize(size, 'large') && (
+                {isMinSize(size, 'large') && (fullscreen || showSettings) && (
                   <WrapControl>
                     <SettingTitle>
                       <FormattedMessage {...messages.settingZoomToBounds} />
@@ -222,15 +244,31 @@ export function Settings({
                     <CheckBox
                       toggle
                       checked={zoomToBounds}
-                      label={intl.formatMessage(
-                        messages[zoomToBounds ? 'settingOn' : 'settingOff'],
-                      )}
+                      label={
+                        <TextLabel>
+                          {intl.formatMessage(
+                            messages[zoomToBounds ? 'settingOn' : 'settingOff'],
+                          )}
+                        </TextLabel>
+                      }
                       onChange={() => onSetZoomToBounds(!zoomToBounds)}
                     />
                   </WrapControl>
                 )}
               </Box>
             </StyledInner>
+          )}
+          {showPanel && isMinSize(size, 'large') && !fullscreen && (
+            <SettingsToggle
+              onClick={() => setShowSettings(!showSettings)}
+              label={
+                <Text size="xsmall" color="secondary">
+                  {intl.formatMessage(
+                    messages[showSettings ? 'settingsHide' : 'settingsShow'],
+                  )}
+                </Text>
+              }
+            />
           )}
         </Styled>
       )}

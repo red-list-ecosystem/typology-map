@@ -41,6 +41,14 @@ export default defineMessages({
     id: `${scope}.settingOff`,
     defaultMessage: 'Off',
   },
+  settingsShow: {
+    id: `${scope}.settingsShow`,
+    defaultMessage: 'Show settings',
+  },
+  settingsHide: {
+    id: `${scope}.settingsHide`,
+    defaultMessage: 'Hide settings',
+  },
   basemapAttribution: {
     id: `${scope}.basemapAttribution`,
     defaultMessage: 'Basemap attribution',
