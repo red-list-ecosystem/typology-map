@@ -69,7 +69,7 @@ export const dimensions = {
   settings: {
     height: {
       small: 55,
-      large: 110,
+      large: 100,
     },
   },
   panelToggle: {

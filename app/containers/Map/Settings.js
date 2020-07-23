@@ -73,6 +73,7 @@ const KeyColor = styled.span`
   display: inline-block;
   width: 14px;
   height: 14px;
+  margin: 2px 0;
   background: ${({ color }) => color};
   opacity: ${({ opacity }) => opacity};
 `;
@@ -103,6 +104,9 @@ const WrapControl = styled(props => <Box justify="evenly" {...props} />)``;
 const LayerTitle = styled(Text)`
   font-weight: 600;
 `;
+
+const Id = styled(LayerTitle)``;
+
 const SettingTitle = styled(props => (
   <Text size="xsmall" {...props} margin={{ bottom: 'xsmall' }} />
 ))`
@@ -146,13 +150,29 @@ export function Settings({
             }
           />
           {showPanel && (
-            <StyledInner justify="evenly">
+            <StyledInner>
               {fullscreen && (
-                <Box alignContent="center" pad={{ vertical: 'xsmall' }}>
+                <Box
+                  alignContent="center"
+                  pad={{ vertical: 'xsmall' }}
+                  direction="row"
+                  gap="xsmall"
+                  margin={{
+                    top: 'xsmall',
+                    bottom: 'xsmall',
+                  }}
+                >
+                  <Id>{group.id}</Id>
                   <LayerTitle>{group.title[locale]}</LayerTitle>
                 </Box>
               )}
-              <Box direction="row" gap="medium">
+              <Box
+                direction="row"
+                gap="medium"
+                margin={{
+                  top: !fullscreen ? 'small' : 0,
+                }}
+              >
                 <WrapControl>
                   <SettingTitle>
                     <FormattedMessage {...commonMessages.occurrence} />
