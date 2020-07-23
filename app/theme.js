@@ -68,7 +68,7 @@ export const dimensions = {
   },
   settings: {
     height: {
-      small: 55,
+      small: 62,
       large: 100,
     },
   },
