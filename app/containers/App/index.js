@@ -31,6 +31,7 @@ import {
 import {
   selectShowDisclaimer,
   selectRouterPathNamed,
+  selectFullscreenImage,
 } from 'containers/App/selectors';
 
 import RouteHome from 'containers/RouteHome/Loadable';
@@ -40,6 +41,7 @@ import RouteExplore from 'containers/RouteExplore';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import MapContainer from 'containers/MapContainer';
 import Header from 'containers/Header';
+import FullscreenImage from 'containers/FullscreenImage';
 import Disclaimer from 'components/Disclaimer';
 import { getHeaderHeight } from 'utils/responsive';
 
@@ -78,6 +80,7 @@ function App({
   showDisclaimer,
   onDismissDisclaimer,
   onNavigateAbout,
+  fullscreenImage,
   path,
   intl,
 }) {
@@ -89,6 +92,7 @@ function App({
   }, []);
   const groupId =
     path.route === ROUTES.EXPLORE && path.level === 'groups' ? path.id : null;
+
   return (
     <Grommet theme={theme}>
       <AppWrapper>
@@ -145,6 +149,7 @@ function App({
               <Route path="" component={NotFoundPage} />
             </Switch>
           </ScrollToTop>
+          {fullscreenImage && <FullscreenImage config={fullscreenImage} />}
         </Content>
         <GlobalStyle />
       </AppWrapper>
@@ -165,12 +170,14 @@ App.propTypes = {
   onNavigateAbout: PropTypes.func,
   showDisclaimer: PropTypes.bool,
   path: PropTypes.object,
+  fullscreenImage: PropTypes.object,
   intl: intlShape.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
   showDisclaimer: state => selectShowDisclaimer(state),
   path: state => selectRouterPathNamed(state),
+  fullscreenImage: state => selectFullscreenImage(state),
 });
 
 export function mapDispatchToProps(dispatch) {

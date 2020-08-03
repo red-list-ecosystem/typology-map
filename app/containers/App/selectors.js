@@ -54,6 +54,10 @@ export const selectLocale = createSelector(
   },
 );
 
+export const selectFullscreenImage = createSelector(
+  selectGlobal,
+  global => global.fullscreenImage,
+);
 export const selectTypology = createSelector(
   selectGlobal,
   global => global.typologyConfig,

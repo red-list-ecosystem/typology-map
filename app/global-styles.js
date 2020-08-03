@@ -55,6 +55,20 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 
+  sub {
+    top: 0.5em;
+  }
+
+  sup {
+    top: -.5em;
+  }
+  sub, sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: initial;
+  }
+
   .rle-content a {
     font-weight: 600;
   }

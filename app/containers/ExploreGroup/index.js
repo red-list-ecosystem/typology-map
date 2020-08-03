@@ -24,12 +24,14 @@ import {
   loadContent,
   navigateTypology,
   navigate,
+  setFullscreenImage,
 } from 'containers/App/actions';
 
 import ColumnMain from 'components/ColumnMain';
 import ColumnMainContent from 'components/ColumnMainContent';
 import ColumnAside from 'components/ColumnAside';
 import HTMLWrapper from 'components/HTMLWrapper';
+import GroupDiagram from 'components/GroupDiagram';
 import AsideNavSection from 'components/AsideNavSection';
 import AsideNavLabel from 'components/AsideNavLabel';
 import AsideNavTypologySelected from 'components/AsideNavTypologySelected';
@@ -60,6 +62,7 @@ export function ExploreGroup({
   intl,
   biome,
   realm,
+  onSetFullscreenImage,
 }) {
   useEffect(() => {
     // kick off loading of page content
@@ -123,6 +126,19 @@ export function ExploreGroup({
                   <HTMLWrapper
                     innerhtml={content}
                     classNames={['rle-html-group']}
+                    inject={[
+                      {
+                        tag: '[DIAGRAM]',
+                        el: (
+                          <GroupDiagram
+                            group={typology}
+                            onFullscreen={() =>
+                              onSetFullscreenImage({ typology })
+                            }
+                          />
+                        ),
+                      },
+                    ]}
                   />
                 </TypologyContent>
               </ColumnMainContent>
@@ -189,6 +205,7 @@ ExploreGroup.propTypes = {
   navBiome: PropTypes.func.isRequired,
   navRealm: PropTypes.func.isRequired,
   navExplore: PropTypes.func.isRequired,
+  onSetFullscreenImage: PropTypes.func.isRequired,
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   intl: intlShape.isRequired,
 };
@@ -213,6 +230,8 @@ function mapDispatchToProps(dispatch) {
     navBiome: id => dispatch(navigateTypology('biomes', id)),
     navRealm: id => dispatch(navigateTypology('realms', id)),
     navExplore: () => dispatch(navigate('explore')),
+    onSetFullscreenImage: args =>
+      dispatch(setFullscreenImage('GroupDiagram', args)),
   };
 }
 

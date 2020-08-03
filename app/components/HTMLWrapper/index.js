@@ -18,7 +18,7 @@ import { navigate } from 'containers/App/actions';
 // className="rle-html"
 // dangerouslySetInnerHTML={{ __html: setLinkTarget(innerhtml) }}
 // />
-const HTMLWrapper = ({ innerhtml, onNavigate, classNames = [] }) => (
+const HTMLWrapper = ({ innerhtml, onNavigate, classNames = [], inject }) => (
   <div className={`rle-html ${classNames.join(' ')}`}>
     {!innerhtml && <LoadingIndicator />}
     {innerhtml &&
@@ -47,6 +47,10 @@ const HTMLWrapper = ({ innerhtml, onNavigate, classNames = [] }) => (
               </a>
             );
           }
+          if (inject && inject.length > 0 && node.type === 'text') {
+            const inj = inject.find(({ tag }) => tag === node.data);
+            return inj ? inj.el : undefined;
+          }
           return undefined;
         },
       })}
@@ -58,6 +62,7 @@ HTMLWrapper.propTypes = {
   innerhtml: PropTypes.string,
   onNavigate: PropTypes.func,
   classNames: PropTypes.array,
+  inject: PropTypes.array,
 };
 
 function mapDispatchToProps(dispatch) {

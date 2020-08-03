@@ -31,6 +31,7 @@ import {
   CONTENT_LOAD_ERROR,
   CONTENT_READY,
   DISMISS_DISCLAIMER,
+  SET_FULLSCREEN_IMAGE,
 } from './constants';
 
 export function setLocale(locale) {
@@ -165,6 +166,13 @@ export function setContentReady(contentType, key, locale, time) {
     time,
     contentType,
     locale,
+  };
+}
+export function setFullscreenImage(imageType, args) {
+  return {
+    type: SET_FULLSCREEN_IMAGE,
+    imageType,
+    args,
   };
 }
 

@@ -196,3 +196,5 @@ export const LOGOS = [
     src: LOGO_3,
   },
 ];
+
+export const DIAGRAM_NAME_ENDING = '-diagram.png';
