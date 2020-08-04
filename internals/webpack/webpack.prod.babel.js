@@ -125,8 +125,8 @@ module.exports = require('./webpack.base.babel')({
 
     new WebpackPwaManifest({
       name: 'Global Ecosystem Typology',
-      short_name: 'Global Ecosystem Typology',
-      description: 'Global Ecosystem Typology',
+      short_name: 'Ecosystem Typology',
+      description: "A Global Typology for Earth's Ecosystems",
       background_color: '#ffffff',
       theme_color: '#000000',
       inject: true,
