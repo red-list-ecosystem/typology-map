@@ -128,7 +128,7 @@ module.exports = require('./webpack.base.babel')({
       short_name: 'Global Ecosystem Typology',
       description: 'Global Ecosystem Typology',
       background_color: '#ffffff',
-      theme_color: '#00183A',
+      theme_color: '#000000',
       inject: true,
       ios: true,
       icons: [
