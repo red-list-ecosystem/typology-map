@@ -127,21 +127,21 @@ module.exports = require('./webpack.base.babel')({
       name: 'Global Ecosystem Typology',
       short_name: 'Global Ecosystem Typology',
       description: 'Global Ecosystem Typology',
-      background_color: '#fafafa',
-      theme_color: '#b1624d',
+      background_color: '#ffffff',
+      theme_color: '#00183A',
       inject: true,
       ios: true,
-      // icons: [
-      //   {
-      //     src: path.resolve('app/images/icon-512x512.png'),
-      //     sizes: [72, 96, 128, 144, 192, 384, 512],
-      //   },
-      //   {
-      //     src: path.resolve('app/images/icon-512x512.png'),
-      //     sizes: [120, 152, 167, 180],
-      //     ios: true,
-      //   },
-      // ],
+      icons: [
+        {
+          src: path.resolve('app/images/icon-256x256.png'),
+          sizes: [72, 96, 128, 144, 192, 256],
+        },
+        {
+          src: path.resolve('app/images/icon-256x256.png'),
+          sizes: [120, 152, 167, 180],
+          ios: true,
+        },
+      ],
     }),
 
     new HashedModuleIdsPlugin({
