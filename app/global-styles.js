@@ -55,6 +55,10 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 
+  figure {
+    margin: 0;
+  }
+
   sub {
     top: 0.5em;
   }

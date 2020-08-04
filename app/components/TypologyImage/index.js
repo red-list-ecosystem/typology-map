@@ -46,41 +46,47 @@ const mapVerticalAlignment = align => {
 function TypologyImage({ typology, inText, locale }) {
   const { image } = typology;
   const [imageExists, setImageExists] = useState(true);
+  const [loaded, setLoaded] = useState(false);
   const src = `${PATHS.IMAGES}/${
     image && image.name ? image.name : typology.path
   }`;
   return !imageExists ? null : (
     <ImageWrap inText={inText}>
-      <LoadingWrap>
-        <LoadingIndicator />
-      </LoadingWrap>
-      <Image
-        fill
-        fit="cover"
-        src={`${src}.jpg`}
-        onError={() => setImageExists(false)}
-        alignSelf={
-          image && image.verticalAlign
-            ? mapVerticalAlignment(typology.image.verticalAlign)
-            : 'center'
-        }
-      />
-      {image && (image.credit || image.caption) && (
-        <ImageInfo
-          caption={
-            image.caption &&
-            image.caption[locale] &&
-            image.caption[locale].trim() !== '' &&
-            image.caption[locale]
-          }
-          credit={
-            image.credit &&
-            image.credit[locale] &&
-            image.credit[locale].trim() !== '' &&
-            image.credit[locale]
+      {!loaded && (
+        <LoadingWrap>
+          <LoadingIndicator />
+        </LoadingWrap>
+      )}
+      <figure>
+        <Image
+          fill
+          fit="cover"
+          src={`${src}.jpg`}
+          onError={() => setImageExists(false)}
+          onLoad={() => setLoaded(true)}
+          alignSelf={
+            image && image.verticalAlign
+              ? mapVerticalAlignment(typology.image.verticalAlign)
+              : 'center'
           }
         />
-      )}
+        {image && (image.credit || image.caption) && (
+          <ImageInfo
+            caption={
+              image.caption &&
+              image.caption[locale] &&
+              image.caption[locale].trim() !== '' &&
+              image.caption[locale]
+            }
+            credit={
+              image.credit &&
+              image.credit[locale] &&
+              image.credit[locale].trim() !== '' &&
+              image.credit[locale]
+            }
+          />
+        )}
+      </figure>
     </ImageWrap>
   );
 }

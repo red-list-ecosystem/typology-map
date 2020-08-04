@@ -39,23 +39,25 @@ const mdOptions = {
 
 function ImageInfo({ caption, credit, intl, below }) {
   return (
-    <Styled align="end" below={below}>
-      {caption && (
-        <Caption className="rle-caption-markdown">
-          <Markdown options={mdOptions} source={caption} />
-        </Caption>
-      )}
-      {credit && (
-        <Credit className="rle-caption-markdown">
-          <Markdown
-            options={mdOptions}
-            source={`${intl.formatMessage(
-              commonMessages.imageCreditBy,
-            )} ${credit}`}
-          />
-        </Credit>
-      )}
-    </Styled>
+    <figcaption>
+      <Styled align="end" below={below}>
+        {caption && (
+          <Caption className="rle-caption-markdown">
+            <Markdown options={mdOptions} source={caption} />
+          </Caption>
+        )}
+        {credit && (
+          <Credit className="rle-caption-markdown">
+            <Markdown
+              options={mdOptions}
+              source={`${intl.formatMessage(
+                commonMessages.imageCreditBy,
+              )} ${credit}`}
+            />
+          </Credit>
+        )}
+      </Styled>
+    </figcaption>
   );
 }
 

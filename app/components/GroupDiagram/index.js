@@ -68,33 +68,39 @@ function GroupDiagram({ group, intl, fullscreen, onFullscreen }) {
   const { locale } = intl;
   const image = group.diagram;
   const [imageExists, setImageExists] = useState(true);
+  const [loaded, setLoaded] = useState(false);
   const src = `${PATHS.IMAGES}/${
     image && image.name ? image.name : `${group.path}${DIAGRAM_NAME_ENDING}`
   }`;
   // prettier-ignore
   return !imageExists ? null : (
     <ImageWrap flex={!fullscreen} isFS={fullscreen}>
-      <LoadingWrap>
-        <LoadingIndicator />
-      </LoadingWrap>
-      <StyledImage
-        src={`${src}`}
-        onError={() => setImageExists(false)}
-        fit="contain"
-      />
-      <ImageInfo
-        below={!fullscreen}
-        caption={
-          image &&
-          image.caption &&
-          image.caption[locale] &&
-          image.caption[locale].trim() !== ''
-            ? image.caption[locale]
-            : intl.formatMessage(messages.caption, {
-              title: `${group.id} ${group.title[locale]}`,
-            })
-        }
-      />
+      {!loaded && (
+        <LoadingWrap>
+          <LoadingIndicator />
+        </LoadingWrap>
+      )}
+      <figure>
+        <StyledImage
+          src={`${src}`}
+          onError={() => setImageExists(false)}
+          onLoad={() => setLoaded(true)}
+          fit="contain"
+        />
+        <ImageInfo
+          below={!fullscreen}
+          caption={
+            image &&
+            image.caption &&
+            image.caption[locale] &&
+            image.caption[locale].trim() !== ''
+              ? image.caption[locale]
+              : intl.formatMessage(messages.caption, {
+                title: `${group.id} ${group.title[locale]}`,
+              })
+          }
+        />
+      </figure>
       {onFullscreen && (
         <FSControlContainer>
           <FSControl
@@ -116,7 +122,7 @@ function GroupDiagram({ group, intl, fullscreen, onFullscreen }) {
 GroupDiagram.propTypes = {
   group: PropTypes.object,
   fullscreen: PropTypes.bool,
-  onFullscreen: PropTypes.bool,
+  onFullscreen: PropTypes.func,
   intl: intlShape.isRequired,
 };
 
