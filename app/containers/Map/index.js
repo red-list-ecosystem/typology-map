@@ -10,7 +10,6 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import styled from 'styled-components';
-import { Add, Subtract } from 'grommet-icons';
 import L from 'leaflet';
 import 'leaflet.vectorgrid';
 import 'leaflet/dist/leaflet.css';
@@ -25,6 +24,7 @@ import {
   MAP_OPTIONS,
 } from 'config';
 
+import { Plus, Minus } from 'components/Icons';
 import LoadingIndicator from 'components/LoadingIndicator';
 import MapControls from 'components/MapControls';
 import MapControl from 'components/MapControl';
@@ -336,16 +336,14 @@ export function Map({
         <MapControl
           disabled={MAP_OPTIONS.maxZoom === zoom}
           icon={
-            <Add color={MAP_OPTIONS.maxZoom === zoom ? 'dark-4' : 'black'} />
+            <Plus color={MAP_OPTIONS.maxZoom === zoom ? 'dark-4' : 'black'} />
           }
           onClick={() => setZoom(zoom + 1)}
         />
         <MapControl
           disabled={MAP_OPTIONS.minZoom === zoom}
           icon={
-            <Subtract
-              color={MAP_OPTIONS.minZoom === zoom ? 'dark-4' : 'black'}
-            />
+            <Minus color={MAP_OPTIONS.minZoom === zoom ? 'dark-4' : 'black'} />
           }
           onClick={() => setZoom(zoom - 1)}
         />

@@ -54,6 +54,9 @@ export const dimensions = {
     single: 68,
     multi: 48,
   },
+  icons: {
+    size: 24,
+  },
   topGraphic: {
     // by breakpoint
     height: [300, 300, 350, 420, 550],

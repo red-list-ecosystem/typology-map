@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { Box, Image } from 'grommet';
 import styled, { css } from 'styled-components';
 import { injectIntl, intlShape } from 'react-intl';
-import { Expand, Contract } from 'grommet-icons';
+import { Expand, Contract } from 'components/Icons';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import ImageInfo from 'components/ImageInfo';
