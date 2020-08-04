@@ -80,7 +80,7 @@ function GroupDiagram({ group, intl, fullscreen, onFullscreen }) {
           <LoadingIndicator />
         </LoadingWrap>
       )}
-      <figure>
+      <Box as="figure">
         <StyledImage
           src={`${src}`}
           onError={() => setImageExists(false)}
@@ -100,7 +100,7 @@ function GroupDiagram({ group, intl, fullscreen, onFullscreen }) {
               })
           }
         />
-      </figure>
+      </Box>
       {onFullscreen && (
         <FSControlContainer>
           <FSControl
