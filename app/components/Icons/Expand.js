@@ -7,12 +7,12 @@ function Expand(props) {
       <g>
         <polygon
           fill="inherit"
-          stroke="none"
+          stroke="inherit"
           points="15 2 15 4 18.59 4 13.29 9.29 14.71 10.71 20 5.41 20 9 22 9 22 2 15 2"
         />
         <polygon
           fill="inherit"
-          stroke="none"
+          stroke="inherit"
           points="9.29 13.29 4 18.59 4 15 2 15 2 22 9 22 9 20 5.41 20 10.71 14.71 9.29 13.29"
         />
       </g>

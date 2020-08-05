@@ -7,7 +7,7 @@ function Plus(props) {
       <g>
         <polygon
           fill="inherit"
-          stroke="none"
+          stroke="inherit"
           points="19 11 13 11 13 5 11 5 11 11 5 11 5 13 11 13 11 19 13 19 13 13 19 13 19 11"
         />
       </g>

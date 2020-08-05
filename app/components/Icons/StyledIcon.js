@@ -3,9 +3,10 @@ import styled, { withTheme } from 'styled-components';
 
 const parseMetricToNum = string => parseFloat(string.match(/\d+(\.\d+)?/), 10);
 
-const StyledIcon = styled(({ a11yTitle, color, theme, ...rest }) => (
+const StyledIcon = styled(({ a11yTitle, color, theme, stroke, ...rest }) => (
   <svg
     fill={theme.global.colors[color] || color}
+    stroke={stroke || 'none'}
     aria-label={a11yTitle}
     {...rest}
   />
