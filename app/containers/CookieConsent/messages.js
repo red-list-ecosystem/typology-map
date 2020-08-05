@@ -16,7 +16,7 @@ export default defineMessages({
   info: {
     id: `${scope}.info`,
     defaultMessage:
-      'By using this Website you agree to store your Personal Data where it is essential for the Website to function. In addition, you can enable non-essential third-party services that may store Cookies and Usage Data',
+      'By using this Website you agree to store some of your Personal Data where it is essential for the Website to function. In addition, you can enable non-essential third-party services that may store Cookies and Usage Data',
   },
   buttonAccept: {
     id: `${scope}.buttonAccept`,
@@ -24,7 +24,7 @@ export default defineMessages({
   },
   buttonReject: {
     id: `${scope}.buttonReject`,
-    defaultMessage: 'No thanks',
+    defaultMessage: 'Decline',
   },
   linkPrivacyPolicy: {
     id: `${scope}.linkPrivacyPolicy`,

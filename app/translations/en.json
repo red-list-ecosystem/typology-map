@@ -88,5 +88,12 @@
   "app.containers.Search.placeholder": "Search typology by name or id",
   "app.containers.Search.resultHint": "Search typology by name or id",
   "app.containers.Search.search": "Search",
-  "rle.components.Partners.titleThanks": "Thanks to"
+  "rle.components.Footer.linkCookieConseentUpdate": "Update privacy settings",
+  "rle.components.Partners.titleThanks": "Thanks to",
+  "rle.containers.CookieConsent.buttonAccept": "Allow third-party services",
+  "rle.containers.CookieConsent.buttonReject": "Decline",
+  "rle.containers.CookieConsent.info": "By using this Website you agree to store some of your Personal Data where it is essential for the Website to function. In addition, you can enable non-essential third-party services that may store Cookies and Usage Data",
+  "rle.containers.CookieConsent.linkDialogue": "Privacy Settings",
+  "rle.containers.CookieConsent.linkPrivacyPolicy": "Our privacy policy",
+  "rle.containers.CookieConsent.title": "Cookie preference & privacy"
 }

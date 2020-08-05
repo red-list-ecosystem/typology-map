@@ -28,12 +28,34 @@ import ButtonText from 'components/ButtonText';
 import messages from './messages';
 
 const Styled = styled.div``;
+const StyledButtonText = styled(ButtonText)`
+  color: ${({ theme }) => theme.global.colors.brand};
+  text-decoration: none;
+  font-weight: bold;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
 
-const StyledButton = styled(ButtonPrimary)``;
+// prettier-ignore
+const StyledButton = styled(ButtonPrimary)`
+  padding: 5px 10px;
+  background: ${({ theme, secondary }) =>
+    theme.global.colors[secondary ? 'light-grey' : 'brand-2']};
+  color: ${({ theme, secondary }) =>
+    theme.global.colors[secondary ? 'dark-grey' : 'white']};
+  &:hover {
+    background: ${({ theme, secondary }) =>
+    theme.global.colors[secondary ? 'light-grey' : 'black']};
+    color: ${({ theme, secondary }) =>
+    theme.global.colors[secondary ? 'black' : 'white']};
+  }
+`;
 
-const ButtonWrap = styled.div`
+const ButtonWrap = styled(Box)`
   text-align: center;
-  margin: 0 auto;
+  margin-right: auto;
+  margin-left: auto;
 `;
 
 export function CookieConsent({
@@ -77,16 +99,13 @@ export function CookieConsent({
             style={{ maxWidth: '100%', width: '360px' }}
             elevation="large"
           >
-            <Heading level={3}>
+            <Heading level={3} margin={{ bottom: 'small' }}>
               <FormattedMessage {...messages.title} />
             </Heading>
-            <Paragraph
-              margin={{ top: 'small', bottom: 'medium' }}
-              size="medium"
-            >
+            <Paragraph margin={{ bottom: 'medium' }} size="medium">
               <FormattedMessage {...messages.info} />
             </Paragraph>
-            <ButtonWrap>
+            <ButtonWrap gap="xsmall" margin={{ bottom: 'medium' }}>
               <StyledButton
                 onClick={() => {
                   onConsent('true');
@@ -103,7 +122,8 @@ export function CookieConsent({
                 <FormattedMessage {...messages.buttonReject} />
               </StyledButton>
             </ButtonWrap>
-            <ButtonText
+            <StyledButtonText
+              alignSelf="end"
               onClick={() => navPrivacy()}
               label={<FormattedMessage {...messages.linkPrivacyPolicy} />}
             />
