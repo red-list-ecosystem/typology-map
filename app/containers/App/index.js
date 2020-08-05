@@ -43,6 +43,8 @@ import MapContainer from 'containers/MapContainer';
 import Header from 'containers/Header';
 import FullscreenImage from 'containers/FullscreenImage';
 import Disclaimer from 'components/Disclaimer';
+import CookieConsent from 'containers/CookieConsent';
+
 import { getHeaderHeight } from 'utils/responsive';
 
 import { ROUTES, PAGES } from 'config';
@@ -105,6 +107,7 @@ function App({
             content={intl.formatMessage(commonMessages.metaDescription)}
           />
         </Helmet>
+        <CookieConsent />
         {showDisclaimer && (
           <Disclaimer
             onDismiss={() => onDismissDisclaimer()}

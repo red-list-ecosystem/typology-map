@@ -215,3 +215,20 @@ export const selectShowDisclaimer = createSelector(
   selectGlobal,
   global => global.showDisclaimer,
 );
+
+export const selectCookieConsent = createSelector(
+  selectGlobal,
+  global => global.cookieConsent,
+);
+export const selectCookieConsentApp = createSelector(
+  selectGlobal,
+  global => global.cookieConsentApp,
+);
+export const selectCookieConsentChecked = createSelector(
+  selectGlobal,
+  global => global.cookieConsentChecked,
+);
+export const selectCookieConsentShow = createSelector(
+  selectGlobal,
+  global => global.showCookieConsent,
+);
