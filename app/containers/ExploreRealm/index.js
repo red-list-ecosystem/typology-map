@@ -12,10 +12,12 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { Box, ResponsiveContext } from 'grommet';
+import styled from 'styled-components';
 
 import {
   selectContentByKey,
   selectBiomesForRealmWithStats,
+  selectRealms,
 } from 'containers/App/selectors';
 import {
   loadContent,
@@ -42,6 +44,13 @@ import { isMinSize } from 'utils/responsive';
 import commonMessages from 'messages';
 import messages from './messages';
 
+const Hint = styled(p => (
+  <Box pad={{ top: 'ms', horizontal: 'small' }} {...p} />
+))`
+  font-style: italic;
+  color: ${({ theme }) => theme.global.colors['dark-grey']};
+`;
+
 export function ExploreRealm({
   typology,
   onLoadContent,
@@ -50,6 +59,7 @@ export function ExploreRealm({
   navBiome,
   navExplore,
   intl,
+  realms,
 }) {
   useEffect(() => {
     // kick off loading of page content
@@ -106,6 +116,30 @@ export function ExploreRealm({
                     active
                   />
                 </AsideNavSection>
+                {typology.type === 'core' && realms && (
+                  <Hint>
+                    <FormattedMessage
+                      {...messages.relatedHintTrans}
+                      values={{
+                        count:
+                          realms &&
+                          realms.filter(r => r.type === 'trans').length,
+                      }}
+                    />
+                  </Hint>
+                )}
+                {typology.type === 'trans' && realms && (
+                  <Hint>
+                    <FormattedMessage
+                      {...messages.relatedHintCore}
+                      values={{
+                        count:
+                          realms &&
+                          realms.filter(r => r.type === 'core').length,
+                      }}
+                    />
+                  </Hint>
+                )}
                 <AsideNavSection>
                   <AsideNavLabel
                     label={<FormattedMessage {...commonMessages.biomeSelect} />}
@@ -129,6 +163,7 @@ export function ExploreRealm({
 ExploreRealm.propTypes = {
   typology: PropTypes.object.isRequired,
   biomes: PropTypes.array,
+  realms: PropTypes.array,
   onLoadContent: PropTypes.func.isRequired,
   navBiome: PropTypes.func.isRequired,
   navExplore: PropTypes.func.isRequired,
@@ -144,6 +179,7 @@ const mapStateToProps = createStructuredSelector({
     }),
   biomes: (state, { typology }) =>
     selectBiomesForRealmWithStats(state, typology.id),
+  realms: state => selectRealms(state),
 });
 
 function mapDispatchToProps(dispatch) {

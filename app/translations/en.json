@@ -59,6 +59,8 @@
   "app.containers.ExploreBiome.metaTitle": "Biome: {biome}",
   "app.containers.ExploreGroup.metaTitle": "Group: {group}",
   "app.containers.ExploreRealm.metaTitle": "Realm: {realm}",
+  "app.containers.ExploreRealm.relatedHintCore": "See the {count} core realms for related biomes",
+  "app.containers.ExploreRealm.relatedHintTrans": "See the {count} transitional realms for related biomes",
   "app.containers.LocaleToggle.en": "en",
   "app.containers.Map.basemapAttribution": "Basemap attribution",
   "app.containers.Map.settingBasemap": "Satellite",
