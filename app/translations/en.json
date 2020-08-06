@@ -42,6 +42,8 @@
   "app.common.realms": "Realms",
   "app.common.realmsCore": "Core realms",
   "app.common.realmsTrans": "Transitional realms",
+  "app.common.requireConsent": "Please {showConsentLink} to view the feedback form.",
+  "app.common.showConsentLink": "allow third-party services and cookies",
   "app.components.Disclaimer.disclaimer": "Please note that the content and functionality of this site are still under development.",
   "app.components.Disclaimer.dismiss": "Got it!",
   "app.components.Disclaimer.more": "Read more about upcoming updates",

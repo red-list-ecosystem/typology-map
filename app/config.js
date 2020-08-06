@@ -81,6 +81,7 @@ export const PAGES = {
     path: 'feedback',
     nav: SECONDARY,
     backgroundImage: 'bg_home',
+    needsConsent: 'true',
   },
   privacy: {
     path: 'privacy',
