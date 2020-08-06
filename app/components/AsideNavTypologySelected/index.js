@@ -8,7 +8,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Box, Text, Button } from 'grommet';
-import { Close } from 'grommet-icons';
+import { Close } from 'components/Icons';
 
 const TypologyButton = styled(props => <Button plain {...props} />)`
   &:hover {

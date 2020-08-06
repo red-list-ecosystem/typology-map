@@ -7,7 +7,7 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Box, Button, Drop, Text, Heading } from 'grommet';
-import { CircleInformation } from 'grommet-icons';
+import { Info } from 'components/Icons';
 import { FormattedMessage } from 'react-intl';
 
 import messages from './messages';
@@ -26,8 +26,7 @@ const StyledHeading = styled(Heading)`
 `;
 
 const StyledButton = styled(Button)`
-  background: rgba(255, 255, 255, 0.85);
-  padding: 2px;
+  background: rgba(255, 255, 255, 0.65);
   border-radius: 9999px;
   &:hover {
     background: ${({ theme }) => theme.global.colors.white};
@@ -78,7 +77,7 @@ export function Attribution() {
         <StyledButton
           ref={attributionButtonRef}
           plain
-          icon={<CircleInformation size="small" color="dark" />}
+          icon={<Info size="xlarge" color="dark" />}
           onClick={() => setShowAttribution(!showAttribution)}
         />
         {showAttribution && attributionButtonRef.current && (

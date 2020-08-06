@@ -19,7 +19,7 @@ import {
   Text,
   ResponsiveContext,
 } from 'grommet';
-import { Menu } from 'grommet-icons';
+import { Menu } from 'components/Icons';
 
 import { GROUP_LAYER_PROPERTIES } from 'config';
 

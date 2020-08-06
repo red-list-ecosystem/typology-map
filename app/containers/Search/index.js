@@ -12,7 +12,8 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import styled from 'styled-components';
 import { Box, Text, Button, ResponsiveContext } from 'grommet';
-import { Close, Search as SearchIcon } from 'grommet-icons';
+
+import { Close, Search as SearchIcon } from 'components/Icons';
 
 import {
   selectGroups,
@@ -45,9 +46,9 @@ const SearchResultWrap = styled.div`
 `;
 
 const CloseButton = styled(p => <Button plain fill="vertical" {...p} />)`
-  stroke: black;
+  fill: black;
   &:focus {
-    stroke: ${({ theme }) => theme.global.colors.brand};
+    fill: ${({ theme }) => theme.global.colors.brand} !important;
   }
 `;
 
@@ -122,7 +123,7 @@ export function Search({
                   if (onClose) onClose();
                   setActiveResult(0);
                 }}
-                icon={<Close size="medium" style={{ stroke: 'inherit' }} />}
+                icon={<Close size="medium" />}
               />
             )}
           </Box>

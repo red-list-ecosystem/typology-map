@@ -7,7 +7,7 @@ import { filter } from 'lodash/collection';
 import styled from 'styled-components';
 
 import { Button, Box, Text, ResponsiveContext, Layer } from 'grommet';
-import { Menu, Search as SearchIcon } from 'grommet-icons';
+import { Menu, Search as SearchIcon } from 'components/Icons';
 
 import { selectRouterPath } from 'containers/App/selectors';
 import { navigate, navigateHome, navigatePage } from 'containers/App/actions';
@@ -252,7 +252,7 @@ function Header({ nav, navHome, navPage, path }) {
                         setShowMenu(false);
                         setShowSearch(!showSearch);
                       }}
-                      label={<SearchIcon color="white" />}
+                      label={<SearchIcon color="white" size="medium" />}
                     />
                   </Box>
                 )}
@@ -346,7 +346,7 @@ function Header({ nav, navHome, navPage, path }) {
                 <NavSearch justify="end">
                   {!showSearch && (
                     <SearchButton
-                      icon={<SearchIcon size="xlarge" color="white" />}
+                      icon={<SearchIcon color="white" />}
                       onClick={() => setShowSearch(true)}
                     />
                   )}

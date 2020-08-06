@@ -9,15 +9,20 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Helmet } from 'react-helmet';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import styled from 'styled-components';
+import { Box, Text } from 'grommet';
 
 import { PATHS, PAGES } from 'config';
 
-import { selectContentByKey } from 'containers/App/selectors';
-import { loadContent } from 'containers/App/actions';
+import {
+  selectContentByKey,
+  selectCookieConsent,
+} from 'containers/App/selectors';
+import { loadContent, showCookieConsent } from 'containers/App/actions';
 
+import ButtonTextBold from 'components/ButtonTextBold';
 import HTMLWrapper from 'components/HTMLWrapper';
 import PageBackground from 'components/PageBackground';
 import Footer from 'containers/Footer';
@@ -77,12 +82,19 @@ const ContentWrap = styled.div`
   }
 `;
 
-export function RoutePage({ match, onLoadContent, content, intl }) {
+export function RoutePage({
+  match,
+  onLoadContent,
+  content,
+  intl,
+  consent,
+  onShowCookieConsent,
+}) {
+  const config = PAGES[match.params.id];
   useEffect(() => {
     // kick off loading of page content
     onLoadContent(match.params.id);
   }, [match.params.id]);
-  const config = PAGES[match.params.id];
   const partners = config.partners && config.partners === 'true';
   const title = commonMessages[`page_${match.params.id}`]
     ? intl.formatMessage(commonMessages[`page_${match.params.id}`])
@@ -103,7 +115,42 @@ export function RoutePage({ match, onLoadContent, content, intl }) {
         }}
       />
       <ContentWrap hasPad={partners}>
-        <HTMLWrapper innerhtml={content} classNames={['rle-html-page']} />
+        {config.needsConsent === 'true' && consent !== 'true' && (
+          <HTMLWrapper
+            innerhtml={content}
+            classNames={['rle-html-page']}
+            needsConsentClass="rle-needs-consent"
+            consentPlaceholder={
+              <Box
+                background="light-3"
+                pad={{ horizontal: 'medium', vertical: 'ms' }}
+                margin={{ top: 'medium' }}
+                border
+                round="xsmall"
+              >
+                <Text style={{ fontStyle: 'italic' }}>
+                  <FormattedMessage
+                    {...commonMessages.requireConsent}
+                    values={{
+                      showConsentLink: (
+                        <ButtonTextBold
+                          onClick={() => onShowCookieConsent()}
+                          label={intl.formatMessage(
+                            commonMessages.showConsentLink,
+                          )}
+                        />
+                      ),
+                    }}
+                  />
+                </Text>
+              </Box>
+            }
+          />
+        )}
+        {(config.needsConsent !== 'true' ||
+          (consent === 'true' && content)) && (
+          <HTMLWrapper innerhtml={content} classNames={['rle-html-page']} />
+        )}
         {content && partners && <Partners />}
       </ContentWrap>
       <Footer elevated />
@@ -113,12 +160,15 @@ export function RoutePage({ match, onLoadContent, content, intl }) {
 
 RoutePage.propTypes = {
   onLoadContent: PropTypes.func.isRequired,
+  onShowCookieConsent: PropTypes.func,
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  consent: PropTypes.string,
   match: PropTypes.object,
   intl: intlShape.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
+  consent: state => selectCookieConsent(state),
   content: (state, props) =>
     selectContentByKey(state, {
       contentType: 'pages',
@@ -131,6 +181,7 @@ function mapDispatchToProps(dispatch) {
     onLoadContent: id => {
       dispatch(loadContent('pages', id));
     },
+    onShowCookieConsent: () => dispatch(showCookieConsent(true)),
   };
 }
 

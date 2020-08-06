@@ -10,12 +10,12 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import styled, { css } from 'styled-components';
-import { Expand, Contract } from 'grommet-icons';
 
 import { selectLocale, selectGroup } from 'containers/App/selectors';
 
 import Map from 'containers/Map';
 
+import { Expand, Contract } from 'components/Icons';
 import MapControls from 'components/MapControls';
 import MapControl from 'components/MapControl';
 import TopGraphic from 'components/TopGraphic';

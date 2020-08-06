@@ -1,6 +1,7 @@
 import { takeEvery, takeLatest, select, put, call } from 'redux-saga/effects';
 import { push } from 'connected-react-router';
 import extend from 'lodash/extend';
+import Cookies from 'js-cookie';
 import 'whatwg-fetch';
 import 'url-search-params-polyfill';
 
@@ -13,6 +14,10 @@ import {
   LOAD_CONTENT,
   NAVIGATE,
   CHANGE_LOCALE,
+  CHECK_COOKIECONSENT,
+  COOKIECONSENT_NAME,
+  SET_COOKIECONSENT,
+  // COOKIECONSENT_CHECKED,
 } from './constants';
 
 import {
@@ -31,6 +36,8 @@ import {
   setContentRequested,
   setContentLoadError,
   setContentLoadSuccess,
+  cookieConsentChecked,
+  checkCookieConsent,
 } from './actions';
 
 /**
@@ -308,6 +315,16 @@ export function* changeLocaleSaga({ locale }) {
   yield put(push(`${path}${currentLocation.search}`));
 }
 
+export function* checkCookieConsentSaga() {
+  const consentStatus = Cookies.get(COOKIECONSENT_NAME);
+  // console.log('Checking for cookie consent. Current status: ', consentStatus);
+  yield put(cookieConsentChecked(consentStatus));
+}
+export function* setCookieConsentSaga({ status }) {
+  Cookies.set(COOKIECONSENT_NAME, status, { expires: 365, sameSite: 'strict' });
+  yield put(checkCookieConsent());
+}
+
 export default function* defaultSaga() {
   // See example in containers/HomePage/saga.js
   yield takeEvery(
@@ -320,4 +337,6 @@ export default function* defaultSaga() {
   );
   yield takeLatest(NAVIGATE, navigateSaga);
   yield takeLatest(CHANGE_LOCALE, changeLocaleSaga);
+  yield takeEvery(CHECK_COOKIECONSENT, checkCookieConsentSaga);
+  yield takeLatest(SET_COOKIECONSENT, setCookieConsentSaga);
 }

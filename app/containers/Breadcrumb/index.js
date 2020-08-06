@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import styled from 'styled-components';
 
 import { Box, Button, Text } from 'grommet';
-import { FormNext } from 'grommet-icons';
+import { Next } from 'components/Icons';
 
 import { navigate } from 'containers/App/actions';
 
@@ -37,7 +37,7 @@ function Breadcrumb({ targets, level, navExplore }) {
         onClick={() => navExplore()}
         label={<FormattedMessage {...messages.explore} />}
       />
-      <FormNext color="inactive" />
+      <Next color="inactive" />
       {level === 0 && (
         <TextActive>
           <FormattedMessage {...commonMessages.realm} />
@@ -49,7 +49,7 @@ function Breadcrumb({ targets, level, navExplore }) {
           label={<FormattedMessage {...commonMessages.realm} />}
         />
       )}
-      <FormNext color="inactive" />
+      <Next color="inactive" />
       {level < 1 && (
         <TextInactive>
           <FormattedMessage {...commonMessages.biome} />
@@ -66,7 +66,7 @@ function Breadcrumb({ targets, level, navExplore }) {
           label={<FormattedMessage {...commonMessages.biome} />}
         />
       )}
-      <FormNext color="inactive" />
+      <Next color="inactive" />
       {level < 2 && (
         <TextInactive>
           <FormattedMessage {...commonMessages.group} />

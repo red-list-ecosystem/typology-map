@@ -10,7 +10,7 @@ import { FormattedMessage } from 'react-intl';
 import { PAGES } from 'config';
 
 import { selectRouterPath } from 'containers/App/selectors';
-import { navigatePage } from 'containers/App/actions';
+import { navigatePage, showCookieConsent } from 'containers/App/actions';
 
 import commonMessages from 'messages';
 
@@ -52,7 +52,7 @@ const pagesArray = Object.keys(PAGES).map(key => ({
   ...PAGES[key],
 }));
 
-function Footer({ navPage, path, elevated }) {
+function Footer({ navPage, path, elevated, onShowCookieConsent }) {
   const paths = path.split('/');
   const contentType = paths[0] === '' ? paths[1] : paths[0];
   const contentId =
@@ -77,6 +77,11 @@ function Footer({ navPage, path, elevated }) {
               last={index === pagesFooter.length - 1}
             />
           ))}
+          <FooterLink
+            onClick={() => onShowCookieConsent()}
+            label={<Text size="small">Update privacy settings</Text>}
+            last
+          />
         </NavFooter>
       </FooterBar>
     </Styled>
@@ -85,6 +90,7 @@ function Footer({ navPage, path, elevated }) {
 
 Footer.propTypes = {
   navPage: PropTypes.func,
+  onShowCookieConsent: PropTypes.func,
   path: PropTypes.string,
   elevated: PropTypes.bool,
 };
@@ -96,6 +102,7 @@ const mapStateToProps = createStructuredSelector({
 export function mapDispatchToProps(dispatch) {
   return {
     navPage: id => dispatch(navigatePage(id)),
+    onShowCookieConsent: () => dispatch(showCookieConsent(true)),
   };
 }
 

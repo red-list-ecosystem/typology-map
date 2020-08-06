@@ -181,4 +181,12 @@ export default defineMessages({
     id: `${scope}.partner_4_url`,
     defaultMessage: 'https://www.unsw.edu.au/',
   },
+  requireConsent: {
+    id: `${scope}.requireConsent`,
+    defaultMessage: 'Please {showConsentLink} to view the feedback form.',
+  },
+  showConsentLink: {
+    id: `${scope}.showConsentLink`,
+    defaultMessage: 'allow third-party services and cookies',
+  },
 });

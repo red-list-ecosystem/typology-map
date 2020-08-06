@@ -18,7 +18,10 @@ import {
   CONTENT_LOAD_SUCCESS,
   CONTENT_LOAD_ERROR,
   DISMISS_DISCLAIMER,
+  COOKIECONSENT_CHECKED,
+  SET_COOKIECONSENT,
   SET_FULLSCREEN_IMAGE,
+  SHOW_COOKIECONSENT,
 } from './constants';
 
 /* eslint-disable no-param-reassign */
@@ -68,6 +71,10 @@ export const initialState = {
   // contentError: Object.assign({}, initialContent),
   showDisclaimer: true,
   fullscreenImage: null,
+  cookieConsent: '',
+  cookieConsentApp: '',
+  cookieConsentChecked: false,
+  showCookieConsent: null,
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -123,6 +130,29 @@ const appReducer = (state = initialState, action) =>
               ...action.args,
             }
             : null;
+        break;
+      case COOKIECONSENT_CHECKED:
+        // console.log(
+        //   'Store: storing cookie consent status from cookie: ',
+        //   action.status,
+        // );
+        draft.cookieConsent = action.status;
+        draft.cookieConsentChecked = true;
+        break;
+      case SET_COOKIECONSENT:
+        // console.log(
+        //   'Store: storing cookie consent status from dialogue ',
+        //   action.status,
+        // );
+        draft.cookieConsentApp = action.status;
+        draft.showCookieConsent = false;
+        break;
+      case SHOW_COOKIECONSENT:
+        // console.log(
+        //   'Store: storing cookie consent show status from footer ',
+        //   action.show,
+        // );
+        draft.showCookieConsent = action.show;
         break;
     }
   });
