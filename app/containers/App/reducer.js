@@ -132,26 +132,26 @@ const appReducer = (state = initialState, action) =>
             : null;
         break;
       case COOKIECONSENT_CHECKED:
-        console.log(
-          'Store: storing cookie consent status from cookie: ',
-          action.status,
-        );
+        // console.log(
+        //   'Store: storing cookie consent status from cookie: ',
+        //   action.status,
+        // );
         draft.cookieConsent = action.status;
         draft.cookieConsentChecked = true;
         break;
       case SET_COOKIECONSENT:
-        console.log(
-          'Store: storing cookie consent status from dialogue ',
-          action.status,
-        );
+        // console.log(
+        //   'Store: storing cookie consent status from dialogue ',
+        //   action.status,
+        // );
         draft.cookieConsentApp = action.status;
         draft.showCookieConsent = false;
         break;
       case SHOW_COOKIECONSENT:
-        console.log(
-          'Store: storing cookie consent show status from footer ',
-          action.show,
-        );
+        // console.log(
+        //   'Store: storing cookie consent show status from footer ',
+        //   action.show,
+        // );
         draft.showCookieConsent = action.show;
         break;
     }

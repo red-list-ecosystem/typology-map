@@ -317,7 +317,7 @@ export function* changeLocaleSaga({ locale }) {
 
 export function* checkCookieConsentSaga() {
   const consentStatus = Cookies.get(COOKIECONSENT_NAME);
-  console.log('Checking for cookie consent. Current status: ', consentStatus);
+  // console.log('Checking for cookie consent. Current status: ', consentStatus);
   yield put(cookieConsentChecked(consentStatus));
 }
 export function* setCookieConsentSaga({ status }) {
