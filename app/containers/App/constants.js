@@ -26,13 +26,6 @@ export const CONTENT_READY = 'rle/App/CONTENT_READY';
 export const DISMISS_DISCLAIMER = 'rle/App/DISMISS_DISCLAIMER';
 export const SET_FULLSCREEN_IMAGE = 'rle/App/SET_FULLSCREEN_IMAGE';
 
-export const CHECK_COOKIECONSENT = 'rle/App/CHECK_COOKIECONSENT';
-export const COOKIECONSENT_CHECKED = 'rle/App/COOKIECONSENT_CHECKED';
-export const SET_COOKIECONSENT = 'rle/App/SET_COOKIECONSENT';
-export const SHOW_COOKIECONSENT = 'rle/App/SHOW_COOKIECONSENT';
-
 export const PRIMARY = 1;
 export const SECONDARY = 2;
 export const FOOTER = 3;
-
-export const COOKIECONSENT_NAME = 'global-ecosystems-cookie-consent-status';

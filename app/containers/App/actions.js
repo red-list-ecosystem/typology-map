@@ -32,10 +32,6 @@ import {
   CONTENT_READY,
   DISMISS_DISCLAIMER,
   SET_FULLSCREEN_IMAGE,
-  CHECK_COOKIECONSENT,
-  COOKIECONSENT_CHECKED,
-  SET_COOKIECONSENT,
-  SHOW_COOKIECONSENT,
 } from './constants';
 
 export function setLocale(locale) {
@@ -183,29 +179,5 @@ export function setFullscreenImage(imageType, args) {
 export function dismissDisclaimer() {
   return {
     type: DISMISS_DISCLAIMER,
-  };
-}
-
-export function checkCookieConsent() {
-  return {
-    type: CHECK_COOKIECONSENT,
-  };
-}
-export function setCookieConsent(status) {
-  return {
-    type: SET_COOKIECONSENT,
-    status,
-  };
-}
-export function cookieConsentChecked(status) {
-  return {
-    type: COOKIECONSENT_CHECKED,
-    status,
-  };
-}
-export function showCookieConsent(show) {
-  return {
-    type: SHOW_COOKIECONSENT,
-    show,
   };
 }

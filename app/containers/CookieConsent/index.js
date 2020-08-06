@@ -6,24 +6,25 @@ import { createStructuredSelector } from 'reselect';
 import styled from 'styled-components';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import { Box, Layer, Paragraph, Heading } from 'grommet';
-import {
-  selectCookieConsent,
-  selectCookieConsentApp,
-  selectCookieConsentChecked,
-  selectCookieConsentShow,
-} from 'containers/App/selectors';
-import {
-  checkCookieConsent,
-  setCookieConsent,
-  navigatePage,
-} from 'containers/App/actions';
-import saga from 'containers/App/saga';
+import { navigatePage } from 'containers/App/actions';
 import { useInjectSaga } from 'utils/injectSaga';
+import { useInjectReducer } from 'utils/injectReducer';
 
 import { PAGES } from 'config';
 
 import ButtonPrimary from 'components/ButtonPrimary';
 import ButtonText from 'components/ButtonText';
+
+import { checkCookieConsent, setCookieConsent } from './actions';
+import {
+  selectCookieConsent,
+  selectCookieConsentApp,
+  selectCookieConsentChecked,
+  selectCookieConsentShow,
+} from './selectors';
+
+import saga from './saga';
+import reducer from './reducer';
 
 import messages from './messages';
 
@@ -67,7 +68,8 @@ export function CookieConsent({
   navPrivacy,
   show,
 }) {
-  useInjectSaga({ key: 'app', saga });
+  useInjectSaga({ key: 'consent', saga });
+  useInjectReducer({ key: 'consent', reducer });
   useEffect(() => {
     init();
   }, []);

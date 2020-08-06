@@ -1,7 +1,6 @@
 import { takeEvery, takeLatest, select, put, call } from 'redux-saga/effects';
 import { push } from 'connected-react-router';
 import extend from 'lodash/extend';
-import Cookies from 'js-cookie';
 import 'whatwg-fetch';
 import 'url-search-params-polyfill';
 
@@ -14,9 +13,6 @@ import {
   LOAD_CONTENT,
   NAVIGATE,
   CHANGE_LOCALE,
-  CHECK_COOKIECONSENT,
-  COOKIECONSENT_NAME,
-  SET_COOKIECONSENT,
   // COOKIECONSENT_CHECKED,
 } from './constants';
 
@@ -36,8 +32,6 @@ import {
   setContentRequested,
   setContentLoadError,
   setContentLoadSuccess,
-  cookieConsentChecked,
-  checkCookieConsent,
 } from './actions';
 
 /**
@@ -77,7 +71,7 @@ function* loadContentErrorHandler(err, { key, contentType, locale }) {
   yield put(setContentLoadError(err, contentType, locale, key));
 }
 
-export function* loadDataSaga({ key }) {
+function* loadDataSaga({ key }) {
   if (TYPOLOGY[key]) {
     // requestedSelector returns the times that entities where fetched from the API
     const requestedAt = yield select(selectTypologyRequestedByKey, key);
@@ -112,7 +106,7 @@ export function* loadDataSaga({ key }) {
 }
 
 // key expected to include full path, for at risk data metric/country
-export function* loadContentSaga({ key, contentType }) {
+function* loadContentSaga({ key, contentType }) {
   if (PAGES[key] || TYPOLOGY[contentType]) {
     const requestedAt = yield select(selectContentRequestedByKey, {
       contentType,
@@ -179,7 +173,7 @@ export function* loadContentSaga({ key, contentType }) {
 }
 
 // location can either be string or object { pathname, search }
-export function* navigateSaga({ location, args }) {
+function* navigateSaga({ location, args }) {
   const currentLocale = yield select(selectLocale);
   const currentLocation = yield select(selectRouterLocation);
   // default args
@@ -291,7 +285,7 @@ export function* navigateSaga({ location, args }) {
   yield put(push(`${path}${search}`));
 }
 
-export function* changeLocaleSaga({ locale }) {
+function* changeLocaleSaga({ locale }) {
   const currentLocale = yield select(selectLocale);
   const currentLocation = yield select(selectRouterLocation);
   let path = '/';
@@ -315,16 +309,6 @@ export function* changeLocaleSaga({ locale }) {
   yield put(push(`${path}${currentLocation.search}`));
 }
 
-export function* checkCookieConsentSaga() {
-  const consentStatus = Cookies.get(COOKIECONSENT_NAME);
-  // console.log('Checking for cookie consent. Current status: ', consentStatus);
-  yield put(cookieConsentChecked(consentStatus));
-}
-export function* setCookieConsentSaga({ status }) {
-  Cookies.set(COOKIECONSENT_NAME, status, { expires: 365, sameSite: 'strict' });
-  yield put(checkCookieConsent());
-}
-
 export default function* defaultSaga() {
   // See example in containers/HomePage/saga.js
   yield takeEvery(
@@ -337,6 +321,4 @@ export default function* defaultSaga() {
   );
   yield takeLatest(NAVIGATE, navigateSaga);
   yield takeLatest(CHANGE_LOCALE, changeLocaleSaga);
-  yield takeEvery(CHECK_COOKIECONSENT, checkCookieConsentSaga);
-  yield takeLatest(SET_COOKIECONSENT, setCookieConsentSaga);
 }

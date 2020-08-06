@@ -10,7 +10,8 @@ import { FormattedMessage } from 'react-intl';
 import { PAGES } from 'config';
 
 import { selectRouterPath } from 'containers/App/selectors';
-import { navigatePage, showCookieConsent } from 'containers/App/actions';
+import { navigatePage } from 'containers/App/actions';
+import { showCookieConsent } from 'containers/CookieConsent/actions';
 
 import commonMessages from 'messages';
 

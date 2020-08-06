@@ -31,12 +31,12 @@ import MapControl from 'components/MapControl';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
+import reducer from './reducer';
+import saga from './saga';
 
 import Settings from './Settings';
 import Attribution from './Attribution';
 
-import reducer from './reducer';
-import saga from './saga';
 import {
   selectLayers,
   selectBasemap,

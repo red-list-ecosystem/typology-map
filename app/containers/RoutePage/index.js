@@ -16,11 +16,10 @@ import { Box, Text } from 'grommet';
 
 import { PATHS, PAGES } from 'config';
 
-import {
-  selectContentByKey,
-  selectCookieConsent,
-} from 'containers/App/selectors';
-import { loadContent, showCookieConsent } from 'containers/App/actions';
+import { selectContentByKey } from 'containers/App/selectors';
+import { loadContent } from 'containers/App/actions';
+import { selectCookieConsent } from 'containers/CookieConsent/selectors';
+import { showCookieConsent } from 'containers/CookieConsent/actions';
 
 import ButtonTextBold from 'components/ButtonTextBold';
 import HTMLWrapper from 'components/HTMLWrapper';
