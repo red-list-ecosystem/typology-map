@@ -19,6 +19,7 @@ import {
   selectRealmForBiome,
   selectContentByKey,
   selectGroupsForBiome,
+  selectRealms,
 } from 'containers/App/selectors';
 import {
   loadContent,
@@ -39,6 +40,7 @@ import AsideNavTypologyList from 'components/AsideNavTypologyList';
 import TypologyHeader from 'components/TypologyHeader';
 import TypologyContent from 'components/TypologyContent';
 import TypologyImage from 'components/TypologyImage';
+import RelatedHint from 'components/RelatedHint';
 
 import { isMinSize } from 'utils/responsive';
 
@@ -62,6 +64,7 @@ export function ExploreGroup({
   intl,
   biome,
   realm,
+  realms,
   onSetFullscreenImage,
 }) {
   useEffect(() => {
@@ -159,6 +162,7 @@ export function ExploreGroup({
                     />
                   )}
                 </AsideNavSection>
+                {realms && <RelatedHint typology={realm} realms={realms} />}
                 <AsideNavSection>
                   <AsideNavLabel
                     label={<FormattedMessage {...commonMessages.biome} />}
@@ -200,6 +204,7 @@ ExploreGroup.propTypes = {
   biome: PropTypes.object,
   realm: PropTypes.object,
   groups: PropTypes.array,
+  realms: PropTypes.array,
   onLoadContent: PropTypes.func.isRequired,
   navGroup: PropTypes.func.isRequired,
   navBiome: PropTypes.func.isRequired,
@@ -219,6 +224,7 @@ const mapStateToProps = createStructuredSelector({
   realm: (state, { typology }) => selectRealmForBiome(state, typology.biome),
   biome: (state, { typology }) => selectBiome(state, typology.biome),
   groups: (state, { typology }) => selectGroupsForBiome(state, typology.biome),
+  realms: state => selectRealms(state),
 });
 
 function mapDispatchToProps(dispatch) {

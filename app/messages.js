@@ -189,4 +189,12 @@ export default defineMessages({
     id: `${scope}.showConsentLink`,
     defaultMessage: 'allow third-party services and cookies',
   },
+  relatedHintTrans: {
+    id: `${scope}.relatedHintTrans`,
+    defaultMessage: 'See the {count} transitional realms for related biomes',
+  },
+  relatedHintCore: {
+    id: `${scope}.relatedHintCore`,
+    defaultMessage: 'See the {count} core realms for related biomes',
+  },
 });

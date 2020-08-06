@@ -15,6 +15,7 @@ import { Box, ResponsiveContext } from 'grommet';
 
 import {
   selectRealm,
+  selectRealms,
   selectContentByKey,
   selectGroupsForBiome,
 } from 'containers/App/selectors';
@@ -37,6 +38,7 @@ import TypologyHeader from 'components/TypologyHeader';
 import TopGraphic from 'components/TopGraphic';
 import TypologyImage from 'components/TypologyImage';
 import TypologyContent from 'components/TypologyContent';
+import RelatedHint from 'components/RelatedHint';
 
 import { isMinSize } from 'utils/responsive';
 
@@ -54,6 +56,7 @@ export function ExploreBiome({
   navExplore,
   intl,
   realm,
+  realms,
 }) {
   useEffect(() => {
     // kick off loading of page content
@@ -132,6 +135,7 @@ export function ExploreBiome({
                     />
                   )}
                 </AsideNavSection>
+                {realms && <RelatedHint typology={realm} realms={realms} />}
                 <AsideNavSection>
                   <AsideNavLabel
                     label={<FormattedMessage {...commonMessages.biome} />}
@@ -168,6 +172,7 @@ ExploreBiome.propTypes = {
   typology: PropTypes.object.isRequired,
   realm: PropTypes.object,
   groups: PropTypes.array,
+  realms: PropTypes.array,
   onLoadContent: PropTypes.func.isRequired,
   navGroup: PropTypes.func.isRequired,
   navRealm: PropTypes.func.isRequired,
@@ -184,6 +189,7 @@ const mapStateToProps = createStructuredSelector({
     }),
   realm: (state, { typology }) => selectRealm(state, typology.realm),
   groups: (state, { typology }) => selectGroupsForBiome(state, typology.id),
+  realms: state => selectRealms(state),
 });
 
 function mapDispatchToProps(dispatch) {

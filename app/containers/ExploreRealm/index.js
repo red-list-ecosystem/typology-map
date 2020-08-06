@@ -12,7 +12,6 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { Box, ResponsiveContext } from 'grommet';
-import styled from 'styled-components';
 
 import {
   selectContentByKey,
@@ -38,18 +37,12 @@ import TypologyHeader from 'components/TypologyHeader';
 import TopGraphic from 'components/TopGraphic';
 import TypologyImage from 'components/TypologyImage';
 import TypologyContent from 'components/TypologyContent';
+import RelatedHint from 'components/RelatedHint';
 
 import { isMinSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
 import messages from './messages';
-
-const Hint = styled(p => (
-  <Box pad={{ top: 'ms', horizontal: 'small' }} {...p} />
-))`
-  font-style: italic;
-  color: ${({ theme }) => theme.global.colors['dark-grey']};
-`;
 
 export function ExploreRealm({
   typology,
@@ -99,6 +92,9 @@ export function ExploreRealm({
                       parent={typology}
                     />
                   )}
+                  {realms && (
+                    <RelatedHint typology={typology} realms={realms} />
+                  )}
                 </TypologyContent>
               </ColumnMainContent>
             </ColumnMain>
@@ -116,30 +112,7 @@ export function ExploreRealm({
                     active
                   />
                 </AsideNavSection>
-                {typology.type === 'core' && realms && (
-                  <Hint>
-                    <FormattedMessage
-                      {...messages.relatedHintTrans}
-                      values={{
-                        count:
-                          realms &&
-                          realms.filter(r => r.type === 'trans').length,
-                      }}
-                    />
-                  </Hint>
-                )}
-                {typology.type === 'trans' && realms && (
-                  <Hint>
-                    <FormattedMessage
-                      {...messages.relatedHintCore}
-                      values={{
-                        count:
-                          realms &&
-                          realms.filter(r => r.type === 'core').length,
-                      }}
-                    />
-                  </Hint>
-                )}
+                {realms && <RelatedHint typology={typology} realms={realms} />}
                 <AsideNavSection>
                   <AsideNavLabel
                     label={<FormattedMessage {...commonMessages.biomeSelect} />}
