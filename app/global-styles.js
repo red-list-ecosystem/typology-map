@@ -28,6 +28,11 @@ const GlobalStyle = createGlobalStyle`
     min-width: 100%;
   }
 
+  h1 {
+    font-family: Kanit, Arial, sans-serif;
+    font-weight: 500;
+  }
+
   p,
   label {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -105,11 +110,13 @@ const GlobalStyle = createGlobalStyle`
   }
   .rle-html .rle-content h1,
   .rle-html .rle-content h2 {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 20px;
     margin: 30px 0 10px;
   }
   .rle-html-page .rle-content h1:first-of-type {
-    font-size: 35px;
+    font-family: Kanit, Arial, sans-serif;
+    font-size: 40px;
     margin: 0 0 40px;
   }
   .rle-html .rle-content h3,
