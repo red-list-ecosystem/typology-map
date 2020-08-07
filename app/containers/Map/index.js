@@ -276,7 +276,7 @@ export function Map({
             [-parseInt(S || 85, 10), parseInt(E || 180, 10)],
           ];
         } else {
-          latlngs = [[85, -180], [-85, 180]];
+          latlngs = MAP_OPTIONS.defaultBounds;
         }
         mapRef.current.fitBounds(latlngs, {
           paddingBottomRight: [0, 40],
@@ -325,6 +325,34 @@ export function Map({
       }
     }
   }, [group, layers]);
+
+  useEffect(() => {
+    // zoom to bounds when enabled
+    if (group && zoomToBounds) {
+      let latlngs;
+      const layer = layers[group.id];
+      if (group && group.layer && group.layer.extent) {
+        const { N, S, W, E } = group.layer.extent;
+        latlngs = [
+          [parseInt(N || 85, 10), -parseInt(W || 180, 10)],
+          [-parseInt(S || 85, 10), parseInt(E || 180, 10)],
+        ];
+      } else if (
+        layer &&
+        group &&
+        group.layer &&
+        (group.layer.type === 'geojson' || group.layer.type === 'topojson')
+      ) {
+        const jsonLayer = L.geoJSON(layer.data);
+        latlngs = jsonLayer.getBounds();
+      } else {
+        latlngs = MAP_OPTIONS.defaultBounds;
+      }
+      mapRef.current.fitBounds(latlngs, {
+        paddingBottomRight: [0, 40],
+      });
+    }
+  }, [zoomToBounds]);
 
   return (
     <Styled>
