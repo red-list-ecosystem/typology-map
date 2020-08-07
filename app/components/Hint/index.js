@@ -7,6 +7,8 @@ const Hint = styled(p => (
 ))`
   font-style: italic;
   color: ${({ theme }) => theme.global.colors['dark-grey']};
+  font-size: ${({ theme, size }) => theme.text[size || 'small'].size};
+  line-height: ${({ theme, size }) => theme.text[size || 'small'].height};
 `;
 
 export default Hint;
