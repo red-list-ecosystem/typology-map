@@ -49,8 +49,33 @@ export default defineMessages({
     id: `${scope}.settingsHide`,
     defaultMessage: 'Hide settings',
   },
-  basemapAttribution: {
-    id: `${scope}.basemapAttribution`,
-    defaultMessage: 'Basemap attribution',
+  mapAttribution: {
+    id: `${scope}.mapAttribution`,
+    defaultMessage: 'Map attribution',
+  },
+  mapAttributionGroupsTitle: {
+    id: `${scope}.mapAttributionGroupsTitle`,
+    defaultMessage: 'Functional group data',
+  },
+  mapAttributionGroupsInfo: {
+    id: `${scope}.mapAttributionGroupsInfo`,
+    defaultMessage:
+      'Compiled by RLE from various sources. See group descriptions for detailed references',
+  },
+  mapAttributionGroupsLink: {
+    id: `${scope}.mapAttributionGroupsLink`,
+    defaultMessage: 'Provide feedback',
+  },
+  mapAttributionBasemapsTitle: {
+    id: `${scope}.mapAttributionBasemapsTitle`,
+    defaultMessage: 'Basemaps',
+  },
+  mapAttributionBasemapsInfo: {
+    id: `${scope}.mapAttributionBasemapsInfo`,
+    defaultMessage: 'Terrain, satellite and country data',
+  },
+  mapAttributionBasemapsLink: {
+    id: `${scope}.mapAttributionBasemapsLink`,
+    defaultMessage: 'Improve the basemaps',
   },
 });

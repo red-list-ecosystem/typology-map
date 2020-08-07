@@ -22,7 +22,10 @@ import {
   GROUP_LAYER_PROPERTIES,
   GROUP_LAYER_OPTIONS,
   MAP_OPTIONS,
+  PAGES,
 } from 'config';
+
+import { navigatePage } from 'containers/App/actions';
 
 import { Plus, Minus } from 'components/Icons';
 import LoadingIndicator from 'components/LoadingIndicator';
@@ -108,6 +111,7 @@ export function Map({
   country,
   zoomToBounds,
   loading,
+  onNavPage,
 }) {
   useInjectReducer({ key: 'map', reducer });
   useInjectSaga({ key: 'map', saga });
@@ -326,7 +330,7 @@ export function Map({
     <Styled>
       <LeafletContainer id="ll-map" />
       {group && <Settings group={group} fullscreen={fullscreen} />}
-      <Attribution />
+      <Attribution navFeedback={() => onNavPage(PAGES.feedback.path)} />
       {(tilesLoading || loading) && (
         <LoadingWrap>
           <LoadingIndicator />
@@ -357,6 +361,7 @@ Map.propTypes = {
   group: PropTypes.object,
   fullscreen: PropTypes.bool,
   onLoadLayer: PropTypes.func,
+  onNavPage: PropTypes.func,
   basemap: PropTypes.string,
   opacity: PropTypes.number,
   country: PropTypes.bool,
@@ -378,6 +383,7 @@ function mapDispatchToProps(dispatch) {
     onLoadLayer: (key, config) => {
       dispatch(loadLayer(key, config));
     },
+    onNavPage: id => dispatch(navigatePage(id)),
   };
 }
 
