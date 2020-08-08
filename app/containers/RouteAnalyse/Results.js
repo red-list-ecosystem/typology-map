@@ -4,49 +4,196 @@
  *
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { Box, Text } from 'grommet';
+import { Box, Text, Button, TextInput } from 'grommet';
+import { intlShape, injectIntl } from 'react-intl';
 
-import { selectGroupsByAreaFiltered } from 'containers/App/selectors';
+import {
+  selectGroupsByAreaFiltered,
+  selectGroupsQueryReadyAll,
+  selectGroupsByAreaArgs,
+} from 'containers/App/selectors';
+import {
+  resetGroupsQuery,
+  updateGroupsQuery,
+  queryGroups,
+  resetGroupsQueryNav,
+} from 'containers/App/actions';
 // import messages from './messages';
 
-const Styled = styled.div`
-  pointer-events: none;
-  position: relative;
-  z-index: 2;
-`;
+import AsideNavTypologyList from 'components/AsideNavTypologyList';
+import LoadingIndicator from 'components/LoadingIndicator';
 
-export function Results({ groups }) {
-  // console.log(groups)
+export function Results({
+  groups,
+  queriesReady,
+  onResetQuery,
+  queryArgs,
+  intl,
+  updateQuery,
+  onQueryGroups,
+  // queryArgsFromQuery,
+}) {
+  const [areaUpdate, setAreaUpdate] = useState(false);
+  const [filterUpdate, setFilterUpdate] = useState(false);
+  const { locale } = intl;
+  const { area, realm, biome, occurrence } = queryArgs;
   return (
-    <Styled>
-      <Box>
-        {groups &&
-          groups.map(g => (
-            <Box key={g.id}>
-              <Text>{g.id}</Text>
-            </Box>
-          ))}
-      </Box>
-    </Styled>
+    <Box>
+      {(areaUpdate || filterUpdate) && (
+        <Box>
+          {areaUpdate && (
+            <>
+              <Text>Area</Text>
+              <TextInput
+                value={area}
+                onChange={e =>
+                  updateQuery({
+                    ...queryArgs,
+                    area: e.target.value,
+                  })
+                }
+              />
+            </>
+          )}
+          {filterUpdate && (
+            <>
+              <Text>Realm</Text>
+              <TextInput
+                value={realm}
+                onChange={e =>
+                  updateQuery({
+                    ...queryArgs,
+                    realm: e.target.value,
+                  })
+                }
+              />
+              <Text>Biome</Text>
+              <TextInput
+                value={biome}
+                onChange={e =>
+                  updateQuery({
+                    ...queryArgs,
+                    biome: e.target.value,
+                  })
+                }
+              />
+              <Text>Occurrence</Text>
+              <TextInput
+                value={occurrence}
+                onChange={e =>
+                  updateQuery({
+                    ...queryArgs,
+                    occurrence: e.target.value,
+                  })
+                }
+              />
+            </>
+          )}
+          {(!areaUpdate || (area && area.trim() !== '')) && (
+            <Button
+              label="Submit"
+              onClick={() => {
+                setAreaUpdate(false);
+                setFilterUpdate(false);
+                onQueryGroups({
+                  area: area.trim(),
+                  realm: realm && realm.trim() !== '' ? realm : null,
+                  biome: biome && biome.trim() !== '' ? biome : null,
+                  occurrence:
+                    occurrence && occurrence.trim() !== '' ? occurrence : null,
+                });
+              }}
+            />
+          )}
+        </Box>
+      )}
+      {!areaUpdate && !filterUpdate && (
+        <>
+          <div>
+            <Text>Area</Text>
+            <Text>{area}</Text>
+            <Button onClick={() => setAreaUpdate(true)} label="Update area" />
+          </div>
+          <div>
+            <Text>Filters</Text>
+            {(realm || biome || occurrence) && (
+              <>
+                {realm && <Text>{`Realm: ${realm}`}</Text>}
+                {biome && <Text>{`Biome: ${realm}`}</Text>}
+                {occurrence && <Text>{`Occurrence: ${occurrence}`}</Text>}
+              </>
+            )}
+            <Button
+              onClick={() => setFilterUpdate(true)}
+              label="Update filters"
+            />
+          </div>
+          <div>
+            <Button onClick={() => onResetQuery()} label="Reset query" />
+          </div>
+          <div>
+            {queriesReady && (
+              <Text>{`${groups.length} Functional Groups`}</Text>
+            )}
+          </div>
+          <div>
+            {!queriesReady && <Text>Functional Groups</Text>}
+            {queriesReady && groups && (
+              <AsideNavTypologyList
+                items={groups}
+                level={2}
+                locale={locale}
+                navItem={id => console.log(id)}
+                activeId={null}
+              />
+            )}
+            {!queriesReady && <LoadingIndicator />}
+          </div>
+        </>
+      )}
+    </Box>
   );
 }
 
 Results.propTypes = {
   groups: PropTypes.array,
-  // args: PropTypes.object,
+  queriesReady: PropTypes.bool,
+  // queryArgsFromQuery: PropTypes.object,
+  queryArgs: PropTypes.object,
+  onResetQuery: PropTypes.func,
+  intl: intlShape.isRequired,
+  updateQuery: PropTypes.func,
+  onQueryGroups: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
-  groups: (state, { args }) => selectGroupsByAreaFiltered(state, args),
+  queriesReady: state => selectGroupsQueryReadyAll(state),
+  queryArgsFromQuery: state => selectGroupsByAreaArgs(state),
+  groups: (state, { queryArgs }) =>
+    selectGroupsByAreaFiltered(state, queryArgs),
 });
 
-const withConnect = connect(mapStateToProps);
+function mapDispatchToProps(dispatch) {
+  return {
+    onResetQuery: () => {
+      dispatch(resetGroupsQuery());
+      dispatch(resetGroupsQueryNav());
+    },
+    updateQuery: args => dispatch(updateGroupsQuery(args)),
+    onQueryGroups: args => dispatch(queryGroups(args)),
+  };
+}
+
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
 // export default RouteExplore;
-export default compose(withConnect)(Results);
+export default compose(withConnect)(injectIntl(Results));

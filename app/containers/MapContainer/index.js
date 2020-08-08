@@ -33,24 +33,33 @@ const Styled = styled(TopGraphic)`
     `}
 `;
 
-export function MapWrapper({ typology, locale, groupId }) {
+export function MapWrapper({ typology, locale, groupId, expand }) {
   const [isMapExpanded, setIsMapExpanded] = useState(false);
 
   return (
-    <Styled isFS={groupId && isMapExpanded} active={!!groupId}>
-      <Map group={typology} fullscreen={isMapExpanded} locale={locale} />
-      <MapControls position="right">
-        <MapControl
-          icon={
-            isMapExpanded ? (
-              <Contract color="black" />
-            ) : (
-              <Expand color="black" />
-            )
-          }
-          onClick={() => setIsMapExpanded(!isMapExpanded)}
-        />
-      </MapControls>
+    <Styled
+      isFS={expand || (groupId && isMapExpanded)}
+      active={expand || !!groupId}
+    >
+      <Map
+        group={typology}
+        fullscreen={expand || isMapExpanded}
+        locale={locale}
+      />
+      {!expand && (
+        <MapControls position="right">
+          <MapControl
+            icon={
+              isMapExpanded ? (
+                <Contract color="black" />
+              ) : (
+                <Expand color="black" />
+              )
+            }
+            onClick={() => setIsMapExpanded(!isMapExpanded)}
+          />
+        </MapControls>
+      )}
     </Styled>
   );
 }
@@ -59,6 +68,7 @@ MapWrapper.propTypes = {
   typology: PropTypes.object,
   locale: PropTypes.string,
   groupId: PropTypes.string,
+  expand: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({

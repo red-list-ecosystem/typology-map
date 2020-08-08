@@ -37,6 +37,9 @@ import {
   CONTENT_READY,
   DISMISS_DISCLAIMER,
   SET_FULLSCREEN_IMAGE,
+  UPDATE_GROUPS_QUERY,
+  RESET_GROUPS_QUERY,
+  RESET_GROUPS_QUERY_NAV,
 } from './constants';
 
 export function setLocale(locale) {
@@ -230,5 +233,23 @@ export function setGroupQueryReady(layerType, time) {
     type: GROUPS_QUERY_READY,
     layerType,
     time,
+  };
+}
+
+export function updateGroupsQuery(args) {
+  return {
+    type: UPDATE_GROUPS_QUERY,
+    args,
+  };
+}
+
+export function resetGroupsQuery() {
+  return {
+    type: RESET_GROUPS_QUERY,
+  };
+}
+export function resetGroupsQueryNav() {
+  return {
+    type: RESET_GROUPS_QUERY_NAV,
   };
 }

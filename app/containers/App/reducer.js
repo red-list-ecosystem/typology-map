@@ -17,12 +17,12 @@ import {
   GROUPS_QUERIED,
   GROUPS_QUERY_SUCCESS,
   GROUPS_QUERY_ERROR,
-  QUERY_GROUPS,
   CONTENT_REQUESTED,
   CONTENT_LOAD_SUCCESS,
   CONTENT_LOAD_ERROR,
   DISMISS_DISCLAIMER,
   SET_FULLSCREEN_IMAGE,
+  RESET_GROUPS_QUERY,
 } from './constants';
 
 /* eslint-disable no-param-reassign */
@@ -139,13 +139,20 @@ const appReducer = (state = initialState, action) =>
             }
             : null;
         break;
-      case QUERY_GROUPS:
-        draft.groupsByAreaQueried = Object.assign({}, initialGroupsByArea);
-        draft.groupsByAreaReady = Object.assign({}, initialGroupsByArea);
-        break;
-      case GROUPS_QUERIED:
-        draft.groupsByAreaQueried.groups[action.layerType] = action.time;
+      case RESET_GROUPS_QUERY:
         draft.groupsByArea = Object.assign({}, initialGroupsByArea);
+        draft.groupsByAreaReady = Object.assign({}, initialGroupsByArea);
+        draft.groupsByAreaQueried = Object.assign({}, initialGroupsByArea);
+        break;
+      // case QUERY_GROUPS:
+      //   draft.groupsByAreaQueried = Object.assign({}, initialGroupsByArea);
+      //   draft.groupsByAreaReady = Object.assign({}, initialGroupsByArea);
+      //   break;
+      case GROUPS_QUERIED:
+        // reset results
+        draft.groupsByArea = Object.assign({}, initialGroupsByArea);
+        // record query begin
+        draft.groupsByAreaQueried.groups[action.layerType] = action.time;
         break;
       case GROUPS_QUERY_SUCCESS:
         draft.groupsByArea.groups[action.layerType] = action.groups;

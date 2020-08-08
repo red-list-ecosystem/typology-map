@@ -26,6 +26,16 @@ export const selectRouterPath = createSelector(
   location => location && location.pathname,
 );
 
+export const selectGroupsQueryArgs = createSelector(
+  selectRouterSearchParams,
+  search => ({
+    area: search.has('area') ? search.get('area') : '',
+    occurrence: search.has('occurrence') ? search.get('occurrence') : '',
+    realm: search.has('realm') ? search.get('realm') : '',
+    biome: search.has('biome') ? search.get('biome') : '',
+  }),
+);
+
 export const selectRouterPathNamed = createSelector(
   selectRouterLocation,
   location => {
@@ -271,6 +281,10 @@ export const selectGroupsQueriedByType = createSelector(
   selectGroupsQueried,
   (layerType, data) => data.groups[layerType],
 );
+export const selectGroupsQueriedAny = createSelector(
+  selectGroupsQueried,
+  data => data && data.groups && (!!data.groups.raster || !!data.groups.vector),
+);
 
 const selectGroupsQueryReady = createSelector(
   selectGlobal,
@@ -280,4 +294,12 @@ export const selectGroupsQueryReadyByType = createSelector(
   (state, layerType) => layerType,
   selectGroupsQueryReady,
   (layerType, data) => data.groups[layerType],
+);
+export const selectGroupsQueryReadyAny = createSelector(
+  selectGroupsQueryReady,
+  data => data && data.groups && (!!data.groups.raster || !!data.groups.vector),
+);
+export const selectGroupsQueryReadyAll = createSelector(
+  selectGroupsQueryReady,
+  data => data && data.groups && !!data.groups.raster && !!data.groups.vector,
 );

@@ -27,6 +27,8 @@ import {
   QUERY_GROUPS,
   NAVIGATE,
   CHANGE_LOCALE,
+  UPDATE_GROUPS_QUERY,
+  RESET_GROUPS_QUERY_NAV,
   // COOKIECONSENT_CHECKED,
 } from './constants';
 
@@ -54,7 +56,16 @@ import {
   setGroupsQueryError,
   setGroupsQuerySuccess,
   setGroupQueryReady,
+  resetGroupsQuery,
 } from './actions';
+
+const cleanSearch = search =>
+  Object.keys(search).reduce((memo, param) => {
+    if (search[param] !== '' && search[param] !== null) {
+      return { ...memo, [param]: search[param] };
+    }
+    return memo;
+  }, {});
 
 // location can either be string or object { pathname, search }
 function* navigateSaga({ location, args }) {
@@ -92,7 +103,7 @@ function* navigateSaga({ location, args }) {
 
   // keep old pathname
   else {
-    newPathname += currentLocation.pathname;
+    newPathname = currentLocation.pathname;
   }
   // add locale
   const path = myArgs.needsLocale
@@ -107,7 +118,7 @@ function* navigateSaga({ location, args }) {
     typeof location.search !== 'undefined' &&
     myArgs.replaceSearch
   ) {
-    newSearchParams = new URLSearchParams(location.search);
+    newSearchParams = new URLSearchParams(cleanSearch(location.search));
   }
   // remove all search params
   else if (
@@ -157,7 +168,7 @@ function* navigateSaga({ location, args }) {
       !myArgs.replaceSearch
     ) {
       // adding new params to previous params
-      const searchParams = new URLSearchParams(location.search);
+      const searchParams = new URLSearchParams(cleanSearch(location.search));
       searchParams.forEach((value, key) => newSearchParams.set(key, value));
     }
   }
@@ -191,6 +202,39 @@ function* changeLocaleSaga({ locale }) {
     }
   }
   yield put(push(`${path}${currentLocation.search}`));
+}
+
+function* updateGroupsQuerySaga({ args }) {
+  const { keep, remove } = Object.keys(args).reduce(
+    (memo, arg) => {
+      const mk = memo.keep;
+      const mr = memo.remove;
+      const value = args[arg];
+      if (value && value !== '') {
+        return {
+          remove: mr,
+          keep: {
+            ...mk,
+            [arg]: value,
+          },
+        };
+      }
+      return {
+        keep: mk,
+        remove: [...mr, arg],
+      };
+    },
+    { keep: {}, remove: [] },
+  );
+  yield call(navigateSaga, {
+    location: { search: keep },
+    args: { deleteSearchParams: remove },
+  });
+}
+function* resetGroupsQuerySaga() {
+  yield call(navigateSaga, {
+    args: { deleteSearchParams: ['area', 'realm', 'biome', 'occurrence'] },
+  });
 }
 
 /**
@@ -424,7 +468,10 @@ const needsQuery = (args, argsStored) => {
 
 function* queryGroupsSaga(args) {
   const argsStored = yield select(selectGroupsByAreaArgs);
+  // console.log(args, argsStored);
+  // console.log(needsQuery(args, argsStored));
   if (needsQuery(args, argsStored)) {
+    yield put(resetGroupsQuery());
     yield fork(queryGroupsByType, 'raster', args);
     yield fork(queryGroupsByType, 'vector', args);
   } else {
@@ -453,4 +500,6 @@ export default function* defaultSaga() {
   );
   yield takeLatest(NAVIGATE, navigateSaga);
   yield takeLatest(CHANGE_LOCALE, changeLocaleSaga);
+  yield takeLatest(UPDATE_GROUPS_QUERY, updateGroupsQuerySaga);
+  yield takeLatest(RESET_GROUPS_QUERY_NAV, resetGroupsQuerySaga);
 }

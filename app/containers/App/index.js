@@ -117,7 +117,10 @@ function App({
         )}
         <Header />
         <Content>
-          <MapContainer groupId={groupId} />
+          <MapContainer
+            groupId={groupId}
+            expand={path.route === ROUTES.ANALYSE}
+          />
           <ScrollToTop>
             <Switch>
               <Route
