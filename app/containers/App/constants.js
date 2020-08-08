@@ -18,11 +18,18 @@ export const TYPOLOGY_LOAD_ERROR = 'rle/App/TYPOLOGY_LOAD_ERROR';
 export const TYPOLOGY_LOAD_SUCCESS = 'rle/App/TYPOLOGY_LOAD_SUCCESS';
 export const TYPOLOGY_READY = 'rle/App/TYPOLOGY_READY';
 
+export const QUERY_GROUPS = 'rle/App/QUERY_GROUPS';
+export const GROUPS_QUERIED = 'rle/App/GROUPS_QUERIED';
+export const GROUPS_QUERY_ERROR = 'rle/App/GROUPS_QUERY_ERROR';
+export const GROUPS_QUERY_SUCCESS = 'rle/App/GROUPS_QUERY_SUCCESS';
+export const GROUPS_QUERY_READY = 'rle/App/GROUPS_QUERY_READY';
+
 export const LOAD_CONTENT = 'rle/App/LOAD_CONTENT';
 export const CONTENT_REQUESTED = 'rle/App/CONTENT_REQUESTED';
 export const CONTENT_LOAD_ERROR = 'rle/App/CONTENT_LOAD_ERROR';
 export const CONTENT_LOAD_SUCCESS = 'rle/App/CONTENT_LOAD_SUCCESS';
 export const CONTENT_READY = 'rle/App/CONTENT_READY';
+
 export const DISMISS_DISCLAIMER = 'rle/App/DISMISS_DISCLAIMER';
 export const SET_FULLSCREEN_IMAGE = 'rle/App/SET_FULLSCREEN_IMAGE';
 

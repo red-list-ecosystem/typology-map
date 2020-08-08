@@ -37,7 +37,16 @@ export const PATHS = {
   CONTENT: 'https://red-list-ecosystem.github.io/typology-map-content',
   IMAGES:
     'https://red-list-ecosystem.github.io/typology-map-content/assets/uploads',
+  GROUPS_QUERY_API: {
+    vector:
+      'https://v1mnzwc793.execute-api.ap-southeast-2.amazonaws.com/default/rle_intersects_vectors_api',
+    raster:
+      'https://4rl7fsjrfk.execute-api.ap-southeast-2.amazonaws.com/default/rle_intersects_raster_api',
+  },
 };
+
+export const MAX_LOAD_ATTEMPTS = 5;
+export const MAX_LOAD_ATTEMPTS_GROUPS = 2;
 
 export const TYPOLOGY = {
   realms: {
@@ -89,8 +98,6 @@ export const PAGES = {
     backgroundImage: 'bg_home',
   },
 };
-
-export const MAX_LOAD_ATTEMPTS = 5;
 
 export const GROUP_LAYER_PROPERTIES = {
   OCCURRENCE: {

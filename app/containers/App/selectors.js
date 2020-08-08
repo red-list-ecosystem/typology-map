@@ -215,3 +215,69 @@ export const selectShowDisclaimer = createSelector(
   selectGlobal,
   global => global.showDisclaimer,
 );
+
+export const selectGroupsByArea = createSelector(
+  selectGlobal,
+  global => global.groupsByArea,
+);
+export const selectGroupsByAreaArgs = createSelector(
+  selectGroupsByArea,
+  data => data && data.args,
+);
+export const selectGroupsByAreaAll = createSelector(
+  selectGroupsByArea,
+  selectGroups,
+  (data, groups) => {
+    let rGroups = [];
+    let vGroups = [];
+    if (groups && data.groups.raster) {
+      rGroups = data.groups.raster.map(d =>
+        groups.find(g => g.id === d.layer_id),
+      );
+    }
+    if (groups && data.groups.vector) {
+      vGroups = data.groups.vector.map(d =>
+        groups.find(g => g.id === d.layer_id),
+      );
+    }
+    return [...vGroups, ...rGroups];
+  },
+);
+export const selectGroupsByAreaFiltered = createSelector(
+  (state, args) => args,
+  selectGroupsByAreaAll,
+  selectBiomes,
+  (args, groups, biomes) => {
+    const { realm, biome } = args;
+    return groups.filter(g => {
+      if (biome && g.biome !== biome) {
+        return false;
+      }
+      const theBiome = g.biome && biomes && biomes.find(b => b.id === g.biome);
+      if (realm && theBiome.realm !== realm) {
+        return false;
+      }
+      return true;
+    });
+  },
+);
+
+const selectGroupsQueried = createSelector(
+  selectGlobal,
+  global => global.groupsByAreaQueried,
+);
+export const selectGroupsQueriedByType = createSelector(
+  (state, layerType) => layerType,
+  selectGroupsQueried,
+  (layerType, data) => data.groups[layerType],
+);
+
+const selectGroupsQueryReady = createSelector(
+  selectGlobal,
+  global => global.groupsByAreaReady,
+);
+export const selectGroupsQueryReadyByType = createSelector(
+  (state, layerType) => layerType,
+  selectGroupsQueryReady,
+  (layerType, data) => data.groups[layerType],
+);

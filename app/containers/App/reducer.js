@@ -14,6 +14,10 @@ import {
   TYPOLOGY_REQUESTED,
   TYPOLOGY_LOAD_SUCCESS,
   TYPOLOGY_LOAD_ERROR,
+  GROUPS_QUERIED,
+  GROUPS_QUERY_SUCCESS,
+  GROUPS_QUERY_ERROR,
+  QUERY_GROUPS,
   CONTENT_REQUESTED,
   CONTENT_LOAD_SUCCESS,
   CONTENT_LOAD_ERROR,
@@ -35,6 +39,14 @@ const initialContent = {
   realms: {},
   biomes: {},
   groups: {},
+};
+
+const initialGroupsByArea = {
+  args: null,
+  groups: {
+    raster: null,
+    vector: null,
+  },
 };
 
 // The initial state of the App
@@ -68,6 +80,9 @@ export const initialState = {
   // contentError: Object.assign({}, initialContent),
   showDisclaimer: true,
   fullscreenImage: null,
+  groupsByArea: Object.assign({}, initialGroupsByArea),
+  groupsByAreaQueried: Object.assign({}, initialGroupsByArea),
+  groupsByAreaReady: Object.assign({}, initialGroupsByArea),
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -123,6 +138,26 @@ const appReducer = (state = initialState, action) =>
               ...action.args,
             }
             : null;
+        break;
+      case QUERY_GROUPS:
+        draft.groupsByAreaQueried = Object.assign({}, initialGroupsByArea);
+        draft.groupsByAreaReady = Object.assign({}, initialGroupsByArea);
+        break;
+      case GROUPS_QUERIED:
+        draft.groupsByAreaQueried.groups[action.layerType] = action.time;
+        draft.groupsByArea = Object.assign({}, initialGroupsByArea);
+        break;
+      case GROUPS_QUERY_SUCCESS:
+        draft.groupsByArea.groups[action.layerType] = action.groups;
+        draft.groupsByArea.args = action.args;
+        draft.groupsByAreaReady.groups[action.layerType] = action.time;
+        break;
+      case GROUPS_QUERY_ERROR:
+        console.log(
+          'Error querying groups ... giving up!',
+          `${action.layerType}`,
+        );
+        draft.groupsByAreaQueried.groups[action.layerType] = action.time;
         break;
     }
   });

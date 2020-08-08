@@ -25,6 +25,11 @@ import {
   TYPOLOGY_LOAD_SUCCESS,
   TYPOLOGY_LOAD_ERROR,
   TYPOLOGY_READY,
+  QUERY_GROUPS,
+  GROUPS_QUERIED,
+  GROUPS_QUERY_SUCCESS,
+  GROUPS_QUERY_ERROR,
+  GROUPS_QUERY_READY,
   LOAD_CONTENT,
   CONTENT_REQUESTED,
   CONTENT_LOAD_SUCCESS,
@@ -179,5 +184,51 @@ export function setFullscreenImage(imageType, args) {
 export function dismissDisclaimer() {
   return {
     type: DISMISS_DISCLAIMER,
+  };
+}
+
+export function queryGroups({ area, occurrence, realm, biome }) {
+  // console.log('queryGroups');
+  return {
+    type: QUERY_GROUPS,
+    area,
+    occurrence,
+    realm,
+    biome,
+  };
+}
+
+export function setGroupsQuerySuccess(layerType, groups, args, time) {
+  return {
+    type: GROUPS_QUERY_SUCCESS,
+    layerType,
+    groups,
+    args,
+    time,
+  };
+}
+
+export function setGroupsQueried(layerType, time) {
+  return {
+    type: GROUPS_QUERIED,
+    layerType,
+    time,
+  };
+}
+
+export function setGroupsQueryError(error, layerType, args) {
+  return {
+    type: GROUPS_QUERY_ERROR,
+    error,
+    layerType,
+    args,
+  };
+}
+
+export function setGroupQueryReady(layerType, time) {
+  return {
+    type: GROUPS_QUERY_READY,
+    layerType,
+    time,
   };
 }

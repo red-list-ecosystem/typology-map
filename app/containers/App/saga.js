@@ -1,16 +1,30 @@
-import { takeEvery, takeLatest, select, put, call } from 'redux-saga/effects';
+import {
+  takeEvery,
+  takeLatest,
+  select,
+  put,
+  call,
+  fork,
+} from 'redux-saga/effects';
 import { push } from 'connected-react-router';
 import extend from 'lodash/extend';
 import 'whatwg-fetch';
 import 'url-search-params-polyfill';
 
-import { TYPOLOGY, MAX_LOAD_ATTEMPTS, PATHS, PAGES } from 'config';
+import {
+  TYPOLOGY,
+  MAX_LOAD_ATTEMPTS,
+  PATHS,
+  PAGES,
+  MAX_LOAD_ATTEMPTS_GROUPS,
+} from 'config';
 
 import { DEFAULT_LOCALE } from 'i18n';
 
 import {
   LOAD_TYPOLOGY,
   LOAD_CONTENT,
+  QUERY_GROUPS,
   NAVIGATE,
   CHANGE_LOCALE,
   // COOKIECONSENT_CHECKED,
@@ -23,6 +37,10 @@ import {
   selectTypologyRequestedByKey,
   selectContentReadyByKey,
   selectContentRequestedByKey,
+  selectGroupsQueryReadyByType,
+  selectGroupsQueriedByType,
+  selectGroupsByAreaArgs,
+  selectRealmForBiome,
 } from './selectors';
 
 import {
@@ -32,145 +50,11 @@ import {
   setContentRequested,
   setContentLoadError,
   setContentLoadSuccess,
+  setGroupsQueried,
+  setGroupsQueryError,
+  setGroupsQuerySuccess,
+  setGroupQueryReady,
 } from './actions';
-
-/**
- * Generator function. Function for restarting sagas multiple times before giving up and calling the error handler.
- * - following https://codeburst.io/try-again-more-redux-saga-patterns-bfbc3ffcdc
- *
- * @param {function} generator the saga generator to be restarted
- * @param {function} handleError the error handler after X unsuccessful tries
- * @param {integer} maxTries the maximum number of tries
- */
-const autoRestart = (generator, handleError, maxTries = MAX_LOAD_ATTEMPTS) =>
-  function* autoRestarting(...args) {
-    let n = 0;
-    while (n < maxTries) {
-      n += 1;
-      try {
-        yield call(generator, ...args);
-        break;
-      } catch (err) {
-        if (n >= maxTries) {
-          yield handleError(err, ...args);
-        }
-      }
-    }
-  };
-
-/**
- * Generator function. Load data error handler:
- * - Record load error
- *
- * @param {object} payload {key: data set key}
- */
-function* loadDataErrorHandler(err, { key }) {
-  yield put(setTypologyLoadError(err, key));
-}
-function* loadContentErrorHandler(err, { key, contentType, locale }) {
-  yield put(setContentLoadError(err, contentType, locale, key));
-}
-
-function* loadDataSaga({ key }) {
-  if (TYPOLOGY[key]) {
-    // requestedSelector returns the times that entities where fetched from the API
-    const requestedAt = yield select(selectTypologyRequestedByKey, key);
-    const ready = yield select(selectTypologyReadyByKey, key);
-    // If haven't loaded yet, do so now.
-    if (!requestedAt && !ready) {
-      const url = `${PATHS.DATA}/${TYPOLOGY[key].path}`;
-      try {
-        // First record that we are requesting
-        yield put(setTypologyRequested(key, Date.now()));
-        const response = yield fetch(url);
-        const responseOk = yield response.ok;
-        if (responseOk && typeof response.json === 'function') {
-          const json = yield response.json();
-          if (json) {
-            yield put(setTypologyLoadSuccess(key, json, Date.now()));
-          } else {
-            yield put(setTypologyRequested(key, false));
-            throw new Error(response.statusText);
-          }
-        } else {
-          yield put(setTypologyRequested(key, false));
-          throw new Error(response.statusText);
-        }
-      } catch (err) {
-        yield put(setTypologyRequested(key, false));
-        // throw error
-        throw new Error(err);
-      }
-    }
-  }
-}
-
-// key expected to include full path, for at risk data metric/country
-function* loadContentSaga({ key, contentType }) {
-  if (PAGES[key] || TYPOLOGY[contentType]) {
-    const requestedAt = yield select(selectContentRequestedByKey, {
-      contentType,
-      key,
-    });
-    const ready = yield select(selectContentReadyByKey, {
-      contentType,
-      key,
-    });
-    // If haven't loaded yet, do so now.
-    if (!requestedAt && !ready) {
-      const currentLocale = yield select(selectLocale);
-      let url;
-      if (contentType === 'pages') {
-        const page = PAGES[key];
-        url = `${PATHS.CONTENT}/${currentLocale}/${page.path}/`;
-      }
-      if (TYPOLOGY[contentType]) {
-        const typo = TYPOLOGY[contentType];
-        url = `${PATHS.CONTENT}/${currentLocale}/${typo.contentPath}/${key}`;
-      }
-      if (url) {
-        try {
-          // First record that we are requesting
-          yield put(
-            setContentRequested(contentType, currentLocale, key, Date.now()),
-          );
-          const response = yield fetch(url);
-          const responseOk = yield response.ok;
-          if (responseOk && typeof response.text === 'function') {
-            const responseBody = yield response.text();
-            if (responseBody) {
-              yield put(
-                setContentLoadSuccess(
-                  contentType,
-                  currentLocale,
-                  key,
-                  responseBody,
-                  Date.now(),
-                ),
-              );
-            } else {
-              yield put(
-                setContentRequested(contentType, currentLocale, key, false),
-              );
-              throw new Error(response.statusText);
-            }
-          } else {
-            yield put(
-              setContentRequested(contentType, currentLocale, key, false),
-            );
-            throw new Error(response.statusText);
-          }
-        } catch (err) {
-          // throw error
-          yield put(
-            setContentRequested(contentType, currentLocale, key, false),
-          );
-          throw new Error(err);
-        }
-      }
-    }
-  }
-}
 
 // location can either be string or object { pathname, search }
 function* navigateSaga({ location, args }) {
@@ -309,6 +193,246 @@ function* changeLocaleSaga({ locale }) {
   yield put(push(`${path}${currentLocation.search}`));
 }
 
+/**
+ * Generator function. Function for restarting sagas multiple times before giving up and calling the error handler.
+ * - following https://codeburst.io/try-again-more-redux-saga-patterns-bfbc3ffcdc
+ *
+ * @param {function} generator the saga generator to be restarted
+ * @param {function} handleError the error handler after X unsuccessful tries
+ * @param {integer} maxTries the maximum number of tries
+ */
+const autoRestart = (generator, handleError, maxTries = MAX_LOAD_ATTEMPTS) =>
+  function* autoRestarting(...args) {
+    let n = 0;
+    while (n < maxTries) {
+      n += 1;
+      try {
+        yield call(generator, ...args);
+        break;
+      } catch (err) {
+        if (n >= maxTries) {
+          yield handleError(err, ...args);
+        }
+      }
+    }
+  };
+
+/**
+ * Generator function. Load data error handler:
+ * - Record load error
+ *
+ * @param {object} payload {key: data set key}
+ */
+function* loadDataErrorHandler(err, { key }) {
+  yield put(setTypologyLoadError(err, key));
+}
+function* loadContentErrorHandler(err, { key, contentType, locale }) {
+  yield put(setContentLoadError(err, contentType, locale, key));
+}
+function* queryGroupsErrorHandler(err, { layerType, args }) {
+  yield put(setGroupsQueryError(err, layerType, args));
+}
+
+function* loadDataSaga({ key }) {
+  if (TYPOLOGY[key]) {
+    // requestedSelector returns the times that entities where fetched from the API
+    const requestedAt = yield select(selectTypologyRequestedByKey, key);
+    const ready = yield select(selectTypologyReadyByKey, key);
+    // If haven't loaded yet, do so now.
+    if (!requestedAt && !ready) {
+      const url = `${PATHS.DATA}/${TYPOLOGY[key].path}`;
+      try {
+        // First record that we are requesting
+        yield put(setTypologyRequested(key, Date.now()));
+        const response = yield fetch(url);
+        const responseOk = yield response.ok;
+        if (responseOk && typeof response.json === 'function') {
+          const json = yield response.json();
+          if (json) {
+            yield put(setTypologyLoadSuccess(key, json, Date.now()));
+          } else {
+            yield put(setTypologyRequested(key, false));
+            throw new Error(response.statusText);
+          }
+        } else {
+          yield put(setTypologyRequested(key, false));
+          throw new Error(response.statusText);
+        }
+      } catch (err) {
+        yield put(setTypologyRequested(key, false));
+        // throw error
+        throw new Error(err);
+      }
+    }
+  }
+}
+
+// key expected to include full path, for at risk data metric/country
+function* loadContentSaga({ key, contentType }) {
+  if (PAGES[key] || TYPOLOGY[contentType]) {
+    const requestedAt = yield select(selectContentRequestedByKey, {
+      contentType,
+      key,
+    });
+    const ready = yield select(selectContentReadyByKey, {
+      contentType,
+      key,
+    });
+    // If haven't loaded yet, do so now.
+    if (!requestedAt && !ready) {
+      const currentLocale = yield select(selectLocale);
+      let url;
+      if (contentType === 'pages') {
+        const page = PAGES[key];
+        url = `${PATHS.CONTENT}/${currentLocale}/${page.path}/`;
+      }
+      if (TYPOLOGY[contentType]) {
+        const typo = TYPOLOGY[contentType];
+        url = `${PATHS.CONTENT}/${currentLocale}/${typo.contentPath}/${key}`;
+      }
+      if (url) {
+        try {
+          // First record that we are requesting
+          yield put(
+            setContentRequested(contentType, currentLocale, key, Date.now()),
+          );
+          const response = yield fetch(url);
+          const responseOk = yield response.ok;
+          if (responseOk && typeof response.text === 'function') {
+            const responseBody = yield response.text();
+            if (responseBody) {
+              yield put(
+                setContentLoadSuccess(
+                  contentType,
+                  currentLocale,
+                  key,
+                  responseBody,
+                  Date.now(),
+                ),
+              );
+            } else {
+              yield put(
+                setContentRequested(contentType, currentLocale, key, false),
+              );
+              throw new Error(response.statusText);
+            }
+          } else {
+            yield put(
+              setContentRequested(contentType, currentLocale, key, false),
+            );
+            throw new Error(response.statusText);
+          }
+        } catch (err) {
+          // throw error
+          yield put(
+            setContentRequested(contentType, currentLocale, key, false),
+          );
+          throw new Error(err);
+        }
+      }
+    }
+  }
+}
+
+function* queryGroupsByType(type, args) {
+  // console.log('queryGroupsByType', type, args)
+  const { area, occurrence, realm, biome } = args;
+  const polygonWKT = encodeURI(`POLYGON((${area}))`);
+  // requestedSelector returns the times that entities where fetched from the API
+  const requestedAt = yield select(selectGroupsQueriedByType, type);
+  const ready = yield select(selectGroupsQueryReadyByType, type);
+  // If haven't loaded yet, do so now.
+  if (!requestedAt && !ready) {
+    let url = `${PATHS.GROUPS_QUERY_API[type]}?poly=${polygonWKT}`;
+    if (occurrence) {
+      url = `${url}&occurrence=${occurrence}`;
+    }
+    if (biome) {
+      url = `${url}&biome=${biome}`;
+    } else if (realm) {
+      url = `${url}&realm=${realm}`;
+    }
+    try {
+      // First record that we are requesting
+      yield put(setGroupsQueried(type, Date.now()));
+      const response = yield fetch(url);
+      const responseOk = yield response.ok;
+      if (responseOk && typeof response.json === 'function') {
+        const json = yield response.json();
+        if (json) {
+          yield put(setGroupsQuerySuccess(type, json, args, Date.now()));
+        } else {
+          yield put(setGroupsQueried(type, false));
+          throw new Error(response.statusText);
+        }
+      } else {
+        yield put(setGroupsQueried(type, false));
+        throw new Error(response.statusText);
+      }
+    } catch (err) {
+      yield put(setGroupsQueried(type, false));
+      // throw error
+      throw new Error(err);
+    }
+  }
+}
+
+const needsQuery = (args, argsStored) => {
+  if (!argsStored) return true;
+  const { area, occurrence, realm, biome } = args;
+  const areaS = argsStored.area;
+  const occurrenceS = argsStored.occurrence;
+  const realmS = argsStored.realm;
+  const biomeS = argsStored.biome;
+  // console.log('1.', area === areaS)
+  // console.log(
+  //   '2.',
+  //   (!occurrenceS && !occurrence) || occurrenceS === occurrence,
+  // );
+  // console.log('3.', !realmS || realmS === realm || startsWith(biome, realm))
+  // console.log('4.', (!biomeS && !biome) || biomeS === biome)
+  // conditions for not needing to query again
+  if (
+    // 1. areas need to be exactly the same
+    area === areaS &&
+    // 2. occurrence needs to be the same or not ever set
+    (occurrence === occurrenceS || (!occurrenceS && !occurrence))
+  ) {
+    // nothing set previously
+    if (!realmS && !biomeS) {
+      return false;
+    }
+    // realm prev set and unchanged
+    if (realmS && !biomeS && realm === realmS) {
+      return false;
+    }
+    // realm prev set and biome belongs to that realm
+    if (realmS && !biomeS && biome) {
+      const biomeRealm = select(selectRealmForBiome, biome);
+      if (biomeRealm.id === realmS) {
+        return false;
+      }
+    }
+    // biome prev set and unchanged
+    if (biomeS && biome === biomeS) {
+      return false;
+    }
+    return true;
+  }
+  return true;
+};
+
+function* queryGroupsSaga(args) {
+  const argsStored = yield select(selectGroupsByAreaArgs);
+  if (needsQuery(args, argsStored)) {
+    yield fork(queryGroupsByType, 'raster', args);
+    yield fork(queryGroupsByType, 'vector', args);
+  } else {
+    yield put(setGroupQueryReady('raster', Date.now()));
+    yield put(setGroupQueryReady('vector', Date.now()));
+  }
+}
+
 export default function* defaultSaga() {
   // See example in containers/HomePage/saga.js
   yield takeEvery(
@@ -318,6 +442,14 @@ export default function* defaultSaga() {
   yield takeEvery(
     LOAD_CONTENT,
     autoRestart(loadContentSaga, loadContentErrorHandler, MAX_LOAD_ATTEMPTS),
+  );
+  yield takeLatest(
+    QUERY_GROUPS,
+    autoRestart(
+      queryGroupsSaga,
+      queryGroupsErrorHandler,
+      MAX_LOAD_ATTEMPTS_GROUPS,
+    ),
   );
   yield takeLatest(NAVIGATE, navigateSaga);
   yield takeLatest(CHANGE_LOCALE, changeLocaleSaga);

@@ -38,6 +38,7 @@ import RouteHome from 'containers/RouteHome/Loadable';
 import RoutePage from 'containers/RoutePage/Loadable';
 import RouteExploreOverview from 'containers/RouteExploreOverview/Loadable';
 import RouteExplore from 'containers/RouteExplore';
+import RouteAnalyse from 'containers/RouteAnalyse';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import MapContainer from 'containers/MapContainer';
 import Header from 'containers/Header';
@@ -141,6 +142,14 @@ function App({
                   }/:level/:id`,
                 ]}
                 component={RouteExplore}
+              />
+              <Route
+                exact
+                path={[
+                  `/${ROUTES.ANALYSE}`,
+                  `/:locale(${appLocales.join('|')})/${ROUTES.ANALYSE}`,
+                ]}
+                component={RouteAnalyse}
               />
               <Route
                 path={[
