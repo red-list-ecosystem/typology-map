@@ -209,6 +209,9 @@ export function Map({
                 username: MAPBOX.USER,
                 accessToken: MAPBOX.TOKEN,
                 pane: 'countryOverlay',
+              }).on({
+                loading: () => setTilesLoading(true),
+                load: () => setTilesLoading(false),
               }),
             );
           }
@@ -218,6 +221,9 @@ export function Map({
                 id: LAYERS.countries.tileset,
                 accessToken: MAPBOX.TOKEN,
                 pane: 'countryOverlay',
+              }).on({
+                loading: () => setTilesLoading(true),
+                load: () => setTilesLoading(false),
               }),
             );
           }
