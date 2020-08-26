@@ -1,7 +1,7 @@
 {
   "projects": {
-    "default": "global-ecosystems-dev-query",
-    "query": "global-ecosystems-dev-query",
+    "default: "global-ecosystems-dev-query",
+    "query: "global-ecosystems-dev-query",
     "dev": "global-ecosystems-dev",
     "production": "rle-typology"
   }
