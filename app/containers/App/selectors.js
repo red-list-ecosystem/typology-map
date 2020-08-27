@@ -126,7 +126,13 @@ export const selectRealmsWithStats = createSelector(
           groupNo: rgroups && rgroups.length,
         };
       })
-      .sort((a, b) => (a.biomeNo > b.biomeNo ? -1 : 1));
+      .sort((a, b) => {
+        if (a.type === b.type) {
+          return a.biomeNo > b.biomeNo ? -1 : 1;
+        }
+        if (a.type === 'core') return -1;
+        return 1;
+      });
   },
 );
 export const selectBiomesForRealmWithStats = createSelector(

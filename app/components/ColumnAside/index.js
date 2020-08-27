@@ -7,7 +7,8 @@ import { getAsideWidth, getHeaderHeight } from 'utils/responsive';
 // prettier-ignore
 const Styled = styled(Box)`
   pointer-events: all;
-  position: fixed;
+  position: ${({ absolute }) => (absolute ? 'absolute' : 'fixed')};
+  overflow-y: ${({ absolute }) => (absolute ? 'unset' : 'auto')};
   z-index: ${({ theme }) => theme.dimensions.aside.zIndex};
   right: 0;
   bottom: 0;
@@ -24,7 +25,6 @@ const Styled = styled(Box)`
   @media (min-width: ${({ theme }) => theme.sizes.xxlarge.minpx}) {
     top: ${getHeaderHeight('xxlarge')}px;
   }
-  overflow-y: auto;
 `;
 
 function ColumnAside({ children, ...other }) {
