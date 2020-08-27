@@ -35,12 +35,12 @@ export default defineMessages({
   },
   defineAreaFieldPlaceholder: {
     id: `${scope}.defineAreaFieldPlaceholder`,
-    defaultMessage: 'Format: lon lat, lon2 lat2, lon3 lat3, ...',
+    defaultMessage: 'Format: lon1 lat1,lon2 lat2,...,lon1 lat1',
   },
   defineAreaFieldFormatHelp: {
     id: `${scope}.defineAreaFieldFormatHelp`,
     defaultMessage:
-      "A comma-separated list of points, each consisting of two space-separated values in decimal degrees where the first value represents the point's latitude and the second value its longitude (format: 'lon lat, lon2 lat2, lon3 lat3, [...]'). Where the last point does not equal the first point, the application will automatically add it to 'close' the resulting shape. Alternatively, you can also define the area using the WKT format ('Well-Known Text') for polygons ('POLYGON ((lon lat, [...]))').",
+      "A comma-separated list of points, each consisting of two space-separated values in decimal degrees where the first value represents the point's latitude and the second value its longitude (format: 'lon1 lat1,lon2 lat2,[...],lon3 lat3'). Note that the last point must equal the first point to 'close' the resulting shape.",
   },
   addFilters: {
     id: `${scope}.addFilters`,
@@ -84,7 +84,7 @@ export default defineMessages({
   },
   submitQueryAreaHint: {
     id: `${scope}.submitQueryAreaHint`,
-    defaultMessage: 'Query requires defining an area',
+    defaultMessage: 'Query requires defining a closed area',
   },
   submitQueryLabel: {
     id: `${scope}.submitQueryLabel`,

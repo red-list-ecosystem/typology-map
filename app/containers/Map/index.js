@@ -26,6 +26,7 @@ import {
 } from 'config';
 
 import { navigatePage } from 'containers/App/actions';
+import { selectGroupsQueryArea } from 'containers/App/selectors';
 
 import { Plus, Minus } from 'components/Icons';
 import LoadingIndicator from 'components/LoadingIndicator';
@@ -34,6 +35,7 @@ import MapControl from 'components/MapControl';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
+import isNumber from 'utils/is-number';
 import reducer from './reducer';
 import saga from './saga';
 
@@ -112,11 +114,13 @@ export function Map({
   zoomToBounds,
   loading,
   onNavPage,
+  queryArea,
 }) {
   useInjectReducer({ key: 'map', reducer });
   useInjectSaga({ key: 'map', saga });
 
   const mapRef = useRef(null);
+  const queryAreaLayerGroupRef = useRef(null);
   const groupLayerGroupRef = useRef(null);
   const basemapLayerGroupRef = useRef(null);
   const countryLayerGroupRef = useRef(null);
@@ -140,6 +144,7 @@ export function Map({
     basemapLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
     groupLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
     countryLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
+    queryAreaLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
 
     mapRef.current.on('zoomend', () => {
       setZoom(mapRef.current.getZoom());
@@ -360,6 +365,23 @@ export function Map({
     }
   }, [zoomToBounds]);
 
+  useEffect(() => {
+    queryAreaLayerGroupRef.current.clearLayers();
+    if (queryArea && queryArea.trim().length > 5) {
+      const points = queryArea.split(',');
+      const latlngs = points.reduce((m, p) => {
+        const lngLat = p.split(' ');
+        if (lngLat.length === 2 && isNumber(lngLat[0]) && isNumber(lngLat[1])) {
+          return [...m, [lngLat[1], lngLat[0]]];
+        }
+        return m;
+      }, []);
+      queryAreaLayerGroupRef.current.addLayer(
+        L.polyline(latlngs, { color: '#00183A', weight: 1 }),
+      );
+    }
+  }, [queryArea]);
+
   return (
     <Styled>
       <LeafletContainer id="ll-map" />
@@ -401,6 +423,7 @@ Map.propTypes = {
   country: PropTypes.bool,
   zoomToBounds: PropTypes.bool,
   loading: PropTypes.bool,
+  queryArea: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -410,6 +433,7 @@ const mapStateToProps = createStructuredSelector({
   country: state => selectCountry(state),
   zoomToBounds: state => selectZoomToBounds(state),
   loading: state => selectLayersLoading(state),
+  queryArea: state => selectGroupsQueryArea(state),
 });
 
 function mapDispatchToProps(dispatch) {

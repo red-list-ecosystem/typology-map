@@ -35,6 +35,10 @@ export const selectGroupsQueryArgs = createSelector(
     biome: search.has('biome') ? search.get('biome') : '',
   }),
 );
+export const selectGroupsQueryArea = createSelector(
+  selectRouterSearchParams,
+  search => (search.has('area') ? search.get('area') : ''),
+);
 
 export const selectRouterPathNamed = createSelector(
   selectRouterLocation,

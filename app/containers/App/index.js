@@ -62,7 +62,11 @@ const AppWrapper = styled.div`
 `;
 
 const Content = styled.div`
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   padding-top: ${getHeaderHeight('small')}px;
   @media (min-width: ${props => props.theme.sizes.medium.minpx}) {
     padding-top: ${getHeaderHeight('medium')}px;

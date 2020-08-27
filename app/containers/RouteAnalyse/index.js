@@ -26,6 +26,11 @@ import Configure from './Configure';
 
 const Styled = styled.div`
   pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 `;
 
 export function RouteAnalyse({ queryArgs, queried, realms, biomes }) {

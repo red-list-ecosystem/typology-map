@@ -18,6 +18,7 @@ import { GROUP_LAYER_PROPERTIES } from 'config';
 import { queryGroups, updateGroupsQuery } from 'containers/App/actions';
 import { selectGroupsQueryArgs } from 'containers/App/selectors';
 
+import { Close } from 'components/Icons';
 import ButtonPrimary from 'components/ButtonPrimary';
 import AsideNavSection from 'components/AsideNavSection';
 import Hint from 'components/Hint';
@@ -67,10 +68,31 @@ const ToggleButton = styled(p => <Button plain {...p} />)`
 
 const AreaTextInput = styled(p => <TextInput {...p} />)`
   min-height: 35px;
+  border: 0;
+`;
+const TextInputWrap = styled.div`
+  position: relative;
   border: 1px solid ${({ theme }) => theme.global.colors['light-4']};
-  padding: 3px 6px;
+  padding: 0 26px 0 6px;
   border-radius: 3px;
 `;
+
+const CloseButton = styled(p => <Button plain {...p} />)`
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  border-radius: 9999px;
+  padding: 6px;
+  background: ${({ theme }) => theme.global.colors.white} !important;
+  &:hover {
+    background: ${({ theme }) => theme.global.colors.grey} !important;
+  }
+`;
+
+const testArea = area => {
+  const points = area.trim().split(',');
+  return points.length > 3 && points[0] === points[points.length - 1];
+};
 
 export function Configure({
   onQueryGroups,
@@ -81,7 +103,7 @@ export function Configure({
   biomes,
 }) {
   const { area, realm, biome, occurrence } = queryArgs;
-  const hasArea = area && area.trim() !== '';
+  const hasArea = area && area.trim() !== '' && testArea(area);
   // figure out objects from any set filter
   const realmObject = realms && realms.find(r => r.id === realm);
   const biomeObject = biomes && biomes.find(b => b.id === biome);
@@ -122,18 +144,31 @@ export function Configure({
           <Label>
             <FormattedMessage {...messages.defineAreaFieldLabel} />
           </Label>
-          <AreaTextInput
-            value={area}
-            placeholder={intl.formatMessage(
-              messages.defineAreaFieldPlaceholder,
+          <TextInputWrap>
+            <AreaTextInput
+              value={area}
+              placeholder={intl.formatMessage(
+                messages.defineAreaFieldPlaceholder,
+              )}
+              onChange={e =>
+                updateQuery({
+                  ...queryArgs,
+                  area: e.target.value,
+                })
+              }
+            />
+            {area && (
+              <CloseButton
+                onClick={() =>
+                  updateQuery({
+                    ...queryArgs,
+                    area: '',
+                  })
+                }
+                icon={<Close size="medium" color="black" />}
+              />
             )}
-            onChange={e =>
-              updateQuery({
-                ...queryArgs,
-                area: e.target.value,
-              })
-            }
-          />
+          </TextInputWrap>
         </FieldWrap>
       </AsideNavSection>
       <AsideNavSection>
