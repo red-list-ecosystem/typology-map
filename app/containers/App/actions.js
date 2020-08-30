@@ -40,6 +40,7 @@ import {
   UPDATE_GROUPS_QUERY,
   RESET_GROUPS_QUERY,
   RESET_GROUPS_QUERY_NAV,
+  SET_ACTIVE_GROUP_QUERY,
 } from './constants';
 
 export function setLocale(locale) {
@@ -251,5 +252,11 @@ export function resetGroupsQuery() {
 export function resetGroupsQueryNav() {
   return {
     type: RESET_GROUPS_QUERY_NAV,
+  };
+}
+export function setActiveGroupQuery(id) {
+  return {
+    type: SET_ACTIVE_GROUP_QUERY,
+    id,
   };
 }

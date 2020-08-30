@@ -29,6 +29,7 @@ import {
   navigatePage,
 } from 'containers/App/actions';
 import {
+  selectActiveGroup,
   selectShowDisclaimer,
   selectRouterPathNamed,
   selectFullscreenImage,
@@ -53,8 +54,6 @@ import GlobalStyle from 'global-styles';
 import { appLocales } from 'i18n';
 
 import commonMessages from 'messages';
-
-import ScrollToTop from './ScrollToTop';
 
 const AppWrapper = styled.div`
   width: 100%;
@@ -90,6 +89,7 @@ function App({
   fullscreenImage,
   path,
   intl,
+  activeGroup,
 }) {
   useInjectReducer({ key: 'global', reducer });
   useInjectSaga({ key: 'default', saga });
@@ -97,8 +97,12 @@ function App({
   useEffect(() => {
     onLoadTypology();
   }, []);
-  const groupId =
-    path.route === ROUTES.EXPLORE && path.level === 'groups' ? path.id : null;
+  let groupId;
+  if (path.route === ROUTES.EXPLORE && path.level === 'groups') {
+    groupId = path.id;
+  } else if (path.route === ROUTES.ANALYSE && activeGroup) {
+    groupId = activeGroup;
+  }
 
   return (
     <Grommet theme={theme}>
@@ -125,49 +129,47 @@ function App({
             groupId={groupId}
             expand={path.route === ROUTES.ANALYSE}
           />
-          <ScrollToTop>
-            <Switch>
-              <Route
-                exact
-                path={[`/${ROUTES.HOME}`, `/:locale(${appLocales.join('|')})`]}
-                component={RouteHome}
-              />
-              <Route
-                exact
-                path={[
-                  `/${ROUTES.EXPLORE}`,
-                  `/:locale(${appLocales.join('|')})/${ROUTES.EXPLORE}`,
-                ]}
-                component={RouteExploreOverview}
-              />
-              <Route
-                exact
-                path={[
-                  `/${ROUTES.EXPLORE}/:level/:id`,
-                  `/:locale(${appLocales.join('|')})/${
-                    ROUTES.EXPLORE
-                  }/:level/:id`,
-                ]}
-                component={RouteExplore}
-              />
-              <Route
-                exact
-                path={[
-                  `/${ROUTES.ANALYSE}`,
-                  `/:locale(${appLocales.join('|')})/${ROUTES.ANALYSE}`,
-                ]}
-                component={RouteAnalyse}
-              />
-              <Route
-                path={[
-                  `/${ROUTES.PAGE}/:id`,
-                  `/:locale(${appLocales.join('|')})/${ROUTES.PAGE}/:id`,
-                ]}
-                component={RoutePage}
-              />
-              <Route path="" component={NotFoundPage} />
-            </Switch>
-          </ScrollToTop>
+          <Switch>
+            <Route
+              exact
+              path={[`/${ROUTES.HOME}`, `/:locale(${appLocales.join('|')})`]}
+              component={RouteHome}
+            />
+            <Route
+              exact
+              path={[
+                `/${ROUTES.EXPLORE}`,
+                `/:locale(${appLocales.join('|')})/${ROUTES.EXPLORE}`,
+              ]}
+              component={RouteExploreOverview}
+            />
+            <Route
+              exact
+              path={[
+                `/${ROUTES.EXPLORE}/:level/:id`,
+                `/:locale(${appLocales.join('|')})/${
+                  ROUTES.EXPLORE
+                }/:level/:id`,
+              ]}
+              component={RouteExplore}
+            />
+            <Route
+              exact
+              path={[
+                `/${ROUTES.ANALYSE}`,
+                `/:locale(${appLocales.join('|')})/${ROUTES.ANALYSE}`,
+              ]}
+              component={RouteAnalyse}
+            />
+            <Route
+              path={[
+                `/${ROUTES.PAGE}/:id`,
+                `/:locale(${appLocales.join('|')})/${ROUTES.PAGE}/:id`,
+              ]}
+              component={RoutePage}
+            />
+            <Route path="" component={NotFoundPage} />
+          </Switch>
           {fullscreenImage && <FullscreenImage config={fullscreenImage} />}
         </Content>
         <GlobalStyle />
@@ -191,12 +193,14 @@ App.propTypes = {
   path: PropTypes.object,
   fullscreenImage: PropTypes.object,
   intl: intlShape.isRequired,
+  activeGroup: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({
   showDisclaimer: state => selectShowDisclaimer(state),
   path: state => selectRouterPathNamed(state),
   fullscreenImage: state => selectFullscreenImage(state),
+  activeGroup: state => selectActiveGroup(state),
 });
 
 export function mapDispatchToProps(dispatch) {

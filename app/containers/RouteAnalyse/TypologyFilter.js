@@ -5,11 +5,9 @@ import { Button, DropButton, Box, Text } from 'grommet';
 import styled from 'styled-components';
 
 import { Close, Down, Up } from 'components/Icons';
+import FieldLabel from './FieldLabel';
 import messages from './messages';
 
-const Label = styled(p => <Text {...p} size="xsmall" />)`
-  margin-bottom: 5px;
-`;
 const FieldWrap = styled(p => <Box margin={{ bottom: 'medium' }} {...p} />)``;
 
 const DropDown = styled(p => (
@@ -67,14 +65,14 @@ export function TypologyFilter({
   const { locale } = intl;
   return (
     <FieldWrap>
-      <Label>
+      <FieldLabel>
         {type === 'realms' && (
           <FormattedMessage {...messages.addFiltersByRealmLabel} />
         )}
         {type === 'biomes' && (
           <FormattedMessage {...messages.addFiltersByBiomeLabel} />
         )}
-      </Label>
+      </FieldLabel>
       {active && (
         <Active>
           <LabelWrap align="center">

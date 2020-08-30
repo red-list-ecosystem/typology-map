@@ -4,95 +4,34 @@
  *
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
-import { Button, Box, TextInput, Text } from 'grommet';
+import { Box } from 'grommet';
 import styled from 'styled-components';
-
-import { GROUP_LAYER_PROPERTIES } from 'config';
 
 import { queryGroups, updateGroupsQuery } from 'containers/App/actions';
 import { selectGroupsQueryArgs } from 'containers/App/selectors';
 
-import { Close } from 'components/Icons';
 import ButtonPrimary from 'components/ButtonPrimary';
 import AsideNavSection from 'components/AsideNavSection';
 import Hint from 'components/Hint';
-import SectionTitle from 'components/styled/SectionTitle';
 
-import commonMessages from 'messages';
-import TypologyFilter from './TypologyFilter';
 import messages from './messages';
 
-const Label = styled(p => <Text {...p} size="xsmall" />)`
-  margin-bottom: 5px;
-`;
-const StepTitle = styled(p => <Text {...p} weight="bold" />)`
-  margin-bottom: 10px;
-`;
+import { testArea, getRealmOptions, getBiomeOptions } from './utils';
 
-const FieldWrap = styled(p => <Box margin={{ bottom: 'medium' }} {...p} />)``;
+import TypologyFilter from './TypologyFilter';
+import StepTitle from './StepTitle';
+import FieldWrap from './FieldWrap';
+import FieldLabel from './FieldLabel';
+import AreaInput from './AreaInput';
+import OccurrenceInput from './OccurrenceInput';
 
 const SubmitButton = styled(p => <ButtonPrimary {...p} />)``;
-const KeyColor = styled.span`
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  margin: 2px 0;
-  background: ${({ color }) => color};
-  opacity: ${({ opacity }) => opacity};
-`;
-
-const TextLabel = styled(props => <Text size="small" {...props} />)``;
-
-// prettier-ignore
-const ToggleButton = styled(p => <Button plain {...p} />)`
-  padding: 8px 14px;
-  border-radius: 3px;
-  background: ${({ theme, active }) =>
-    theme.global.colors[active ? 'brand-2' : 'light-grey']};
-  color: ${({ theme, active }) =>
-    theme.global.colors[active ? 'white' : 'black']};
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
-  &:hover {
-    background: ${({ theme, active }) =>
-    theme.global.colors[active ? 'brand-2-dark' : 'light-4']};
-    color: ${({ theme, active }) =>
-    theme.global.colors[active ? 'white' : 'black']};
-  }
-`;
-
-const AreaTextInput = styled(p => <TextInput {...p} />)`
-  min-height: 35px;
-  border: 0;
-`;
-const TextInputWrap = styled.div`
-  position: relative;
-  border: 1px solid ${({ theme }) => theme.global.colors['light-4']};
-  padding: 0 26px 0 6px;
-  border-radius: 3px;
-`;
-
-const CloseButton = styled(p => <Button plain {...p} />)`
-  position: absolute;
-  top: 3px;
-  right: 3px;
-  border-radius: 9999px;
-  padding: 6px;
-  background: ${({ theme }) => theme.global.colors.white} !important;
-  &:hover {
-    background: ${({ theme }) => theme.global.colors.grey} !important;
-  }
-`;
-
-const testArea = area => {
-  const points = area.trim().split(',');
-  return points.length > 3 && points[0] === points[points.length - 1];
-};
 
 export function Configure({
   onQueryGroups,
@@ -102,37 +41,25 @@ export function Configure({
   realms,
   biomes,
 }) {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const { area, realm, biome, occurrence } = queryArgs;
   const hasArea = area && area.trim() !== '' && testArea(area);
   // figure out objects from any set filter
   const realmObject = realms && realms.find(r => r.id === realm);
   const biomeObject = biomes && biomes.find(b => b.id === biome);
   // figure out options from any other filters set
-  const realmOptions =
-    realms && realms.filter(r => !biomeObject || biomeObject.realm === r.id);
-  const biomeOptions =
-    realms &&
-    biomes &&
-    biomes
-      .filter(b => !realmObject || b.realm === realmObject.id)
-      .sort((a, b) => {
-        const aRealmIndex = realms.findIndex(r => a.realm === r.id);
-        const bRealmIndex = realms.findIndex(r => b.realm === r.id);
-        if (aRealmIndex === bRealmIndex) {
-          return a.id > b.id ? 1 : -1;
-        }
-        return aRealmIndex < bRealmIndex ? -1 : 1;
-      });
+  const realmOptions = getRealmOptions(realms, biomeObject);
+  const biomeOptions = getBiomeOptions(realms, biomes, realmObject);
 
   return (
     <Box
-      pad={{ horizontal: 'small', top: 'small', bottom: 'large' }}
+      pad={{ horizontal: 'small', bottom: 'large' }}
       flex={false}
       background="white"
     >
-      <SectionTitle aside>
-        <FormattedMessage {...messages.title} />
-      </SectionTitle>
       <AsideNavSection margin={{ top: 'ms' }}>
         <StepTitle>
           <FormattedMessage {...messages.defineArea} />
@@ -141,34 +68,18 @@ export function Configure({
           <FormattedMessage {...messages.defineAreaInstructions} />
         </Hint>
         <FieldWrap margin={{ top: 'medium' }}>
-          <Label>
+          <FieldLabel>
             <FormattedMessage {...messages.defineAreaFieldLabel} />
-          </Label>
-          <TextInputWrap>
-            <AreaTextInput
-              value={area}
-              placeholder={intl.formatMessage(
-                messages.defineAreaFieldPlaceholder,
-              )}
-              onChange={e =>
-                updateQuery({
-                  ...queryArgs,
-                  area: e.target.value,
-                })
-              }
-            />
-            {area && (
-              <CloseButton
-                onClick={() =>
-                  updateQuery({
-                    ...queryArgs,
-                    area: '',
-                  })
-                }
-                icon={<Close size="medium" color="black" />}
-              />
-            )}
-          </TextInputWrap>
+          </FieldLabel>
+          <AreaInput
+            area={area}
+            onSubmit={value =>
+              updateQuery({
+                ...queryArgs,
+                area: value,
+              })
+            }
+          />
         </FieldWrap>
       </AsideNavSection>
       <AsideNavSection>
@@ -209,45 +120,19 @@ export function Configure({
             });
           }}
         />
-        <FieldWrap margin={{ bottom: 0 }}>
-          <Label>
+        <FieldWrap margin={{ bottom: '0' }}>
+          <FieldLabel>
             <FormattedMessage {...messages.addFiltersByOccurrenceLabel} />
-          </Label>
-          <Box direction="row" gap="small" margin={{ top: 'xxsmall' }}>
-            {Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).map(key => (
-              <ToggleButton
-                plain
-                key={key}
-                active={
-                  occurrence === GROUP_LAYER_PROPERTIES.OCCURRENCE[key].id
-                }
-                onClick={() => {
-                  const item = GROUP_LAYER_PROPERTIES.OCCURRENCE[key];
-                  const active = occurrence === item.id;
-                  updateQuery({
-                    ...queryArgs,
-                    occurrence: active ? '' : item.id,
-                  });
-                }}
-                label={
-                  <Box direction="row" align="center" gap="xsmall">
-                    <KeyColor
-                      color={GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color}
-                    />
-                    <TextLabel>
-                      <FormattedMessage
-                        {...commonMessages[
-                          `occurrence_${
-                            GROUP_LAYER_PROPERTIES.OCCURRENCE[key].id
-                          }`
-                        ]}
-                      />
-                    </TextLabel>
-                  </Box>
-                }
-              />
-            ))}
-          </Box>
+          </FieldLabel>
+          <OccurrenceInput
+            occurrence={occurrence}
+            onSubmit={value =>
+              updateQuery({
+                ...queryArgs,
+                occurrence: value,
+              })
+            }
+          />
         </FieldWrap>
       </AsideNavSection>
       <AsideNavSection>

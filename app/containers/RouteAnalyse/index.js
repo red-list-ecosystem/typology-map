@@ -10,7 +10,8 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { ResponsiveContext } from 'grommet';
+import { FormattedMessage, intlShape, injectIntl } from 'react-intl';
+import { Box, ResponsiveContext } from 'grommet';
 import { queryGroups, updateGroupsQuery } from 'containers/App/actions';
 import {
   selectGroupsQueryArgs,
@@ -19,8 +20,10 @@ import {
   selectBiomes,
 } from 'containers/App/selectors';
 import ColumnAside from 'components/ColumnAside';
+import SectionTitle from 'components/styled/SectionTitle';
+
 import { isMinSize } from 'utils/responsive';
-// import messages from './messages';
+import messages from './messages';
 import Results from './Results';
 import Configure from './Configure';
 
@@ -33,21 +36,36 @@ const Styled = styled.div`
   bottom: 0;
 `;
 
-export function RouteAnalyse({ queryArgs, queried, realms, biomes }) {
+export function RouteAnalyse({ queryArgs, queried, realms, biomes, intl }) {
   // const [show, setShow] = useState(true);
   return (
     <ResponsiveContext.Consumer>
       {size => (
         <Styled size={size}>
           <Helmet>
-            <title>Analyse</title>
+            <title>{intl.formatMessage(messages.title)}</title>
           </Helmet>
           {isMinSize(size, 'large') && (
             <ColumnAside absolute>
+              <Box
+                pad={{ horizontal: 'small', top: 'small' }}
+                flex={false}
+                background="white"
+              >
+                <SectionTitle aside>
+                  <FormattedMessage {...messages.title} />
+                </SectionTitle>
+              </Box>
               {!queried && realms && biomes && (
                 <Configure realms={realms} biomes={biomes} />
               )}
-              {queried && <Results queryArgs={queryArgs} />}
+              {queried && (
+                <Results
+                  queryArgs={queryArgs}
+                  realms={realms}
+                  biomes={biomes}
+                />
+              )}
             </ColumnAside>
           )}
         </Styled>
@@ -61,6 +79,7 @@ RouteAnalyse.propTypes = {
   queryArgs: PropTypes.object,
   realms: PropTypes.array,
   biomes: PropTypes.array,
+  intl: intlShape.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -83,4 +102,4 @@ const withConnect = connect(
 );
 
 // export default RouteExplore;
-export default compose(withConnect)(RouteAnalyse);
+export default compose(withConnect)(injectIntl(RouteAnalyse));

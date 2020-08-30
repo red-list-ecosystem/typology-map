@@ -58,6 +58,10 @@ export default defineMessages({
     id: `${scope}.filtersAdd`,
     defaultMessage: 'Add filters',
   },
+  noFilters: {
+    id: `${scope}.noFilters`,
+    defaultMessage: 'No filters currently set',
+  },
   addFiltersByRealmLabel: {
     id: `${scope}.addFiltersByRealmLabel`,
     defaultMessage: 'Filter by Realm',
@@ -97,5 +101,18 @@ export default defineMessages({
   updateQueryLabel: {
     id: `${scope}.updateQueryLabel`,
     defaultMessage: 'Update query',
+  },
+  queryResults: {
+    id: `${scope}.queryResults`,
+    defaultMessage: 'Query results',
+  },
+  cancel: {
+    id: `${scope}.cancel`,
+    defaultMessage: 'Cancel',
+  },
+  noResults: {
+    id: `${scope}.noResults`,
+    defaultMessage:
+      'We are sorry, but your query produced no results. Please try again with a different area or different filter settings',
   },
 });

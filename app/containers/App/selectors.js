@@ -39,6 +39,10 @@ export const selectGroupsQueryArea = createSelector(
   selectRouterSearchParams,
   search => (search.has('area') ? search.get('area') : ''),
 );
+export const selectActiveGroup = createSelector(
+  selectRouterSearchParams,
+  search => (search.has('active') ? search.get('active') : ''),
+);
 
 export const selectRouterPathNamed = createSelector(
   selectRouterLocation,

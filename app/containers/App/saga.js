@@ -29,6 +29,7 @@ import {
   CHANGE_LOCALE,
   UPDATE_GROUPS_QUERY,
   RESET_GROUPS_QUERY_NAV,
+  SET_ACTIVE_GROUP_QUERY,
   // COOKIECONSENT_CHECKED,
 } from './constants';
 
@@ -177,6 +178,9 @@ function* navigateSaga({ location, args }) {
   const search = newSearch.length > 0 ? `?${newSearch}` : '';
 
   // finally combine new path and search  ============================
+  if (newPathname !== currentLocation.pathname) {
+    window.scrollTo(0, 0);
+  }
   yield put(push(`${path}${search}`));
 }
 
@@ -231,9 +235,22 @@ function* updateGroupsQuerySaga({ args }) {
     args: { deleteSearchParams: remove },
   });
 }
+function* setActiveGroupQuerySaga({ id }) {
+  if (id === '') {
+    yield call(navigateSaga, {
+      args: { deleteSearchParams: ['active'] },
+    });
+  } else {
+    yield call(navigateSaga, {
+      location: { search: { active: id } },
+    });
+  }
+}
 function* resetGroupsQuerySaga() {
   yield call(navigateSaga, {
-    args: { deleteSearchParams: ['area', 'realm', 'biome', 'occurrence'] },
+    args: {
+      deleteSearchParams: ['area', 'realm', 'biome', 'occurrence', 'active'],
+    },
   });
 }
 
@@ -502,4 +519,5 @@ export default function* defaultSaga() {
   yield takeLatest(CHANGE_LOCALE, changeLocaleSaga);
   yield takeLatest(UPDATE_GROUPS_QUERY, updateGroupsQuerySaga);
   yield takeLatest(RESET_GROUPS_QUERY_NAV, resetGroupsQuerySaga);
+  yield takeLatest(SET_ACTIVE_GROUP_QUERY, setActiveGroupQuerySaga);
 }

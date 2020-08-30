@@ -135,6 +135,9 @@ export function Map({
     mapRef.current.createPane('groupOverlay');
     mapRef.current.getPane('groupOverlay').style.zIndex = 600;
     mapRef.current.getPane('groupOverlay').style.pointerEvents = 'none';
+    mapRef.current.createPane('areaOverlay');
+    mapRef.current.getPane('areaOverlay').style.zIndex = 700;
+    mapRef.current.getPane('areaOverlay').style.pointerEvents = 'none';
     // make sure country overlays are always rendered on top of basemap and groups
     mapRef.current.createPane('countryOverlay');
     mapRef.current.getPane('countryOverlay').style.zIndex = 650;
@@ -370,14 +373,18 @@ export function Map({
     if (queryArea && queryArea.trim().length > 5) {
       const points = queryArea.split(',');
       const latlngs = points.reduce((m, p) => {
-        const lngLat = p.split(' ');
+        const lngLat = p.trim().split(' ');
         if (lngLat.length === 2 && isNumber(lngLat[0]) && isNumber(lngLat[1])) {
           return [...m, [lngLat[1], lngLat[0]]];
         }
         return m;
       }, []);
       queryAreaLayerGroupRef.current.addLayer(
-        L.polyline(latlngs, { color: '#00183A', weight: 1 }),
+        L.polyline(latlngs, {
+          color: '#00183A',
+          weight: 1,
+          pane: 'areaOverlay',
+        }),
       );
     }
   }, [queryArea]);
