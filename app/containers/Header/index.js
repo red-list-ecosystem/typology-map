@@ -302,7 +302,7 @@ function Header({ nav, navHome, navPage, path }) {
                     <PrimaryLabel>
                       <IconImgWrap>
                         <IconImgHelper />
-                        <IconImg src={ICONS.EXPLORE} alt="" />
+                        <IconImg src={ICONS.ANALYSIS} alt="" />
                       </IconImgWrap>
                       <Text>
                         <FormattedMessage {...commonMessages.navAnalyse} />

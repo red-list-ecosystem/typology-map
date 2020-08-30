@@ -4,6 +4,7 @@ import ICON_F from 'images/f.svg';
 import ICON_S from 'images/s.svg';
 import ICON_TYPOLOGY from 'images/typology.svg';
 import ICON_X from 'images/explore.svg';
+import ICON_ANALYSIS from 'images/analysis.svg';
 import ICON_LOGO from 'images/logo_RLE_icon.svg';
 import LOGO_0 from 'images/logo_RLE.png';
 import LOGO_1 from 'images/logo_IUCN.jpg';
@@ -174,6 +175,7 @@ export const ICONS = {
   SM: [ICON_S, ICON_M],
   TF: [ICON_T, ICON_F],
   EXPLORE: ICON_X,
+  ANALYSIS: ICON_ANALYSIS,
   LOGO: ICON_LOGO,
 };
 
