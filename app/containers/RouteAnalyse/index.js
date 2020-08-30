@@ -18,6 +18,7 @@ import {
   selectGroupsQueriedAny,
   selectRealmsWithStats,
   selectBiomes,
+  selectInfoGroup,
 } from 'containers/App/selectors';
 import ColumnAside from 'components/ColumnAside';
 import SectionTitle from 'components/styled/SectionTitle';
@@ -26,6 +27,7 @@ import { isMinSize } from 'utils/responsive';
 import messages from './messages';
 import Results from './Results';
 import Configure from './Configure';
+import GroupInfo from './GroupInfo';
 
 const Styled = styled.div`
   pointer-events: none;
@@ -36,7 +38,14 @@ const Styled = styled.div`
   bottom: 0;
 `;
 
-export function RouteAnalyse({ queryArgs, queried, realms, biomes, intl }) {
+export function RouteAnalyse({
+  queryArgs,
+  queried,
+  realms,
+  biomes,
+  intl,
+  infoGroup,
+}) {
   // const [show, setShow] = useState(true);
   return (
     <ResponsiveContext.Consumer>
@@ -68,6 +77,7 @@ export function RouteAnalyse({ queryArgs, queried, realms, biomes, intl }) {
               )}
             </ColumnAside>
           )}
+          {infoGroup && <GroupInfo group={infoGroup} />}
         </Styled>
       )}
     </ResponsiveContext.Consumer>
@@ -79,6 +89,7 @@ RouteAnalyse.propTypes = {
   queryArgs: PropTypes.object,
   realms: PropTypes.array,
   biomes: PropTypes.array,
+  infoGroup: PropTypes.object,
   intl: intlShape.isRequired,
 };
 
@@ -87,6 +98,7 @@ const mapStateToProps = createStructuredSelector({
   queried: state => selectGroupsQueriedAny(state),
   realms: state => selectRealmsWithStats(state),
   biomes: state => selectBiomes(state),
+  infoGroup: state => selectInfoGroup(state),
 });
 
 export function mapDispatchToProps(dispatch) {

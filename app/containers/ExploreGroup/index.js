@@ -185,8 +185,8 @@ export function ExploreGroup({
                     items={sortedGroups}
                     level={2}
                     locale={locale}
-                    navItem={id => navGroup(id)}
-                    navParent={() => navBiome(biome.id)}
+                    selectItem={id => navGroup(id)}
+                    selectParent={() => navBiome(biome.id)}
                     activeId={typology.id}
                   />
                 </AsideNavSection>

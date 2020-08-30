@@ -43,6 +43,10 @@ export const selectActiveGroup = createSelector(
   selectRouterSearchParams,
   search => (search.has('active') ? search.get('active') : ''),
 );
+export const selectInfoGroupQuery = createSelector(
+  selectRouterSearchParams,
+  search => (search.has('info') ? search.get('info') : ''),
+);
 
 export const selectRouterPathNamed = createSelector(
   selectRouterLocation,
@@ -97,6 +101,7 @@ export const selectGroups = createSelector(
   state => selectTypologyByKey(state, 'groups'),
   data => data,
 );
+
 export const selectRealm = createSelector(
   (state, id) => id,
   selectRealms,
@@ -114,6 +119,12 @@ export const selectRealmForBiome = createSelector(
 );
 export const selectGroup = createSelector(
   (state, id) => id,
+  selectGroups,
+  (id, data) => data && data.find(d => d.id === id),
+);
+
+export const selectInfoGroup = createSelector(
+  selectInfoGroupQuery,
   selectGroups,
   (id, data) => data && data.find(d => d.id === id),
 );

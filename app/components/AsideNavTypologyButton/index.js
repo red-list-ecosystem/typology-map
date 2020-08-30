@@ -17,15 +17,12 @@ const getSize = level => {
 
 // prettier-ignore
 const StyledButton = styled(props => <Button {...props} plain />)`
-  padding: ${({ theme }) => theme.global.edgeSize.small};
-  border-top: 1px solid;
-  border-top-color: ${({ theme }) => theme.global.colors.border.light};
+  padding-top: ${({ theme }) => theme.global.edgeSize.small};
+  padding-bottom: ${({ theme }) => theme.global.edgeSize.small};
+  padding-right: ${({ theme, hasInfo }) => hasInfo ? '40px' : theme.global.edgeSize.small};
+  padding-left: ${({ theme }) => theme.global.edgeSize.small};
   background: ${({ theme, active }) =>
     active ? theme.global.colors['light-2'] : 'transparent'};
-  &:last-child {
-    border-bottom: 1px solid;
-    border-bottom-color: ${({ theme }) => theme.global.colors.border.light};
-  }
   &:hover {
     background: ${({ theme, active }) =>
     active ? theme.global.colors['light-2'] : theme.global.colors['light-1']};
@@ -49,6 +46,7 @@ AsideNavTypologyButton.propTypes = {
   id: PropTypes.string,
   name: PropTypes.string,
   level: PropTypes.number,
+  hasInfo: PropTypes.bool,
 };
 
 export default AsideNavTypologyButton;

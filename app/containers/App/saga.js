@@ -30,6 +30,7 @@ import {
   UPDATE_GROUPS_QUERY,
   RESET_GROUPS_QUERY_NAV,
   SET_ACTIVE_GROUP_QUERY,
+  SET_INFO_GROUP_QUERY,
   // COOKIECONSENT_CHECKED,
 } from './constants';
 
@@ -243,6 +244,17 @@ function* setActiveGroupQuerySaga({ id }) {
   } else {
     yield call(navigateSaga, {
       location: { search: { active: id } },
+    });
+  }
+}
+function* setInfoGroupQuerySaga({ id }) {
+  if (id === '') {
+    yield call(navigateSaga, {
+      args: { deleteSearchParams: ['info'] },
+    });
+  } else {
+    yield call(navigateSaga, {
+      location: { search: { info: id } },
     });
   }
 }
@@ -520,4 +532,5 @@ export default function* defaultSaga() {
   yield takeLatest(UPDATE_GROUPS_QUERY, updateGroupsQuerySaga);
   yield takeLatest(RESET_GROUPS_QUERY_NAV, resetGroupsQuerySaga);
   yield takeLatest(SET_ACTIVE_GROUP_QUERY, setActiveGroupQuerySaga);
+  yield takeLatest(SET_INFO_GROUP_QUERY, setInfoGroupQuerySaga);
 }

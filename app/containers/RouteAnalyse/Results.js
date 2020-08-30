@@ -27,6 +27,7 @@ import {
   queryGroups,
   resetGroupsQueryNav,
   setActiveGroupQuery,
+  setInfoGroupQuery,
 } from 'containers/App/actions';
 
 import AsideNavTypologyList from 'components/AsideNavTypologyList';
@@ -90,6 +91,7 @@ export function Results({
   biomes,
   onSetActiveGroup,
   activeGroup,
+  onSetInfoGroup,
 }) {
   const [areaUpdate, setAreaUpdate] = useState(false);
   const [filterUpdate, setFilterUpdate] = useState(false);
@@ -341,8 +343,11 @@ export function Results({
                   items={groups}
                   level={2}
                   locale={locale}
-                  navItem={id => onSetActiveGroup(activeGroup === id ? '' : id)}
+                  selectItem={id =>
+                    onSetActiveGroup(activeGroup === id ? '' : id)
+                  }
                   activeId={activeGroup}
+                  infoItem={id => onSetInfoGroup(id)}
                 />
               </>
             )}
@@ -360,6 +365,7 @@ Results.propTypes = {
   queryArgs: PropTypes.object,
   onResetQuery: PropTypes.func,
   onSetActiveGroup: PropTypes.func,
+  onSetInfoGroup: PropTypes.func,
   intl: intlShape.isRequired,
   updateQuery: PropTypes.func,
   onQueryGroups: PropTypes.func,
@@ -384,6 +390,7 @@ function mapDispatchToProps(dispatch) {
     },
     updateQuery: args => dispatch(updateGroupsQuery(args)),
     onSetActiveGroup: id => dispatch(setActiveGroupQuery(id)),
+    onSetInfoGroup: id => dispatch(setInfoGroupQuery(id)),
     onQueryGroups: args => dispatch(queryGroups(args)),
   };
 }
