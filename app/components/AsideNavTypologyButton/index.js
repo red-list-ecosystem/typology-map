@@ -30,6 +30,10 @@ const StyledButton = styled(props => <Button {...props} plain />)`
     background: ${({ theme, active }) =>
     active ? theme.global.colors['light-2'] : theme.global.colors['light-1']};
   }
+  &:focus {
+    background: ${({ theme, active }) =>
+    active ? theme.global.colors['light-2'] : theme.global.colors['light-1']};
+  }
 `;
 
 function AsideNavTypologyButton({ id, name, level, ...rest }) {

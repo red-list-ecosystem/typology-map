@@ -31,18 +31,51 @@ export default defineMessages({
   },
   settingBasemap: {
     id: `${scope}.settingBasemap`,
-    defaultMessage: 'Basemap',
-  },
-  settingBasemapLight: {
-    id: `${scope}.settingBasemapLight`,
-    defaultMessage: 'Terrain',
-  },
-  settingBasemapSat: {
-    id: `${scope}.settingBasemapSat`,
     defaultMessage: 'Satellite',
   },
-  basemapAttribution: {
-    id: `${scope}.basemapAttribution`,
-    defaultMessage: 'Basemap attribution',
+  settingOn: {
+    id: `${scope}.settingOn`,
+    defaultMessage: 'On',
+  },
+  settingOff: {
+    id: `${scope}.settingOff`,
+    defaultMessage: 'Off',
+  },
+  settingsShow: {
+    id: `${scope}.settingsShow`,
+    defaultMessage: 'Show settings',
+  },
+  settingsHide: {
+    id: `${scope}.settingsHide`,
+    defaultMessage: 'Hide settings',
+  },
+  mapAttribution: {
+    id: `${scope}.mapAttribution`,
+    defaultMessage: 'Map attribution',
+  },
+  mapAttributionGroupsTitle: {
+    id: `${scope}.mapAttributionGroupsTitle`,
+    defaultMessage: 'Functional group data',
+  },
+  mapAttributionGroupsInfo: {
+    id: `${scope}.mapAttributionGroupsInfo`,
+    defaultMessage:
+      'Compiled by RLE from various sources. See group descriptions for detailed references',
+  },
+  mapAttributionGroupsLink: {
+    id: `${scope}.mapAttributionGroupsLink`,
+    defaultMessage: 'Provide feedback',
+  },
+  mapAttributionBasemapsTitle: {
+    id: `${scope}.mapAttributionBasemapsTitle`,
+    defaultMessage: 'Basemaps',
+  },
+  mapAttributionBasemapsInfo: {
+    id: `${scope}.mapAttributionBasemapsInfo`,
+    defaultMessage: 'Terrain, satellite and country data',
+  },
+  mapAttributionBasemapsLink: {
+    id: `${scope}.mapAttributionBasemapsLink`,
+    defaultMessage: 'Improve the basemaps',
   },
 });

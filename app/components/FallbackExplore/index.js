@@ -8,6 +8,7 @@ import ColumnMainContent from 'components/ColumnMainContent';
 import ColumnAside from 'components/ColumnAside';
 import TopGraphic from 'components/TopGraphic';
 import TypologyContent from 'components/TypologyContent';
+import LoadingIndicator from 'components/LoadingIndicator';
 
 import { isMinSize } from 'utils/responsive';
 
@@ -25,10 +26,16 @@ export function FallbackExplore() {
             <ColumnMain hasAside={isMinSize(size, 'large')}>
               <TopGraphic direction="row" />
               <ColumnMainContent>
-                <TypologyContent />
+                <TypologyContent>
+                  <LoadingIndicator />
+                </TypologyContent>
               </ColumnMainContent>
             </ColumnMain>
-            {isMinSize(size, 'large') && <ColumnAside />}
+            {isMinSize(size, 'large') && (
+              <ColumnAside>
+                <LoadingIndicator />
+              </ColumnAside>
+            )}
           </Box>
         </Styled>
       )}

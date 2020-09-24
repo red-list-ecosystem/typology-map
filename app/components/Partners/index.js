@@ -11,11 +11,10 @@ import styled from 'styled-components';
 
 import coreMessages from 'messages';
 
-import messages from './messages';
+import SectionInner from 'components/styled/SectionInner';
+import SectionOuter from 'components/styled/SectionOuter';
 
-import SectionTitle from './SectionTitle';
-import SectionInner from './SectionInner';
-import SectionOuter from './SectionOuter';
+import messages from './messages';
 
 const ImageButton = styled(Button)`
   height: 65px;
@@ -30,22 +29,33 @@ const ImageButton = styled(Button)`
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     height: 120px;
   }
-`;
-
-const ImageWrap = styled(Box)`
-  width: 50%;
-  @media (min-width: 500px) {
-    width: 25%;
+  border-bottom: 1px solid transparent;
+  &:focus {
+    outline: 0;
+    border-bottom: 1px solid ${({ theme }) => theme.global.colors.brand};
   }
 `;
 
-export function SectionThanks({ intl }) {
+const ImageWrap = styled(Box)`
+  width: 33%;
+  @media (min-width: 500px) {
+    width: ${({ count }) => 100 / count}%;
+  }
+`;
+
+const SectionTitle = styled.h3`
+  font-size: 18px;
+  line-height: 24px;
+  margin: 20px 0;
+`;
+
+export function Partners({ intl }) {
   return (
     <SectionOuter background="light-2">
       <SectionInner>
         <Box>
-          <SectionTitle small>
-            <FormattedMessage {...messages.titleSectionThanks} />
+          <SectionTitle>
+            <FormattedMessage {...messages.titleThanks} />
           </SectionTitle>
         </Box>
         <Box direction="row" align="center" wrap>
@@ -58,6 +68,7 @@ export function SectionThanks({ intl }) {
                   key={logo.id}
                   pad="xsmall"
                   margin={{ bottom: 'medium' }}
+                  count={Object.keys(LOGOS).length}
                 >
                   <ImageButton
                     plain
@@ -76,8 +87,8 @@ export function SectionThanks({ intl }) {
     </SectionOuter>
   );
 }
-SectionThanks.propTypes = {
+Partners.propTypes = {
   intl: intlShape.isRequired,
 };
 
-export default injectIntl(SectionThanks);
+export default injectIntl(Partners);

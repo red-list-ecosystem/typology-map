@@ -6,7 +6,6 @@
 
 import React, { memo, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Helmet } from 'react-helmet';
 import { injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -19,7 +18,8 @@ import { PATHS, PAGES } from 'config';
 import { selectRealmsWithStats, selectLocale } from 'containers/App/selectors';
 import { navigateTypology, navigatePage } from 'containers/App/actions';
 
-import Footer from 'components/Footer';
+import Partners from 'components/Partners';
+import Footer from 'containers/Footer';
 import PageBackground from 'components/PageBackground';
 
 import { getHeaderHeight } from 'utils/responsive';
@@ -30,7 +30,6 @@ import messages from './messages';
 import Intro from './Intro';
 import SectionExplore from './SectionExplore';
 import SectionAbout from './SectionAbout';
-import SectionThanks from './SectionThanks';
 
 const Styled = styled.div`
   position: relative;
@@ -41,7 +40,9 @@ const MainContent = styled.div`
   position: relative;
   z-index: 1;
   top: 100vh;
+  width: 100%;
   margin-top: -${getHeaderHeight('small')}px;
+  box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.2);
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
     margin-top: -${getHeaderHeight('medium')}px;
   }
@@ -66,10 +67,6 @@ export function HomePage({ realms, navRealm, navPage, locale, intl }) {
     <ResponsiveContext.Consumer>
       {size => (
         <Styled>
-          <Helmet>
-            <title>Home Page</title>
-            <meta name="description" content="home" />
-          </Helmet>
           <PageBackground
             image={{
               src: `${PATHS.IMAGES}/bg_home.jpg`,
@@ -97,7 +94,7 @@ export function HomePage({ realms, navRealm, navPage, locale, intl }) {
                 },
               ]}
             />
-            <SectionThanks />
+            <Partners />
             <Footer />
           </MainContent>
         </Styled>

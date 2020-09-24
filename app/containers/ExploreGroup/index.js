@@ -7,7 +7,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -17,20 +17,22 @@ import { Box, ResponsiveContext } from 'grommet';
 import {
   selectBiome,
   selectRealmForBiome,
-  selectLocale,
   selectContentByKey,
   selectGroupsForBiome,
+  selectRealms,
 } from 'containers/App/selectors';
 import {
   loadContent,
   navigateTypology,
   navigate,
+  setFullscreenImage,
 } from 'containers/App/actions';
 
 import ColumnMain from 'components/ColumnMain';
 import ColumnMainContent from 'components/ColumnMainContent';
 import ColumnAside from 'components/ColumnAside';
 import HTMLWrapper from 'components/HTMLWrapper';
+import GroupDiagram from 'components/GroupDiagram';
 import AsideNavSection from 'components/AsideNavSection';
 import AsideNavLabel from 'components/AsideNavLabel';
 import AsideNavTypologySelected from 'components/AsideNavTypologySelected';
@@ -38,10 +40,13 @@ import AsideNavTypologyList from 'components/AsideNavTypologyList';
 import TypologyHeader from 'components/TypologyHeader';
 import TypologyContent from 'components/TypologyContent';
 import TypologyImage from 'components/TypologyImage';
+import RelatedHint from 'components/RelatedHint';
 
 import { isMinSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
+
+import messages from './messages';
 
 const Styled = styled.div`
   pointer-events: none;
@@ -56,14 +61,18 @@ export function ExploreGroup({
   navBiome,
   navRealm,
   navExplore,
-  locale,
+  intl,
   biome,
   realm,
+  realms,
+  onSetFullscreenImage,
 }) {
   useEffect(() => {
     // kick off loading of page content
     onLoadContent(typology.path);
   }, [typology]);
+
+  const { locale } = intl;
 
   const sortedGroups =
     groups &&
@@ -79,8 +88,11 @@ export function ExploreGroup({
       {size => (
         <Styled size={size}>
           <Helmet>
-            <title>Explore Group</title>
-            <meta name="description" content="Description of Explore Group" />
+            <title>
+              {intl.formatMessage(messages.metaTitle, {
+                group: typology.title[locale],
+              })}
+            </title>
           </Helmet>
           <Box
             direction="row"
@@ -114,7 +126,23 @@ export function ExploreGroup({
                     ]}
                   />
                   <TypologyImage inText typology={typology} locale={locale} />
-                  {content && <HTMLWrapper innerhtml={content} />}
+                  <HTMLWrapper
+                    innerhtml={content}
+                    classNames={['rle-html-group']}
+                    inject={[
+                      {
+                        tag: '[DIAGRAM]',
+                        el: (
+                          <GroupDiagram
+                            group={typology}
+                            onFullscreen={() =>
+                              onSetFullscreenImage({ typology })
+                            }
+                          />
+                        ),
+                      },
+                    ]}
+                  />
                 </TypologyContent>
               </ColumnMainContent>
             </ColumnMain>
@@ -134,6 +162,7 @@ export function ExploreGroup({
                     />
                   )}
                 </AsideNavSection>
+                {realms && <RelatedHint typology={realm} realms={realms} />}
                 <AsideNavSection>
                   <AsideNavLabel
                     label={<FormattedMessage {...commonMessages.biome} />}
@@ -175,13 +204,15 @@ ExploreGroup.propTypes = {
   biome: PropTypes.object,
   realm: PropTypes.object,
   groups: PropTypes.array,
-  locale: PropTypes.string,
+  realms: PropTypes.array,
   onLoadContent: PropTypes.func.isRequired,
   navGroup: PropTypes.func.isRequired,
   navBiome: PropTypes.func.isRequired,
   navRealm: PropTypes.func.isRequired,
   navExplore: PropTypes.func.isRequired,
+  onSetFullscreenImage: PropTypes.func.isRequired,
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  intl: intlShape.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -193,7 +224,7 @@ const mapStateToProps = createStructuredSelector({
   realm: (state, { typology }) => selectRealmForBiome(state, typology.biome),
   biome: (state, { typology }) => selectBiome(state, typology.biome),
   groups: (state, { typology }) => selectGroupsForBiome(state, typology.biome),
-  locale: state => selectLocale(state),
+  realms: state => selectRealms(state),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -205,6 +236,8 @@ function mapDispatchToProps(dispatch) {
     navBiome: id => dispatch(navigateTypology('biomes', id)),
     navRealm: id => dispatch(navigateTypology('realms', id)),
     navExplore: () => dispatch(navigate('explore')),
+    onSetFullscreenImage: args =>
+      dispatch(setFullscreenImage('GroupDiagram', args)),
   };
 }
 
@@ -213,4 +246,4 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-export default compose(withConnect)(ExploreGroup);
+export default compose(withConnect)(injectIntl(ExploreGroup));

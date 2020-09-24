@@ -13,6 +13,7 @@ import {
   LOAD_CONTENT,
   NAVIGATE,
   CHANGE_LOCALE,
+  // COOKIECONSENT_CHECKED,
 } from './constants';
 
 import {
@@ -70,7 +71,7 @@ function* loadContentErrorHandler(err, { key, contentType, locale }) {
   yield put(setContentLoadError(err, contentType, locale, key));
 }
 
-export function* loadDataSaga({ key }) {
+function* loadDataSaga({ key }) {
   if (TYPOLOGY[key]) {
     // requestedSelector returns the times that entities where fetched from the API
     const requestedAt = yield select(selectTypologyRequestedByKey, key);
@@ -105,7 +106,7 @@ export function* loadDataSaga({ key }) {
 }
 
 // key expected to include full path, for at risk data metric/country
-export function* loadContentSaga({ key, contentType }) {
+function* loadContentSaga({ key, contentType }) {
   if (PAGES[key] || TYPOLOGY[contentType]) {
     const requestedAt = yield select(selectContentRequestedByKey, {
       contentType,
@@ -172,7 +173,7 @@ export function* loadContentSaga({ key, contentType }) {
 }
 
 // location can either be string or object { pathname, search }
-export function* navigateSaga({ location, args }) {
+function* navigateSaga({ location, args }) {
   const currentLocale = yield select(selectLocale);
   const currentLocation = yield select(selectRouterLocation);
   // default args
@@ -284,7 +285,7 @@ export function* navigateSaga({ location, args }) {
   yield put(push(`${path}${search}`));
 }
 
-export function* changeLocaleSaga({ locale }) {
+function* changeLocaleSaga({ locale }) {
   const currentLocale = yield select(selectLocale);
   const currentLocation = yield select(selectRouterLocation);
   let path = '/';

@@ -7,7 +7,7 @@ import { filter } from 'lodash/collection';
 import styled from 'styled-components';
 
 import { Button, Box, Text, ResponsiveContext, Layer } from 'grommet';
-import { Menu, Search as SearchIcon } from 'grommet-icons';
+import { Menu, Search as SearchIcon } from 'components/Icons';
 
 import { selectRouterPath } from 'containers/App/selectors';
 import { navigate, navigateHome, navigatePage } from 'containers/App/actions';
@@ -23,20 +23,17 @@ import { getHeaderHeight, isMinSize, isMaxSize } from 'utils/responsive';
 import commonMessages from 'messages';
 
 import NavBar from './NavBar';
-
-const Brand = styled(props => <Button {...props} plain color="white" />)`
+// prettier-ignore
+const Brand = styled(props => <Button plain color="white" {...props} />)`
   /* responsive height */
-  padding: 0 ${({ theme }) => theme.global.edgeSize.xsmall};
+  padding-right: ${({ theme }) => theme.global.edgeSize.small};
   height: ${getHeaderHeight('small')}px;
-  font-weight: 600;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
     height: ${getHeaderHeight('medium')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     height: ${getHeaderHeight('large')}px;
     min-width: ${getHeaderHeight('large')}px;
-    max-width: ${getHeaderHeight('large') + 20}px;
-    margin-right: ${getHeaderHeight('large')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
     height: ${getHeaderHeight('xlarge')}px;
@@ -44,12 +41,41 @@ const Brand = styled(props => <Button {...props} plain color="white" />)`
   @media (min-width: ${({ theme }) => theme.sizes.xxlarge.minpx}) {
     height: ${getHeaderHeight('xxlarge')}px;
   }
+  color: ${({ theme }) => theme.global.colors.white};
+  background: transparent;
   &:hover {
     background: ${({ theme }) => theme.global.colors.brand};
   }
+  &:focus {
+    background: ${({ theme, active }) =>
+    active ? 'transparent' : theme.global.colors['brand-dark']};
+  }
 `;
 
-const NavPrimary = styled(props => <Box {...props} direction="row" />)`
+const BrandWrap = styled(Box)`
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    margin-right: 50px;
+  }
+`;
+
+const LogoWrap = styled(p => <Box flex={{ shrink: 0 }} {...p} />)`
+  width: 50px;
+  height: 100%;
+  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+    width: 80px;
+  }
+`;
+const TitleWrap = styled(Box)`
+  font-weight: 600;
+  line-height: 18px;
+  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+    min-width: ${getHeaderHeight('large')}px;
+    max-width: ${getHeaderHeight('large') + 20}px;
+    line-height: 19px;
+  }
+`;
+
+const NavPrimary = styled(props => <Box direction="row" {...props} />)`
   height: ${getHeaderHeight('small')}px;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
     height: ${getHeaderHeight('medium')}px;
@@ -70,43 +96,54 @@ const NavSecondary = styled(props => (
 const NavSearch = styled(props => (
   <Box {...props} direction="row" basis="1/2" align="center" />
 ))``;
-const NavSearchSmall = styled(props => (
-  <Box {...props} direction="row" align="center" fill="horizontal" />
+const NavSearchSmall = styled(p => (
+  <Box direction="row" align="center" fill="horizontal" flex {...p} />
 ))`
   height: ${getHeaderHeight('small')}px;
 `;
 
 const MenuButton = styled(props => <Button plain {...props} fill="vertical" />)`
-  width: ${getHeaderHeight('small')}px;
-  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
-    width: ${getHeaderHeight('medium')}px;
-  }
+  width: 100%;
   text-align: center;
+  &:hover {
+    background: ${({ theme }) => theme.global.colors.brand};
+  }
+  &:focus {
+    background: ${({ theme }) => theme.global.colors.brand};
+  }
 `;
-const SearchButton = styled(props => (
-  <Button plain {...props} fill="vertical" />
-))`
-  width: ${getHeaderHeight('small')}px;
-  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
-    width: ${getHeaderHeight('medium')}px;
-  }
+const SearchButton = styled(props => <Button plain {...props} />)`
   text-align: center;
+  border-radius: 9999px;
+  padding: ${({ theme }) => theme.global.edgeSize.xsmall};
+  &:hover {
+    background: ${({ theme }) => theme.global.colors.brand};
+  }
+  &:focus {
+    background: ${({ theme }) => theme.global.colors.brand};
+  }
 `;
 
 const MenuOpen = styled(Menu)`
   transform: rotate(90deg);
 `;
 
+// prettier-ignore
 const Primary = styled(props => (
-  <Button
-    {...props}
-    plain
-    pad={{ horizontal: 'small' }}
-    margin={{ horizontal: 'hair' }}
-  />
+  <Button plain margin={{ horizontal: 'hair' }} {...props} />
 ))`
   text-align: center;
   font-weight: 600;
+  padding: ${({ theme }) => theme.global.edgeSize.small};
+  background: ${({ theme, active }) =>
+    active ? theme.global.colors.brand : 'transparent'};
+  color: ${({ theme }) => theme.global.colors.white};
+  &:hover {
+    background: ${({ theme }) => theme.global.colors.brand};
+  }
+  &:focus {
+    background: ${({ theme, active }) => theme.global.colors[active ? 'brand' : 'brand-dark']};
+  }
   height: ${getHeaderHeight('small')}px;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
     height: ${getHeaderHeight('medium')}px;
@@ -121,13 +158,6 @@ const Primary = styled(props => (
   @media (min-width: ${({ theme }) => theme.sizes.xxlarge.minpx}) {
     height: ${getHeaderHeight('xxlarge')}px;
   }
-  padding: 0 ${({ theme }) => theme.global.edgeSize.small};
-  background: ${({ theme, active }) =>
-    active ? theme.global.colors.brand : 'transparent'};
-  color: ${({ theme }) => theme.global.colors.white};
-  &:hover {
-    background: ${({ theme }) => theme.global.colors.brand};
-  }
 `;
 // prettier-ignore
 const Secondary = styled(props => <Button {...props} plain />)`
@@ -136,6 +166,9 @@ const Secondary = styled(props => <Button {...props} plain />)`
   text-decoration: ${({ active }) => (active ? 'underline' : 'none')};
   background: transparent;
   &:hover {
+    text-decoration: underline;
+  }
+  &:focus {
     text-decoration: underline;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
@@ -147,6 +180,7 @@ const Secondary = styled(props => <Button {...props} plain />)`
 
 const IconImg = styled(Img)`
   vertical-align: middle;
+  max-height: 100%;
 `;
 const IconImgHelper = styled.div`
   display: inline-block;
@@ -177,7 +211,6 @@ function Header({ nav, navHome, navPage, path }) {
       : paths.length > 0 && paths[1];
   const pagesPrimary = filter(pagesArray, p => p.nav === PRIMARY);
   const pagesSecondary = filter(pagesArray, p => p.nav === SECONDARY);
-
   return (
     <ResponsiveContext.Consumer>
       {size => (
@@ -187,39 +220,63 @@ function Header({ nav, navHome, navPage, path }) {
             alignContent="end"
             fill
           >
-            {(isMinSize(size, 'medium') || !showSearch) && (
-              <Box flex={{ shrink: 0 }}>
+            {(isMinSize(size, 'large') || !showSearch) && (
+              <BrandWrap>
                 <Brand
                   onClick={() => navHome()}
-                  label={<FormattedMessage {...commonMessages.appTitle} />}
+                  active={contentType === ''}
+                  label={
+                    <Box direction="row" fill="vertical" align="center">
+                      <LogoWrap>
+                        <IconImg src={ICONS.LOGO} alt="" />
+                      </LogoWrap>
+                      <TitleWrap>
+                        <FormattedMessage {...commonMessages.appTitle} />
+                      </TitleWrap>
+                    </Box>
+                  }
                 />
-              </Box>
+              </BrandWrap>
             )}
             {isMaxSize(size, 'medium') && (
-              <Box direction="row" justify="end" fill="vertical">
+              <Box
+                direction="row"
+                justify="end"
+                fill={showSearch ? true : 'vertical'}
+                flex={{ grow: 0 }}
+              >
                 {!showSearch && (
-                  <SearchButton
-                    plain
-                    onClick={() => setShowSearch(!showSearch)}
-                    label={<SearchIcon color="white" />}
-                  />
+                  <Box flex={false} style={{ width: '40px' }}>
+                    <MenuButton
+                      onClick={() => {
+                        setShowMenu(false);
+                        setShowSearch(!showSearch);
+                      }}
+                      label={<SearchIcon color="white" size="medium" />}
+                    />
+                  </Box>
                 )}
                 {showSearch && (
                   <NavSearchSmall>
-                    <Search onClose={() => setShowSearch(false)} />
+                    <Search onClose={() => setShowSearch(false)} stretch />
                   </NavSearchSmall>
                 )}
-                <MenuButton
-                  plain
-                  onClick={() => setShowMenu(!showMenu)}
-                  label={
-                    showMenu ? (
-                      <MenuOpen color="white" />
-                    ) : (
-                      <Menu color="white" />
-                    )
-                  }
-                />
+                <Box flex={false} style={{ width: '40px' }}>
+                  <MenuButton
+                    plain
+                    onClick={() => {
+                      setShowSearch(false);
+                      setShowMenu(!showMenu);
+                    }}
+                    label={
+                      showMenu ? (
+                        <MenuOpen color="white" />
+                      ) : (
+                        <Menu color="white" />
+                      )
+                    }
+                  />
+                </Box>
               </Box>
             )}
             {isMinSize(size, 'large') && (
@@ -268,6 +325,7 @@ function Header({ nav, navHome, navPage, path }) {
                 fill="vertical"
                 pad={{ horizontal: 'small' }}
                 margin={{ left: 'auto' }}
+                flex={{ shrink: 0 }}
               >
                 <NavSecondary justify="end">
                   {pagesSecondary.map((p, index) => (
@@ -287,10 +345,9 @@ function Header({ nav, navHome, navPage, path }) {
                 </NavSecondary>
                 <NavSearch justify="end">
                   {!showSearch && (
-                    <Button
+                    <SearchButton
+                      icon={<SearchIcon color="white" />}
                       onClick={() => setShowSearch(true)}
-                      icon={<SearchIcon size="xlarge" color="white" />}
-                      style={{ textAlign: 'center' }}
                     />
                   )}
                   {showSearch && (
@@ -303,15 +360,18 @@ function Header({ nav, navHome, navPage, path }) {
           {isMaxSize(size, 'medium') && showMenu && (
             <Layer
               full="horizontal"
-              margin={{ top: '52px' }}
+              margin={{ top: '50px' }}
               onClickOutside={() => setShowMenu(false)}
               responsive={false}
               modal={false}
               animate={false}
-              background="black"
               position="top"
             >
-              <Box background="black">
+              <Box
+                background="brand-2"
+                elevation="medium"
+                style={{ borderTop: '1px solid white' }}
+              >
                 <Secondary
                   onClick={() => {
                     setShowMenu(false);

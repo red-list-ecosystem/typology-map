@@ -7,76 +7,105 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
-import { Box, Button, Text, ResponsiveContext } from 'grommet';
+import { Box, Text, ResponsiveContext } from 'grommet';
 import styled from 'styled-components';
-
 import { isMinSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
 
-const StyledButton = styled(Button)`
-  background: ${({ theme }) => theme.global.colors.white};
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  &:hover {
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+import ButtonCard from 'components/ButtonCard';
+
+const Styled = styled(p => <Box responsive={false} align="start" {...p} />)`
+  position: relative;
+  padding: ${({ theme }) => theme.global.edgeSize.xsmall};
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    padding: ${({ theme }) => theme.global.edgeSize.xsmall};
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+    padding: ${({ theme }) => theme.global.edgeSize.ms};
   }
 `;
+
+const Label = styled(Text)`
+  font-weight: 600;
+`;
+
+const IconWrap = styled(p => <Box align="center" flex={false} {...p} />)`
+  min-width: 100px;
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    width: 100%;
+    padding: ${({ theme }) => theme.global.edgeSize.ms} 0;
+  }
+`;
+
+const ChildLabel = styled(p => <Text size="small" {...p} />)``;
+
+const ChildLabelNo = styled(ChildLabel)``;
+
+const getCardBasis = size => {
+  if (isMinSize(size, 'large')) return '1/4';
+  if (isMinSize(size, 'medium')) return '1/3';
+  return 'auto';
+};
 
 export function CardRealm({ onCardClick, label, realm, icon, ...rest }) {
   return (
     <ResponsiveContext.Consumer>
       {size => (
-        <Box
-          basis={isMinSize(size, 'large') ? '1/4' : 'auto'}
-          fill={isMinSize(size, 'large') ? false : 'horizontal'}
-          responsive={false}
-          pad="small"
-          align="start"
-          style={{ position: 'relative' }}
+        <Styled
+          basis={getCardBasis(size)}
+          fill={isMinSize(size, 'medium') ? false : 'horizontal'}
           {...rest}
         >
-          <StyledButton onClick={onCardClick} fill plain>
+          <ButtonCard onClick={onCardClick}>
             <Box
               fill
-              margin={{
-                top: 'xsmall',
-                bottom: 'small',
-              }}
-              pad={{
-                horizontal: 'small',
-              }}
-              direction={isMinSize(size, 'large') ? 'column' : 'row'}
-              gap={isMinSize(size, 'large') ? 'hair' : 'small'}
-              align={isMinSize(size, 'large') ? 'start' : 'center'}
+              margin={{ vertical: 'xsmall' }}
+              pad={{ horizontal: 'small' }}
+              direction={isMinSize(size, 'medium') ? 'column' : 'row'}
+              gap={isMinSize(size, 'medium') ? 'hair' : 'small'}
+              align={isMinSize(size, 'medium') ? 'start' : 'center'}
+              flex={{ shrink: 0 }}
             >
-              <Box
-                align="center"
-                fill={isMinSize(size, 'large') ? 'horizontal' : false}
-              >
+              <IconWrap fill={isMinSize(size, 'medium') ? 'horizontal' : false}>
                 {icon}
-              </Box>
-              <Box>
-                <h4>{label}</h4>
-                <Box direction="row" gap="xsmall">
-                  <Text>{realm.biomeNo}</Text>
-                  <FormattedMessage
-                    {...commonMessages[
-                      realm.biomeNo === 1 ? 'biome' : 'biomes'
-                    ]}
-                  />
-                </Box>
-                <Box direction="row" gap="xsmall">
-                  <Text>{realm.groupNo}</Text>
-                  <FormattedMessage
-                    {...commonMessages[
-                      realm.groupNo === 1 ? 'group' : 'groups'
-                    ]}
-                  />
+              </IconWrap>
+              <Box
+                flex={isMinSize(size, 'medium')}
+                pad={{
+                  horizontal: 'small',
+                  vertical: 'small',
+                }}
+                justify="between"
+                fill={isMinSize(size, 'medium') ? 'horizontal' : false}
+              >
+                <Label>{label}</Label>
+                <Box pad={{ bottom: 'small' }}>
+                  <Box direction="row" gap="xsmall">
+                    <ChildLabelNo>{realm.biomeNo}</ChildLabelNo>
+                    <ChildLabel>
+                      <FormattedMessage
+                        {...commonMessages[
+                          realm.biomeNo === 1 ? 'biome' : 'biomes'
+                        ]}
+                      />
+                    </ChildLabel>
+                  </Box>
+                  <Box direction="row" gap="xsmall">
+                    <ChildLabelNo>{realm.groupNo}</ChildLabelNo>
+                    <ChildLabel>
+                      <FormattedMessage
+                        {...commonMessages[
+                          realm.groupNo === 1 ? 'group' : 'groups'
+                        ]}
+                      />
+                    </ChildLabel>
+                  </Box>
                 </Box>
               </Box>
             </Box>
-          </StyledButton>
-        </Box>
+          </ButtonCard>
+        </Styled>
       )}
     </ResponsiveContext.Consumer>
   );

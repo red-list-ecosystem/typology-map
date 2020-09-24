@@ -12,6 +12,10 @@ export default defineMessages({
     id: `${scope}.appTitle`,
     defaultMessage: 'Global Ecosystem Typology',
   },
+  metaDescription: {
+    id: `${scope}.metaDescription`,
+    defaultMessage: 'Global Ecosystem Typology',
+  },
   realmSelect: {
     id: `${scope}.realmSelect`,
     defaultMessage: 'Select a Realm',
@@ -96,6 +100,10 @@ export default defineMessages({
     id: `${scope}.page_feedback`,
     defaultMessage: 'Feedback',
   },
+  page_privacy: {
+    id: `${scope}.page_privacy`,
+    defaultMessage: 'Privacy policy',
+  },
   imageCreditBy: {
     id: `${scope}.imageCreditBy`,
     defaultMessage: 'Image by: ',
@@ -132,6 +140,10 @@ export default defineMessages({
     id: `${scope}.occurrence_minor`,
     defaultMessage: 'Minor',
   },
+  partner_0: {
+    id: `${scope}.partner_0`,
+    defaultMessage: 'IUCN Red List of Ecosystems',
+  },
   partner_1: {
     id: `${scope}.partner_1`,
     defaultMessage: 'International Union for Conservation of Nature',
@@ -147,6 +159,10 @@ export default defineMessages({
   partner_4: {
     id: `${scope}.partner_4`,
     defaultMessage: 'University of New South Wales',
+  },
+  partner_0_url: {
+    id: `${scope}.partner_0_url`,
+    defaultMessage: 'https://iucnrle.org/',
   },
   partner_1_url: {
     id: `${scope}.partner_1_url`,
@@ -164,5 +180,21 @@ export default defineMessages({
   partner_4_url: {
     id: `${scope}.partner_4_url`,
     defaultMessage: 'https://www.unsw.edu.au/',
+  },
+  requireConsent: {
+    id: `${scope}.requireConsent`,
+    defaultMessage: 'Please {showConsentLink} to view the feedback form.',
+  },
+  showConsentLink: {
+    id: `${scope}.showConsentLink`,
+    defaultMessage: 'allow third-party services and cookies',
+  },
+  relatedHintTrans: {
+    id: `${scope}.relatedHintTrans`,
+    defaultMessage: 'See the {count} transitional realms for related biomes',
+  },
+  relatedHintCore: {
+    id: `${scope}.relatedHintCore`,
+    defaultMessage: 'See the {count} core realms for related biomes',
   },
 });

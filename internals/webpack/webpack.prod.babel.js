@@ -125,23 +125,23 @@ module.exports = require('./webpack.base.babel')({
 
     new WebpackPwaManifest({
       name: 'Global Ecosystem Typology',
-      short_name: 'Global Ecosystem Typology',
-      description: 'Global Ecosystem Typology',
-      background_color: '#fafafa',
-      theme_color: '#b1624d',
+      short_name: 'Ecosystem Typology',
+      description: "A Global Typology for Earth's Ecosystems",
+      background_color: '#ffffff',
+      theme_color: '#000000',
       inject: true,
       ios: true,
-      // icons: [
-      //   {
-      //     src: path.resolve('app/images/icon-512x512.png'),
-      //     sizes: [72, 96, 128, 144, 192, 384, 512],
-      //   },
-      //   {
-      //     src: path.resolve('app/images/icon-512x512.png'),
-      //     sizes: [120, 152, 167, 180],
-      //     ios: true,
-      //   },
-      // ],
+      icons: [
+        {
+          src: path.resolve('app/images/icon-256x256.png'),
+          sizes: [72, 96, 128, 144, 192, 256],
+        },
+        {
+          src: path.resolve('app/images/icon-256x256.png'),
+          sizes: [120, 152, 167, 180],
+          ios: true,
+        },
+      ],
     }),
 
     new HashedModuleIdsPlugin({

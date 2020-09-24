@@ -19,17 +19,16 @@ const WrapGrid = styled.div`
 
 const Label = styled.h4`
   text-transform: uppercase;
-  margin-top: ${({ theme }) => theme.global.edgeSize.medium};
-  margin-bottom: 0;
+  margin: ${({ theme }) => theme.global.edgeSize.small} 0;
 `;
 
 function NavGridRealms({ label, items, itemClick, locale, type }) {
   /* eslint-disable react/no-array-index-key */
   return (
     <div>
-      <Label>{label}</Label>
+      <Label>{`${items.length} ${label}`}</Label>
       <WrapGrid>
-        <Box direction="row" wrap>
+        <Box direction="row" wrap margin={{ bottom: 'large' }}>
           {items &&
             items.map(r => (
               <CardRealm

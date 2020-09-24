@@ -4,7 +4,7 @@ import { Header } from 'grommet';
 import { getHeaderHeight } from 'utils/responsive';
 
 export default styled(props => (
-  <Header {...props} align="start" pad={{ horizontal: 'medium' }} gap="none" />
+  <Header align="start" gap="none" elevation="medium" {...props} />
 ))`
   position: fixed;
   top: 0;
@@ -15,10 +15,13 @@ export default styled(props => (
   background: ${({ theme }) => theme.global.colors.header.background};
   /* responsive height */
   height: ${getHeaderHeight('small')}px;
+  padding-left: ${({ theme }) => theme.global.edgeSize.xsmall};
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    padding-left: ${({ theme }) => theme.global.edgeSize.medium};
     height: ${getHeaderHeight('medium')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+    padding: 0 ${({ theme }) => theme.global.edgeSize.medium};
     height: ${getHeaderHeight('large')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.xxlarge.minpx}) {

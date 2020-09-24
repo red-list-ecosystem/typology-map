@@ -1,10 +1,9 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
-import { Box, Text } from 'grommet';
+import { injectIntl, intlShape } from 'react-intl';
+import { Box } from 'grommet';
 
 import commonMessages from 'messages';
-import messages from './messages';
 
 import NavOptionGroup from './NavOptionGroup';
 
@@ -17,7 +16,6 @@ export function SearchResults({
   activeResult,
   setActiveResult,
   maxResult,
-  search,
   intl,
 }) {
   const [focus, setFocus] = useState(false);
@@ -45,14 +43,8 @@ export function SearchResults({
       document.removeEventListener('keydown', onKey, false);
     };
   }, [activeResult, maxResult]);
-  const total = realms.length + biomes.length + groups.length;
   return (
-    <Box overflow="auto" elevation="small" background="white">
-      {total === 0 && search.trim().length > 2 && (
-        <Text margin="small">
-          <FormattedMessage {...messages.noResults} />
-        </Text>
-      )}
+    <Box overflow="auto">
       {realms.length > 0 && (
         <NavOptionGroup
           label={intl.formatMessage(commonMessages.realms)}
@@ -105,7 +97,6 @@ SearchResults.propTypes = {
   biomes: PropTypes.array,
   onClose: PropTypes.func,
   onSelect: PropTypes.func,
-  search: PropTypes.string,
   activeResult: PropTypes.number,
   maxResult: PropTypes.number,
   intl: intlShape.isRequired,

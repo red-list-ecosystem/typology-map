@@ -8,7 +8,7 @@
 
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-// import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import { Helmet } from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -31,21 +31,27 @@ import {
 import {
   selectShowDisclaimer,
   selectRouterPathNamed,
+  selectFullscreenImage,
 } from 'containers/App/selectors';
 
 import RouteHome from 'containers/RouteHome/Loadable';
 import RoutePage from 'containers/RoutePage/Loadable';
 import RouteExploreOverview from 'containers/RouteExploreOverview/Loadable';
-import RouteExplore from 'containers/RouteExplore/Loadable';
+import RouteExplore from 'containers/RouteExplore';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import MapContainer from 'containers/MapContainer';
 import Header from 'containers/Header';
+import FullscreenImage from 'containers/FullscreenImage';
 import Disclaimer from 'components/Disclaimer';
+import CookieConsent from 'containers/CookieConsent';
+
 import { getHeaderHeight } from 'utils/responsive';
 
 import { ROUTES, PAGES } from 'config';
 import GlobalStyle from 'global-styles';
 import { appLocales } from 'i18n';
+
+import commonMessages from 'messages';
 
 import ScrollToTop from './ScrollToTop';
 
@@ -76,7 +82,9 @@ function App({
   showDisclaimer,
   onDismissDisclaimer,
   onNavigateAbout,
+  fullscreenImage,
   path,
+  intl,
 }) {
   useInjectReducer({ key: 'global', reducer });
   useInjectSaga({ key: 'default', saga });
@@ -86,15 +94,20 @@ function App({
   }, []);
   const groupId =
     path.route === ROUTES.EXPLORE && path.level === 'groups' ? path.id : null;
+
   return (
     <Grommet theme={theme}>
       <AppWrapper>
         <Helmet
-          titleTemplate="%s - Global Ecosystem Typology"
-          defaultTitle="Global Ecosystem Typology"
+          titleTemplate={`%s - ${intl.formatMessage(commonMessages.appTitle)}`}
+          defaultTitle={intl.formatMessage(commonMessages.appTitle)}
         >
-          <meta name="description" content="" />
+          <meta
+            name="description"
+            content={intl.formatMessage(commonMessages.metaDescription)}
+          />
         </Helmet>
+        <CookieConsent />
         {showDisclaimer && (
           <Disclaimer
             onDismiss={() => onDismissDisclaimer()}
@@ -139,6 +152,7 @@ function App({
               <Route path="" component={NotFoundPage} />
             </Switch>
           </ScrollToTop>
+          {fullscreenImage && <FullscreenImage config={fullscreenImage} />}
         </Content>
         <GlobalStyle />
       </AppWrapper>
@@ -159,11 +173,14 @@ App.propTypes = {
   onNavigateAbout: PropTypes.func,
   showDisclaimer: PropTypes.bool,
   path: PropTypes.object,
+  fullscreenImage: PropTypes.object,
+  intl: intlShape.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
   showDisclaimer: state => selectShowDisclaimer(state),
   path: state => selectRouterPathNamed(state),
+  fullscreenImage: state => selectFullscreenImage(state),
 });
 
 export function mapDispatchToProps(dispatch) {
@@ -183,4 +200,4 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-export default compose(withConnect)(App);
+export default compose(withConnect)(injectIntl(App));

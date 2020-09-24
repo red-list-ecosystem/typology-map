@@ -10,7 +10,7 @@ import React from 'react';
 import { Box } from 'grommet';
 
 function AsideNavSection({ ...props }) {
-  return <Box margin={{ top: 'large' }} {...props} />;
+  return <Box margin={{ top: 'large' }} flex={{ shrink: 0 }} {...props} />;
 }
 
 export default AsideNavSection;

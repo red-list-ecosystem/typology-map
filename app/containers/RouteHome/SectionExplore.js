@@ -1,5 +1,5 @@
 /*
- * Intro
+ * SectionExplore
  *
  */
 
@@ -10,21 +10,15 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import NavGridRealms from 'components/NavGridRealms';
 
 import commonMessages from 'messages';
+import SectionTitle from 'components/styled/SectionTitle';
+import SectionInner from 'components/styled/SectionInner';
+import SectionOuter from 'components/styled/SectionOuter';
+import SectionTeaser from 'components/styled/SectionTeaser';
+
 import messages from './messages';
 
-import SectionTitle from './SectionTitle';
-import SectionTeaser from './SectionTeaser';
-import SectionInner from './SectionInner';
-import SectionOuter from './SectionOuter';
-
-export function SectionExplore({
-  intl,
-  locale,
-  realms,
-  navRealm,
-  title,
-  teaser,
-}) {
+export function SectionExplore({ intl, realms, navRealm, title, teaser }) {
+  const { locale } = intl;
   return (
     <SectionOuter background="light-2">
       <SectionInner>
@@ -34,20 +28,24 @@ export function SectionExplore({
         <SectionTeaser>
           {teaser || <FormattedMessage {...messages.teaserSectionExplore} />}
         </SectionTeaser>
-        <NavGridRealms
-          label={intl.formatMessage(commonMessages.realmsCore)}
-          items={realms && realms.filter(r => r.type === 'core')}
-          itemClick={id => navRealm(id)}
-          locale={locale}
-          type="core"
-        />
-        <NavGridRealms
-          label={intl.formatMessage(commonMessages.realmsTrans)}
-          items={realms && realms.filter(r => r.type === 'trans')}
-          itemClick={id => navRealm(id)}
-          locale={locale}
-          type="trans"
-        />
+        {realms && (
+          <NavGridRealms
+            label={intl.formatMessage(commonMessages.realmsCore)}
+            items={realms && realms.filter(r => r.type === 'core')}
+            itemClick={id => navRealm(id)}
+            locale={locale}
+            type="core"
+          />
+        )}
+        {realms && (
+          <NavGridRealms
+            label={intl.formatMessage(commonMessages.realmsTrans)}
+            items={realms && realms.filter(r => r.type === 'trans')}
+            itemClick={id => navRealm(id)}
+            locale={locale}
+            type="trans"
+          />
+        )}
       </SectionInner>
     </SectionOuter>
   );
@@ -56,7 +54,6 @@ export function SectionExplore({
 SectionExplore.propTypes = {
   navRealm: PropTypes.func,
   intl: intlShape.isRequired,
-  locale: PropTypes.string,
   title: PropTypes.string,
   teaser: PropTypes.string,
   realms: PropTypes.array,

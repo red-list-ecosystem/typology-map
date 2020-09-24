@@ -67,7 +67,7 @@ export function NavOptionGroup({
           >
             <Box
               direction="row"
-              align="end"
+              align="center"
               fill="horizontal"
               width="100%"
               gap="xsmall"

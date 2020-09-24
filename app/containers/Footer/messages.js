@@ -7,4 +7,9 @@ import { defineMessages } from 'react-intl';
 
 export const scope = 'rle.components.Footer';
 
-export default defineMessages({});
+export default defineMessages({
+  linkCookieConseentUpdate: {
+    id: `${scope}.linkCookieConseentUpdate`,
+    defaultMessage: 'Update privacy settings',
+  },
+});

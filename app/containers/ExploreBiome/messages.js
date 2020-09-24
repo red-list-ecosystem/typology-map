@@ -8,4 +8,9 @@ import { defineMessages } from 'react-intl';
 
 export const scope = 'app.containers.ExploreBiome';
 
-export default defineMessages({});
+export default defineMessages({
+  metaTitle: {
+    id: `${scope}.metaTitle`,
+    defaultMessage: 'Biome: {biome}',
+  },
+});

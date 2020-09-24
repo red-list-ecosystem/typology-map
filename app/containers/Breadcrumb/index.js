@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import styled from 'styled-components';
 
 import { Box, Button, Text } from 'grommet';
-import { FormNext } from 'grommet-icons';
+import { Next } from 'components/Icons';
 
 import { navigate } from 'containers/App/actions';
 
@@ -15,30 +15,29 @@ import messages from './messages';
 // prettier-ignore
 const Styled = styled(Box)``;
 
-const StyledButton = styled(props => <Button {...props} plain />)`
+const StyledButton = styled(props => <Button plain {...props} />)`
+  color: ${({ theme }) => theme.global.colors.black};
   &:hover {
     text-decoration: underline;
+    color: ${({ theme }) => theme.global.colors.brand};
+  }
+  &:focus {
+    text-decoration: underline;
+    color: ${({ theme }) => theme.global.colors.brand};
   }
 `;
 
-const TextAncestor = styled(Text)``;
 const TextActive = styled(Text)``;
-const TextInactive = styled(props => <Text color="dark-4" {...props} />)`
-  opacity: 0.8;
-`;
+const TextInactive = styled(props => <Text color="inactive" {...props} />)``;
 
 function Breadcrumb({ targets, level, navExplore }) {
   return (
     <Styled direction="row" wrap align="center" gap="xsmall">
       <StyledButton
         onClick={() => navExplore()}
-        label={
-          <TextAncestor>
-            <FormattedMessage {...messages.explore} />
-          </TextAncestor>
-        }
+        label={<FormattedMessage {...messages.explore} />}
       />
-      <FormNext />
+      <Next color="inactive" />
       {level === 0 && (
         <TextActive>
           <FormattedMessage {...commonMessages.realm} />
@@ -47,14 +46,10 @@ function Breadcrumb({ targets, level, navExplore }) {
       {level > 0 && targets && targets.length > 0 && (
         <StyledButton
           onClick={() => targets[0]()}
-          label={
-            <TextAncestor>
-              <FormattedMessage {...commonMessages.realm} />
-            </TextAncestor>
-          }
+          label={<FormattedMessage {...commonMessages.realm} />}
         />
       )}
-      <FormNext color={level < 2 ? 'dark-4' : 'dark'} />
+      <Next color="inactive" />
       {level < 1 && (
         <TextInactive>
           <FormattedMessage {...commonMessages.biome} />
@@ -68,14 +63,10 @@ function Breadcrumb({ targets, level, navExplore }) {
       {level > 1 && targets && targets.length > 1 && (
         <StyledButton
           onClick={() => targets[1]()}
-          label={
-            <TextAncestor>
-              <FormattedMessage {...commonMessages.biome} />
-            </TextAncestor>
-          }
+          label={<FormattedMessage {...commonMessages.biome} />}
         />
       )}
-      <FormNext color={level < 2 ? 'dark-4' : 'dark'} />
+      <Next color="inactive" />
       {level < 2 && (
         <TextInactive>
           <FormattedMessage {...commonMessages.group} />

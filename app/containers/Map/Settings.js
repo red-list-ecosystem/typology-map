@@ -19,7 +19,7 @@ import {
   Text,
   ResponsiveContext,
 } from 'grommet';
-import { Menu } from 'grommet-icons';
+import { Menu } from 'components/Icons';
 
 import { GROUP_LAYER_PROPERTIES } from 'config';
 
@@ -38,42 +38,60 @@ import { setOpacity, setBasemap, setCountry, setZoomToBounds } from './actions';
 
 import messages from './messages';
 
-const Styled = styled(props => (
-  <Box direction="row" {...props} elevation="xxsmall" />
-))`
+const Styled = styled(props => <Box direction="row" {...props} />)`
   position: absolute;
   z-index: 401;
-  bottom: 4px;
-  left: 0;
-  background: rgba(255, 255, 255, 0.9);
+  bottom: ${({ theme }) => theme.global.edgeSize.xsmall};
+  left: ${({ theme }) => theme.global.edgeSize.xsmall};
   height: ${({ theme, fs }) =>
     theme.dimensions.settings.height[fs ? 'large' : 'small']}px;
 `;
 
-const SettingsToggle = styled(props => <Button {...props} plain />)`
-  width: ${({ theme }) => theme.dimensions.settingsToggle.width}px;
+const PanelToggle = styled(props => <Button plain {...props} />)`
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  width: ${({ theme }) => theme.dimensions.panelToggle.width}px;
+  background: rgba(255, 255, 255, 0.85);
   height: ${({ theme, fs }) =>
     theme.dimensions.settings.height[fs ? 'large' : 'small']}px;
+  &:hover {
+    background: ${({ theme }) => theme.global.colors.white};
+  }
+`;
+const SettingsToggle = styled(props => <Button plain {...props} />)`
+  box-shadow: 2 0 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: ${({ theme }) => theme.dimensions.settingsToggle.width}px;
+  background: ${({ theme }) => theme.global.colors['light-grey-transparent']};
+  height: ${({ theme, fs }) =>
+    theme.dimensions.settings.height[fs ? 'large' : 'small']}px;
+  &:hover {
+    background: ${({ theme }) => theme.global.colors['light-grey']};
+  }
 `;
 
 const KeyColor = styled.span`
   display: inline-block;
   width: 14px;
   height: 14px;
+  margin: 2px 0;
   background: ${({ color }) => color};
   opacity: ${({ opacity }) => opacity};
 `;
 
 const IconWrap = styled(Box)`
-  width: ${({ theme }) => theme.dimensions.settingsToggle.width}px;
-  height: ${({ theme }) => theme.dimensions.settingsToggle.width}px;
+  width: ${({ theme }) => theme.dimensions.panelToggle.width}px;
+  height: ${({ theme }) => theme.dimensions.panelToggle.width}px;
   text-align: center;
   vertical-align: middle;
 `;
 
 const StyledInner = styled(props => (
   <Box {...props} pad={{ horizontal: 'small' }} />
-))``;
+))`
+  margin: 0 1px;
+  background: ${({ theme }) => theme.global.colors['light-grey-transparent']};
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+`;
 
 const MenuOpen = styled(Menu)`
   transform: rotate(90deg);
@@ -83,26 +101,18 @@ const WrapControl = styled(props => <Box justify="evenly" {...props} />)``;
 
 // const StyledRangeInput = styled(RangeInput)``;
 
-const BasemapToggle = styled(props => <Box {...props} direction="row" />)``;
-const BasemapButton = styled(props => <Button plain {...props} />)`
-  border-radius: 30px;
-  margin-right: ${({ theme }) => theme.global.edgeSize.xsmall};
-  padding: ${({ theme }) => theme.global.edgeSize.hair}
-    ${({ theme }) => theme.global.edgeSize.small};
-  background: ${({ theme, active }) =>
-    theme.global.colors[active ? 'dark-1' : 'white']};
-  color: ${({ theme, active }) =>
-    theme.global.colors.text[active ? 'dark' : 'light']};
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  opacity: 1 !important;
-`;
-
 const LayerTitle = styled(Text)`
   font-weight: 600;
 `;
+
+const Id = styled(LayerTitle)``;
+
 const SettingTitle = styled(props => (
-  <Text size="small" {...props} margin={{ vertical: 'xxsmall' }} />
-))``;
+  <Text size="xsmall" {...props} margin={{ bottom: 'xsmall' }} />
+))`
+  font-weight: 600;
+`;
+const TextLabel = styled(props => <Text size="xsmall" {...props} />)``;
 
 export function Settings({
   group,
@@ -119,33 +129,50 @@ export function Settings({
 }) {
   useInjectReducer({ key: 'map', reducer });
 
-  const [showSettings, setShowSettings] = useState(true);
+  const [showPanel, setShowPanel] = useState(true);
+  const [showSettings, setShowSettings] = useState(false);
   const { locale } = intl;
-
+  const satellite = basemap === 'satellite';
   return (
     <ResponsiveContext.Consumer>
       {size => (
         <Styled fs={fullscreen}>
-          <SettingsToggle
-            onClick={() => setShowSettings(!showSettings)}
+          <PanelToggle
+            onClick={() => setShowPanel(!showPanel)}
             fs={fullscreen}
             label={
               <Box alignContent="start" justify="center" direction="row" fill>
                 <IconWrap justify="center" direction="row" align="center">
-                  {!showSettings && <Menu />}
-                  {showSettings && <MenuOpen />}
+                  {!showPanel && <Menu color="black" />}
+                  {showPanel && <MenuOpen color="black" />}
                 </IconWrap>
               </Box>
             }
           />
-          {showSettings && (
-            <StyledInner justify="evenly">
+          {showPanel && (
+            <StyledInner>
               {fullscreen && (
-                <Box alignContent="center" pad={{ vertical: 'xsmall' }}>
+                <Box
+                  alignContent="center"
+                  pad={{ vertical: 'xsmall' }}
+                  direction="row"
+                  gap="xsmall"
+                  margin={{
+                    top: 'xsmall',
+                    bottom: 'xsmall',
+                  }}
+                >
+                  <Id>{group.id}</Id>
                   <LayerTitle>{group.title[locale]}</LayerTitle>
                 </Box>
               )}
-              <Box direction="row" gap="medium">
+              <Box
+                direction="row"
+                gap="medium"
+                margin={{
+                  top: !fullscreen ? 'small' : '0',
+                }}
+              >
                 <WrapControl>
                   <SettingTitle>
                     <FormattedMessage {...commonMessages.occurrence} />
@@ -162,7 +189,7 @@ export function Settings({
                           color={GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color}
                           opacity={opacity}
                         />
-                        <Text>
+                        <TextLabel>
                           <FormattedMessage
                             {...commonMessages[
                               `occurrence_${
@@ -170,12 +197,12 @@ export function Settings({
                               }`
                             ]}
                           />
-                        </Text>
+                        </TextLabel>
                       </Box>
                     ))}
                   </Box>
                 </WrapControl>
-                {isMinSize(size, 'large') && (
+                {isMinSize(size, 'large') && (fullscreen || showSettings) && (
                   <WrapControl>
                     <SettingTitle>
                       <FormattedMessage {...messages.settingOpacity} />
@@ -189,56 +216,60 @@ export function Settings({
                     />
                   </WrapControl>
                 )}
-                {isMinSize(size, 'large') && (
+                {isMinSize(size, 'large') && (fullscreen || showSettings) && (
                   <WrapControl>
                     <SettingTitle>
                       <FormattedMessage {...messages.settingBasemap} />
                     </SettingTitle>
-                    <BasemapToggle>
-                      <BasemapButton
-                        active={basemap === 'light'}
-                        disabled={basemap === 'light'}
-                        onClick={() => onSetBasemap('light')}
-                        label={
-                          <FormattedMessage {...messages.settingBasemapLight} />
-                        }
-                      />
-                      <BasemapButton
-                        active={basemap === 'satellite'}
-                        disabled={basemap === 'satellite'}
-                        onClick={() => onSetBasemap('satellite')}
-                        label={
-                          <FormattedMessage {...messages.settingBasemapSat} />
-                        }
-                      />
-                    </BasemapToggle>
+                    <CheckBox
+                      toggle
+                      checked={satellite}
+                      label={
+                        <TextLabel>
+                          {intl.formatMessage(
+                            messages[satellite ? 'settingOn' : 'settingOff'],
+                          )}
+                        </TextLabel>
+                      }
+                      onChange={() =>
+                        onSetBasemap(satellite ? 'light' : 'satellite')
+                      }
+                    />
                   </WrapControl>
                 )}
-                {isMinSize(size, 'large') && (
+                {isMinSize(size, 'large') && (fullscreen || showSettings) && (
                   <WrapControl>
                     <SettingTitle>
                       <FormattedMessage {...messages.settingCountries} />
                     </SettingTitle>
                     <CheckBox
+                      toggle
                       checked={country}
                       label={
-                        <FormattedMessage {...messages.settingCountriesShow} />
+                        <TextLabel>
+                          {intl.formatMessage(
+                            messages[country ? 'settingOn' : 'settingOff'],
+                          )}
+                        </TextLabel>
                       }
                       onChange={() => onSetCountry(!country)}
                     />
                   </WrapControl>
                 )}
-                {isMinSize(size, 'large') && (
+                {isMinSize(size, 'large') && (fullscreen || showSettings) && (
                   <WrapControl>
                     <SettingTitle>
                       <FormattedMessage {...messages.settingZoomToBounds} />
                     </SettingTitle>
                     <CheckBox
+                      toggle
                       checked={zoomToBounds}
                       label={
-                        <FormattedMessage
-                          {...messages.settingZoomToBoundsEnabled}
-                        />
+                        <TextLabel>
+                          {intl.formatMessage(
+                            messages[zoomToBounds ? 'settingOn' : 'settingOff'],
+                          )}
+                        </TextLabel>
                       }
                       onChange={() => onSetZoomToBounds(!zoomToBounds)}
                     />
@@ -246,6 +277,18 @@ export function Settings({
                 )}
               </Box>
             </StyledInner>
+          )}
+          {showPanel && isMinSize(size, 'large') && !fullscreen && (
+            <SettingsToggle
+              onClick={() => setShowSettings(!showSettings)}
+              label={
+                <Text size="xsmall" color="secondary">
+                  {intl.formatMessage(
+                    messages[showSettings ? 'settingsHide' : 'settingsShow'],
+                  )}
+                </Text>
+              }
+            />
           )}
         </Styled>
       )}

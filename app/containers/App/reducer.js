@@ -18,6 +18,7 @@ import {
   CONTENT_LOAD_SUCCESS,
   CONTENT_LOAD_ERROR,
   DISMISS_DISCLAIMER,
+  SET_FULLSCREEN_IMAGE,
 } from './constants';
 
 /* eslint-disable no-param-reassign */
@@ -66,6 +67,7 @@ export const initialState = {
   // // record error time
   // contentError: Object.assign({}, initialContent),
   showDisclaimer: true,
+  fullscreenImage: null,
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -111,6 +113,16 @@ const appReducer = (state = initialState, action) =>
         break;
       case DISMISS_DISCLAIMER:
         draft.showDisclaimer = false;
+        break;
+      case SET_FULLSCREEN_IMAGE:
+        // prettier-ignore
+        draft.fullscreenImage =
+          action.imageType && action.args
+            ? {
+              imageType: action.imageType,
+              ...action.args,
+            }
+            : null;
         break;
     }
   });

@@ -48,7 +48,14 @@ export const dimensions = {
   },
   realmIcons: {
     single: 68,
-    multi: 42,
+    multi: 56,
+  },
+  realmIconsSmall: {
+    single: 68,
+    multi: 48,
+  },
+  icons: {
+    size: 24,
   },
   topGraphic: {
     // by breakpoint
@@ -60,16 +67,19 @@ export const dimensions = {
     maxWidth: [700, 700, 700, 800, 900],
   },
   home: {
-    maxWidth: [700, 700, 1000, 1100, 1200],
+    maxWidth: [700, 900, 1000, 1100, 1200],
   },
   settings: {
     height: {
-      small: 75,
-      large: 110,
+      small: 62,
+      large: 100,
     },
   },
+  panelToggle: {
+    width: 41, // align with map controls (icon (17px) + (padding) 2*12px)
+  },
   settingsToggle: {
-    width: 40,
+    width: 60, // align with map controls (icon (17px) + (padding) 2*12px)
   },
 };
 
@@ -79,13 +89,22 @@ export const colors = {
   // also see https://github.com/grommet/grommet/wiki/Grommet-v2-theming-documentation
   // and https://github.com/grommet/grommet/blob/master/src/js/themes/base.js
   black: '#000000',
-  dark: '#999999',
+  dark: '#333333',
   white: '#ffffff',
   // active: '#ffffff',
-  brand: '#AD190F',
+  brand: '#C60000', // rle red
+  'brand-2': '#00183A', // rle blue
+  'brand-dark': '#8D0202', // rle red
+  'brand-2-dark': '#011126', // rle blue
   focus: '#333333',
   hover: '#AD190F',
   // placeholder: '#ffffff',
+  inactive: '#adadad',
+  secondary: '#6e787d',
+  grey: '#c4c8c9',
+  'dark-grey': '#6E787D',
+  'light-grey': '#F5F5F5',
+  'light-grey-transparent': 'rgba(245, 245, 245, 0.9)',
   text: {
     dark: '#ffffff', // on dark background
     light: '#000000', // on light background
@@ -102,19 +121,22 @@ export const colors = {
   //   S: '',
   // },
   header: {
-    background: '#000000',
+    background: '#00183A',
+  },
+  footer: {
+    background: '#011126',
   },
 };
 
 // grommet text
 const text = {
-  xxsmall: { size: '12px', height: '14px', maxWidth: '500px' },
+  xxsmall: { size: '12px', height: '15px', maxWidth: '500px' },
   xsmall: { size: '13px', height: '16px', maxWidth: '600px' },
   small: { size: '14px', height: '18px', maxWidth: '700px' },
-  medium: { size: '16px', height: '21px', maxWidth: '800px' },
+  medium: { size: '16px', height: '22px', maxWidth: '800px' },
   large: { size: '18px', height: '24px', maxWidth: '800px' },
   xlarge: { size: '22px', height: '30px', maxWidth: '800px' },
-  xxlarge: { size: '30px', height: '36px', maxWidth: '800px' },
+  xxlarge: { size: '40px', height: '48px', maxWidth: '800px' },
   xxxlarge: { size: '60px', height: '75px', maxWidth: '800px' },
 };
 // grommet paddings and margins
@@ -189,17 +211,12 @@ const theme = {
     },
     spacing: '18px',
     focus: {
-      // shadow or outline are required for accessibility
-      border: {
-        color: 'rgba(0, 0, 0, 0.7)',
-      },
+      // disable focus and instead deal with it in css
+      border: { color: 'transparent' },
       // not effective?
-      outline: { color: 'red', size: '1px' },
+      outline: { color: 'transparent' },
       // not effective?
-      shadow: {
-        color: 'rgb(255, 0, 0)',
-        size: '1px',
-      },
+      shadow: { color: 'transparent' },
     },
     drop: {
       zIndex: 1200,
@@ -207,34 +224,40 @@ const theme = {
   },
   rangeInput: {
     thumb: {
-      color: 'black',
+      color: colors['brand-2'],
+      extend: () => ({
+        width: '18px !important',
+        height: '18px !important',
+        border: 'none !important',
+        outline: 'none !important',
+        boxShadow: 'none !important',
+      }),
     },
     track: {
-      color: colors.dark,
-      //   height: '4px',
+      color: colors.grey,
+      height: '6px',
+      extend: () => ({
+        borderRadius: '3px',
+      }),
     },
   },
   checkBox: {
-    size: '20px',
+    size: '18px',
     gap: 'xsmall',
-    // CHECKED: The stroke color for the CheckBox icon, and the border when checked.
-    color: 'black',
-    // HOVER
-    hover: {
-      border: {
-        color: 'black',
+    toggle: {
+      extend: () => ({
+        background: colors.grey,
+        border: `1.5px solid ${colors.grey} !important`,
+      }),
+      size: '36px',
+      knob: {
+        extend: ({ checked }) => ({
+          background: `${colors[checked ? 'brand-2' : 'dark-grey']} !important`,
+          border: `2px solid ${
+            colors[checked ? 'brand-2' : 'dark-grey']
+          } !important`,
+        }),
       },
-    },
-    // UNCHECKED
-    border: {
-      // The border color when unchecked.
-      color: 'black',
-      // The border width when unchecked.
-      width: '1.5px',
-    },
-    check: {
-      radius: '4px',
-      thickness: '3px',
     },
   },
   layer: {

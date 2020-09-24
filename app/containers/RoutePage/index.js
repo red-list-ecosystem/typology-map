@@ -9,17 +9,23 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Helmet } from 'react-helmet';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import styled from 'styled-components';
+import { Box, Text } from 'grommet';
 
 import { PATHS, PAGES } from 'config';
 
 import { selectContentByKey } from 'containers/App/selectors';
 import { loadContent } from 'containers/App/actions';
+import { selectCookieConsent } from 'containers/CookieConsent/selectors';
+import { showCookieConsent } from 'containers/CookieConsent/actions';
 
+import ButtonTextBold from 'components/ButtonTextBold';
 import HTMLWrapper from 'components/HTMLWrapper';
 import PageBackground from 'components/PageBackground';
+import Footer from 'containers/Footer';
+import Partners from 'components/Partners';
 
 import { getHeaderHeight, getContentMaxWidth } from 'utils/responsive';
 
@@ -30,28 +36,34 @@ const Styled = styled.div`
   position: relative;
   z-index: 2;
 `;
+
+// prettier-ignore
 const ContentWrap = styled.div`
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
   position: relative;
-  top: 50vh;
+  margin-bottom: 150px;
   min-height: 100vh;
   background: ${({ theme }) => theme.global.colors['light-2']};
-  margin-top: -${getHeaderHeight('small')}px;
+  margin-top: ${250 - getHeaderHeight('small')}px;
   margin-right: auto;
   margin-left: auto;
-  margin-bottom: 50px;
   padding: ${({ theme }) => theme.global.edgeSize.small};
+  padding-bottom: ${({ theme, hasPad }) =>
+    hasPad ? '0' : theme.global.edgeSize.small};
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
-    margin-top: -${getHeaderHeight('medium')}px;
+    margin-top: ${250 - getHeaderHeight('medium')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
-    margin-top: -${getHeaderHeight('large')}px;
+    margin-top: ${250 - getHeaderHeight('large')}px;
     padding: ${({ theme }) => theme.global.edgeSize.large};
+    padding-bottom: ${({ theme, hasPad }) =>
+    hasPad ? '0' : theme.global.edgeSize.large};
   }
   @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
-    margin-top: -${getHeaderHeight('xlarge')}px;
+    margin-top: ${250 - getHeaderHeight('xlarge')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.xxlarge.minpx}) {
-    margin-top: -${getHeaderHeight('xxlarge')}px;
+    margin-top: ${250 - getHeaderHeight('xxlarge')}px;
   }
   max-width: ${getContentMaxWidth('small')}px;
   /* responsive height */
@@ -69,17 +81,27 @@ const ContentWrap = styled.div`
   }
 `;
 
-export function RoutePage({ match, onLoadContent, content, intl }) {
+export function RoutePage({
+  match,
+  onLoadContent,
+  content,
+  intl,
+  consent,
+  onShowCookieConsent,
+}) {
+  const config = PAGES[match.params.id];
   useEffect(() => {
     // kick off loading of page content
     onLoadContent(match.params.id);
   }, [match.params.id]);
-  const config = PAGES[match.params.id];
+  const partners = config.partners && config.partners === 'true';
+  const title = commonMessages[`page_${match.params.id}`]
+    ? intl.formatMessage(commonMessages[`page_${match.params.id}`])
+    : '';
   return (
     <Styled>
       <Helmet>
-        <title>RoutePage</title>
-        <meta name="description" content="Description of RoutePage" />
+        <title>{title}</title>
       </Helmet>
       <PageBackground
         image={{
@@ -91,21 +113,61 @@ export function RoutePage({ match, onLoadContent, content, intl }) {
             ),
         }}
       />
-      <ContentWrap>
-        {content && <HTMLWrapper innerhtml={content} />}
+      <ContentWrap hasPad={partners}>
+        {config.needsConsent === 'true' && consent !== 'true' && (
+          <HTMLWrapper
+            innerhtml={content}
+            classNames={['rle-html-page']}
+            needsConsentClass="rle-needs-consent"
+            consentPlaceholder={
+              <Box
+                background="light-3"
+                pad={{ horizontal: 'medium', vertical: 'ms' }}
+                margin={{ top: 'medium' }}
+                border
+                round="xsmall"
+              >
+                <Text style={{ fontStyle: 'italic' }}>
+                  <FormattedMessage
+                    {...commonMessages.requireConsent}
+                    values={{
+                      showConsentLink: (
+                        <ButtonTextBold
+                          onClick={() => onShowCookieConsent()}
+                          label={intl.formatMessage(
+                            commonMessages.showConsentLink,
+                          )}
+                        />
+                      ),
+                    }}
+                  />
+                </Text>
+              </Box>
+            }
+          />
+        )}
+        {(config.needsConsent !== 'true' ||
+          (consent === 'true' && content)) && (
+          <HTMLWrapper innerhtml={content} classNames={['rle-html-page']} />
+        )}
+        {content && partners && <Partners />}
       </ContentWrap>
+      <Footer elevated />
     </Styled>
   );
 }
 
 RoutePage.propTypes = {
   onLoadContent: PropTypes.func.isRequired,
+  onShowCookieConsent: PropTypes.func,
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  consent: PropTypes.string,
   match: PropTypes.object,
   intl: intlShape.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
+  consent: state => selectCookieConsent(state),
   content: (state, props) =>
     selectContentByKey(state, {
       contentType: 'pages',
@@ -118,6 +180,7 @@ function mapDispatchToProps(dispatch) {
     onLoadContent: id => {
       dispatch(loadContent('pages', id));
     },
+    onShowCookieConsent: () => dispatch(showCookieConsent(true)),
   };
 }
 

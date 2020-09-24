@@ -4,7 +4,7 @@
  *
  */
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -12,6 +12,7 @@ import { compose } from 'redux';
 import styled from 'styled-components';
 import L from 'leaflet';
 import 'leaflet.vectorgrid';
+import 'leaflet/dist/leaflet.css';
 // import { cloneDeep } from 'lodash/lang';
 
 import {
@@ -20,22 +21,32 @@ import {
   LAYERS,
   GROUP_LAYER_PROPERTIES,
   GROUP_LAYER_OPTIONS,
+  MAP_OPTIONS,
+  PAGES,
 } from 'config';
+
+import { navigatePage } from 'containers/App/actions';
+
+import { Plus, Minus } from 'components/Icons';
+import LoadingIndicator from 'components/LoadingIndicator';
+import MapControls from 'components/MapControls';
+import MapControl from 'components/MapControl';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
+import reducer from './reducer';
+import saga from './saga';
 
 import Settings from './Settings';
 import Attribution from './Attribution';
 
-import reducer from './reducer';
-import saga from './saga';
 import {
   selectLayers,
   selectBasemap,
   selectOpacity,
   selectCountry,
   selectZoomToBounds,
+  selectLayersLoading,
 } from './selectors';
 import { loadLayer } from './actions';
 
@@ -47,12 +58,17 @@ const Styled = styled.div`
   right: 0;
   left: 0;
 `;
-const MapContainer = styled.div`
+const LeafletContainer = styled.div`
   position: absolute;
   top: 0;
   bottom: 0;
   right: 0;
   left: 0;
+`;
+
+const LoadingWrap = styled(LeafletContainer)`
+  z-index: 999;
+  pointer-events: none;
 `;
 
 const getGeometryType = type =>
@@ -94,6 +110,8 @@ export function Map({
   opacity,
   country,
   zoomToBounds,
+  loading,
+  onNavPage,
 }) {
   useInjectReducer({ key: 'map', reducer });
   useInjectSaga({ key: 'map', saga });
@@ -103,15 +121,12 @@ export function Map({
   const basemapLayerGroupRef = useRef(null);
   const countryLayerGroupRef = useRef(null);
 
+  const [tilesLoading, setTilesLoading] = useState(false);
+  const [zoom, setZoom] = useState(MAP_OPTIONS.zoom);
+
   // init map
   useEffect(() => {
-    mapRef.current = L.map('ll-map', {
-      center: [30, 0],
-      zoom: 1,
-      minZoom: 1,
-      maxBounds: [[-90, -315], [90, 315]],
-      attributionControl: false,
-    });
+    mapRef.current = L.map('ll-map', MAP_OPTIONS);
     // make sure group overlays are always rendered on top of basemap
     mapRef.current.createPane('groupOverlay');
     mapRef.current.getPane('groupOverlay').style.zIndex = 600;
@@ -126,9 +141,9 @@ export function Map({
     groupLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
     countryLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
 
-    // mapRef.current.on('zoomend', event => {
-    //   console.log(mapRef.current.getZoom());
-    // });
+    mapRef.current.on('zoomend', () => {
+      setZoom(mapRef.current.getZoom());
+    });
 
     mapRef.current.scrollWheelZoom.disable();
   }, []);
@@ -140,6 +155,12 @@ export function Map({
       mapRef.current.scrollWheelZoom.disable();
     }
   }, [fullscreen]);
+
+  useEffect(() => {
+    if (mapRef.current.getZoom() !== zoom) {
+      mapRef.current.setZoom(zoom);
+    }
+  }, [zoom]);
 
   // change basemap
   useEffect(() => {
@@ -240,6 +261,9 @@ export function Map({
             opacity,
             pane: 'groupOverlay',
             ...GROUP_LAYER_OPTIONS.RASTER,
+          }).on({
+            loading: () => setTilesLoading(true),
+            load: () => setTilesLoading(false),
           }),
         );
       }
@@ -252,7 +276,7 @@ export function Map({
             [-parseInt(S || 85, 10), parseInt(E || 180, 10)],
           ];
         } else {
-          latlngs = [[85, -180], [-85, 180]];
+          latlngs = MAP_OPTIONS.defaultBounds;
         }
         mapRef.current.fitBounds(latlngs, {
           paddingBottomRight: [0, 40],
@@ -302,11 +326,60 @@ export function Map({
     }
   }, [group, layers]);
 
+  useEffect(() => {
+    // zoom to bounds when enabled
+    if (group && zoomToBounds) {
+      let latlngs;
+      const layer = layers[group.id];
+      if (group && group.layer && group.layer.extent) {
+        const { N, S, W, E } = group.layer.extent;
+        latlngs = [
+          [parseInt(N || 85, 10), -parseInt(W || 180, 10)],
+          [-parseInt(S || 85, 10), parseInt(E || 180, 10)],
+        ];
+      } else if (
+        layer &&
+        group &&
+        group.layer &&
+        (group.layer.type === 'geojson' || group.layer.type === 'topojson')
+      ) {
+        const jsonLayer = L.geoJSON(layer.data);
+        latlngs = jsonLayer.getBounds();
+      } else {
+        latlngs = MAP_OPTIONS.defaultBounds;
+      }
+      mapRef.current.fitBounds(latlngs, {
+        paddingBottomRight: [0, 40],
+      });
+    }
+  }, [zoomToBounds]);
+
   return (
     <Styled>
-      <MapContainer id="ll-map" />
+      <LeafletContainer id="ll-map" />
       {group && <Settings group={group} fullscreen={fullscreen} />}
-      <Attribution />
+      <Attribution navFeedback={() => onNavPage(PAGES.feedback.path)} />
+      {(tilesLoading || loading) && (
+        <LoadingWrap>
+          <LoadingIndicator />
+        </LoadingWrap>
+      )}
+      <MapControls position="left">
+        <MapControl
+          disabled={MAP_OPTIONS.maxZoom === zoom}
+          icon={
+            <Plus color={MAP_OPTIONS.maxZoom === zoom ? 'dark-4' : 'black'} />
+          }
+          onClick={() => setZoom(zoom + 1)}
+        />
+        <MapControl
+          disabled={MAP_OPTIONS.minZoom === zoom}
+          icon={
+            <Minus color={MAP_OPTIONS.minZoom === zoom ? 'dark-4' : 'black'} />
+          }
+          onClick={() => setZoom(zoom - 1)}
+        />
+      </MapControls>
     </Styled>
   );
 }
@@ -316,10 +389,12 @@ Map.propTypes = {
   group: PropTypes.object,
   fullscreen: PropTypes.bool,
   onLoadLayer: PropTypes.func,
+  onNavPage: PropTypes.func,
   basemap: PropTypes.string,
   opacity: PropTypes.number,
   country: PropTypes.bool,
   zoomToBounds: PropTypes.bool,
+  loading: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -328,6 +403,7 @@ const mapStateToProps = createStructuredSelector({
   basemap: state => selectBasemap(state),
   country: state => selectCountry(state),
   zoomToBounds: state => selectZoomToBounds(state),
+  loading: state => selectLayersLoading(state),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -335,6 +411,7 @@ function mapDispatchToProps(dispatch) {
     onLoadLayer: (key, config) => {
       dispatch(loadLayer(key, config));
     },
+    onNavPage: id => dispatch(navigatePage(id)),
   };
 }
 

@@ -13,7 +13,7 @@ import Markdown from 'react-remarkable';
 import commonMessages from 'messages';
 
 const Styled = styled(Box)`
-  position: absolute;
+  position: ${({ below }) => (below ? 'relative' : 'absolute')};
   right: 0;
   bottom: 0;
   opacity: 0.8;
@@ -37,31 +37,34 @@ const mdOptions = {
   linkTarget: '_blank',
 };
 
-function ImageInfo({ caption, credit, intl }) {
+function ImageInfo({ caption, credit, intl, below }) {
   return (
-    <Styled align="end">
-      {caption && (
-        <Caption className="rle-caption-markdown">
-          <Markdown options={mdOptions} source={caption} />
-        </Caption>
-      )}
-      {credit && (
-        <Credit className="rle-caption-markdown">
-          <Markdown
-            options={mdOptions}
-            source={`${intl.formatMessage(
-              commonMessages.imageCreditBy,
-            )} ${credit}`}
-          />
-        </Credit>
-      )}
-    </Styled>
+    <figcaption>
+      <Styled align="end" below={below}>
+        {caption && (
+          <Caption className="rle-caption-markdown">
+            <Markdown options={mdOptions} source={caption} />
+          </Caption>
+        )}
+        {credit && (
+          <Credit className="rle-caption-markdown">
+            <Markdown
+              options={mdOptions}
+              source={`${intl.formatMessage(
+                commonMessages.imageCreditBy,
+              )} ${credit}`}
+            />
+          </Credit>
+        )}
+      </Styled>
+    </figcaption>
   );
 }
 
 ImageInfo.propTypes = {
   credit: PropTypes.string,
   caption: PropTypes.string,
+  below: PropTypes.bool,
   intl: intlShape.isRequired,
 };
 
