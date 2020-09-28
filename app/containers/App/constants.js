@@ -38,6 +38,8 @@ export const CONTENT_READY = 'rle/App/CONTENT_READY';
 export const DISMISS_DISCLAIMER = 'rle/App/DISMISS_DISCLAIMER';
 export const SET_FULLSCREEN_IMAGE = 'rle/App/SET_FULLSCREEN_IMAGE';
 
+export const TOGGLE_DRAW = 'rle/App/TOGGLE_DRAW';
+
 export const PRIMARY = 1;
 export const SECONDARY = 2;
 export const FOOTER = 3;

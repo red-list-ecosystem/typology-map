@@ -76,6 +76,11 @@ export const selectLocale = createSelector(
   },
 );
 
+export const selectDrawActive = createSelector(
+  selectGlobal,
+  global => global.drawActive,
+);
+
 export const selectFullscreenImage = createSelector(
   selectGlobal,
   global => global.fullscreenImage,

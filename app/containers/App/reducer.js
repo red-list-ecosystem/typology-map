@@ -23,6 +23,7 @@ import {
   DISMISS_DISCLAIMER,
   SET_FULLSCREEN_IMAGE,
   RESET_GROUPS_QUERY,
+  TOGGLE_DRAW,
 } from './constants';
 
 /* eslint-disable no-param-reassign */
@@ -83,6 +84,8 @@ export const initialState = {
   groupsByArea: Object.assign({}, initialGroupsByArea),
   groupsByAreaQueried: Object.assign({}, initialGroupsByArea),
   groupsByAreaReady: Object.assign({}, initialGroupsByArea),
+  drawActive: false,
+  countrySelectActive: false,
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -165,6 +168,9 @@ const appReducer = (state = initialState, action) =>
           `${action.layerType}`,
         );
         draft.groupsByAreaQueried.groups[action.layerType] = action.time;
+        break;
+      case TOGGLE_DRAW:
+        draft.drawActive = action.active;
         break;
     }
   });

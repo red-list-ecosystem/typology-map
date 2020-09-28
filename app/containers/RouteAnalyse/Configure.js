@@ -46,7 +46,17 @@ export function Configure({
   }, []);
 
   const { area, realm, biome, occurrence } = queryArgs;
+  // must be a closed area (first point === last point)
   const hasArea = area && area.trim() !== '' && testArea(area);
+  // but we want an open area in the text area
+  // prettier-ignore
+  const areaOpen = hasArea
+    ? area
+      .trim()
+      .split(',')
+      .slice(0, -1)
+      .join(',')
+    : '';
   // figure out objects from any set filter
   const realmObject = realms && realms.find(r => r.id === realm);
   const biomeObject = biomes && biomes.find(b => b.id === biome);
@@ -72,13 +82,21 @@ export function Configure({
             <FormattedMessage {...messages.defineAreaFieldLabel} />
           </FieldLabel>
           <AreaInput
-            area={area}
-            onSubmit={value =>
-              updateQuery({
-                ...queryArgs,
-                area: value,
-              })
-            }
+            area={areaOpen}
+            onSubmit={value => {
+              const points = value.split(',');
+              if (points[0] === points[points.length - 1]) {
+                updateQuery({
+                  ...queryArgs,
+                  area: value,
+                });
+              } else {
+                updateQuery({
+                  ...queryArgs,
+                  area: `${value}, ${points[0]}`,
+                });
+              }
+            }}
           />
         </FieldWrap>
       </AsideNavSection>
@@ -166,6 +184,7 @@ export function Configure({
 
 Configure.propTypes = {
   onQueryGroups: PropTypes.func,
+  onToggleDraw: PropTypes.func,
   updateQuery: PropTypes.func,
   queryArgs: PropTypes.object,
   realms: PropTypes.array,

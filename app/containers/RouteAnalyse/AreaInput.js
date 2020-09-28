@@ -4,13 +4,17 @@
  *
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { injectIntl, intlShape } from 'react-intl';
 import { Button, TextInput } from 'grommet';
 import styled from 'styled-components';
 
 import { Close } from 'components/Icons';
+
+import { toggleDraw } from 'containers/App/actions';
 
 import messages from './messages';
 
@@ -37,13 +41,26 @@ const CloseButton = styled(p => <Button plain {...p} />)`
   }
 `;
 
-export function AreaInput({ area, onSubmit, intl }) {
+export function AreaInput({ area, onSubmit, intl, onToggleDraw }) {
+  useEffect(() => {
+    onToggleDraw(true);
+    return () => onToggleDraw(false);
+  }, []);
+
   return (
     <TextInputWrap>
       <AreaTextInput
         value={area}
         placeholder={intl.formatMessage(messages.defineAreaFieldPlaceholder)}
-        onChange={e => onSubmit(e.target.value)}
+        onChange={e => {
+          const cursor = e.target.selectionStart;
+          const element = e.target;
+          window.requestAnimationFrame(() => {
+            element.selectionStart = cursor;
+            element.selectionEnd = cursor;
+          });
+          onSubmit(e.target.value);
+        }}
       />
       {area && (
         <CloseButton
@@ -57,8 +74,21 @@ export function AreaInput({ area, onSubmit, intl }) {
 
 AreaInput.propTypes = {
   onSubmit: PropTypes.func,
+  onToggleDraw: PropTypes.func,
   area: PropTypes.string,
   intl: intlShape.isRequired,
 };
 
-export default injectIntl(AreaInput);
+export function mapDispatchToProps(dispatch) {
+  return {
+    onToggleDraw: active => dispatch(toggleDraw(active)),
+  };
+}
+
+const withConnect = connect(
+  null,
+  mapDispatchToProps,
+);
+
+// export default RouteExplore;
+export default compose(withConnect)(injectIntl(AreaInput));

@@ -1,7 +1,7 @@
 export const testArea = area => {
   const points = area.trim().split(',');
   return (
-    points.length > 3 && points[0].trim(0) === points[points.length - 1].trim()
+    points.length > 2 && points[0].trim(0) === points[points.length - 1].trim()
   );
 };
 

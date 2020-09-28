@@ -60,7 +60,7 @@ function AsideNavTypologyList({
               name={item.title[locale]}
               level={level}
               active={item.id === activeId}
-              hasInfo={infoItem}
+              hasInfo={!!infoItem}
             />
             {infoItem && (
               <ButtonInfo

@@ -127,7 +127,7 @@ function App({
         <Content>
           <MapContainer
             groupId={groupId}
-            expand={path.route === ROUTES.ANALYSE}
+            expandWithAside={path.route === ROUTES.ANALYSE}
           />
           <Switch>
             <Route

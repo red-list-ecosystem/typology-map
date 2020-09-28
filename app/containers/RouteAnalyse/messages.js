@@ -35,7 +35,7 @@ export default defineMessages({
   },
   defineAreaFieldPlaceholder: {
     id: `${scope}.defineAreaFieldPlaceholder`,
-    defaultMessage: 'Format: lon1 lat1,lon2 lat2,...,lon1 lat1',
+    defaultMessage: 'Format: lon1 lat1,lon2 lat2,...',
   },
   defineAreaFieldFormatHelp: {
     id: `${scope}.defineAreaFieldFormatHelp`,
