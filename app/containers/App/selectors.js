@@ -267,7 +267,9 @@ export const selectGroupsByAreaArgs = createSelector(
 export const selectGroupsByAreaAll = createSelector(
   selectGroupsByArea,
   selectGroups,
-  (data, groups) => {
+  selectBiomes,
+  selectRealms,
+  (data, groups, biomes, realms) => {
     let rGroups = [];
     let vGroups = [];
     if (groups && data.groups.raster) {
@@ -280,24 +282,26 @@ export const selectGroupsByAreaAll = createSelector(
         groups.find(g => g.id === d.layer_id),
       );
     }
-    return [...vGroups, ...rGroups];
-  },
-);
-export const selectGroupsByAreaFiltered = createSelector(
-  (state, args) => args,
-  selectGroupsByAreaAll,
-  selectBiomes,
-  (args, groups, biomes) => {
-    const { realm, biome } = args;
-    return groups.filter(g => {
-      if (biome && g.biome !== biome) {
-        return false;
+    const allGroups = [...vGroups, ...rGroups];
+    return allGroups.sort((a, b) => {
+      const biomeA = biomes && biomes.find(biome => biome.id === a.biome);
+      const realmA = realms && realms.find(r => r.id === biomeA.realm);
+      const biomeB = biomes && biomes.find(biome => biome.id === b.biome);
+      const realmB = realms && realms.find(r => r.id === biomeB.realm);
+      // if same biome, go by id
+      if (biomeA.id === biomeB.id) {
+        return a.id > b.id ? 1 : -1;
       }
-      const theBiome = g.biome && biomes && biomes.find(b => b.id === g.biome);
-      if (realm && theBiome.realm !== realm) {
-        return false;
+      // if different biome but same realm go by biome id
+      if (realmA.id === realmB.id) {
+        return biomeA.id > biomeB.id ? 1 : -1;
       }
-      return true;
+      // if different realm but same type, go by realm id
+      if (realmA.type === realmB.type) {
+        return realmA.id > realmB.id ? 1 : -1;
+      }
+      // if different realm and different type, go by type
+      return realmA.type === 'core' ? -1 : 1;
     });
   },
 );

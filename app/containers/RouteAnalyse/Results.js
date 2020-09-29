@@ -16,7 +16,7 @@ import { FormattedMessage, intlShape, injectIntl } from 'react-intl';
 import { GROUP_LAYER_PROPERTIES } from 'config';
 
 import {
-  selectGroupsByAreaFiltered,
+  selectGroupsByAreaAll,
   selectGroupsQueryReadyAll,
   selectGroupsByAreaArgs,
   selectActiveGroup,
@@ -35,19 +35,17 @@ import AsideNavLabel from 'components/AsideNavLabel';
 import LoadingIndicator from 'components/LoadingIndicator';
 import AsideNavSection from 'components/AsideNavSection';
 import Hint from 'components/Hint';
-import ButtonPrimary from 'components/ButtonPrimary';
 
 import commonMessages from 'messages';
 import messages from './messages';
 
-import { testArea, getRealmOptions, getBiomeOptions } from './utils';
+import { getOpenArea } from './utils';
 
-import TypologyFilter from './TypologyFilter';
 import StepTitle from './StepTitle';
 import FieldWrap from './FieldWrap';
 import FieldLabel from './FieldLabel';
-import AreaInput from './AreaInput';
-import OccurrenceInput from './OccurrenceInput';
+import ConfigureArea from './ConfigureArea';
+import ConfigureFilters from './ConfigureFilters';
 
 const Active = styled(p => (
   <Box justify="between" direction="row" align="center" {...p} />
@@ -77,16 +75,13 @@ const UpdateButton = styled(p => <Button plain {...p} />)`
   }
 `;
 
-const SubmitButton = styled(p => <ButtonPrimary {...p} />)``;
-
 export function Results({
   groups,
   queriesReady,
   onResetQuery,
   queryArgs,
+  queryArgsFromQuery,
   intl,
-  updateQuery,
-  onQueryGroups,
   realms,
   biomes,
   onSetActiveGroup,
@@ -96,15 +91,21 @@ export function Results({
   const [areaUpdate, setAreaUpdate] = useState(false);
   const [filterUpdate, setFilterUpdate] = useState(false);
   const { locale } = intl;
-  const { area, realm, biome, occurrence } = queryArgs;
+  let { area, realm, biome, occurrence } = queryArgs;
+
+  if (queriesReady && queryArgsFromQuery) {
+    /* eslint-disable prefer-destructuring */
+    area = queryArgsFromQuery.area;
+    realm = queryArgsFromQuery.realm;
+    biome = queryArgsFromQuery.biome;
+    occurrence = queryArgsFromQuery.occurrence;
+  }
+
   const realmObject = realms && realms.find(r => r.id === realm);
   const biomeObject = biomes && biomes.find(b => b.id === biome);
-  // figure out options from any other filters set
-  const realmOptions = getRealmOptions(realms, biomeObject);
-  const biomeOptions = getBiomeOptions(realms, biomes, realmObject);
 
   const hasFilters = realm || biome || occurrence;
-  const hasArea = area && area.trim() !== '' && testArea(area);
+
   const KeyColor = styled.span`
     display: inline-block;
     width: 14px;
@@ -119,111 +120,20 @@ export function Results({
       {(areaUpdate || filterUpdate) && (
         <Box pad={{ horizontal: 'small' }} flex={false}>
           {areaUpdate && (
-            <AsideNavSection margin={{ vertical: 'ms' }}>
-              <StepTitle>
-                <FormattedMessage {...messages.areaChange} />
-              </StepTitle>
-              <Hint>
-                <FormattedMessage {...messages.defineAreaInstructions} />
-              </Hint>
-              <FieldWrap margin={{ top: 'medium' }}>
-                <FieldLabel>
-                  <FormattedMessage {...messages.defineAreaFieldLabel} />
-                </FieldLabel>
-                <AreaInput
-                  area={area}
-                  onSubmit={value =>
-                    updateQuery({
-                      ...queryArgs,
-                      area: value,
-                    })
-                  }
-                />
-              </FieldWrap>
-            </AsideNavSection>
+            <ConfigureArea
+              queryArgs={queryArgs}
+              onSubmit={() => setAreaUpdate(false)}
+              onCancel={() => setAreaUpdate(false)}
+            />
           )}
           {filterUpdate && (
-            <AsideNavSection margin={{ vertical: 'ms' }}>
-              <StepTitle>
-                <FormattedMessage {...messages.filtersChange} />
-              </StepTitle>
-              <TypologyFilter
-                type="realms"
-                options={realmOptions}
-                active={realmObject}
-                onSelect={id => {
-                  updateQuery({
-                    ...queryArgs,
-                    realm: id,
-                  });
-                }}
-                onDismiss={() => {
-                  updateQuery({
-                    ...queryArgs,
-                    realm: '',
-                  });
-                }}
-              />
-              <TypologyFilter
-                type="biomes"
-                options={biomeOptions}
-                active={biomeObject}
-                onSelect={id => {
-                  updateQuery({
-                    ...queryArgs,
-                    biome: id,
-                  });
-                }}
-                onDismiss={() => {
-                  updateQuery({
-                    ...queryArgs,
-                    biome: '',
-                  });
-                }}
-              />
-              <FieldWrap margin={{ bottom: '0' }}>
-                <FieldLabel>
-                  <FormattedMessage {...messages.addFiltersByOccurrenceLabel} />
-                </FieldLabel>
-                <OccurrenceInput
-                  occurrence={occurrence}
-                  onSubmit={value =>
-                    updateQuery({
-                      ...queryArgs,
-                      occurrence: value,
-                    })
-                  }
-                />
-              </FieldWrap>
-            </AsideNavSection>
-          )}
-          {(filterUpdate || (areaUpdate && hasArea)) && (
-            <Box direction="row" gap="small" margin={{ top: 'small' }}>
-              <SubmitButton
-                disabled={!hasArea}
-                label={intl.formatMessage(messages.updateQueryLabel)}
-                onClick={() => {
-                  setAreaUpdate(false);
-                  setFilterUpdate(false);
-                  onQueryGroups({
-                    area: area.trim(),
-                    realm: realm && realm.trim() !== '' ? realm : null,
-                    biome: biome && biome.trim() !== '' ? biome : null,
-                    occurrence:
-                      occurrence && occurrence.trim() !== ''
-                        ? occurrence
-                        : null,
-                  });
-                }}
-              />
-              <UpdateButton
-                onClick={() => {
-                  setAreaUpdate(false);
-                  setFilterUpdate(false);
-                }}
-                label={<FormattedMessage {...messages.cancel} />}
-              />
-            </Box>
+            <ConfigureFilters
+              queryArgs={queryArgs}
+              realms={realms}
+              biomes={biomes}
+              onSubmit={() => setFilterUpdate(false)}
+              onCancel={() => setFilterUpdate(false)}
+            />
           )}
         </Box>
       )}
@@ -235,13 +145,15 @@ export function Results({
                 <StyledStepTitle>
                   <FormattedMessage {...messages.area} />
                 </StyledStepTitle>
-                <UpdateButton
-                  onClick={() => setAreaUpdate(true)}
-                  label={<FormattedMessage {...messages.areaChange} />}
-                />
+                {queriesReady && (
+                  <UpdateButton
+                    onClick={() => setAreaUpdate(true)}
+                    label={<FormattedMessage {...messages.areaChange} />}
+                  />
+                )}
               </StepTitleWrap>
               <FieldWrap>
-                <Text truncate>{area}</Text>
+                <Text truncate>{getOpenArea(area)}</Text>
               </FieldWrap>
             </AsideNavSection>
             <AsideNavSection margin={{ top: 'ms' }}>
@@ -249,14 +161,18 @@ export function Results({
                 <StyledStepTitle>
                   <FormattedMessage {...messages.filters} />
                 </StyledStepTitle>
-                <UpdateButton
-                  onClick={() => setFilterUpdate(true)}
-                  label={
-                    <FormattedMessage
-                      {...messages[hasFilters ? 'filtersChange' : 'filtersAdd']}
-                    />
-                  }
-                />
+                {queriesReady && (
+                  <UpdateButton
+                    onClick={() => setFilterUpdate(true)}
+                    label={
+                      <FormattedMessage
+                        {...messages[
+                          hasFilters ? 'filtersChange' : 'filtersAdd'
+                        ]}
+                      />
+                    }
+                  />
+                )}
               </StepTitleWrap>
               {!hasFilters && (
                 <Hint>
@@ -320,10 +236,12 @@ export function Results({
                 <StyledStepTitle size="large">
                   <FormattedMessage {...messages.queryResults} />
                 </StyledStepTitle>
-                <UpdateButton
-                  onClick={() => onResetQuery()}
-                  label={<FormattedMessage {...messages.resetQueryLabel} />}
-                />
+                {queriesReady && (
+                  <UpdateButton
+                    onClick={() => onResetQuery()}
+                    label={<FormattedMessage {...messages.resetQueryLabel} />}
+                  />
+                )}
               </StepTitleWrap>
               {queriesReady && groups.length === 0 && (
                 <Hint>
@@ -361,7 +279,7 @@ export function Results({
 Results.propTypes = {
   groups: PropTypes.array,
   queriesReady: PropTypes.bool,
-  // queryArgsFromQuery: PropTypes.object,
+  queryArgsFromQuery: PropTypes.object,
   queryArgs: PropTypes.object,
   onResetQuery: PropTypes.func,
   onSetActiveGroup: PropTypes.func,
@@ -378,8 +296,7 @@ const mapStateToProps = createStructuredSelector({
   queriesReady: state => selectGroupsQueryReadyAll(state),
   queryArgsFromQuery: state => selectGroupsByAreaArgs(state),
   activeGroup: state => selectActiveGroup(state),
-  groups: (state, { queryArgs }) =>
-    selectGroupsByAreaFiltered(state, queryArgs),
+  groups: state => selectGroupsByAreaAll(state),
 });
 
 function mapDispatchToProps(dispatch) {

@@ -1,6 +1,6 @@
 /**
  *
- * MapWrapper
+ * MapContainer
  *
  */
 
@@ -42,12 +42,13 @@ const Styled = styled(TopGraphic)`
     `}
 `;
 
-export function MapWrapper({
+export function MapContainer({
   typology,
   locale,
   groupId,
   expandWithAside,
   drawActive,
+  showQuery,
 }) {
   const [isMapExpanded, setIsMapExpanded] = useState(false);
 
@@ -65,6 +66,7 @@ export function MapWrapper({
             fullscreen={expandWithAside || isMapExpanded}
             locale={locale}
             drawActive={drawActive}
+            showQuery={showQuery}
           />
           {!expandWithAside && (
             <MapControls position="right">
@@ -86,12 +88,13 @@ export function MapWrapper({
   );
 }
 
-MapWrapper.propTypes = {
+MapContainer.propTypes = {
   typology: PropTypes.object,
   locale: PropTypes.string,
   groupId: PropTypes.string,
   expandWithAside: PropTypes.bool,
   drawActive: PropTypes.bool,
+  showQuery: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -105,4 +108,4 @@ const withConnect = connect(
   null,
 );
 
-export default compose(withConnect)(MapWrapper);
+export default compose(withConnect)(MapContainer);

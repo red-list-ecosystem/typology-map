@@ -45,6 +45,9 @@ import {
   selectGroupsQueriedByType,
   selectGroupsByAreaArgs,
   selectRealmForBiome,
+  selectGroupsByArea,
+  selectGroups,
+  selectBiomes,
 } from './selectors';
 
 import {
@@ -57,7 +60,6 @@ import {
   setGroupsQueried,
   setGroupsQueryError,
   setGroupsQuerySuccess,
-  setGroupQueryReady,
   resetGroupsQuery,
 } from './actions';
 
@@ -449,6 +451,28 @@ function* queryGroupsByType(type, args) {
     }
   }
 }
+//  pretend we are querying but actually filter results from previous query
+function* filterGroupsByType(type, args) {
+  const groupsByArea = yield select(selectGroupsByArea);
+  const groupsForType = groupsByArea.groups[type];
+  const groups = yield select(selectGroups);
+  const biomes = yield select(selectBiomes);
+  const { realm, biome } = args;
+  const groupIds = groupsForType.filter(gId => {
+    const group = groups.find(g => g.id === gId.layer_id);
+    if (biome && group.biome !== biome) {
+      return false;
+    }
+    const theBiome =
+      group.biome && biomes && biomes.find(b => b.id === group.biome);
+    if (realm && theBiome.realm !== realm) {
+      return false;
+    }
+    return true;
+  });
+  yield put(setGroupsQueried(type, Date.now()));
+  yield put(setGroupsQuerySuccess(type, groupIds, args, Date.now()));
+}
 
 const needsQuery = (args, argsStored) => {
   if (!argsStored) return true;
@@ -457,13 +481,6 @@ const needsQuery = (args, argsStored) => {
   const occurrenceS = argsStored.occurrence;
   const realmS = argsStored.realm;
   const biomeS = argsStored.biome;
-  // console.log('1.', area === areaS)
-  // console.log(
-  //   '2.',
-  //   (!occurrenceS && !occurrence) || occurrenceS === occurrence,
-  // );
-  // console.log('3.', !realmS || realmS === realm || startsWith(biome, realm))
-  // console.log('4.', (!biomeS && !biome) || biomeS === biome)
   // conditions for not needing to query again
   if (
     // 1. areas need to be exactly the same
@@ -495,17 +512,15 @@ const needsQuery = (args, argsStored) => {
   return true;
 };
 
-function* queryGroupsSaga(args) {
+function* queryGroupsSaga({ args }) {
   const argsStored = yield select(selectGroupsByAreaArgs);
-  // console.log(args, argsStored);
-  // console.log(needsQuery(args, argsStored));
   if (needsQuery(args, argsStored)) {
     yield put(resetGroupsQuery());
-    yield fork(queryGroupsByType, 'raster', args);
     yield fork(queryGroupsByType, 'vector', args);
+    yield fork(queryGroupsByType, 'raster', args);
   } else {
-    yield put(setGroupQueryReady('raster', Date.now()));
-    yield put(setGroupQueryReady('vector', Date.now()));
+    yield fork(filterGroupsByType, 'vector', args);
+    yield fork(filterGroupsByType, 'raster', args);
   }
 }
 

@@ -5,8 +5,22 @@ export const testArea = area => {
   );
 };
 
+export const getOpenArea = area => {
+  const hasArea = area && area.trim() !== '' && testArea(area);
+  // but we want an open area in the text area
+  // prettier-ignore
+  return hasArea
+    ? area
+      .trim()
+      .split(',')
+      .slice(0, -1)
+      .join(',')
+    : '';
+};
+
 export const getRealmOptions = (realms, biomeObject) =>
   realms && realms.filter(r => !biomeObject || biomeObject.realm === r.id);
+
 export const getBiomeOptions = (realms, biomes, realmObject) =>
   realms &&
   biomes &&

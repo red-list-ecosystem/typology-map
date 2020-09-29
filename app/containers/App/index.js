@@ -128,6 +128,7 @@ function App({
           <MapContainer
             groupId={groupId}
             expandWithAside={path.route === ROUTES.ANALYSE}
+            showQuery={path.route === ROUTES.ANALYSE}
           />
           <Switch>
             <Route

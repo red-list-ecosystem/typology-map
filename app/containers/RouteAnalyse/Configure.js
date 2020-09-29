@@ -22,7 +22,12 @@ import Hint from 'components/Hint';
 
 import messages from './messages';
 
-import { testArea, getRealmOptions, getBiomeOptions } from './utils';
+import {
+  testArea,
+  getOpenArea,
+  getRealmOptions,
+  getBiomeOptions,
+} from './utils';
 
 import TypologyFilter from './TypologyFilter';
 import StepTitle from './StepTitle';
@@ -50,13 +55,7 @@ export function Configure({
   const hasArea = area && area.trim() !== '' && testArea(area);
   // but we want an open area in the text area
   // prettier-ignore
-  const areaOpen = hasArea
-    ? area
-      .trim()
-      .split(',')
-      .slice(0, -1)
-      .join(',')
-    : '';
+  const areaOpen = getOpenArea(area);
   // figure out objects from any set filter
   const realmObject = realms && realms.find(r => r.id === realm);
   const biomeObject = biomes && biomes.find(b => b.id === biome);

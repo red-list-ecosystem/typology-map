@@ -193,14 +193,11 @@ export function dismissDisclaimer() {
   };
 }
 
-export function queryGroups({ area, occurrence, realm, biome }) {
+export function queryGroups(args) {
   // console.log('queryGroups');
   return {
     type: QUERY_GROUPS,
-    area,
-    occurrence,
-    realm,
-    biome,
+    args,
   };
 }
 
