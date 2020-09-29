@@ -87,6 +87,8 @@ export function Results({
   onSetActiveGroup,
   activeGroup,
   onSetInfoGroup,
+  updateQuery,
+  onQueryGroups,
 }) {
   const [areaUpdate, setAreaUpdate] = useState(false);
   const [filterUpdate, setFilterUpdate] = useState(false);
@@ -124,6 +126,8 @@ export function Results({
               queryArgs={queryArgs}
               onSubmit={() => setAreaUpdate(false)}
               onCancel={() => setAreaUpdate(false)}
+              updateQuery={updateQuery}
+              onQueryGroups={onQueryGroups}
             />
           )}
           {filterUpdate && (
@@ -133,6 +137,8 @@ export function Results({
               biomes={biomes}
               onSubmit={() => setFilterUpdate(false)}
               onCancel={() => setFilterUpdate(false)}
+              updateQuery={updateQuery}
+              onQueryGroups={onQueryGroups}
             />
           )}
         </Box>
@@ -304,11 +310,15 @@ function mapDispatchToProps(dispatch) {
     onResetQuery: () => {
       dispatch(resetGroupsQuery());
       dispatch(resetGroupsQueryNav());
+      dispatch(setActiveGroupQuery(''));
     },
     updateQuery: args => dispatch(updateGroupsQuery(args)),
     onSetActiveGroup: id => dispatch(setActiveGroupQuery(id)),
     onSetInfoGroup: id => dispatch(setInfoGroupQuery(id)),
-    onQueryGroups: args => dispatch(queryGroups(args)),
+    onQueryGroups: args => {
+      dispatch(setActiveGroupQuery(''));
+      dispatch(queryGroups(args));
+    },
   };
 }
 

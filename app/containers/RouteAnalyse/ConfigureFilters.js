@@ -14,7 +14,6 @@ import { Box, Button } from 'grommet';
 import { FormattedMessage, intlShape, injectIntl } from 'react-intl';
 
 import { selectGroupsByAreaArgs } from 'containers/App/selectors';
-import { updateGroupsQuery, queryGroups } from 'containers/App/actions';
 
 import AsideNavSection from 'components/AsideNavSection';
 import ButtonPrimary from 'components/ButtonPrimary';
@@ -168,16 +167,9 @@ const mapStateToProps = createStructuredSelector({
   queryArgsFromQuery: state => selectGroupsByAreaArgs(state),
 });
 
-function mapDispatchToProps(dispatch) {
-  return {
-    updateQuery: args => dispatch(updateGroupsQuery(args)),
-    onQueryGroups: args => dispatch(queryGroups(args)),
-  };
-}
-
 const withConnect = connect(
   mapStateToProps,
-  mapDispatchToProps,
+  null,
 );
 
 // export default RouteExplore;

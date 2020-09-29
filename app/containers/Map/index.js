@@ -384,6 +384,7 @@ export function Map({
     }
   }, [zoomToBounds]);
 
+  // draw query area
   useEffect(() => {
     drawFeatureGroupRef.current.clearLayers();
     if (showQuery && queryArea && queryArea.trim().length > 5) {
