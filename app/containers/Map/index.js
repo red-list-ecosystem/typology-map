@@ -480,6 +480,7 @@ export function Map({
           drawFeatureGroupRef.current.getLayers().length > 0
             ? {
               allowIntersection: false,
+              remove: false,
               edit: {
                 selectedPathOptions: {
                   color: theme.global.colors['brand-2'],
