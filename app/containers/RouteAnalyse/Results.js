@@ -20,6 +20,7 @@ import {
   selectGroupsQueryReadyAll,
   selectGroupsByAreaArgs,
   selectActiveGroup,
+  selectQueryType,
 } from 'containers/App/selectors';
 import {
   resetGroupsQuery,
@@ -89,15 +90,17 @@ export function Results({
   onSetInfoGroup,
   updateQuery,
   onQueryGroups,
+  queryType,
 }) {
   const [areaUpdate, setAreaUpdate] = useState(false);
   const [filterUpdate, setFilterUpdate] = useState(false);
   const { locale } = intl;
-  let { area, realm, biome, occurrence } = queryArgs;
+  let { area, realm, biome, occurrence, regionId } = queryArgs;
 
   if (queriesReady && queryArgsFromQuery) {
     /* eslint-disable prefer-destructuring */
     area = queryArgsFromQuery.area;
+    regionId = queryArgsFromQuery.regionId;
     realm = queryArgsFromQuery.realm;
     biome = queryArgsFromQuery.biome;
     occurrence = queryArgsFromQuery.occurrence;
@@ -107,6 +110,7 @@ export function Results({
   const biomeObject = biomes && biomes.find(b => b.id === biome);
 
   const hasFilters = realm || biome || occurrence;
+  const updating = areaUpdate || filterUpdate;
 
   const KeyColor = styled.span`
     display: inline-block;
@@ -119,7 +123,7 @@ export function Results({
 
   return (
     <Box pad={{ bottom: 'large' }} flex={false} background="white">
-      {(areaUpdate || filterUpdate) && (
+      {updating && (
         <Box pad={{ horizontal: 'small' }} flex={false}>
           {areaUpdate && (
             <ConfigureArea
@@ -143,7 +147,7 @@ export function Results({
           )}
         </Box>
       )}
-      {!areaUpdate && !filterUpdate && (
+      {!updating && (
         <>
           <Box pad={{ horizontal: 'small' }} flex={false}>
             <AsideNavSection margin={{ top: 'ms' }}>
@@ -159,7 +163,18 @@ export function Results({
                 )}
               </StepTitleWrap>
               <FieldWrap>
-                <Text truncate>{getOpenArea(area)}</Text>
+                <FieldLabel>
+                  {queryType === 'area' && (
+                    <FormattedMessage {...messages.customArea} />
+                  )}
+                  {queryType === 'region' && (
+                    <FormattedMessage {...messages.predefinedRegion} />
+                  )}
+                </FieldLabel>
+                {queryType === 'area' && (
+                  <Text truncate>{getOpenArea(area)}</Text>
+                )}
+                {queryType === 'region' && <Text>{regionId}</Text>}
               </FieldWrap>
             </AsideNavSection>
             <AsideNavSection margin={{ top: 'ms' }}>
@@ -296,6 +311,7 @@ Results.propTypes = {
   realms: PropTypes.array,
   biomes: PropTypes.array,
   activeGroup: PropTypes.string,
+  queryType: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -303,6 +319,7 @@ const mapStateToProps = createStructuredSelector({
   queryArgsFromQuery: state => selectGroupsByAreaArgs(state),
   activeGroup: state => selectActiveGroup(state),
   groups: state => selectGroupsByAreaAll(state),
+  queryType: state => selectQueryType(state),
 });
 
 function mapDispatchToProps(dispatch) {

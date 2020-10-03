@@ -28,6 +28,7 @@ export const RESET_GROUPS_QUERY = 'rle/App/RESET_GROUPS_QUERY';
 export const RESET_GROUPS_QUERY_NAV = 'rle/App/RESET_GROUPS_QUERY_NAV';
 export const SET_ACTIVE_GROUP_QUERY = 'rle/App/SET_ACTIVE_GROUP_QUERY';
 export const SET_INFO_GROUP_QUERY = 'rle/App/SET_INFO_GROUP_QUERY';
+export const SET_QUERY_TYPE = 'rle/App/SET_QUERY_TYPE';
 
 export const LOAD_CONTENT = 'rle/App/LOAD_CONTENT';
 export const CONTENT_REQUESTED = 'rle/App/CONTENT_REQUESTED';

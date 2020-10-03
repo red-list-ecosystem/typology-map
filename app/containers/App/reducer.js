@@ -24,6 +24,7 @@ import {
   SET_FULLSCREEN_IMAGE,
   RESET_GROUPS_QUERY,
   TOGGLE_DRAW,
+  SET_QUERY_TYPE,
 } from './constants';
 
 /* eslint-disable no-param-reassign */
@@ -86,6 +87,7 @@ export const initialState = {
   groupsByAreaReady: Object.assign({}, initialGroupsByArea),
   drawActive: false,
   countrySelectActive: false,
+  queryType: null,
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -171,6 +173,9 @@ const appReducer = (state = initialState, action) =>
         break;
       case TOGGLE_DRAW:
         draft.drawActive = action.active;
+        break;
+      case SET_QUERY_TYPE:
+        draft.queryType = action.queryType;
         break;
     }
   });

@@ -48,7 +48,7 @@ export function MapContainer({
   groupId,
   expandWithAside,
   drawActive,
-  showQuery,
+  showQueryArea,
 }) {
   const [isMapExpanded, setIsMapExpanded] = useState(false);
 
@@ -66,7 +66,7 @@ export function MapContainer({
             fullscreen={expandWithAside || isMapExpanded}
             locale={locale}
             drawActive={drawActive}
-            showQuery={showQuery}
+            showQueryArea={showQueryArea}
           />
           {!expandWithAside && (
             <MapControls position="right">
@@ -94,7 +94,7 @@ MapContainer.propTypes = {
   groupId: PropTypes.string,
   expandWithAside: PropTypes.bool,
   drawActive: PropTypes.bool,
-  showQuery: PropTypes.bool,
+  showQueryArea: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({

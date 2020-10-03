@@ -263,7 +263,14 @@ function* setInfoGroupQuerySaga({ id }) {
 function* resetGroupsQuerySaga() {
   yield call(navigateSaga, {
     args: {
-      deleteSearchParams: ['area', 'realm', 'biome', 'occurrence', 'active'],
+      deleteSearchParams: [
+        'area',
+        'realm',
+        'biome',
+        'occurrence',
+        'active',
+        'regionId',
+      ],
     },
   });
 }
@@ -411,14 +418,20 @@ function* loadContentSaga({ key, contentType }) {
 
 function* queryGroupsByType(type, args) {
   // console.log('queryGroupsByType', type, args)
-  const { area, occurrence, realm, biome } = args;
-  const polygonWKT = encodeURI(`POLYGON((${area}))`);
+  const { area, regionId, occurrence, realm, biome } = args;
+  const polygonWKT =
+    area && area.trim() !== '' && encodeURI(`POLYGON((${area}))`);
   // requestedSelector returns the times that entities where fetched from the API
   const requestedAt = yield select(selectGroupsQueriedByType, type);
   const ready = yield select(selectGroupsQueryReadyByType, type);
   // If haven't loaded yet, do so now.
   if (!requestedAt && !ready) {
-    let url = `${PATHS.GROUPS_QUERY_API[type]}?poly=${polygonWKT}`;
+    let url = `${PATHS.GROUPS_QUERY_API[type]}?`;
+    if (polygonWKT) {
+      url = `${url}poly=${polygonWKT}`;
+    } else {
+      url = `${url}eezid=${regionId}`;
+    }
     if (occurrence) {
       url = `${url}&occurrence=${occurrence}`;
     }
@@ -476,15 +489,16 @@ function* filterGroupsByType(type, args) {
 
 const needsQuery = (args, argsStored) => {
   if (!argsStored) return true;
-  const { area, occurrence, realm, biome } = args;
+  const { area, occurrence, realm, biome, regionId } = args;
   const areaS = argsStored.area;
+  const regionIdS = argsStored.regionId;
   const occurrenceS = argsStored.occurrence;
   const realmS = argsStored.realm;
   const biomeS = argsStored.biome;
   // conditions for not needing to query again
   if (
-    // 1. areas need to be exactly the same
-    area === areaS &&
+    // 1. areas or regions need to remain unchanged
+    ((area && area === areaS) || (regionId && regionId === regionIdS)) &&
     // 2. occurrence needs to be the same or not ever set
     (occurrence === occurrenceS || (!occurrenceS && !occurrence))
   ) {

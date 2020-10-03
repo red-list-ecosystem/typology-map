@@ -43,6 +43,7 @@ import {
   SET_ACTIVE_GROUP_QUERY,
   SET_INFO_GROUP_QUERY,
   TOGGLE_DRAW,
+  SET_QUERY_TYPE,
 } from './constants';
 
 export function setLocale(locale) {
@@ -269,5 +270,11 @@ export function toggleDraw(active) {
   return {
     type: TOGGLE_DRAW,
     active,
+  };
+}
+export function setQueryType(queryType) {
+  return {
+    type: SET_QUERY_TYPE,
+    queryType,
   };
 }

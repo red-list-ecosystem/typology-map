@@ -33,6 +33,7 @@ import {
   selectShowDisclaimer,
   selectRouterPathNamed,
   selectFullscreenImage,
+  selectQueryType,
 } from 'containers/App/selectors';
 
 import RouteHome from 'containers/RouteHome/Loadable';
@@ -90,6 +91,7 @@ function App({
   path,
   intl,
   activeGroup,
+  queryType,
 }) {
   useInjectReducer({ key: 'global', reducer });
   useInjectSaga({ key: 'default', saga });
@@ -128,7 +130,9 @@ function App({
           <MapContainer
             groupId={groupId}
             expandWithAside={path.route === ROUTES.ANALYSE}
-            showQuery={path.route === ROUTES.ANALYSE}
+            showQueryArea={
+              path.route === ROUTES.ANALYSE && queryType === 'area'
+            }
           />
           <Switch>
             <Route
@@ -195,6 +199,7 @@ App.propTypes = {
   fullscreenImage: PropTypes.object,
   intl: intlShape.isRequired,
   activeGroup: PropTypes.string,
+  queryType: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -202,6 +207,7 @@ const mapStateToProps = createStructuredSelector({
   path: state => selectRouterPathNamed(state),
   fullscreenImage: state => selectFullscreenImage(state),
   activeGroup: state => selectActiveGroup(state),
+  queryType: state => selectQueryType(state),
 });
 
 export function mapDispatchToProps(dispatch) {

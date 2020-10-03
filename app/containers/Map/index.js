@@ -128,7 +128,7 @@ export function Map({
   updateQuery,
   theme,
   intl,
-  showQuery,
+  showQueryArea,
 }) {
   useInjectReducer({ key: 'map', reducer });
   useInjectSaga({ key: 'map', saga });
@@ -387,7 +387,7 @@ export function Map({
   // draw query area
   useEffect(() => {
     drawFeatureGroupRef.current.clearLayers();
-    if (showQuery && queryArea && queryArea.trim().length > 5) {
+    if (showQueryArea && queryArea && queryArea.trim().length > 5) {
       const latlngs = getLatLngsFromArea(queryArea);
       if (latlngs.length > 2) {
         const first = latlngs[0];
@@ -404,7 +404,7 @@ export function Map({
         }
       }
     }
-  }, [showQuery, queryArea]);
+  }, [showQueryArea, queryArea]);
 
   // enable leaflet draw
   useEffect(() => {
@@ -560,7 +560,7 @@ Map.propTypes = {
   zoomToBounds: PropTypes.bool,
   loading: PropTypes.bool,
   drawActive: PropTypes.bool,
-  showQuery: PropTypes.bool,
+  showQueryArea: PropTypes.bool,
   queryArea: PropTypes.string,
   theme: PropTypes.object,
   updateQuery: PropTypes.func,

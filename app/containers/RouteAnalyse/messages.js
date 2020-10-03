@@ -21,6 +21,18 @@ export default defineMessages({
     id: `${scope}.area`,
     defaultMessage: 'Area',
   },
+  region: {
+    id: `${scope}.region`,
+    defaultMessage: 'Region',
+  },
+  customArea: {
+    id: `${scope}.customArea`,
+    defaultMessage: 'Custom area',
+  },
+  predefinedRegion: {
+    id: `${scope}.predefinedRegion`,
+    defaultMessage: 'Predefined region',
+  },
   areaChange: {
     id: `${scope}.areaChange`,
     defaultMessage: 'Change area',
@@ -29,9 +41,17 @@ export default defineMessages({
     id: `${scope}.defineAreaInstructions`,
     defaultMessage: 'Draw an area on the map or enter area coordinates',
   },
+  selectRegionInstructions: {
+    id: `${scope}.selectRegionInstructions`,
+    defaultMessage: 'Select a region on the map or from the dropdown',
+  },
   defineAreaFieldLabel: {
     id: `${scope}.defineAreaFieldLabel`,
     defaultMessage: 'Area coordinates',
+  },
+  selectRegionFieldLabel: {
+    id: `${scope}.selectRegionFieldLabel`,
+    defaultMessage: 'Select region',
   },
   defineAreaFieldPlaceholder: {
     id: `${scope}.defineAreaFieldPlaceholder`,

@@ -50,6 +50,7 @@ export function ConfigureFilters({
 }) {
   const { realm, biome, occurrence } = queryArgs;
   const areaQ = queryArgsFromQuery && queryArgsFromQuery.area;
+  const regionQ = queryArgsFromQuery && queryArgsFromQuery.regionId;
   const realmQ = queryArgsFromQuery && queryArgsFromQuery.realm;
   const biomeQ = queryArgsFromQuery && queryArgsFromQuery.biome;
   const occurrenceQ = queryArgsFromQuery && queryArgsFromQuery.occurrence;
@@ -132,6 +133,7 @@ export function ConfigureFilters({
             onSubmit();
             onQueryGroups({
               area: areaQ,
+              regionId: regionQ,
               realm: realm && realm.trim() !== '' ? realm : null,
               biome: biome && biome.trim() !== '' ? biome : null,
               occurrence:

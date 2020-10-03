@@ -29,6 +29,7 @@ export const selectRouterPath = createSelector(
 export const selectGroupsQueryArgs = createSelector(
   selectRouterSearchParams,
   search => ({
+    regionId: search.has('regionId') ? search.get('regionId') : '',
     area: search.has('area') ? search.get('area') : '',
     occurrence: search.has('occurrence') ? search.get('occurrence') : '',
     realm: search.has('realm') ? search.get('realm') : '',
@@ -254,6 +255,10 @@ export const selectContentRequestedByKey = createSelector(
 export const selectShowDisclaimer = createSelector(
   selectGlobal,
   global => global.showDisclaimer,
+);
+export const selectQueryType = createSelector(
+  selectGlobal,
+  global => global.queryType,
 );
 
 export const selectGroupsByArea = createSelector(
