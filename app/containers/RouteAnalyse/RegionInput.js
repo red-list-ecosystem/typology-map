@@ -4,17 +4,17 @@
  *
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-// import { connect } from 'react-redux';
-// import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 // import { injectIntl, intlShape } from 'react-intl';
 import { Button, TextInput } from 'grommet';
 import styled from 'styled-components';
 
 import { Close } from 'components/Icons';
 
-// import { toggleDraw } from 'containers/App/actions';
+import { showQueryRegions } from 'containers/App/actions';
 
 // import messages from './messages';
 
@@ -41,12 +41,11 @@ const CloseButton = styled(p => <Button plain {...p} />)`
   }
 `;
 
-export function RegionInput({ regionId, onSubmit }) {
-  // useEffect(() => {
-  //   onToggleCountries
-  //   onToggleDraw(true);
-  //   return () => onToggleDraw(false);
-  // }, []);
+export function RegionInput({ regionId, onSubmit, onShowQueryRegions }) {
+  useEffect(() => {
+    onShowQueryRegions(true);
+    return () => onShowQueryRegions(false);
+  }, []);
 
   return (
     <TextInputWrap>
@@ -75,21 +74,22 @@ export function RegionInput({ regionId, onSubmit }) {
 
 RegionInput.propTypes = {
   onSubmit: PropTypes.func,
+  onShowQueryRegions: PropTypes.func,
   regionId: PropTypes.string,
   // intl: intlShape.isRequired,
 };
-//
-// export function mapDispatchToProps(dispatch) {
-//   return {
-//     onToggleDraw: active => dispatch(toggleDraw(active)),
-//   };
-// }
 
-// const withConnect = connect(
-//   null,
-//   mapDispatchToProps,
-// );
+export function mapDispatchToProps(dispatch) {
+  return {
+    onShowQueryRegions: active => dispatch(showQueryRegions(active)),
+  };
+}
+
+const withConnect = connect(
+  null,
+  mapDispatchToProps,
+);
 
 // export default RouteExplore;
-// export default compose(withConnect)(injectIntl(RegionInput));
-export default RegionInput;
+export default compose(withConnect)(RegionInput);
+// export default RegionInput;

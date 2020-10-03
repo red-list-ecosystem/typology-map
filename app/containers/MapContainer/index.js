@@ -16,6 +16,8 @@ import {
   selectLocale,
   selectGroup,
   selectDrawActive,
+  selectQueryRegionsActive,
+  selectQueryType,
 } from 'containers/App/selectors';
 
 import Map from 'containers/Map';
@@ -48,7 +50,9 @@ export function MapContainer({
   groupId,
   expandWithAside,
   drawActive,
-  showQueryArea,
+  showQuery,
+  queryType,
+  queryRegionsActive,
 }) {
   const [isMapExpanded, setIsMapExpanded] = useState(false);
 
@@ -66,7 +70,9 @@ export function MapContainer({
             fullscreen={expandWithAside || isMapExpanded}
             locale={locale}
             drawActive={drawActive}
-            showQueryArea={showQueryArea}
+            queryRegionsActive={queryRegionsActive}
+            queryType={queryType}
+            showQuery={showQuery}
           />
           {!expandWithAside && (
             <MapControls position="right">
@@ -94,13 +100,17 @@ MapContainer.propTypes = {
   groupId: PropTypes.string,
   expandWithAside: PropTypes.bool,
   drawActive: PropTypes.bool,
-  showQueryArea: PropTypes.bool,
+  queryRegionsActive: PropTypes.bool,
+  showQuery: PropTypes.bool,
+  queryType: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({
   locale: state => selectLocale(state),
   typology: (state, { groupId }) => groupId && selectGroup(state, groupId),
   drawActive: state => selectDrawActive(state),
+  queryRegionsActive: state => selectQueryRegionsActive(state),
+  queryType: state => selectQueryType(state),
 });
 
 const withConnect = connect(

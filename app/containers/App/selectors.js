@@ -40,6 +40,10 @@ export const selectGroupsQueryArea = createSelector(
   selectRouterSearchParams,
   search => (search.has('area') ? search.get('area') : ''),
 );
+export const selectGroupsQueryRegion = createSelector(
+  selectRouterSearchParams,
+  search => (search.has('regionId') ? search.get('regionId') : ''),
+);
 export const selectActiveGroup = createSelector(
   selectRouterSearchParams,
   search => (search.has('active') ? search.get('active') : ''),
@@ -80,6 +84,10 @@ export const selectLocale = createSelector(
 export const selectDrawActive = createSelector(
   selectGlobal,
   global => global.drawActive,
+);
+export const selectQueryRegionsActive = createSelector(
+  selectGlobal,
+  global => global.queryRegionsActive,
 );
 
 export const selectFullscreenImage = createSelector(

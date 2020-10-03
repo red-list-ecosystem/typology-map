@@ -34,6 +34,12 @@ export const PATHS = {
   },
 };
 
+export const QUERY_REGIONS_LAYER = {
+  source: 'github',
+  type: 'topojson',
+  path: 'auxiliary/EEZ_Land_v3_202030_simplified-10.topo.json',
+};
+
 export const MAX_LOAD_ATTEMPTS = 5;
 export const MAX_LOAD_ATTEMPTS_GROUPS = 2;
 

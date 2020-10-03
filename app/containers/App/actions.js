@@ -43,6 +43,7 @@ import {
   SET_ACTIVE_GROUP_QUERY,
   SET_INFO_GROUP_QUERY,
   TOGGLE_DRAW,
+  SHOW_QUERY_REGIONS,
   SET_QUERY_TYPE,
 } from './constants';
 
@@ -269,6 +270,12 @@ export function setInfoGroupQuery(id) {
 export function toggleDraw(active) {
   return {
     type: TOGGLE_DRAW,
+    active,
+  };
+}
+export function showQueryRegions(active) {
+  return {
+    type: SHOW_QUERY_REGIONS,
     active,
   };
 }

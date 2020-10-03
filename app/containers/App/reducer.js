@@ -24,6 +24,7 @@ import {
   SET_FULLSCREEN_IMAGE,
   RESET_GROUPS_QUERY,
   TOGGLE_DRAW,
+  SHOW_QUERY_REGIONS,
   SET_QUERY_TYPE,
 } from './constants';
 
@@ -86,7 +87,7 @@ export const initialState = {
   groupsByAreaQueried: Object.assign({}, initialGroupsByArea),
   groupsByAreaReady: Object.assign({}, initialGroupsByArea),
   drawActive: false,
-  countrySelectActive: false,
+  queryRegionsActive: false,
   queryType: null,
 };
 
@@ -173,6 +174,9 @@ const appReducer = (state = initialState, action) =>
         break;
       case TOGGLE_DRAW:
         draft.drawActive = action.active;
+        break;
+      case SHOW_QUERY_REGIONS:
+        draft.queryRegionsActive = action.active;
         break;
       case SET_QUERY_TYPE:
         draft.queryType = action.queryType;

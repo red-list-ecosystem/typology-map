@@ -31,6 +31,7 @@ import {
 import { navigatePage, updateGroupsQuery } from 'containers/App/actions';
 import {
   selectGroupsQueryArea,
+  selectGroupsQueryRegion,
   selectGroupsQueryArgs,
 } from 'containers/App/selectors';
 
@@ -125,10 +126,13 @@ export function Map({
   onNavPage,
   queryArea,
   drawActive,
+  queryRegionsActive,
   updateQuery,
   theme,
   intl,
-  showQueryArea,
+  showQuery,
+  queryType,
+  queryRegion,
 }) {
   useInjectReducer({ key: 'map', reducer });
   useInjectSaga({ key: 'map', saga });
@@ -387,7 +391,12 @@ export function Map({
   // draw query area
   useEffect(() => {
     drawFeatureGroupRef.current.clearLayers();
-    if (showQueryArea && queryArea && queryArea.trim().length > 5) {
+    if (
+      showQuery &&
+      queryType === 'area' &&
+      queryArea &&
+      queryArea.trim().length > 5
+    ) {
       const latlngs = getLatLngsFromArea(queryArea);
       if (latlngs.length > 2) {
         const first = latlngs[0];
@@ -404,7 +413,25 @@ export function Map({
         }
       }
     }
-  }, [showQueryArea, queryArea]);
+  }, [showQuery, queryType, queryArea]);
+  // draw query area
+  // useEffect(() => {
+  //   // drawFeatureGroupRef.current.clearLayers();
+  //   if (showQuery && queryType === 'region') {
+  //     console.log('ShowQueryRegions');
+  //     console.log('Active', queryRegion);
+  //   }
+  // }, [showQuery, queryType, queryRegion]);
+  useEffect(() => {
+    // drawFeatureGroupRef.current.clearLayers();
+    if (queryRegionsActive) {
+      console.log('ShowQueryRegions');
+      console.log('Active', queryRegion);
+    } else {
+      console.log('HideQueryRegions');
+      console.log('Active', queryRegion);
+    }
+  }, [queryRegionsActive, queryRegion]);
 
   // enable leaflet draw
   useEffect(() => {
@@ -560,8 +587,11 @@ Map.propTypes = {
   zoomToBounds: PropTypes.bool,
   loading: PropTypes.bool,
   drawActive: PropTypes.bool,
-  showQueryArea: PropTypes.bool,
+  queryRegionsActive: PropTypes.bool,
+  showQuery: PropTypes.bool,
+  queryType: PropTypes.string,
   queryArea: PropTypes.string,
+  queryRegion: PropTypes.string,
   theme: PropTypes.object,
   updateQuery: PropTypes.func,
   intl: intlShape.isRequired,
@@ -575,6 +605,7 @@ const mapStateToProps = createStructuredSelector({
   zoomToBounds: state => selectZoomToBounds(state),
   loading: state => selectLayersLoading(state),
   queryArea: state => selectGroupsQueryArea(state),
+  queryRegion: state => selectGroupsQueryRegion(state),
   queryArgs: state => selectGroupsQueryArgs(state),
 });
 
