@@ -26,6 +26,7 @@ import {
   GROUP_LAYER_OPTIONS,
   MAP_OPTIONS,
   PAGES,
+  QUERY_REGIONS_LAYER,
 } from 'config';
 
 import { navigatePage, updateGroupsQuery } from 'containers/App/actions';
@@ -33,6 +34,9 @@ import {
   selectGroupsQueryArea,
   selectGroupsQueryRegion,
   selectGroupsQueryArgs,
+  selectDrawActive,
+  selectQueryRegionsActive,
+  selectQueryType,
 } from 'containers/App/selectors';
 
 import { Plus, Minus } from 'components/Icons';
@@ -42,6 +46,7 @@ import MapControl from 'components/MapControl';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
+import quasiEquals from 'utils/quasi-equals';
 import reducer from './reducer';
 import saga from './saga';
 import { getAreaWKTFromLayer, getLatLngsFromArea } from './utils';
@@ -56,8 +61,9 @@ import {
   selectCountry,
   selectZoomToBounds,
   selectLayersLoading,
+  selectRegionHighlight,
 } from './selectors';
-import { loadLayer } from './actions';
+import { loadLayer, setRegionHighlight } from './actions';
 
 import messages from './messages';
 import Style from './styles';
@@ -88,7 +94,7 @@ const getGeometryType = type =>
     ? 'line'
     : 'area';
 
-const getVectorGridStyle = (properties, opacity, type) => {
+const getVectorGridGroupStyle = (properties, opacity, type) => {
   const value = properties[GEOJSON.PROPERTIES.OCCURRENCE];
   const featureStyle = GROUP_LAYER_OPTIONS.VECTOR[type];
   if (value) {
@@ -127,12 +133,16 @@ export function Map({
   queryArea,
   drawActive,
   queryRegionsActive,
-  updateQuery,
+  updateQueryArea,
+  updateQueryRegion,
   theme,
   intl,
-  showQuery,
   queryType,
   queryRegion,
+  onSetRegionHighlight,
+  regionHighlight,
+  size,
+  mode,
 }) {
   useInjectReducer({ key: 'map', reducer });
   useInjectSaga({ key: 'map', saga });
@@ -146,6 +156,8 @@ export function Map({
 
   const [tilesLoading, setTilesLoading] = useState(false);
   const [zoom, setZoom] = useState(MAP_OPTIONS.zoom);
+
+  const showQuery = mode === 'analyse';
 
   // init map
   useEffect(() => {
@@ -172,9 +184,15 @@ export function Map({
     mapRef.current.on('zoomend', () => {
       setZoom(mapRef.current.getZoom());
     });
-
-    mapRef.current.scrollWheelZoom.disable();
+    if (!fullscreen) {
+      mapRef.current.scrollWheelZoom.disable();
+    }
+    mapRef.current.invalidateSize();
   }, []);
+
+  useEffect(() => {
+    if (mapRef) mapRef.current.invalidateSize();
+  }, [size]);
 
   useEffect(() => {
     if (fullscreen) {
@@ -228,7 +246,7 @@ export function Map({
   // change country
   useEffect(() => {
     if (countryLayerGroupRef.current) {
-      if (country && LAYERS.countries) {
+      if (country && LAYERS.countries && mode !== 'analyse') {
         if (LAYERS.countries.source === 'mapbox') {
           if (LAYERS.countries.type === 'style') {
             countryLayerGroupRef.current.addLayer(
@@ -261,7 +279,7 @@ export function Map({
         countryLayerGroupRef.current.clearLayers();
       }
     }
-  }, [country]);
+  }, [country, mode]);
 
   // change full screen
   useEffect(() => {
@@ -301,7 +319,7 @@ export function Map({
           }),
         );
       }
-      if (zoomToBounds) {
+      if (zoomToBounds && mode !== 'analyse') {
         let latlngs;
         if (group.layer.extent) {
           const { N, S, W, E } = group.layer.extent;
@@ -336,7 +354,7 @@ export function Map({
           rendererFactory: L.svg.tile,
           vectorTileLayerStyles: {
             sliced: properties =>
-              getVectorGridStyle(properties, opacity, geoType),
+              getVectorGridGroupStyle(properties, opacity, geoType),
           },
         });
         groupLayerGroupRef.current.addLayer(vectorGrid);
@@ -358,11 +376,11 @@ export function Map({
         }
       }
     }
-  }, [group, layers]);
+  }, [group, layers, mode]);
 
   useEffect(() => {
     // zoom to bounds when enabled
-    if (group && zoomToBounds) {
+    if (group && zoomToBounds && mode !== 'analyse') {
       let latlngs;
       const layer = layers[group.id];
       if (group && group.layer && group.layer.extent) {
@@ -388,50 +406,168 @@ export function Map({
     }
   }, [zoomToBounds]);
 
-  // draw query area
+  const onRegionMouseOver = (e, feature) => {
+    if (feature && feature.properties) {
+      const id = feature.properties[QUERY_REGIONS_LAYER.featureId];
+      onSetRegionHighlight(id);
+    }
+  };
+  const onRegionMouseOut = () => {
+    onSetRegionHighlight(null);
+  };
+  const onRegionClick = (e, feature) => {
+    if (feature && feature.properties) {
+      updateQueryRegion(feature.properties[QUERY_REGIONS_LAYER.featureId]);
+    }
+  };
+
+  const getRegionStyle = (featureId, highlight, active) => {
+    if (quasiEquals(active, featureId)) {
+      if (quasiEquals(highlight, featureId)) {
+        return {
+          ...QUERY_REGIONS_LAYER.style,
+          color: theme.global.colors['brand-2-light'],
+          fillOpacity: 0.1,
+          weight: 1,
+        };
+      }
+      return {
+        ...QUERY_REGIONS_LAYER.style,
+        color: theme.global.colors['brand-2-light'],
+        weight: 1,
+      };
+    }
+    if (quasiEquals(highlight, featureId)) {
+      return {
+        ...QUERY_REGIONS_LAYER.style,
+        color: theme.global.colors['brand-2-light'],
+        fillOpacity: 0.1,
+      };
+    }
+    return {
+      ...QUERY_REGIONS_LAYER.style,
+      color:
+        active && active !== ''
+          ? theme.global.colors['brand-2-lighter']
+          : theme.global.colors['brand-2-light'],
+    };
+  };
+
   useEffect(() => {
-    drawFeatureGroupRef.current.clearLayers();
-    if (
-      showQuery &&
-      queryType === 'area' &&
-      queryArea &&
-      queryArea.trim().length > 5
-    ) {
-      const latlngs = getLatLngsFromArea(queryArea);
-      if (latlngs.length > 2) {
-        const first = latlngs[0];
-        const last = latlngs[latlngs.length - 1];
-        // check for enclosed area
-        if (first[0] === last[0] && first[1] === last[1]) {
-          drawFeatureGroupRef.current.addLayer(
-            L.polygon(latlngs, {
-              color: theme.global.colors['brand-2'],
-              fillOpacity: 0.05,
-              weight: 1,
-            }),
-          );
+    if (queryAreaLayerGroupRef && queryAreaLayerGroupRef.current) {
+      if (queryRegionsActive) {
+        queryAreaLayerGroupRef.current.clearLayers();
+        if (
+          layers &&
+          (QUERY_REGIONS_LAYER.type === 'geojson' ||
+            QUERY_REGIONS_LAYER.type === 'topojson')
+        ) {
+          if (!layers[QUERY_REGIONS_LAYER.key]) {
+            onLoadLayer(QUERY_REGIONS_LAYER.key, QUERY_REGIONS_LAYER);
+          }
+          if (layers[QUERY_REGIONS_LAYER.key]) {
+            const layer = layers[QUERY_REGIONS_LAYER.key];
+            const regions = L.geoJSON(layer.data, {
+              style: feature =>
+                getRegionStyle(
+                  feature.properties[QUERY_REGIONS_LAYER.featureId],
+                  null,
+                  queryRegion,
+                ),
+              onEachFeature: (feature, jsonLayer) => {
+                const featureTitle =
+                  feature.properties[QUERY_REGIONS_LAYER.featureTitle];
+                const featureTitleAdd =
+                  feature.properties[
+                    QUERY_REGIONS_LAYER.featureTitleAdditional
+                  ];
+                const featureTitleAdd2 =
+                  feature.properties[
+                    QUERY_REGIONS_LAYER.featureTitleAdditional2
+                  ];
+                if (featureTitle === featureTitleAdd) {
+                  jsonLayer.bindTooltip(featureTitle, { sticky: true });
+                } else if (featureTitleAdd2 && featureTitleAdd2 !== '') {
+                  jsonLayer.bindTooltip(
+                    `${featureTitle} (${featureTitleAdd}/${featureTitleAdd2})`,
+                    { sticky: true },
+                  );
+                } else {
+                  jsonLayer.bindTooltip(
+                    `${featureTitle} (${featureTitleAdd})`,
+                    { sticky: true },
+                  );
+                }
+                jsonLayer.on({
+                  mouseover: e => onRegionMouseOver(e, feature),
+                  mouseout: e => onRegionMouseOut(e, feature),
+                  click: e => onRegionClick(e, feature),
+                });
+              },
+            });
+            queryAreaLayerGroupRef.current.addLayer(regions);
+          }
         }
       }
     }
-  }, [showQuery, queryType, queryArea]);
-  // draw query area
-  // useEffect(() => {
-  //   // drawFeatureGroupRef.current.clearLayers();
-  //   if (showQuery && queryType === 'region') {
-  //     console.log('ShowQueryRegions');
-  //     console.log('Active', queryRegion);
-  //   }
-  // }, [showQuery, queryType, queryRegion]);
+  }, [queryRegionsActive, layers]);
   useEffect(() => {
-    // drawFeatureGroupRef.current.clearLayers();
-    if (queryRegionsActive) {
-      console.log('ShowQueryRegions');
-      console.log('Active', queryRegion);
-    } else {
-      console.log('HideQueryRegions');
-      console.log('Active', queryRegion);
+    if (queryAreaLayerGroupRef && queryAreaLayerGroupRef.current) {
+      if (!queryRegionsActive) {
+        queryAreaLayerGroupRef.current.clearLayers();
+        if (queryType === 'region' && queryRegion) {
+          if (
+            layers &&
+            (QUERY_REGIONS_LAYER.type === 'geojson' ||
+              QUERY_REGIONS_LAYER.type === 'topojson')
+          ) {
+            if (!layers[QUERY_REGIONS_LAYER.key]) {
+              onLoadLayer(QUERY_REGIONS_LAYER.key, QUERY_REGIONS_LAYER);
+            }
+            if (layers[QUERY_REGIONS_LAYER.key]) {
+              const layer = layers[QUERY_REGIONS_LAYER.key];
+              const regions = L.geoJSON(layer.data, {
+                filter: feature =>
+                  quasiEquals(
+                    queryRegion,
+                    feature.properties[QUERY_REGIONS_LAYER.featureId],
+                  ),
+                style: feature =>
+                  getRegionStyle(
+                    feature.properties[QUERY_REGIONS_LAYER.featureId],
+                    null,
+                    queryRegion,
+                  ),
+              });
+              queryAreaLayerGroupRef.current.addLayer(regions);
+            }
+          }
+        }
+      }
     }
-  }, [queryRegionsActive, queryRegion]);
+  }, [queryRegionsActive, queryRegion, layers]);
+
+  // update region layer style
+  useEffect(() => {
+    if (
+      queryRegionsActive &&
+      queryAreaLayerGroupRef &&
+      queryAreaLayerGroupRef.current &&
+      queryAreaLayerGroupRef.current.getLayers &&
+      queryAreaLayerGroupRef.current.getLayers().length > 0
+    ) {
+      const regions = queryAreaLayerGroupRef.current.getLayers()[0];
+      regions.eachLayer(layer =>
+        layer.setStyle(
+          getRegionStyle(
+            layer.feature.properties[QUERY_REGIONS_LAYER.featureId],
+            regionHighlight,
+            queryRegion,
+          ),
+        ),
+      );
+    }
+  }, [queryRegionsActive, regionHighlight, queryRegion]);
 
   // enable leaflet draw
   useEffect(() => {
@@ -488,7 +624,7 @@ export function Map({
               message: intl.formatMessage(messages.drawError), // Message that will show when intersect
             },
             shapeOptions: {
-              color: theme.global.colors['brand-2'],
+              color: theme.global.colors['brand-2-light'],
               fillOpacity: 0.05,
               weight: 1,
               clickable: false,
@@ -497,7 +633,7 @@ export function Map({
           rectangle: {
             showArea: false,
             shapeOptions: {
-              color: theme.global.colors['brand-2'],
+              color: theme.global.colors['brand-2-light'],
               fillOpacity: 0.05,
               weight: 1,
               clickable: false,
@@ -511,8 +647,8 @@ export function Map({
               remove: false,
               edit: {
                 selectedPathOptions: {
-                  color: theme.global.colors['brand-2'],
-                  fillColor: theme.global.colors['brand-2'],
+                  color: theme.global.colors['brand-2-light'],
+                  fillColor: theme.global.colors['brand-2-light'],
                   fillOpacity: 0.025,
                 },
               },
@@ -524,7 +660,7 @@ export function Map({
       mapRef.current.on('draw:created', e => {
         if (e.layer) {
           const areaWKT = getAreaWKTFromLayer(e.layer);
-          updateQuery(areaWKT);
+          updateQueryArea(areaWKT);
         }
       });
       mapRef.current.on('draw:edited', e => {
@@ -534,20 +670,47 @@ export function Map({
           e.layers.eachLayer(layer => {
             areaWKT = getAreaWKTFromLayer(layer);
           });
-          updateQuery(areaWKT);
+          updateQueryArea(areaWKT);
         }
       });
       mapRef.current.on('draw:deleted', () => {
-        updateQuery('');
+        updateQueryArea('');
       });
     }
     return () => drawControl && mapRef.current.removeControl(drawControl);
   }, [drawActive, queryArea]);
 
+  // draw query area
+  useEffect(() => {
+    drawFeatureGroupRef.current.clearLayers();
+    if (
+      showQuery &&
+      queryType === 'area' &&
+      queryArea &&
+      queryArea.trim().length > 5
+    ) {
+      const latlngs = getLatLngsFromArea(queryArea);
+      if (latlngs.length > 2) {
+        const first = latlngs[0];
+        const last = latlngs[latlngs.length - 1];
+        // check for enclosed area
+        if (first[0] === last[0] && first[1] === last[1]) {
+          drawFeatureGroupRef.current.addLayer(
+            L.polygon(latlngs, {
+              color: theme.global.colors['brand-2-light'],
+              fillOpacity: 0.05,
+              weight: 1,
+            }),
+          );
+        }
+      }
+    }
+  }, [showQuery, queryType, queryArea]);
+
   return (
     <Styled>
       <LeafletContainer id="ll-map" />
-      {group && <Settings group={group} fullscreen={fullscreen} />}
+      <Settings group={group} fullscreen={fullscreen} mode={mode} />
       <Attribution navFeedback={() => onNavPage(PAGES.feedback.path)} />
       {(tilesLoading || loading) && (
         <LoadingWrap>
@@ -588,12 +751,16 @@ Map.propTypes = {
   loading: PropTypes.bool,
   drawActive: PropTypes.bool,
   queryRegionsActive: PropTypes.bool,
-  showQuery: PropTypes.bool,
   queryType: PropTypes.string,
   queryArea: PropTypes.string,
   queryRegion: PropTypes.string,
   theme: PropTypes.object,
-  updateQuery: PropTypes.func,
+  updateQueryArea: PropTypes.func,
+  updateQueryRegion: PropTypes.func,
+  onSetRegionHighlight: PropTypes.func,
+  regionHighlight: PropTypes.number,
+  size: PropTypes.string,
+  mode: PropTypes.string,
   intl: intlShape.isRequired,
 };
 
@@ -604,9 +771,13 @@ const mapStateToProps = createStructuredSelector({
   country: state => selectCountry(state),
   zoomToBounds: state => selectZoomToBounds(state),
   loading: state => selectLayersLoading(state),
+  queryType: state => selectQueryType(state),
   queryArea: state => selectGroupsQueryArea(state),
   queryRegion: state => selectGroupsQueryRegion(state),
   queryArgs: state => selectGroupsQueryArgs(state),
+  regionHighlight: state => selectRegionHighlight(state),
+  drawActive: state => selectDrawActive(state),
+  queryRegionsActive: state => selectQueryRegionsActive(state),
 });
 
 function mapDispatchToProps(dispatch, props) {
@@ -615,13 +786,21 @@ function mapDispatchToProps(dispatch, props) {
       dispatch(loadLayer(key, config));
     },
     onNavPage: id => dispatch(navigatePage(id)),
-    updateQuery: area =>
+    updateQueryArea: area =>
       dispatch(
         updateGroupsQuery({
           ...props.queryArgs,
           area,
         }),
       ),
+    updateQueryRegion: regionId =>
+      dispatch(
+        updateGroupsQuery({
+          ...props.queryArgs,
+          regionId,
+        }),
+      ),
+    onSetRegionHighlight: regionId => dispatch(setRegionHighlight(regionId)),
   };
 }
 

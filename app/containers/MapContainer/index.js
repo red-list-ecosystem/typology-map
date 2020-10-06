@@ -12,13 +12,7 @@ import { createStructuredSelector } from 'reselect';
 import styled, { css } from 'styled-components';
 import { ResponsiveContext } from 'grommet';
 
-import {
-  selectLocale,
-  selectGroup,
-  selectDrawActive,
-  selectQueryRegionsActive,
-  selectQueryType,
-} from 'containers/App/selectors';
+import { selectLocale, selectGroup } from 'containers/App/selectors';
 
 import Map from 'containers/Map';
 
@@ -45,14 +39,11 @@ const Styled = styled(TopGraphic)`
 `;
 
 export function MapContainer({
-  typology,
+  group,
   locale,
   groupId,
   expandWithAside,
-  drawActive,
-  showQuery,
-  queryType,
-  queryRegionsActive,
+  mode,
 }) {
   const [isMapExpanded, setIsMapExpanded] = useState(false);
 
@@ -66,13 +57,11 @@ export function MapContainer({
           asideWidth={getAsideWidth(size)}
         >
           <Map
-            group={typology}
+            group={group}
             fullscreen={expandWithAside || isMapExpanded}
             locale={locale}
-            drawActive={drawActive}
-            queryRegionsActive={queryRegionsActive}
-            queryType={queryType}
-            showQuery={showQuery}
+            size={size}
+            mode={mode}
           />
           {!expandWithAside && (
             <MapControls position="right">
@@ -95,22 +84,16 @@ export function MapContainer({
 }
 
 MapContainer.propTypes = {
-  typology: PropTypes.object,
+  group: PropTypes.object,
   locale: PropTypes.string,
   groupId: PropTypes.string,
   expandWithAside: PropTypes.bool,
-  drawActive: PropTypes.bool,
-  queryRegionsActive: PropTypes.bool,
-  showQuery: PropTypes.bool,
-  queryType: PropTypes.string,
+  mode: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({
   locale: state => selectLocale(state),
-  typology: (state, { groupId }) => groupId && selectGroup(state, groupId),
-  drawActive: state => selectDrawActive(state),
-  queryRegionsActive: state => selectQueryRegionsActive(state),
-  queryType: state => selectQueryType(state),
+  group: (state, { groupId }) => groupId && selectGroup(state, groupId),
 });
 
 const withConnect = connect(

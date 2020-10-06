@@ -14,12 +14,19 @@ import {
   SET_OPACITY,
   SET_COUNTRY,
   SET_ZOOM_TO_BOUNDS,
+  SET_REGION_HIGHLIGHT,
 } from './constants';
 
 export function setZoomToBounds(value) {
   return {
     type: SET_ZOOM_TO_BOUNDS,
     value,
+  };
+}
+export function setRegionHighlight(id) {
+  return {
+    type: SET_REGION_HIGHLIGHT,
+    id,
   };
 }
 export function setCountry(value) {

@@ -34,12 +34,6 @@ export const PATHS = {
   },
 };
 
-export const QUERY_REGIONS_LAYER = {
-  source: 'github',
-  type: 'topojson',
-  path: 'auxiliary/EEZ_Land_v3_202030_simplified-10.topo.json',
-};
-
 export const MAX_LOAD_ATTEMPTS = 5;
 export const MAX_LOAD_ATTEMPTS_GROUPS = 2;
 
@@ -128,6 +122,22 @@ export const GROUP_LAYER_OPTIONS = {
   RASTER: {
     tileSize: 256,
     noWrap: false,
+  },
+};
+
+export const QUERY_REGIONS_LAYER = {
+  key: 'query-regions',
+  source: 'github',
+  type: 'topojson',
+  path: 'auxiliary/EEZ_Land_v3_202030_simplified-10.topo.json',
+  featureId: 'OGC_FID',
+  featureTitle: 'UNION',
+  featureTitleAdditional: 'SOVEREIGN1',
+  featureTitleAdditional2: 'SOVEREIGN2',
+  style: {
+    weight: 0.5,
+    opacity: 1,
+    fillOpacity: 0,
   },
 };
 

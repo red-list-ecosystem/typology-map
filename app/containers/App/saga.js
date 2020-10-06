@@ -426,11 +426,11 @@ function* queryGroupsByType(type, args) {
   const ready = yield select(selectGroupsQueryReadyByType, type);
   // If haven't loaded yet, do so now.
   if (!requestedAt && !ready) {
-    let url = `${PATHS.GROUPS_QUERY_API[type]}?`;
+    let url = `${PATHS.GROUPS_QUERY_API[type]}`;
     if (polygonWKT) {
-      url = `${url}poly=${polygonWKT}`;
+      url = `${url}?poly=${polygonWKT}`;
     } else {
-      url = `${url}eezid=${regionId}`;
+      url = `${url}?regionid=${regionId}`;
     }
     if (occurrence) {
       url = `${url}&occurrence=${occurrence}`;

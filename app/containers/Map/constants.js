@@ -14,3 +14,4 @@ export const SET_BASEMAP = 'app/Map/SET_BASEMAP';
 export const SET_OPACITY = 'app/Map/SET_OPACITY';
 export const SET_COUNTRY = 'app/Map/SET_COUNTRY';
 export const SET_ZOOM_TO_BOUNDS = 'app/Map/SET_ZOOM_TO_BOUNDS';
+export const SET_REGION_HIGHLIGHT = 'app/Map/SET_REGION_HIGHLIGHT';

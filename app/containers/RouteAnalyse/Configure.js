@@ -17,6 +17,7 @@ import {
   queryGroups,
   updateGroupsQuery,
   setQueryType,
+  setActiveGroupQuery,
 } from 'containers/App/actions';
 import {
   selectGroupsQueryArgs,
@@ -79,6 +80,7 @@ export function Configure({
   intl,
   realms,
   biomes,
+  resetActiveGroup,
 }) {
   const { area, realm, biome, occurrence, regionId } = queryArgs;
   const hasArea = area && area.trim() !== '' && testArea(area);
@@ -88,6 +90,9 @@ export function Configure({
   }, []);
   useEffect(() => {
     onSetQueryType(!hasArea && hasRegion ? 'region' : 'area');
+  }, []);
+  useEffect(() => {
+    resetActiveGroup();
   }, []);
 
   // must be a closed area (first point === last point)
@@ -257,7 +262,10 @@ export function Configure({
         </StepTitle>
         <Box direction="row" gap="xsmall" align="center">
           <SubmitButton
-            disabled={!(hasArea || hasRegion)}
+            disabled={
+              (queryType === 'area' && !hasArea) ||
+              (queryType === 'region' && !hasRegion)
+            }
             label={intl.formatMessage(messages.submitQueryLabel)}
             onClick={() => {
               onQueryGroups({
@@ -282,9 +290,14 @@ export function Configure({
               }
             }}
           />
-          {!(hasArea || hasRegion) && (
+          {queryType === 'area' && !hasArea && (
             <Hint>
-              <FormattedMessage {...messages.submitQueryAreaHint} />
+              <FormattedMessage {...messages.submitQueryNoAreaHint} />
+            </Hint>
+          )}
+          {queryType === 'region' && !hasRegion && (
+            <Hint>
+              <FormattedMessage {...messages.submitQueryNoRegionHint} />
             </Hint>
           )}
         </Box>
@@ -298,6 +311,7 @@ Configure.propTypes = {
   onToggleDraw: PropTypes.func,
   onSetQueryType: PropTypes.func,
   updateQuery: PropTypes.func,
+  resetActiveGroup: PropTypes.func,
   queryArgs: PropTypes.object,
   queryType: PropTypes.string,
   realms: PropTypes.array,
@@ -315,6 +329,7 @@ export function mapDispatchToProps(dispatch) {
     onQueryGroups: args => dispatch(queryGroups(args)),
     updateQuery: args => dispatch(updateGroupsQuery(args)),
     onSetQueryType: type => dispatch(setQueryType(type)),
+    resetActiveGroup: () => dispatch(setActiveGroupQuery('')),
   };
 }
 

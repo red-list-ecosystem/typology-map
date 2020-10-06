@@ -106,9 +106,13 @@ export default defineMessages({
     id: `${scope}.submitQuery`,
     defaultMessage: '3. Retrieve Functional Groups',
   },
-  submitQueryAreaHint: {
-    id: `${scope}.submitQueryAreaHint`,
+  submitQueryNoAreaHint: {
+    id: `${scope}.submitQueryNoAreaHint`,
     defaultMessage: 'Query requires defining a closed area',
+  },
+  submitQueryNoRegionHint: {
+    id: `${scope}.submitQueryNoRegionHint`,
+    defaultMessage: 'Query requires selecting a region',
   },
   submitQueryLabel: {
     id: `${scope}.submitQueryLabel`,
