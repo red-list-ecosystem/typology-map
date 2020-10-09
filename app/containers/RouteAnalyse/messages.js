@@ -53,6 +53,10 @@ export default defineMessages({
     id: `${scope}.selectRegionFieldLabel`,
     defaultMessage: 'Select region',
   },
+  selectRegionFieldPlaceholder: {
+    id: `${scope}.selectRegionFieldPlaceholder`,
+    defaultMessage: 'Select region',
+  },
   defineAreaFieldPlaceholder: {
     id: `${scope}.defineAreaFieldPlaceholder`,
     defaultMessage: 'Format: lon1 lat1,lon2 lat2,...',

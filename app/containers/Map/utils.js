@@ -1,5 +1,7 @@
 import isNumber from 'utils/is-number';
 
+import { QUERY_REGIONS_LAYER } from 'config';
+
 export const roundCoordinate = (value, digits = 6) => {
   const factor = 10 ** Math.min(digits, 10);
   return isNumber(value) && Math.round(value * factor) / factor;
@@ -34,4 +36,19 @@ export const getLatLngsFromArea = area => {
     return m;
   }, []);
   return latlngs;
+};
+
+export const getRegionFeatureTitle = feature => {
+  const featureTitle = feature.properties[QUERY_REGIONS_LAYER.featureTitle];
+  const featureTitleAdd =
+    feature.properties[QUERY_REGIONS_LAYER.featureTitleAdditional];
+  const featureTitleAdd2 =
+    feature.properties[QUERY_REGIONS_LAYER.featureTitleAdditional2];
+  if (featureTitle === featureTitleAdd) {
+    return featureTitle;
+  }
+  if (featureTitleAdd2 && featureTitleAdd2 !== '') {
+    return `${featureTitleAdd}/${featureTitleAdd2} (${featureTitle})`;
+  }
+  return `${featureTitleAdd} (${featureTitle})`;
 };

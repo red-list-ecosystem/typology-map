@@ -13,7 +13,7 @@ import { createStructuredSelector } from 'reselect';
 import { Box, Text, Button } from 'grommet';
 import { FormattedMessage, intlShape, injectIntl } from 'react-intl';
 
-import { GROUP_LAYER_PROPERTIES } from 'config';
+import { GROUP_LAYER_PROPERTIES, QUERY_REGIONS_LAYER } from 'config';
 
 import {
   selectGroupsByAreaAll,
@@ -30,12 +30,16 @@ import {
   setActiveGroupQuery,
   setInfoGroupQuery,
 } from 'containers/App/actions';
+import { selectLayerByKey } from 'containers/Map/selectors';
+import { getRegionFeatureTitle } from 'containers/Map/utils';
 
 import AsideNavTypologyList from 'components/AsideNavTypologyList';
 import AsideNavLabel from 'components/AsideNavLabel';
 import LoadingIndicator from 'components/LoadingIndicator';
 import AsideNavSection from 'components/AsideNavSection';
 import Hint from 'components/Hint';
+
+import quasiEquals from 'utils/quasi-equals';
 
 import commonMessages from 'messages';
 import messages from './messages';
@@ -91,6 +95,7 @@ export function Results({
   updateQuery,
   onQueryGroups,
   queryType,
+  regionLayer,
 }) {
   const [areaUpdate, setAreaUpdate] = useState(false);
   const [filterUpdate, setFilterUpdate] = useState(false);
@@ -120,6 +125,14 @@ export function Results({
     background: ${({ color }) => color};
     opacity: ${({ opacity }) => opacity};
   `;
+
+  const activeRegion =
+    queryType === 'region' &&
+    regionId &&
+    regionLayer &&
+    regionLayer.data.features.find(feature =>
+      quasiEquals(feature.properties[QUERY_REGIONS_LAYER.featureId], regionId),
+    );
 
   return (
     <Box pad={{ bottom: 'large' }} flex={false} background="white">
@@ -174,7 +187,9 @@ export function Results({
                 {queryType === 'area' && (
                   <Text truncate>{getOpenArea(area)}</Text>
                 )}
-                {queryType === 'region' && <Text>{regionId}</Text>}
+                {queryType === 'region' && (
+                  <Text>{getRegionFeatureTitle(activeRegion)}</Text>
+                )}
               </FieldWrap>
             </AsideNavSection>
             <AsideNavSection margin={{ top: 'ms' }}>
@@ -312,6 +327,7 @@ Results.propTypes = {
   biomes: PropTypes.array,
   activeGroup: PropTypes.string,
   queryType: PropTypes.string,
+  regionLayer: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -320,6 +336,7 @@ const mapStateToProps = createStructuredSelector({
   activeGroup: state => selectActiveGroup(state),
   groups: state => selectGroupsByAreaAll(state),
   queryType: state => selectQueryType(state),
+  regionLayer: state => selectLayerByKey(state, QUERY_REGIONS_LAYER.key),
 });
 
 function mapDispatchToProps(dispatch) {

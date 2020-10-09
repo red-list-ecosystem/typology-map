@@ -49,7 +49,11 @@ import { useInjectReducer } from 'utils/injectReducer';
 import quasiEquals from 'utils/quasi-equals';
 import reducer from './reducer';
 import saga from './saga';
-import { getAreaWKTFromLayer, getLatLngsFromArea } from './utils';
+import {
+  getAreaWKTFromLayer,
+  getLatLngsFromArea,
+  getRegionFeatureTitle,
+} from './utils';
 
 import Settings from './Settings';
 import Attribution from './Attribution';
@@ -475,29 +479,8 @@ export function Map({
                   queryRegion,
                 ),
               onEachFeature: (feature, jsonLayer) => {
-                const featureTitle =
-                  feature.properties[QUERY_REGIONS_LAYER.featureTitle];
-                const featureTitleAdd =
-                  feature.properties[
-                    QUERY_REGIONS_LAYER.featureTitleAdditional
-                  ];
-                const featureTitleAdd2 =
-                  feature.properties[
-                    QUERY_REGIONS_LAYER.featureTitleAdditional2
-                  ];
-                if (featureTitle === featureTitleAdd) {
-                  jsonLayer.bindTooltip(featureTitle, { sticky: true });
-                } else if (featureTitleAdd2 && featureTitleAdd2 !== '') {
-                  jsonLayer.bindTooltip(
-                    `${featureTitle} (${featureTitleAdd}/${featureTitleAdd2})`,
-                    { sticky: true },
-                  );
-                } else {
-                  jsonLayer.bindTooltip(
-                    `${featureTitle} (${featureTitleAdd})`,
-                    { sticky: true },
-                  );
-                }
+                const featureTitle = getRegionFeatureTitle(feature);
+                jsonLayer.bindTooltip(featureTitle, { sticky: true });
                 jsonLayer.on({
                   mouseover: e => onRegionMouseOver(e, feature),
                   mouseout: e => onRegionMouseOut(e, feature),
