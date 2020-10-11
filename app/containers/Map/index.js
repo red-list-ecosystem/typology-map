@@ -362,7 +362,7 @@ export function Map({
           },
         });
         groupLayerGroupRef.current.addLayer(vectorGrid);
-        if (zoomToBounds) {
+        if (zoomToBounds && mode !== 'analyse') {
           let latlngs;
           if (group.layer.extent) {
             const { N, S, W, E } = group.layer.extent;

@@ -302,6 +302,7 @@ export function Results({
                   }
                   activeId={activeGroup}
                   infoItem={id => onSetInfoGroup(id)}
+                  showAreas
                 />
               </>
             )}

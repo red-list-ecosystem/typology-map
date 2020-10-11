@@ -44,6 +44,7 @@ function AsideNavTypologyList({
   infoItem,
   activeId,
   selectParent,
+  showAreas,
 }) {
   return (
     <Box>
@@ -58,9 +59,11 @@ function AsideNavTypologyList({
               }
               id={item.id}
               name={item.title[locale]}
+              stats={showAreas && item.stats ? item.stats : null}
               level={level}
               active={item.id === activeId}
               hasInfo={!!infoItem}
+              showAreas={showAreas}
             />
             {infoItem && (
               <ButtonInfo
@@ -83,6 +86,7 @@ AsideNavTypologyList.propTypes = {
   selectItem: PropTypes.func,
   infoItem: PropTypes.func,
   selectParent: PropTypes.func,
+  showAreas: PropTypes.bool,
 };
 
 export default AsideNavTypologyList;

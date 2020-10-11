@@ -4,9 +4,13 @@
 import { createSelector } from 'reselect';
 import { DEFAULT_LOCALE, appLocales } from 'i18n';
 
+import { groupBy } from 'lodash/collection';
+
 import { biomesForRealm, groupsForBiome, groupsForBiomes } from 'utils/store';
 import { startsWith } from 'utils/string';
+import quasiEquals from 'utils/quasi-equals';
 
+import { GROUP_LAYER_PROPERTIES } from 'config';
 import { initialState } from './reducer';
 
 const selectGlobal = state => (state && state.global) || initialState;
@@ -286,17 +290,56 @@ export const selectGroupsByAreaAll = createSelector(
     let rGroups = [];
     let vGroups = [];
     if (groups && data.groups.raster) {
-      rGroups = data.groups.raster.map(d =>
-        groups.find(g => g.id === d.layer_id),
-      );
+      rGroups = data.groups.raster.map(d => ({
+        ...d,
+        ...groups.find(g => g.id === d.layer_id),
+      }));
     }
     if (groups && data.groups.vector) {
-      vGroups = data.groups.vector.map(d =>
-        groups.find(g => g.id === d.layer_id),
+      // console.log(groupBy(data.groups.vector, l => l.layer_id))
+      const maxOverall = data.groups.vector.reduce(
+        (max, g) => (g.area ? Math.max(max, g.area) : max),
+        0,
       );
+      const grouped = groupBy(data.groups.vector, l => l.layer_id);
+      vGroups = Object.keys(grouped).map(lid => ({
+        ...groups.find(g => g.id === lid),
+        stats: {
+          occurrences: Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).reduce(
+            (memo, occurr) => {
+              const o = grouped[lid].find(a =>
+                quasiEquals(a.occurrence, occurr),
+              );
+              return {
+                ...memo,
+                [occurr]: {
+                  id: GROUP_LAYER_PROPERTIES.OCCURRENCE[occurr].id,
+                  area: o ? o.area : null,
+                },
+              };
+            },
+            {},
+          ),
+          total: grouped[lid].reduce((sum, group) => sum + group.area, 0),
+          max: grouped[lid].reduce(
+            (max, group) => Math.max(group.area, max),
+            0,
+          ),
+          min: grouped[lid].reduce(
+            (min, group) => (!min ? group.area : Math.min(min, group.area)),
+            null,
+          ),
+          maxOverall,
+        },
+      }));
     }
     const allGroups = [...vGroups, ...rGroups];
     return allGroups.sort((a, b) => {
+      if (a.stats && !b.stats) return -1;
+      if (!a.stats && b.stats) return 1;
+      if (a.stats && b.stats && a.stats.max !== b.stats.max) {
+        return a.stats.max > b.stats.max ? -1 : 1;
+      }
       const biomeA = biomes && biomes.find(biome => biome.id === a.biome);
       const realmA = realms && realms.find(r => r.id === biomeA.realm);
       const biomeB = biomes && biomes.find(biome => biome.id === b.biome);

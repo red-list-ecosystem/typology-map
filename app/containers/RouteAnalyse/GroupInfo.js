@@ -64,8 +64,6 @@ const ContentWrap = styled.div`
   position: relative;
   pointer-events: all;
   z-index: ${({ theme }) => theme.dimensions.mainContent.zIndex};
-  background: ${({ theme }) => theme.global.colors.white};
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
   width: 100%;
   padding: ${({ theme }) => theme.global.edgeSize.small};
   padding-top: ${({ theme }) => theme.global.edgeSize.medium};
