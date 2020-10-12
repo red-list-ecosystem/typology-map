@@ -381,6 +381,40 @@ export function Map({
       }
     }
   }, [group, layers, mode]);
+  // change group or stored vector layers
+  useEffect(() => {
+    // add highlight layer
+    if (
+      group &&
+      layers &&
+      group['highlight-layer'] &&
+      (group['highlight-layer'].type === 'geojson' ||
+        group['highlight-layer'].type === 'topojson')
+    ) {
+      const auxId = `${group.id}-aux`;
+      // kick of loading of vector data for group if not present
+      if (!layers[auxId]) {
+        onLoadLayer(auxId, group['highlight-layer']);
+      }
+      // display layer once loaded
+      if (layers[auxId] && groupLayerGroupRef.current) {
+        const layer = layers[auxId];
+        const maxZoom = parseInt(group['highlight-layer']['max-zoom'], 10) || 4;
+        const vectorGrid = L.vectorGrid.slicer(layer.data, {
+          interactive: true,
+          rendererFactory: L.svg.tile,
+          vectorTileLayerStyles: {
+            sliced: GROUP_LAYER_OPTIONS['VECTOR-AUX'],
+          },
+          maxZoom,
+        });
+        groupLayerGroupRef.current.addLayer(vectorGrid);
+        vectorGrid.on('click', e => {
+          mapRef.current.setView(e.latlng, maxZoom + 1);
+        });
+      }
+    }
+  }, [group, layers, zoom]);
 
   useEffect(() => {
     // zoom to bounds when enabled

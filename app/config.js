@@ -12,6 +12,8 @@ import LOGO_2 from 'images/logo_CEM.jpg';
 import LOGO_3 from 'images/logo_CES.png';
 import LOGO_4 from 'images/logo_UNSW.png';
 
+import { colors } from 'theme';
+
 import { PRIMARY, SECONDARY, FOOTER } from 'containers/App/constants';
 
 export const ROUTES = {
@@ -118,6 +120,15 @@ export const GROUP_LAYER_OPTIONS = {
       stroke: true,
       weight: 1.5,
     },
+  },
+  'VECTOR-AUX': {
+    stroke: true,
+    weight: 0.5,
+    fill: true,
+    fillOpacity: 0.01,
+    color: colors['brand-2-light'],
+    fillColor: 'white',
+    opacity: 1,
   },
   RASTER: {
     tileSize: 256,
