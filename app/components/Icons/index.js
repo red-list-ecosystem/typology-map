@@ -8,6 +8,8 @@ import Minus from './Minus';
 import Next from './Next';
 import Plus from './Plus';
 import Search from './Search';
+import Down from './Down';
+import Up from './Up';
 
 export {
   Close,
@@ -20,4 +22,6 @@ export {
   Next,
   Plus,
   Search,
+  Down,
+  Up,
 };

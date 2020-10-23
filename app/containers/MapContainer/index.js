@@ -1,6 +1,6 @@
 /**
  *
- * MapWrapper
+ * MapContainer
  *
  */
 
@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import styled, { css } from 'styled-components';
+import { ResponsiveContext } from 'grommet';
 
 import { selectLocale, selectGroup } from 'containers/App/selectors';
 
@@ -20,6 +21,9 @@ import MapControls from 'components/MapControls';
 import MapControl from 'components/MapControl';
 import TopGraphic from 'components/TopGraphic';
 
+import { getAsideWidth } from 'utils/responsive';
+
+// prettier-ignore
 const Styled = styled(TopGraphic)`
   z-index: ${({ isFS }) => (isFS ? 1000 : 1)};
   pointer-events: ${({ active }) => (active ? 'all' : 'none')};
@@ -28,42 +32,68 @@ const Styled = styled(TopGraphic)`
     isFS &&
     css`
       bottom: 0 !important;
-      right: 0 !important;
+      right: ${({ aside, asideWidth }) =>
+    aside ? asideWidth : 0}px !important;
       height: auto !important;
     `}
 `;
 
-export function MapWrapper({ typology, locale, groupId }) {
+export function MapContainer({
+  group,
+  locale,
+  groupId,
+  expandWithAside,
+  mode,
+}) {
   const [isMapExpanded, setIsMapExpanded] = useState(false);
 
   return (
-    <Styled isFS={groupId && isMapExpanded} active={!!groupId}>
-      <Map group={typology} fullscreen={isMapExpanded} locale={locale} />
-      <MapControls position="right">
-        <MapControl
-          icon={
-            isMapExpanded ? (
-              <Contract color="black" />
-            ) : (
-              <Expand color="black" />
-            )
-          }
-          onClick={() => setIsMapExpanded(!isMapExpanded)}
-        />
-      </MapControls>
-    </Styled>
+    <ResponsiveContext.Consumer>
+      {size => (
+        <Styled
+          isFS={expandWithAside || (groupId && isMapExpanded)}
+          active={expandWithAside || !!groupId}
+          aside={expandWithAside}
+          asideWidth={getAsideWidth(size)}
+        >
+          <Map
+            group={group}
+            fullscreen={expandWithAside || isMapExpanded}
+            locale={locale}
+            size={size}
+            mode={mode}
+          />
+          {!expandWithAside && (
+            <MapControls position="right">
+              <MapControl
+                icon={
+                  isMapExpanded ? (
+                    <Contract color="black" />
+                  ) : (
+                    <Expand color="black" />
+                  )
+                }
+                onClick={() => setIsMapExpanded(!isMapExpanded)}
+              />
+            </MapControls>
+          )}
+        </Styled>
+      )}
+    </ResponsiveContext.Consumer>
   );
 }
 
-MapWrapper.propTypes = {
-  typology: PropTypes.object,
+MapContainer.propTypes = {
+  group: PropTypes.object,
   locale: PropTypes.string,
   groupId: PropTypes.string,
+  expandWithAside: PropTypes.bool,
+  mode: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({
   locale: state => selectLocale(state),
-  typology: (state, { groupId }) => groupId && selectGroup(state, groupId),
+  group: (state, { groupId }) => groupId && selectGroup(state, groupId),
 });
 
 const withConnect = connect(
@@ -71,4 +101,4 @@ const withConnect = connect(
   null,
 );
 
-export default compose(withConnect)(MapWrapper);
+export default compose(withConnect)(MapContainer);

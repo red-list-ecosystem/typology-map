@@ -156,7 +156,7 @@ export function ExploreBiome({
                     items={sortedGroups}
                     level={2}
                     locale={locale}
-                    navItem={id => navGroup(id)}
+                    selectItem={id => navGroup(id)}
                   />
                 </AsideNavSection>
               </ColumnAside>

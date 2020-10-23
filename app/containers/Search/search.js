@@ -4,7 +4,7 @@ import { reduce } from 'lodash/collection';
 import { startsWith } from 'utils/string';
 
 // match multiple words, incl substrings
-const regExMultipleWords = str =>
+export const regExMultipleWords = str =>
   reduce(str.split(' '), (words, s) => `${words}(?=.*${s})`, '');
 
 // match multiple words
@@ -62,7 +62,7 @@ export const prepTaxonomies = (items, search, locale) =>
           ? item.keywords[locale || 'en']
             .split(',')
             .map(w => w.trim())
-            .join(', ') 
+            .join(', ')
           : '',
       }))
       .filter(item => filterTaxonomy(item, search))

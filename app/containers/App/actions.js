@@ -25,6 +25,11 @@ import {
   TYPOLOGY_LOAD_SUCCESS,
   TYPOLOGY_LOAD_ERROR,
   TYPOLOGY_READY,
+  QUERY_GROUPS,
+  GROUPS_QUERIED,
+  GROUPS_QUERY_SUCCESS,
+  GROUPS_QUERY_ERROR,
+  GROUPS_QUERY_READY,
   LOAD_CONTENT,
   CONTENT_REQUESTED,
   CONTENT_LOAD_SUCCESS,
@@ -32,6 +37,14 @@ import {
   CONTENT_READY,
   DISMISS_DISCLAIMER,
   SET_FULLSCREEN_IMAGE,
+  UPDATE_GROUPS_QUERY,
+  RESET_GROUPS_QUERY,
+  RESET_GROUPS_QUERY_NAV,
+  SET_ACTIVE_GROUP_QUERY,
+  SET_INFO_GROUP_QUERY,
+  TOGGLE_DRAW,
+  SHOW_QUERY_REGIONS,
+  SET_QUERY_TYPE,
 } from './constants';
 
 export function setLocale(locale) {
@@ -179,5 +192,96 @@ export function setFullscreenImage(imageType, args) {
 export function dismissDisclaimer() {
   return {
     type: DISMISS_DISCLAIMER,
+  };
+}
+
+export function queryGroups(args) {
+  // console.log('queryGroups');
+  return {
+    type: QUERY_GROUPS,
+    args,
+  };
+}
+
+export function setGroupsQuerySuccess(layerType, groups, args, time) {
+  return {
+    type: GROUPS_QUERY_SUCCESS,
+    layerType,
+    groups,
+    args,
+    time,
+  };
+}
+
+export function setGroupsQueried(layerType, time) {
+  return {
+    type: GROUPS_QUERIED,
+    layerType,
+    time,
+  };
+}
+
+export function setGroupsQueryError(error, layerType, args) {
+  return {
+    type: GROUPS_QUERY_ERROR,
+    error,
+    layerType,
+    args,
+  };
+}
+
+export function setGroupQueryReady(layerType, time) {
+  return {
+    type: GROUPS_QUERY_READY,
+    layerType,
+    time,
+  };
+}
+
+export function updateGroupsQuery(args) {
+  return {
+    type: UPDATE_GROUPS_QUERY,
+    args,
+  };
+}
+
+export function resetGroupsQuery() {
+  return {
+    type: RESET_GROUPS_QUERY,
+  };
+}
+export function resetGroupsQueryNav() {
+  return {
+    type: RESET_GROUPS_QUERY_NAV,
+  };
+}
+export function setActiveGroupQuery(id) {
+  return {
+    type: SET_ACTIVE_GROUP_QUERY,
+    id,
+  };
+}
+export function setInfoGroupQuery(id) {
+  return {
+    type: SET_INFO_GROUP_QUERY,
+    id,
+  };
+}
+export function toggleDraw(active) {
+  return {
+    type: TOGGLE_DRAW,
+    active,
+  };
+}
+export function showQueryRegions(active) {
+  return {
+    type: SHOW_QUERY_REGIONS,
+    active,
+  };
+}
+export function setQueryType(queryType) {
+  return {
+    type: SET_QUERY_TYPE,
+    queryType,
   };
 }

@@ -80,6 +80,10 @@ export default defineMessages({
     id: `${scope}.navExplore`,
     defaultMessage: 'Explore',
   },
+  navAnalyse: {
+    id: `${scope}.navAnalyse`,
+    defaultMessage: 'By Area',
+  },
   page_typology: {
     id: `${scope}.page_typology`,
     defaultMessage: 'Typology',

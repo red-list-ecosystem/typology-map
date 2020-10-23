@@ -29,6 +29,7 @@ import {
   navigatePage,
 } from 'containers/App/actions';
 import {
+  selectActiveGroup,
   selectShowDisclaimer,
   selectRouterPathNamed,
   selectFullscreenImage,
@@ -38,6 +39,7 @@ import RouteHome from 'containers/RouteHome/Loadable';
 import RoutePage from 'containers/RoutePage/Loadable';
 import RouteExploreOverview from 'containers/RouteExploreOverview/Loadable';
 import RouteExplore from 'containers/RouteExplore';
+import RouteAnalyse from 'containers/RouteAnalyse';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import MapContainer from 'containers/MapContainer';
 import Header from 'containers/Header';
@@ -53,15 +55,17 @@ import { appLocales } from 'i18n';
 
 import commonMessages from 'messages';
 
-import ScrollToTop from './ScrollToTop';
-
 const AppWrapper = styled.div`
   width: 100%;
   min-height: 100%;
 `;
 
 const Content = styled.div`
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   padding-top: ${getHeaderHeight('small')}px;
   @media (min-width: ${props => props.theme.sizes.medium.minpx}) {
     padding-top: ${getHeaderHeight('medium')}px;
@@ -85,6 +89,7 @@ function App({
   fullscreenImage,
   path,
   intl,
+  activeGroup,
 }) {
   useInjectReducer({ key: 'global', reducer });
   useInjectSaga({ key: 'default', saga });
@@ -92,8 +97,12 @@ function App({
   useEffect(() => {
     onLoadTypology();
   }, []);
-  const groupId =
-    path.route === ROUTES.EXPLORE && path.level === 'groups' ? path.id : null;
+  let groupId;
+  if (path.route === ROUTES.EXPLORE && path.level === 'groups') {
+    groupId = path.id;
+  } else if (path.route === ROUTES.ANALYSE && activeGroup) {
+    groupId = activeGroup;
+  }
 
   return (
     <Grommet theme={theme}>
@@ -116,42 +125,52 @@ function App({
         )}
         <Header />
         <Content>
-          <MapContainer groupId={groupId} />
-          <ScrollToTop>
-            <Switch>
-              <Route
-                exact
-                path={[`/${ROUTES.HOME}`, `/:locale(${appLocales.join('|')})`]}
-                component={RouteHome}
-              />
-              <Route
-                exact
-                path={[
-                  `/${ROUTES.EXPLORE}`,
-                  `/:locale(${appLocales.join('|')})/${ROUTES.EXPLORE}`,
-                ]}
-                component={RouteExploreOverview}
-              />
-              <Route
-                exact
-                path={[
-                  `/${ROUTES.EXPLORE}/:level/:id`,
-                  `/:locale(${appLocales.join('|')})/${
-                    ROUTES.EXPLORE
-                  }/:level/:id`,
-                ]}
-                component={RouteExplore}
-              />
-              <Route
-                path={[
-                  `/${ROUTES.PAGE}/:id`,
-                  `/:locale(${appLocales.join('|')})/${ROUTES.PAGE}/:id`,
-                ]}
-                component={RoutePage}
-              />
-              <Route path="" component={NotFoundPage} />
-            </Switch>
-          </ScrollToTop>
+          <MapContainer
+            groupId={groupId}
+            expandWithAside={path.route === ROUTES.ANALYSE}
+            mode={path.route}
+          />
+          <Switch>
+            <Route
+              exact
+              path={[`/${ROUTES.HOME}`, `/:locale(${appLocales.join('|')})`]}
+              component={RouteHome}
+            />
+            <Route
+              exact
+              path={[
+                `/${ROUTES.EXPLORE}`,
+                `/:locale(${appLocales.join('|')})/${ROUTES.EXPLORE}`,
+              ]}
+              component={RouteExploreOverview}
+            />
+            <Route
+              exact
+              path={[
+                `/${ROUTES.EXPLORE}/:level/:id`,
+                `/:locale(${appLocales.join('|')})/${
+                  ROUTES.EXPLORE
+                }/:level/:id`,
+              ]}
+              component={RouteExplore}
+            />
+            <Route
+              exact
+              path={[
+                `/${ROUTES.ANALYSE}`,
+                `/:locale(${appLocales.join('|')})/${ROUTES.ANALYSE}`,
+              ]}
+              component={RouteAnalyse}
+            />
+            <Route
+              path={[
+                `/${ROUTES.PAGE}/:id`,
+                `/:locale(${appLocales.join('|')})/${ROUTES.PAGE}/:id`,
+              ]}
+              component={RoutePage}
+            />
+            <Route path="" component={NotFoundPage} />
+          </Switch>
           {fullscreenImage && <FullscreenImage config={fullscreenImage} />}
         </Content>
         <GlobalStyle />
@@ -175,12 +194,14 @@ App.propTypes = {
   path: PropTypes.object,
   fullscreenImage: PropTypes.object,
   intl: intlShape.isRequired,
+  activeGroup: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({
   showDisclaimer: state => selectShowDisclaimer(state),
   path: state => selectRouterPathNamed(state),
   fullscreenImage: state => selectFullscreenImage(state),
+  activeGroup: state => selectActiveGroup(state),
 });
 
 export function mapDispatchToProps(dispatch) {

@@ -12,7 +12,7 @@ import { Menu, Search as SearchIcon } from 'components/Icons';
 import { selectRouterPath } from 'containers/App/selectors';
 import { navigate, navigateHome, navigatePage } from 'containers/App/actions';
 import { PRIMARY, SECONDARY } from 'containers/App/constants';
-import { PAGES, ICONS } from 'config';
+import { PAGES, ICONS, ROUTES } from 'config';
 
 import Img from 'components/Img';
 import LocaleToggle from 'containers/LocaleToggle';
@@ -282,7 +282,7 @@ function Header({ nav, navHome, navPage, path }) {
             {isMinSize(size, 'large') && (
               <NavPrimary>
                 <Primary
-                  onClick={() => nav('explore')}
+                  onClick={() => nav(ROUTES.EXPLORE)}
                   label={
                     <PrimaryLabel>
                       <IconImgWrap>
@@ -294,7 +294,22 @@ function Header({ nav, navHome, navPage, path }) {
                       </Text>
                     </PrimaryLabel>
                   }
-                  active={contentType === 'explore'}
+                  active={contentType === ROUTES.EXPLORE}
+                />
+                <Primary
+                  onClick={() => nav(ROUTES.ANALYSE)}
+                  label={
+                    <PrimaryLabel>
+                      <IconImgWrap>
+                        <IconImgHelper />
+                        <IconImg src={ICONS.ANALYSIS} alt="" />
+                      </IconImgWrap>
+                      <Text>
+                        <FormattedMessage {...commonMessages.navAnalyse} />
+                      </Text>
+                    </PrimaryLabel>
+                  }
+                  active={contentType === ROUTES.ANALYSE}
                 />
                 {pagesPrimary.map(p => (
                   <Primary

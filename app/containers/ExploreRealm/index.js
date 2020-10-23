@@ -121,7 +121,7 @@ export function ExploreRealm({
                     items={sortedBiomes}
                     level={1}
                     locale={locale}
-                    navItem={id => navBiome(id)}
+                    selectItem={id => navBiome(id)}
                   />
                 </AsideNavSection>
               </ColumnAside>
