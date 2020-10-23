@@ -8,7 +8,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Text } from 'grommet';
-import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 
 import { formatNumber } from 'utils/numbers';
 
@@ -47,6 +47,7 @@ const BarWrapper = styled.div`
   position: relative;
   width: 100%;
   height: 12px;
+  background: ${({ theme }) => theme.global.colors['light-grey']};
 `;
 const Bar = styled.div`
   position: absolute;
@@ -54,6 +55,7 @@ const Bar = styled.div`
   top: 0;
   height: 12px;
   width: ${({ percentage }) => percentage}%;
+  min-width: 1px;
   background: ${({ color }) => color};
 `;
 
@@ -79,15 +81,15 @@ function AsideNavTypologyButton({
               {stats &&
                 stats.occurrences &&
                 Object.keys(stats.occurrences).map(key => {
-                  const { area } = stats.occurrences[key];
+                  const areaRelative = stats.occurrences[key].area_relative;
                   const oid = stats.occurrences[key].id;
-                  if (area) {
+                  if (areaRelative) {
                     return (
                       <div key={key}>
                         <BarWrapper>
                           <Bar
                             color={GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color}
-                            percentage={(area / stats.maxOverall) * 100}
+                            percentage={areaRelative * 100}
                           />
                         </BarWrapper>
                         <div>
@@ -98,8 +100,12 @@ function AsideNavTypologyButton({
                                   type: intl.formatMessage(
                                     rootMessages[`occurrence_${oid}`],
                                   ),
-                                  value: formatNumber(area, intl),
-                                  unit: 'km<sup>2</sup>',
+                                  value: formatNumber(
+                                    areaRelative * 100,
+                                    intl,
+                                    2,
+                                  ),
+                                  unit: '%',
                                 }),
                               }}
                             />
@@ -110,11 +116,6 @@ function AsideNavTypologyButton({
                   }
                   return null;
                 })}
-              {!stats && (
-                <Text size="xxsmall">
-                  <FormattedMessage {...messages.not_available} />
-                </Text>
-              )}
             </Stats>
           )}
         </div>
@@ -124,6 +125,11 @@ function AsideNavTypologyButton({
   );
   /* eslint-enable react/no-danger */
 }
+// {!stats && (
+//   <Text size="xxsmall">
+//   <FormattedMessage {...messages.not_available} />
+//   </Text>
+// )}
 
 AsideNavTypologyButton.propTypes = {
   id: PropTypes.string,

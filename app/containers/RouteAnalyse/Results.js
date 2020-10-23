@@ -17,6 +17,7 @@ import { GROUP_LAYER_PROPERTIES, QUERY_REGIONS_LAYER } from 'config';
 
 import {
   selectGroupsByAreaAll,
+  selectGroupsForRegionsAll,
   selectGroupsQueryReadyAll,
   selectGroupsByAreaArgs,
   selectActiveGroup,
@@ -96,6 +97,7 @@ export function Results({
   onQueryGroups,
   queryType,
   regionLayer,
+  groupsForRegions,
 }) {
   const [areaUpdate, setAreaUpdate] = useState(false);
   const [filterUpdate, setFilterUpdate] = useState(false);
@@ -134,6 +136,7 @@ export function Results({
       quasiEquals(feature.properties[QUERY_REGIONS_LAYER.featureId], regionId),
     );
 
+  const resultGroups = queryType === 'region' ? groupsForRegions : groups;
   return (
     <Box pad={{ bottom: 'large' }} flex={false} background="white">
       {updating && (
@@ -279,22 +282,22 @@ export function Results({
                   />
                 )}
               </StepTitleWrap>
-              {queriesReady && groups.length === 0 && (
+              {queriesReady && resultGroups.length === 0 && (
                 <Hint>
                   <FormattedMessage {...messages.noResults} />
                 </Hint>
               )}
             </Box>
             {!queriesReady && <LoadingIndicator />}
-            {queriesReady && groups && groups.length > 0 && (
+            {queriesReady && resultGroups && resultGroups.length > 0 && (
               <>
                 <AsideNavLabel
-                  label={`${groups.length} ${intl.formatMessage(
+                  label={`${resultGroups.length} ${intl.formatMessage(
                     commonMessages.groups,
                   )}`}
                 />
                 <AsideNavTypologyList
-                  items={groups}
+                  items={resultGroups}
                   level={2}
                   locale={locale}
                   selectItem={id =>
@@ -315,6 +318,7 @@ export function Results({
 
 Results.propTypes = {
   groups: PropTypes.array,
+  groupsForRegions: PropTypes.array,
   queriesReady: PropTypes.bool,
   queryArgsFromQuery: PropTypes.object,
   queryArgs: PropTypes.object,
@@ -336,6 +340,7 @@ const mapStateToProps = createStructuredSelector({
   queryArgsFromQuery: state => selectGroupsByAreaArgs(state),
   activeGroup: state => selectActiveGroup(state),
   groups: state => selectGroupsByAreaAll(state),
+  groupsForRegions: state => selectGroupsForRegionsAll(state),
   queryType: state => selectQueryType(state),
   regionLayer: state => selectLayerByKey(state, QUERY_REGIONS_LAYER.key),
 });

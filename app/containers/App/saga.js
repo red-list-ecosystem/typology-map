@@ -530,8 +530,14 @@ function* queryGroupsSaga({ args }) {
   const argsStored = yield select(selectGroupsByAreaArgs);
   if (needsQuery(args, argsStored)) {
     yield put(resetGroupsQuery());
-    yield fork(queryGroupsByType, 'vector', args);
-    yield fork(queryGroupsByType, 'raster', args);
+    if (args.regionId) {
+      yield queryGroupsByType('areasbyregion', args);
+    } else {
+      yield fork(queryGroupsByType, 'vector', args);
+      yield fork(queryGroupsByType, 'raster', args);
+    }
+  } else if (args.regionId) {
+    yield filterGroupsByType('areasbyregion', args);
   } else {
     yield fork(filterGroupsByType, 'vector', args);
     yield fork(filterGroupsByType, 'raster', args);

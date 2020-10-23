@@ -6,7 +6,7 @@ export const roundNumber = (value, digits = 1) => {
   return isNumber(parsed) && Math.round(value * factor) / factor;
 };
 
-export const formatNumber = (value, intl) =>
-  intl.formatNumber(roundNumber(value, 0));
+export const formatNumber = (value, intl, digits = 0) =>
+  intl.formatNumber(roundNumber(value, digits));
 
 export default { isNumber };
