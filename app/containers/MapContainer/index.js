@@ -12,7 +12,11 @@ import { createStructuredSelector } from 'reselect';
 import styled, { css } from 'styled-components';
 import { ResponsiveContext } from 'grommet';
 
-import { selectLocale, selectGroup } from 'containers/App/selectors';
+import {
+  selectLocale,
+  selectGroup,
+  selectDrawActive,
+} from 'containers/App/selectors';
 
 import Map from 'containers/Map';
 
@@ -44,8 +48,10 @@ export function MapContainer({
   groupId,
   expandWithAside,
   mode,
+  drawActive,
 }) {
   const [isMapExpanded, setIsMapExpanded] = useState(false);
+  const [drawMode, setDrawMode] = useState('rectangle');
 
   return (
     <ResponsiveContext.Consumer>
@@ -62,6 +68,7 @@ export function MapContainer({
             locale={locale}
             size={size}
             mode={mode}
+            drawMode={drawMode}
           />
           {!expandWithAside && (
             <MapControls position="right">
@@ -77,6 +84,26 @@ export function MapContainer({
               />
             </MapControls>
           )}
+          {drawActive && (
+            <MapControls position="right">
+              <MapControl
+                active={drawMode === 'rectangle'}
+                icon={
+                  <Contract
+                    color={drawMode === 'rectangle' ? 'white' : 'black'}
+                  />
+                }
+                onClick={() => setDrawMode('rectangle')}
+              />
+              <MapControl
+                active={drawMode === 'polygon'}
+                icon={
+                  <Expand color={drawMode === 'polygon' ? 'white' : 'black'} />
+                }
+                onClick={() => setDrawMode('polygon')}
+              />
+            </MapControls>
+          )}
         </Styled>
       )}
     </ResponsiveContext.Consumer>
@@ -88,12 +115,14 @@ MapContainer.propTypes = {
   locale: PropTypes.string,
   groupId: PropTypes.string,
   expandWithAside: PropTypes.bool,
+  drawActive: PropTypes.bool,
   mode: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({
   locale: state => selectLocale(state),
   group: (state, { groupId }) => groupId && selectGroup(state, groupId),
+  drawActive: state => selectDrawActive(state),
 });
 
 const withConnect = connect(

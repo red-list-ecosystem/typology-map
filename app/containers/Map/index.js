@@ -147,6 +147,7 @@ export function Map({
   regionHighlight,
   size,
   mode,
+  drawMode,
 }) {
   useInjectReducer({ key: 'map', reducer });
   useInjectSaga({ key: 'map', saga });
@@ -157,6 +158,8 @@ export function Map({
   const groupLayerGroupRef = useRef(null);
   const basemapLayerGroupRef = useRef(null);
   const countryLayerGroupRef = useRef(null);
+  const drawPolygonControl = useRef(null);
+  const drawRectangleControl = useRef(null);
 
   const [tilesLoading, setTilesLoading] = useState(false);
   const [zoom, setZoom] = useState(MAP_OPTIONS.zoom);
@@ -588,20 +591,20 @@ export function Map({
 
   // enable leaflet draw
   useEffect(() => {
-    let drawControl;
+    // let drawControl;
     if (drawActive && drawFeatureGroupRef.current) {
-      L.drawLocal.draw.toolbar.buttons.polygon = intl.formatMessage(
-        messages.drawToolbarPolygon,
-      );
-      L.drawLocal.draw.toolbar.buttons.rectangle = intl.formatMessage(
-        messages.drawToolbarReactangle,
-      );
-      L.drawLocal.edit.toolbar.buttons.edit = intl.formatMessage(
-        messages.drawToolbarEdit,
-      );
-      L.drawLocal.edit.toolbar.buttons.remove = intl.formatMessage(
-        messages.drawToolbarRemove,
-      );
+      // L.drawLocal.draw.toolbar.buttons.polygon = intl.formatMessage(
+      //   messages.drawToolbarPolygon,
+      // );
+      // L.drawLocal.draw.toolbar.buttons.rectangle = intl.formatMessage(
+      //   messages.drawToolbarReactangle,
+      // );
+      // L.drawLocal.edit.toolbar.buttons.edit = intl.formatMessage(
+      //   messages.drawToolbarEdit,
+      // );
+      // L.drawLocal.edit.toolbar.buttons.remove = intl.formatMessage(
+      //   messages.drawToolbarRemove,
+      // );
       L.drawLocal.edit.handlers.edit.tooltip.text = intl.formatMessage(
         messages.drawTooltipEdit,
       );
@@ -627,53 +630,76 @@ export function Map({
         messages.drawTooltipPolygonEnd,
       );
       // prettier-ignore
-      drawControl = new L.Control.Draw({
-        position: 'topright',
-        draw: {
-          polyline: false,
-          circle: false, // Turns off this drawing tool
-          marker: false,
-          circlemarker: false,
-          polygon: {
-            allowIntersection: false, // Restricts shapes to simple polygons
-            drawError: {
-              // color: '#e1e100', // Color the shape will turn when intersects
-              message: intl.formatMessage(messages.drawError), // Message that will show when intersect
-            },
-            shapeOptions: {
-              color: theme.global.colors['brand-2-light'],
-              fillOpacity: 0.05,
-              weight: 1,
-              clickable: false,
-            },
+      // drawControl = new L.Control.Draw({
+      //   position: 'topright',
+      //   draw: {
+      //     polyline: false,
+      //     circle: false, // Turns off this drawing tool
+      //     marker: false,
+      //     circlemarker: false,
+      //     polygon: {
+      //       allowIntersection: false, // Restricts shapes to simple polygons
+      //       drawError: {
+      //         // color: '#e1e100', // Color the shape will turn when intersects
+      //         message: intl.formatMessage(messages.drawError), // Message that will show when intersect
+      //       },
+      //       shapeOptions: {
+      //         color: theme.global.colors['brand-2-light'],
+      //         fillOpacity: 0.05,
+      //         weight: 1,
+      //         clickable: false,
+      //       },
+      //     },
+      //     rectangle: {
+      //       showArea: false,
+      //       shapeOptions: {
+      //         color: theme.global.colors['brand-2-light'],
+      //         fillOpacity: 0.05,
+      //         weight: 1,
+      //         clickable: false,
+      //       },
+      //     },
+      //   },
+      //   edit: {
+      //     allowIntersection: false,
+      //     remove: false,
+      //     edit: {
+      //       selectedPathOptions: {
+      //         color: theme.global.colors['brand-2-light'],
+      //         fillColor: theme.global.colors['brand-2-light'],
+      //         fillOpacity: 0.025,
+      //       },
+      //     },
+      //     featureGroup: drawFeatureGroupRef.current,
+      //   },
+      // });
+      // mapRef.current.addControl(drawControl);
+      drawPolygonControl.current = new L.Draw.Polygon(
+        mapRef.current,
+        {
+          allowIntersection: false,
+          drawError: {
+            message: intl.formatMessage(messages.drawError),
+            // Message that will show when intersect
           },
-          rectangle: {
-            showArea: false,
-            shapeOptions: {
-              color: theme.global.colors['brand-2-light'],
-              fillOpacity: 0.05,
-              weight: 1,
-              clickable: false,
-            },
+          shapeOptions: {
+            color: theme.global.colors['brand-2-light'],
+            fillOpacity: 0.05,
+            weight: 1,
+            clickable: false,
           },
+        }
+      );
+      drawRectangleControl.current = new L.Draw.Rectangle(mapRef.current, {
+        showArea: false,
+        shapeOptions: {
+          color: theme.global.colors['brand-2-light'],
+          fillOpacity: 0.05,
+          weight: 1,
+          clickable: false,
         },
-        edit:
-          drawFeatureGroupRef.current.getLayers().length > 0
-            ? {
-              allowIntersection: false,
-              remove: false,
-              edit: {
-                selectedPathOptions: {
-                  color: theme.global.colors['brand-2-light'],
-                  fillColor: theme.global.colors['brand-2-light'],
-                  fillOpacity: 0.025,
-                },
-              },
-              featureGroup: drawFeatureGroupRef.current,
-            }
-            : false,
       });
-      mapRef.current.addControl(drawControl);
+
       mapRef.current.on('draw:created', e => {
         if (e.layer) {
           const areaWKT = getAreaWKTFromLayer(e.layer);
@@ -694,8 +720,28 @@ export function Map({
         updateQueryArea('');
       });
     }
-    return () => drawControl && mapRef.current.removeControl(drawControl);
+    // return () => drawControl && mapRef.current.removeControl(drawControl);
   }, [drawActive, queryArea]);
+
+  // // draw query area
+  useEffect(() => {
+    if (drawActive) {
+      if (drawMode === 'polygon' && drawPolygonControl.current) {
+        drawPolygonControl.current.enable();
+        drawRectangleControl.current.disable();
+      } else if (drawMode === 'rectangle' && drawRectangleControl.current) {
+        drawRectangleControl.current.enable();
+        drawPolygonControl.current.disable();
+      }
+    } else {
+      if (drawPolygonControl.current) {
+        drawPolygonControl.current.disable();
+      }
+      if (drawRectangleControl.current) {
+        drawRectangleControl.current.disable();
+      }
+    }
+  }, [drawMode, drawActive]);
 
   // draw query area
   useEffect(() => {
@@ -723,6 +769,12 @@ export function Map({
       }
     }
   }, [showQuery, queryType, queryArea]);
+  // console.log('queryArea', queryArea)
+  // console.log('getLatLngsFromArea(queryArea)', getLatLngsFromArea(queryArea))
+  // console.log(
+  //   'drawFeatureGroupRef.current.getLayers()',
+  //   drawFeatureGroupRef && drawFeatureGroupRef.current && drawFeatureGroupRef.current.getLayers(),
+  // );
 
   return (
     <Styled>
@@ -778,6 +830,7 @@ Map.propTypes = {
   regionHighlight: PropTypes.number,
   size: PropTypes.string,
   mode: PropTypes.string,
+  drawMode: PropTypes.string,
   intl: intlShape.isRequired,
 };
 
