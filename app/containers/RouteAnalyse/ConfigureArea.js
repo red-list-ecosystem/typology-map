@@ -109,6 +109,19 @@ export function ConfigureArea({
         >
           <ToggleButton
             plain
+            disabled={queryType === 'region'}
+            active={queryType === 'region'}
+            onClick={() => {
+              onSetQueryType('region');
+            }}
+            label={
+              <TextLabel>
+                <FormattedMessage {...messages.predefinedRegion} />
+              </TextLabel>
+            }
+          />
+          <ToggleButton
+            plain
             disabled={queryType === 'area'}
             active={queryType === 'area'}
             onClick={() => {
@@ -118,19 +131,6 @@ export function ConfigureArea({
             label={
               <TextLabel>
                 <FormattedMessage {...messages.customArea} />
-              </TextLabel>
-            }
-          />
-          <ToggleButton
-            plain
-            disabled={queryType === 'region'}
-            active={queryType === 'region'}
-            onClick={() => {
-              onSetQueryType('region');
-            }}
-            label={
-              <TextLabel>
-                <FormattedMessage {...messages.predefinedRegion} />
               </TextLabel>
             }
           />

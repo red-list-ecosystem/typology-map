@@ -89,7 +89,7 @@ export function Configure({
     window.scrollTo(0, 0);
   }, []);
   useEffect(() => {
-    onSetQueryType(!hasArea && hasRegion ? 'region' : 'area');
+    onSetQueryType(hasArea && !hasRegion ? 'area' : 'region');
   }, []);
   useEffect(() => {
     resetActiveGroup();
@@ -128,6 +128,19 @@ export function Configure({
         >
           <ToggleButton
             plain
+            disabled={queryType === 'region'}
+            active={queryType === 'region'}
+            onClick={() => {
+              onSetQueryType('region');
+            }}
+            label={
+              <TextLabel>
+                <FormattedMessage {...messages.predefinedRegion} />
+              </TextLabel>
+            }
+          />
+          <ToggleButton
+            plain
             disabled={queryType === 'area'}
             active={queryType === 'area'}
             onClick={() => {
@@ -137,19 +150,6 @@ export function Configure({
             label={
               <TextLabel>
                 <FormattedMessage {...messages.customArea} />
-              </TextLabel>
-            }
-          />
-          <ToggleButton
-            plain
-            disabled={queryType === 'region'}
-            active={queryType === 'region'}
-            onClick={() => {
-              onSetQueryType('region');
-            }}
-            label={
-              <TextLabel>
-                <FormattedMessage {...messages.predefinedRegion} />
               </TextLabel>
             }
           />

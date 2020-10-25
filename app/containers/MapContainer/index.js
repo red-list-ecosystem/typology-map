@@ -18,9 +18,11 @@ import {
   selectDrawActive,
 } from 'containers/App/selectors';
 
+import { updateGroupsQuery } from 'containers/App/actions';
+
 import Map from 'containers/Map';
 
-import { Expand, Contract } from 'components/Icons';
+import { Expand, Contract, AnalysePoly, AnalyseRect } from 'components/Icons';
 import MapControls from 'components/MapControls';
 import MapControl from 'components/MapControl';
 import TopGraphic from 'components/TopGraphic';
@@ -49,6 +51,7 @@ export function MapContainer({
   expandWithAside,
   mode,
   drawActive,
+  resetQueryArea,
 }) {
   const [isMapExpanded, setIsMapExpanded] = useState(false);
   const [drawMode, setDrawMode] = useState('rectangle');
@@ -89,18 +92,26 @@ export function MapContainer({
               <MapControl
                 active={drawMode === 'rectangle'}
                 icon={
-                  <Contract
+                  <AnalyseRect
                     color={drawMode === 'rectangle' ? 'white' : 'black'}
                   />
                 }
-                onClick={() => setDrawMode('rectangle')}
+                onClick={() => {
+                  resetQueryArea();
+                  setDrawMode('rectangle');
+                }}
               />
               <MapControl
                 active={drawMode === 'polygon'}
                 icon={
-                  <Expand color={drawMode === 'polygon' ? 'white' : 'black'} />
+                  <AnalysePoly
+                    color={drawMode === 'polygon' ? 'white' : 'black'}
+                  />
                 }
-                onClick={() => setDrawMode('polygon')}
+                onClick={() => {
+                  resetQueryArea();
+                  setDrawMode('polygon');
+                }}
               />
             </MapControls>
           )}
@@ -117,7 +128,19 @@ MapContainer.propTypes = {
   expandWithAside: PropTypes.bool,
   drawActive: PropTypes.bool,
   mode: PropTypes.string,
+  resetQueryArea: PropTypes.func,
 };
+
+function mapDispatchToProps(dispatch) {
+  return {
+    resetQueryArea: () =>
+      dispatch(
+        updateGroupsQuery({
+          area: '',
+        }),
+      ),
+  };
+}
 
 const mapStateToProps = createStructuredSelector({
   locale: state => selectLocale(state),
@@ -127,7 +150,7 @@ const mapStateToProps = createStructuredSelector({
 
 const withConnect = connect(
   mapStateToProps,
-  null,
+  mapDispatchToProps,
 );
 
 export default compose(withConnect)(MapContainer);
