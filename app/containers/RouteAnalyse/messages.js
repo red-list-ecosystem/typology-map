@@ -19,7 +19,7 @@ export default defineMessages({
       'Retrieve an indicative list of ecosystem functional groups for a given area. ',
   },
   download: {
-    id: `${scope}.intro`,
+    id: `${scope}.download`,
     defaultMessage:
       'For additional analyses you can download the raw data from the {link}.',
   },
@@ -175,5 +175,9 @@ export default defineMessages({
     id: `${scope}.hintResultsArea`,
     defaultMessage:
       'Note that the retrieved list is intended to be indicative only. ',
+  },
+  hintResultsGraph: {
+    id: `${scope}.hintResultsGraph`,
+    defaultMessage: 'Showing % of global occurrence for each type',
   },
 });

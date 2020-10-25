@@ -463,10 +463,13 @@ export const selectGroupsQueryReadyByType = createSelector(
   selectGroupsQueryReady,
   (layerType, data) => data.groups[layerType],
 );
-// export const selectGroupsQueryReadyAny = createSelector(
-//   selectGroupsQueryReady,
-//   data => data && data.groups && (!!data.groups.raster || !!data.groups.vector),
-// );
+export const selectGroupsQueryReadyAny = createSelector(
+  selectGroupsQueryReady,
+  data =>
+    data && data.groups && data.groups.areasbyregion
+      ? !!data.groups.areasbyregion
+      : !!data.groups.raster || !!data.groups.vector,
+);
 export const selectGroupsQueryReadyAll = createSelector(
   selectGroupsQueryReady,
   data =>

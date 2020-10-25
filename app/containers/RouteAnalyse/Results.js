@@ -340,7 +340,7 @@ export function Results({
                     <FormattedMessage {...messages.noResults} />
                   </Hint>
                 )}
-                {!queriesReady && resultGroups.length === 0 && (
+                {!queriesReady && (
                   <Hint>
                     <FormattedMessage {...messages.awaitResults} />
                   </Hint>
@@ -351,7 +351,7 @@ export function Results({
             {queriesReady && resultGroups && resultGroups.length > 0 && (
               <>
                 <AsideNavLabel
-                  top
+                  top={queryType === 'region'}
                   label={(
                     <strong>
                       {`${resultGroups.length} ${intl.formatMessage(
@@ -360,50 +360,54 @@ export function Results({
                     </strong>
                   )}
                 />
-                <AsideNavLabel
-                  top
-                  label={(
-                    <Hint>
-                      {`${queryType === 'region' ? 'Showing % of global occurrence for each type ' : ''}`}
-                    </Hint>
-                  )}
-                />
-                <AsideNavLabel
-                  label={(
-                    <Box direction="row" gap="small">
-                      <SettingTitle>
-                        <FormattedMessage {...commonMessages.occurrence} />
-                        {`: `}
-                      </SettingTitle>
-                      {Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).map(
-                        key => (
-                          <Box
-                            direction="row"
-                            align="center"
-                            gap="xsmall"
-                            key={key}
-                          >
-                            <KeyColor
-                              color={
-                                GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color
-                              }
-                              opacity={1}
-                            />
-                            <TextLabel>
-                              <FormattedMessage
-                                {...commonMessages[
-                                  `occurrence_${
-                                    GROUP_LAYER_PROPERTIES.OCCURRENCE[key].id
-                                  }`
-                                ]}
+                {queryType === 'region' && (
+                  <AsideNavLabel
+                    top
+                    label={(
+                      <Hint>
+                        <FormattedMessage {...messages.hintResultsGraph} />
+                      </Hint>
+                    )}
+                  />
+                )}
+                {queryType === 'region' && (
+                  <AsideNavLabel
+                    label={(
+                      <Box direction="row" gap="small">
+                        <SettingTitle>
+                          <FormattedMessage {...commonMessages.occurrence} />
+                          {`: `}
+                        </SettingTitle>
+                        {Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).map(
+                          key => (
+                            <Box
+                              direction="row"
+                              align="center"
+                              gap="xsmall"
+                              key={key}
+                            >
+                              <KeyColor
+                                color={
+                                  GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color
+                                }
+                                opacity={1}
                               />
-                            </TextLabel>
-                          </Box>
-                        ),
-                      )}
-                    </Box>
-                  )}
-                />
+                              <TextLabel>
+                                <FormattedMessage
+                                  {...commonMessages[
+                                    `occurrence_${
+                                      GROUP_LAYER_PROPERTIES.OCCURRENCE[key].id
+                                    }`
+                                  ]}
+                                />
+                              </TextLabel>
+                            </Box>
+                          ),
+                        )}
+                      </Box>
+                    )}
+                  />
+                )}
                 <AsideNavTypologyList
                   items={resultGroups}
                   level={2}

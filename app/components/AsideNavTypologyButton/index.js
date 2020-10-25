@@ -7,7 +7,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Text } from 'grommet';
+import { Button, Text, Box } from 'grommet';
 import { injectIntl, intlShape } from 'react-intl';
 
 import { formatNumber } from 'utils/numbers';
@@ -40,13 +40,12 @@ const StyledButton = styled(props => <Button {...props} plain />)`
 `;
 
 const Stats = styled.div`
-  margin-top: 3px;
-  margin-right: 50px;
+  margin-top: 10px;
+  margin-right: 10px;
 `;
-const BarWrapper = styled.div`
+const BarWrapper = styled(p => <Box {...p} fill="horizontal" />)`
   position: relative;
-  width: 100%;
-  height: 15px;
+  height: 11px;
   margin-bottom: 3px;
   background: ${({ theme, active }) =>
     theme.global.colors[active ? 'light-4' : 'light-3']};
@@ -55,18 +54,17 @@ const Bar = styled.div`
   position: absolute;
   left: 0;
   top: 0;
-  height: 15px;
+  height: 11px;
   width: ${({ percentage }) => percentage}%;
   min-width: ${({ hasArea }) => (hasArea ? 1 : 0)}px;
   background: ${({ color }) => color};
 `;
 
 const BarLabel = styled(p => <Text size="xxsmall" {...p} color="dark" />)`
-  position: absolute;
-  left: 100%;
-  top: 2px;
-  padding-left: 5px;
-  width: 50px;
+  line-height: 11px;
+  padding-right: 5px;
+  width: 40px;
+  text-align: right;
 `;
 
 function AsideNavTypologyButton({
@@ -96,13 +94,12 @@ function AsideNavTypologyButton({
                   const areaRelative = stats.occurrences[key].area_relative;
                   // const oid = stats.occurrences[key].id;
                   return (
-                    <div key={key}>
-                      <BarWrapper active={active}>
-                        <Bar
-                          color={GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color}
-                          percentage={(areaRelative || 0) * 100}
-                          hasArea={areaRelative > 0}
-                        />
+                    <Box direction="row" key={key}>
+                      <Box
+                        flex={{ shrink: false }}
+                        width="40px"
+                        style={{ position: 'relative' }}
+                      >
                         <BarLabel>
                           <span
                             dangerouslySetInnerHTML={{
@@ -117,8 +114,15 @@ function AsideNavTypologyButton({
                             }}
                           />
                         </BarLabel>
+                      </Box>
+                      <BarWrapper active={active}>
+                        <Bar
+                          color={GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color}
+                          percentage={(areaRelative || 0) * 100}
+                          hasArea={areaRelative > 0}
+                        />
                       </BarWrapper>
-                    </div>
+                    </Box>
                   );
                 })}
             </Stats>
