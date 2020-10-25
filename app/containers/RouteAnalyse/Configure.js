@@ -24,10 +24,12 @@ import {
   selectQueryType,
 } from 'containers/App/selectors';
 
+import A from 'components/A';
 import ButtonPrimary from 'components/ButtonPrimary';
 import AsideNavSection from 'components/AsideNavSection';
 import Hint from 'components/Hint';
 
+import { PATHS } from 'config';
 import messages from './messages';
 
 import {
@@ -117,6 +119,21 @@ export function Configure({
       background="white"
     >
       <AsideNavSection margin={{ top: 'ms' }}>
+        <div>
+          <FormattedMessage {...messages.intro} />
+          <FormattedMessage
+            {...messages.download}
+            values={{
+              link: (
+                <A href={PATHS.DATA_DOWNLOAD} target="_blank">
+                  {intl.formatMessage(messages.downloadAnchor)}
+                </A>
+              ),
+            }}
+          />
+        </div>
+      </AsideNavSection>
+      <AsideNavSection>
         <StepTitle>
           <FormattedMessage {...messages.defineArea} />
         </StepTitle>

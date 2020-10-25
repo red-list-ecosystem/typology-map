@@ -13,7 +13,7 @@ import { createStructuredSelector } from 'reselect';
 import { Box, Text, Button } from 'grommet';
 import { FormattedMessage, intlShape, injectIntl } from 'react-intl';
 
-import { GROUP_LAYER_PROPERTIES, QUERY_REGIONS_LAYER } from 'config';
+import { GROUP_LAYER_PROPERTIES, QUERY_REGIONS_LAYER, PATHS } from 'config';
 
 import {
   selectGroupsByAreaAll,
@@ -34,6 +34,7 @@ import {
 import { selectLayerByKey } from 'containers/Map/selectors';
 import { getRegionFeatureTitle } from 'containers/Map/utils';
 
+import A from 'components/A';
 import AsideNavTypologyList from 'components/AsideNavTypologyList';
 import AsideNavLabel from 'components/AsideNavLabel';
 import LoadingIndicator from 'components/LoadingIndicator';
@@ -63,6 +64,10 @@ const Id = styled(p => <Box flex={{ shrink: 0 }} {...p} />)`
   color: ${({ theme }) => theme.global.colors['dark-grey']};
 `;
 const Title = styled(Box)``;
+
+const Hints = styled.div`
+  margin-bottom: ${({ theme }) => theme.global.edgeSize.medium};
+`;
 
 const StyledStepTitle = styled(StepTitle)`
   margin-bottom: 0;
@@ -137,6 +142,7 @@ export function Results({
     );
 
   const resultGroups = queryType === 'region' ? groupsForRegions : groups;
+  // prettier-ignore
   return (
     <Box pad={{ bottom: 'large' }} flex={false} background="white">
       {updating && (
@@ -282,11 +288,47 @@ export function Results({
                   />
                 )}
               </StepTitleWrap>
-              {queriesReady && resultGroups.length === 0 && (
-                <Hint>
-                  <FormattedMessage {...messages.noResults} />
-                </Hint>
-              )}
+              <Hints>
+                {queryType === 'region' &&
+                  queriesReady &&
+                  resultGroups.length > 0 && (
+                  <Hint>
+                    <FormattedMessage {...messages.hintResultsRegion} />
+                    <FormattedMessage
+                      {...messages.download}
+                      values={{
+                        link: (
+                          <A href={PATHS.DATA_DOWNLOAD} target="_blank">
+                            {intl.formatMessage(messages.downloadAnchor)}
+                          </A>
+                        ),
+                      }}
+                    />
+                  </Hint>
+                )}
+                {queryType === 'area' &&
+                  queriesReady &&
+                  resultGroups.length > 0 && (
+                  <Hint>
+                    <FormattedMessage {...messages.hintResultsArea} />
+                    <FormattedMessage
+                      {...messages.download}
+                      values={{
+                        link: (
+                          <A href={PATHS.DATA_DOWNLOAD} target="_blank">
+                            {intl.formatMessage(messages.downloadAnchor)}
+                          </A>
+                        ),
+                      }}
+                    />
+                  </Hint>
+                )}
+                {queriesReady && resultGroups.length === 0 && (
+                  <Hint>
+                    <FormattedMessage {...messages.noResults} />
+                  </Hint>
+                )}
+              </Hints>
             </Box>
             {!queriesReady && <LoadingIndicator />}
             {queriesReady && resultGroups && resultGroups.length > 0 && (

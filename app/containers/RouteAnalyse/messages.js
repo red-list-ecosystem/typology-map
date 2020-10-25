@@ -13,6 +13,20 @@ export default defineMessages({
     id: `${scope}.title`,
     defaultMessage: 'Functional Groups by Area',
   },
+  intro: {
+    id: `${scope}.intro`,
+    defaultMessage:
+      'Retrieve an indicative list of ecosystem functional groups for a given area. ',
+  },
+  download: {
+    id: `${scope}.intro`,
+    defaultMessage:
+      'For additional analyses you can download the raw data from the {link}.',
+  },
+  downloadAnchor: {
+    id: `${scope}.downloadAnchor`,
+    defaultMessage: 'data repository',
+  },
   defineArea: {
     id: `${scope}.defineArea`,
     defaultMessage: '1. Define area (required)',
@@ -142,5 +156,15 @@ export default defineMessages({
     id: `${scope}.noResults`,
     defaultMessage:
       'We are sorry, but your query produced no results. Please try again with a different area or different filter settings',
+  },
+  hintResultsRegion: {
+    id: `${scope}.hintResultsRegion`,
+    defaultMessage:
+      'Note that the retrieved list is intended to be indicative only. Further note that the area calculation is still experimental and has some limitations. ',
+  },
+  hintResultsArea: {
+    id: `${scope}.hintResultsArea`,
+    defaultMessage:
+      'Note that the retrieved list is intended to be indicative only. ',
   },
 });
