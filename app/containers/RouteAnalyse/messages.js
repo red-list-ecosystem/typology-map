@@ -140,6 +140,10 @@ export default defineMessages({
     id: `${scope}.resetQueryLabel`,
     defaultMessage: 'Reset query',
   },
+  cancelQueryLabel: {
+    id: `${scope}.cancelQueryLabel`,
+    defaultMessage: 'Cancel query',
+  },
   updateQueryLabel: {
     id: `${scope}.updateQueryLabel`,
     defaultMessage: 'Update query',
@@ -156,6 +160,11 @@ export default defineMessages({
     id: `${scope}.noResults`,
     defaultMessage:
       'We are sorry, but your query produced no results. Please try again with a different area or different filter settings',
+  },
+  awaitResults: {
+    id: `${scope}.awaitResults`,
+    defaultMessage:
+      'Retrieving list of ecosystem groups... Especially for large areas this may take a while.',
   },
   hintResultsRegion: {
     id: `${scope}.hintResultsRegion`,

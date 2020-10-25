@@ -11,7 +11,7 @@ export const scope = 'app.components.AsideNavTypologyButton';
 export default defineMessages({
   area: {
     id: `${scope}.area`,
-    defaultMessage: '{type}: {value}{unit}',
+    defaultMessage: '{value}{unit}',
   },
   not_available: {
     id: `${scope}.not_available`,

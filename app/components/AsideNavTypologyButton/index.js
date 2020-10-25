@@ -13,7 +13,6 @@ import { injectIntl, intlShape } from 'react-intl';
 import { formatNumber } from 'utils/numbers';
 
 import { GROUP_LAYER_PROPERTIES } from 'config';
-import rootMessages from 'messages';
 import messages from './messages';
 
 const getSize = level => {
@@ -42,21 +41,32 @@ const StyledButton = styled(props => <Button {...props} plain />)`
 
 const Stats = styled.div`
   margin-top: 3px;
+  margin-right: 50px;
 `;
 const BarWrapper = styled.div`
   position: relative;
   width: 100%;
-  height: 12px;
-  background: ${({ theme }) => theme.global.colors['light-grey']};
+  height: 15px;
+  margin-bottom: 3px;
+  background: ${({ theme, active }) =>
+    theme.global.colors[active ? 'light-4' : 'light-3']};
 `;
 const Bar = styled.div`
   position: absolute;
   left: 0;
   top: 0;
-  height: 12px;
+  height: 15px;
   width: ${({ percentage }) => percentage}%;
-  min-width: 1px;
+  min-width: ${({ hasArea }) => (hasArea ? 1 : 0)}px;
   background: ${({ color }) => color};
+`;
+
+const BarLabel = styled(p => <Text size="xxsmall" {...p} color="dark" />)`
+  position: absolute;
+  left: 100%;
+  top: 2px;
+  padding-left: 5px;
+  width: 50px;
 `;
 
 function AsideNavTypologyButton({
@@ -66,11 +76,13 @@ function AsideNavTypologyButton({
   stats,
   showAreas,
   intl,
+  active,
   ...rest
 }) {
   /* eslint-disable react/no-danger */
   return (
     <StyledButton
+      active={active}
       label={
         <div>
           <div>
@@ -82,39 +94,32 @@ function AsideNavTypologyButton({
                 stats.occurrences &&
                 Object.keys(stats.occurrences).map(key => {
                   const areaRelative = stats.occurrences[key].area_relative;
-                  const oid = stats.occurrences[key].id;
-                  if (areaRelative) {
-                    return (
-                      <div key={key}>
-                        <BarWrapper>
-                          <Bar
-                            color={GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color}
-                            percentage={areaRelative * 100}
+                  // const oid = stats.occurrences[key].id;
+                  return (
+                    <div key={key}>
+                      <BarWrapper active={active}>
+                        <Bar
+                          color={GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color}
+                          percentage={(areaRelative || 0) * 100}
+                          hasArea={areaRelative > 0}
+                        />
+                        <BarLabel>
+                          <span
+                            dangerouslySetInnerHTML={{
+                              __html: intl.formatMessage(messages.area, {
+                                value: formatNumber(
+                                  areaRelative * 100,
+                                  intl,
+                                  areaRelative < 0.01 ? 2 : 1,
+                                ),
+                                unit: '%',
+                              }),
+                            }}
                           />
-                        </BarWrapper>
-                        <div>
-                          <Text size="xsmall">
-                            <span
-                              dangerouslySetInnerHTML={{
-                                __html: intl.formatMessage(messages.area, {
-                                  type: intl.formatMessage(
-                                    rootMessages[`occurrence_${oid}`],
-                                  ),
-                                  value: formatNumber(
-                                    areaRelative * 100,
-                                    intl,
-                                    2,
-                                  ),
-                                  unit: '%',
-                                }),
-                              }}
-                            />
-                          </Text>
-                        </div>
-                      </div>
-                    );
-                  }
-                  return null;
+                        </BarLabel>
+                      </BarWrapper>
+                    </div>
+                  );
                 })}
             </Stats>
           )}
@@ -138,6 +143,7 @@ AsideNavTypologyButton.propTypes = {
   hasInfo: PropTypes.bool,
   stats: PropTypes.object,
   showAreas: PropTypes.bool,
+  active: PropTypes.bool,
   intl: intlShape.isRequired,
 };
 

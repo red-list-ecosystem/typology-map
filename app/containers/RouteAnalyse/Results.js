@@ -86,10 +86,25 @@ const UpdateButton = styled(p => <Button plain {...p} />)`
   }
 `;
 
+const KeyColor = styled.span`
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin: 2px 0;
+  background: ${({ color }) => color};
+  opacity: ${({ opacity }) => opacity};
+`;
+
+const TextLabel = styled(props => <Text size="xsmall" {...props} />)``;
+const SettingTitle = styled(props => <Text size="xsmall" {...props} />)`
+  font-weight: 600;
+`;
+
 export function Results({
   groups,
   queriesReady,
   onResetQuery,
+  onCancelQuery,
   queryArgs,
   queryArgsFromQuery,
   intl,
@@ -123,15 +138,6 @@ export function Results({
 
   const hasFilters = realm || biome || occurrence;
   const updating = areaUpdate || filterUpdate;
-
-  const KeyColor = styled.span`
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    margin: 2px 0;
-    background: ${({ color }) => color};
-    opacity: ${({ opacity }) => opacity};
-  `;
 
   const activeRegion =
     queryType === 'region' &&
@@ -287,6 +293,12 @@ export function Results({
                     label={<FormattedMessage {...messages.resetQueryLabel} />}
                   />
                 )}
+                {!queriesReady && (
+                  <UpdateButton
+                    onClick={() => onCancelQuery()}
+                    label={<FormattedMessage {...messages.cancelQueryLabel} />}
+                  />
+                )}
               </StepTitleWrap>
               <Hints>
                 {queryType === 'region' &&
@@ -328,15 +340,69 @@ export function Results({
                     <FormattedMessage {...messages.noResults} />
                   </Hint>
                 )}
+                {!queriesReady && resultGroups.length === 0 && (
+                  <Hint>
+                    <FormattedMessage {...messages.awaitResults} />
+                  </Hint>
+                )}
               </Hints>
             </Box>
             {!queriesReady && <LoadingIndicator />}
             {queriesReady && resultGroups && resultGroups.length > 0 && (
               <>
                 <AsideNavLabel
-                  label={`${resultGroups.length} ${intl.formatMessage(
-                    commonMessages.groups,
-                  )}`}
+                  top
+                  label={(
+                    <strong>
+                      {`${resultGroups.length} ${intl.formatMessage(
+                        commonMessages.groups,
+                      )}`}
+                    </strong>
+                  )}
+                />
+                <AsideNavLabel
+                  top
+                  label={(
+                    <Hint>
+                      {`${queryType === 'region' ? 'Showing % of global occurrence for each type ' : ''}`}
+                    </Hint>
+                  )}
+                />
+                <AsideNavLabel
+                  label={(
+                    <Box direction="row" gap="small">
+                      <SettingTitle>
+                        <FormattedMessage {...commonMessages.occurrence} />
+                        {`: `}
+                      </SettingTitle>
+                      {Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).map(
+                        key => (
+                          <Box
+                            direction="row"
+                            align="center"
+                            gap="xsmall"
+                            key={key}
+                          >
+                            <KeyColor
+                              color={
+                                GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color
+                              }
+                              opacity={1}
+                            />
+                            <TextLabel>
+                              <FormattedMessage
+                                {...commonMessages[
+                                  `occurrence_${
+                                    GROUP_LAYER_PROPERTIES.OCCURRENCE[key].id
+                                  }`
+                                ]}
+                              />
+                            </TextLabel>
+                          </Box>
+                        ),
+                      )}
+                    </Box>
+                  )}
                 />
                 <AsideNavTypologyList
                   items={resultGroups}
@@ -365,6 +431,7 @@ Results.propTypes = {
   queryArgsFromQuery: PropTypes.object,
   queryArgs: PropTypes.object,
   onResetQuery: PropTypes.func,
+  onCancelQuery: PropTypes.func,
   onSetActiveGroup: PropTypes.func,
   onSetInfoGroup: PropTypes.func,
   intl: intlShape.isRequired,
@@ -392,6 +459,10 @@ function mapDispatchToProps(dispatch) {
     onResetQuery: () => {
       dispatch(resetGroupsQuery());
       dispatch(resetGroupsQueryNav());
+      dispatch(setActiveGroupQuery(''));
+    },
+    onCancelQuery: () => {
+      dispatch(resetGroupsQuery());
       dispatch(setActiveGroupQuery(''));
     },
     updateQuery: args => dispatch(updateGroupsQuery(args)),

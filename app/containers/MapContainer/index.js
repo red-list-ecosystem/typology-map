@@ -88,9 +88,11 @@ export function MapContainer({
             </MapControls>
           )}
           {drawActive && (
-            <MapControls position="right">
+            <MapControls position="right" square>
               <MapControl
+                square
                 active={drawMode === 'rectangle'}
+                disabled={drawMode === 'rectangle'}
                 icon={
                   <AnalyseRect
                     color={drawMode === 'rectangle' ? 'white' : 'black'}
@@ -102,7 +104,9 @@ export function MapContainer({
                 }}
               />
               <MapControl
+                square
                 active={drawMode === 'polygon'}
+                disabled={drawMode === 'polygon'}
                 icon={
                   <AnalysePoly
                     color={drawMode === 'polygon' ? 'white' : 'black'}

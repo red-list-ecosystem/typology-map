@@ -4,7 +4,7 @@ import { Button } from 'grommet';
 
 // prettier-ignore
 export default styled(props => <Button plain {...props} />)`
-  border-radius: 9999px;
+  border-radius: ${({ square }) => (square ? 0 : 9999)}px;
   padding: ${({ theme }) => theme.global.edgeSize.small};
   background: ${({ active, theme }) =>
     active ? theme.global.colors.brand : 'rgba(255, 255, 255, 0.85)'};

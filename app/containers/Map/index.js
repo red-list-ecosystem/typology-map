@@ -640,26 +640,6 @@ export function Map({
           clickable: false,
         },
       });
-
-      mapRef.current.on('draw:created', e => {
-        if (e.layer) {
-          const areaWKT = getAreaWKTFromLayer(e.layer);
-          updateQueryArea(areaWKT);
-        }
-      });
-      mapRef.current.on('draw:edited', e => {
-        if (e.layers) {
-          let areaWKT = '';
-          // there should only ever be one
-          e.layers.eachLayer(layer => {
-            areaWKT = getAreaWKTFromLayer(layer);
-          });
-          updateQueryArea(areaWKT);
-        }
-      });
-      mapRef.current.on('draw:deleted', () => {
-        updateQueryArea('');
-      });
     }
     // return () => drawControl && mapRef.current.removeControl(drawControl);
   }, [drawActive, queryArea]);
@@ -670,7 +650,8 @@ export function Map({
       if (drawMode === 'polygon' && drawPolygonControl.current) {
         drawPolygonControl.current.enable();
         drawRectangleControl.current.disable();
-      } else if (drawMode === 'rectangle' && drawRectangleControl.current) {
+      }
+      if (drawMode === 'rectangle' && drawRectangleControl.current) {
         drawRectangleControl.current.enable();
         drawPolygonControl.current.disable();
       }
@@ -682,7 +663,15 @@ export function Map({
         drawRectangleControl.current.disable();
       }
     }
-  }, [drawMode, drawActive]);
+    return () => {
+      if (drawPolygonControl.current) {
+        drawPolygonControl.current.disable();
+      }
+      if (drawRectangleControl.current) {
+        drawRectangleControl.current.disable();
+      }
+    };
+  }, [drawMode, drawActive, queryArea]);
 
   // draw query area
   useEffect(() => {
@@ -710,12 +699,15 @@ export function Map({
       }
     }
   }, [showQuery, queryType, queryArea]);
-  // console.log('queryArea', queryArea)
-  // console.log('getLatLngsFromArea(queryArea)', getLatLngsFromArea(queryArea))
-  // console.log(
-  //   'drawFeatureGroupRef.current.getLayers()',
-  //   drawFeatureGroupRef && drawFeatureGroupRef.current && drawFeatureGroupRef.current.getLayers(),
-  // );
+
+  if (mapRef.current) {
+    mapRef.current.on('draw:created', e => {
+      if (e.layer) {
+        const areaWKT = getAreaWKTFromLayer(e.layer);
+        updateQueryArea(areaWKT);
+      }
+    });
+  }
 
   return (
     <Styled>

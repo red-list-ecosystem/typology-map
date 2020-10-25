@@ -9,9 +9,9 @@ import PropTypes from 'prop-types';
 // import styled from 'styled-components';
 import { Box, Text } from 'grommet';
 
-function AsideNavLabel({ label }) {
+function AsideNavLabel({ label, top }) {
   return (
-    <Box pad={{ left: 'small', vertical: 'xsmall' }}>
+    <Box pad={{ left: 'small', top: 'xsmall', bottom: top ? '0' : 'xsmall' }}>
       <Text size="small">{label}</Text>
     </Box>
   );
@@ -19,6 +19,7 @@ function AsideNavLabel({ label }) {
 
 AsideNavLabel.propTypes = {
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  top: PropTypes.bool,
 };
 
 export default AsideNavLabel;
