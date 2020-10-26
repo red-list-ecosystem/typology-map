@@ -63,7 +63,6 @@ const Bar = styled.div`
 const BarLabel = styled(p => <Text size="xxsmall" {...p} color="dark" />)`
   line-height: 11px;
   padding-right: 5px;
-  width: 40px;
   text-align: right;
 `;
 
@@ -95,14 +94,16 @@ function AsideNavTypologyButton({
                   <Box direction="row" key={key}>
                     <Box
                       flex={{ shrink: 0 }}
-                      width="40px"
+                      width="55px"
                       style={{ position: 'relative' }}
                     >
                       <BarLabel>
                         <span
                           dangerouslySetInnerHTML={{
                             __html: intl.formatMessage(messages.area, {
-                              value: formatAreaRelative(areaRelative, intl),
+                              value: areaRelative
+                                ? formatAreaRelative(areaRelative, intl)
+                                : 0,
                               unit: '%',
                             }),
                           }}
