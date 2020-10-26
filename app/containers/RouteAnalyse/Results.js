@@ -8,6 +8,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import CsvDownloader from 'react-csv-downloader';
+
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { Box, Text, Button } from 'grommet';
@@ -27,21 +29,21 @@ import {
   resetGroupsQuery,
   updateGroupsQuery,
   queryGroups,
-  resetGroupsQueryNav,
+  // resetGroupsQueryNav,
   setActiveGroupQuery,
   setInfoGroupQuery,
 } from 'containers/App/actions';
 import { selectLayerByKey } from 'containers/Map/selectors';
-import { getRegionFeatureTitle } from 'containers/Map/utils';
+import { getRegionFeatureTitle, areaToPolygonWKT } from 'containers/Map/utils';
 
 import A from 'components/A';
 import AsideNavTypologyList from 'components/AsideNavTypologyList';
-import AsideNavLabel from 'components/AsideNavLabel';
 import LoadingIndicator from 'components/LoadingIndicator';
 import AsideNavSection from 'components/AsideNavSection';
 import Hint from 'components/Hint';
 
 import quasiEquals from 'utils/quasi-equals';
+import { formatAreaRelative } from 'utils/numbers';
 
 import commonMessages from 'messages';
 import messages from './messages';
@@ -81,6 +83,8 @@ const StepTitleWrap = styled(p => (
 
 const UpdateButton = styled(p => <Button plain {...p} />)`
   color: ${({ theme }) => theme.global.colors.brand};
+  font-size: ${({ theme }) => theme.text.xsmall.size};
+  line-height: ${({ theme }) => theme.text.xsmall.height};
   &:hover {
     text-decoration: underline;
   }
@@ -100,10 +104,129 @@ const SettingTitle = styled(props => <Text size="xsmall" {...props} />)`
   font-weight: 600;
 `;
 
+const getDate = () => {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  let mm = today.getMonth() + 1;
+  let dd = today.getDate();
+  if (mm < 10) {
+    mm = `0${mm}`;
+  }
+  if (dd < 10) {
+    dd = `0${dd}`;
+  }
+  return `${yyyy}${mm}${dd}`;
+};
+
+const getColumns = (queryType, intl) => {
+  const columns = [
+    {
+      id: 'id',
+      displayName: intl.formatMessage(messages.csvColumnGroupID),
+    },
+    {
+      id: 'title',
+      displayName: intl.formatMessage(messages.csvColumnGroupTitle),
+    },
+    {
+      id: 'biome_id',
+      displayName: intl.formatMessage(messages.csvColumnBiomeID),
+    },
+    {
+      id: 'biome_title',
+      displayName: intl.formatMessage(messages.csvColumnBiomeTitle),
+    },
+    {
+      id: 'realm_id',
+      displayName: intl.formatMessage(messages.csvColumnRealmID),
+    },
+    {
+      id: 'realm_title',
+      displayName: intl.formatMessage(messages.csvColumnRealmTitle),
+    },
+  ];
+  if (queryType === 'region') {
+    return [
+      ...columns,
+      {
+        id: 'major',
+        displayName: intl.formatMessage(messages.csvColumnMajorOccurrence),
+      },
+      {
+        id: 'minor',
+        displayName: intl.formatMessage(messages.csvColumnMinorOccurrence),
+      },
+      {
+        id: 'region_id',
+        displayName: intl.formatMessage(messages.csvColumnRegionID),
+      },
+      {
+        id: 'region_title',
+        displayName: intl.formatMessage(messages.csvColumnRegionTitle),
+      },
+    ];
+  }
+  return [
+    ...columns,
+    {
+      id: 'area',
+      displayName: intl.formatMessage(messages.csvColumnCustomArea),
+    },
+  ];
+};
+
+const prepareCSVData = (
+  resultGroups,
+  queryType,
+  queryArgs,
+  realms,
+  biomes,
+  activeRegion,
+  intl,
+) =>
+  resultGroups.map(group => {
+    const biome = biomes.find(d => d.id === group.biome);
+    const realm = realms.find(d => d.id === biome.realm);
+    const groupData = {
+      id: group.id,
+      title: group.title[intl.locale],
+      biome_id: group.biome,
+      biome_title: biome.title[intl.locale],
+      realm_id: realm.id,
+      realm_title: realm.title[intl.locale],
+    };
+    if (queryType === 'region') {
+      let stats = null;
+      if (group.stats && group.stats.occurrences) {
+        // prettier-ignore
+        stats = Object.values(group.stats.occurrences).reduce(
+          (m, o) => ({
+            ...m,
+            // major/minor
+            [o.id]: o.area_relative
+              ? formatAreaRelative(o.area_relative, intl)
+              : 0,
+          }),
+          {},
+        );
+      }
+      return {
+        ...groupData,
+        ...stats,
+        region_id: queryArgs.regionId,
+        region_title: getRegionFeatureTitle(activeRegion),
+      };
+    }
+    return {
+      ...groupData,
+      area: queryArgs.area ? areaToPolygonWKT(queryArgs.area) : '',
+    };
+  });
+const generateCSVFilename = () => `rle-query-results_${getDate()}`;
+
 export function Results({
   groups,
   queriesReady,
-  onResetQuery,
   onCancelQuery,
   queryArgs,
   queryArgsFromQuery,
@@ -148,6 +271,7 @@ export function Results({
     );
 
   const resultGroups = queryType === 'region' ? groupsForRegions : groups;
+
   // prettier-ignore
   return (
     <Box pad={{ bottom: 'large' }} flex={false} background="white">
@@ -289,8 +413,8 @@ export function Results({
                 </StyledStepTitle>
                 {queriesReady && (
                   <UpdateButton
-                    onClick={() => onResetQuery()}
-                    label={<FormattedMessage {...messages.resetQueryLabel} />}
+                    onClick={() => onCancelQuery()}
+                    label={<FormattedMessage {...messages.changeQueryLabel} />}
                   />
                 )}
                 {!queriesReady && (
@@ -350,64 +474,82 @@ export function Results({
             {!queriesReady && <LoadingIndicator />}
             {queriesReady && resultGroups && resultGroups.length > 0 && (
               <>
-                <AsideNavLabel
-                  top={queryType === 'region'}
-                  label={(
-                    <strong>
-                      {`${resultGroups.length} ${intl.formatMessage(
-                        commonMessages.groups,
-                      )}`}
-                    </strong>
-                  )}
-                />
-                {queryType === 'region' && (
-                  <AsideNavLabel
-                    top
-                    label={(
-                      <Hint>
-                        <FormattedMessage {...messages.hintResultsGraph} />
-                      </Hint>
-                    )}
-                  />
-                )}
-                {queryType === 'region' && (
-                  <AsideNavLabel
-                    label={(
-                      <Box direction="row" gap="small">
-                        <SettingTitle>
-                          <FormattedMessage {...commonMessages.occurrence} />
-                          {`: `}
-                        </SettingTitle>
-                        {Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).map(
-                          key => (
-                            <Box
-                              direction="row"
-                              align="center"
-                              gap="xsmall"
-                              key={key}
-                            >
-                              <KeyColor
-                                color={
-                                  GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color
-                                }
-                                opacity={1}
-                              />
-                              <TextLabel>
-                                <FormattedMessage
-                                  {...commonMessages[
-                                    `occurrence_${
-                                      GROUP_LAYER_PROPERTIES.OCCURRENCE[key].id
-                                    }`
-                                  ]}
-                                />
-                              </TextLabel>
-                            </Box>
-                          ),
+                <Box pad={{ horizontal: 'small' }} flex={false}>
+                  <StepTitleWrap>
+                    <Box>
+                      <Text size="medium">
+                        <strong>
+                          {`${resultGroups.length} ${intl.formatMessage(
+                            commonMessages.groups,
+                          )}`}
+                        </strong>
+                      </Text>
+                    </Box>
+                    {queriesReady && resultGroups.length > 0 && (
+                      <CsvDownloader
+                        datas={prepareCSVData(
+                          resultGroups,
+                          queryType,
+                          queryArgsFromQuery,
+                          realms,
+                          biomes,
+                          activeRegion,
+                          intl,
                         )}
-                      </Box>
+                        columns={getColumns(queryType, intl)}
+                        filename={generateCSVFilename(queryArgsFromQuery, locale)}
+                        suffix
+                        wrapColumnChar='"'
+                      >
+                        <UpdateButton
+                          onClick={e => e.preventDefault()}
+                          label={<FormattedMessage {...messages.downloadResultsLabel} />}
+                        />
+                      </CsvDownloader>
                     )}
-                  />
-                )}
+                  </StepTitleWrap>
+                  {queryType === 'region' && (
+                    <Box pad={{ bottom: 'xsmall' }}>
+                      <Text size="xsmall">
+                        <FormattedMessage {...messages.hintResultsGraph} />
+                      </Text>
+                    </Box>
+                  )}
+                  {queryType === 'region' && (
+                    <Box direction="row" gap="small" pad={{ bottom: 'small' }}>
+                      <SettingTitle>
+                        <FormattedMessage {...commonMessages.occurrence} />
+                        {`: `}
+                      </SettingTitle>
+                      {Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).map(
+                        key => (
+                          <Box
+                            direction="row"
+                            align="center"
+                            gap="xsmall"
+                            key={key}
+                          >
+                            <KeyColor
+                              color={
+                                GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color
+                              }
+                              opacity={1}
+                            />
+                            <TextLabel>
+                              <FormattedMessage
+                                {...commonMessages[
+                                  `occurrence_${
+                                    GROUP_LAYER_PROPERTIES.OCCURRENCE[key].id
+                                  }`
+                                ]}
+                              />
+                            </TextLabel>
+                          </Box>
+                        ),
+                      )}
+                    </Box>
+                  )}
+                </Box>
                 <AsideNavTypologyList
                   items={resultGroups}
                   level={2}
@@ -434,7 +576,7 @@ Results.propTypes = {
   queriesReady: PropTypes.bool,
   queryArgsFromQuery: PropTypes.object,
   queryArgs: PropTypes.object,
-  onResetQuery: PropTypes.func,
+  // onResetQuery: PropTypes.func,
   onCancelQuery: PropTypes.func,
   onSetActiveGroup: PropTypes.func,
   onSetInfoGroup: PropTypes.func,
@@ -460,11 +602,11 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    onResetQuery: () => {
-      dispatch(resetGroupsQuery());
-      dispatch(resetGroupsQueryNav());
-      dispatch(setActiveGroupQuery(''));
-    },
+    // onResetQuery: () => {
+    //   dispatch(resetGroupsQuery());
+    //   dispatch(resetGroupsQueryNav());
+    //   dispatch(setActiveGroupQuery(''));
+    // },
     onCancelQuery: () => {
       dispatch(resetGroupsQuery());
       dispatch(setActiveGroupQuery(''));

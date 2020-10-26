@@ -9,4 +9,17 @@ export const roundNumber = (value, digits = 1) => {
 export const formatNumber = (value, intl, digits = 0) =>
   intl.formatNumber(roundNumber(value, digits));
 
+export const formatAreaRelative = (value, intl) => {
+  if (value < 0.01) {
+    return formatNumber(value * 100, intl, 2);
+  }
+  if (value < 0.001) {
+    return formatNumber(value * 100, intl, 3);
+  }
+  if (value < 0.0001) {
+    return formatNumber(value * 100, intl, 4);
+  }
+  return formatNumber(value * 100, intl, 1);
+};
+
 export default { isNumber };

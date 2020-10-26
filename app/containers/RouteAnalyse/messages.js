@@ -69,7 +69,7 @@ export default defineMessages({
   },
   selectRegionFieldPlaceholder: {
     id: `${scope}.selectRegionFieldPlaceholder`,
-    defaultMessage: 'Select region',
+    defaultMessage: 'Select region (EEZ)',
   },
   defineAreaFieldPlaceholder: {
     id: `${scope}.defineAreaFieldPlaceholder`,
@@ -144,6 +144,10 @@ export default defineMessages({
     id: `${scope}.cancelQueryLabel`,
     defaultMessage: 'Cancel query',
   },
+  changeQueryLabel: {
+    id: `${scope}.changeQueryLabel`,
+    defaultMessage: 'Change query',
+  },
   updateQueryLabel: {
     id: `${scope}.updateQueryLabel`,
     defaultMessage: 'Update query',
@@ -179,5 +183,53 @@ export default defineMessages({
   hintResultsGraph: {
     id: `${scope}.hintResultsGraph`,
     defaultMessage: 'Showing % of global occurrence for each type',
+  },
+  downloadResultsLabel: {
+    id: `${scope}.downloadResultsLabel`,
+    defaultMessage: 'Download (CSV)',
+  },
+  csvColumnGroupID: {
+    id: `${scope}.csvColumnGroupID`,
+    defaultMessage: 'ID',
+  },
+  csvColumnGroupTitle: {
+    id: `${scope}.csvColumnGroupTitle`,
+    defaultMessage: 'Group',
+  },
+  csvColumnBiomeID: {
+    id: `${scope}.csvColumnBiomeID`,
+    defaultMessage: 'Biome ID',
+  },
+  csvColumnBiomeTitle: {
+    id: `${scope}.csvColumnBiomeTitle`,
+    defaultMessage: 'Biome',
+  },
+  csvColumnRealmID: {
+    id: `${scope}.csvColumnRealmID`,
+    defaultMessage: 'Realm ID',
+  },
+  csvColumnRealmTitle: {
+    id: `${scope}.csvColumnRealmTitle`,
+    defaultMessage: 'Realm',
+  },
+  csvColumnMajorOccurrence: {
+    id: `${scope}.csvColumnMajorOccurrence`,
+    defaultMessage: '% major occurrence',
+  },
+  csvColumnMinorOccurrence: {
+    id: `${scope}.csvColumnMinorOccurrence`,
+    defaultMessage: '% minor occurrence',
+  },
+  csvColumnRegionID: {
+    id: `${scope}.csvColumnRegionID`,
+    defaultMessage: 'Region ID',
+  },
+  csvColumnRegionTitle: {
+    id: `${scope}.csvColumnRegionTitle`,
+    defaultMessage: 'Region (EEZ)',
+  },
+  csvColumnCustomArea: {
+    id: `${scope}.csvColumnCustomArea`,
+    defaultMessage: 'Area WKT',
   },
 });

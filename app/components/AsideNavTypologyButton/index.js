@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import { Button, Text, Box } from 'grommet';
 import { injectIntl, intlShape } from 'react-intl';
 
-import { formatNumber } from 'utils/numbers';
+import { formatAreaRelative } from 'utils/numbers';
 
 import { GROUP_LAYER_PROPERTIES } from 'config';
 import messages from './messages';
@@ -96,7 +96,7 @@ function AsideNavTypologyButton({
                   return (
                     <Box direction="row" key={key}>
                       <Box
-                        flex={{ shrink: false }}
+                        flex={{ shrink: 0 }}
                         width="40px"
                         style={{ position: 'relative' }}
                       >
@@ -104,11 +104,7 @@ function AsideNavTypologyButton({
                           <span
                             dangerouslySetInnerHTML={{
                               __html: intl.formatMessage(messages.area, {
-                                value: formatNumber(
-                                  areaRelative * 100,
-                                  intl,
-                                  areaRelative < 0.01 ? 2 : 1,
-                                ),
+                                value: formatAreaRelative(areaRelative, intl),
                                 unit: '%',
                               }),
                             }}

@@ -26,6 +26,9 @@ export const getAreaWKTFromLayer = layer => {
   return '';
 };
 
+export const areaToPolygonWKT = area =>
+  area && area.trim() !== '' ? encodeURI(`POLYGON((${area}))`) : '';
+
 export const getLatLngsFromArea = area => {
   const points = area.split(',');
   const latlngs = points.reduce((m, p) => {
@@ -39,6 +42,7 @@ export const getLatLngsFromArea = area => {
 };
 
 export const getRegionFeatureTitle = feature => {
+  if (!feature) return '';
   const featureTitle = feature.properties[QUERY_REGIONS_LAYER.featureTitle];
   const featureTitleAdd =
     feature.properties[QUERY_REGIONS_LAYER.featureTitleAdditional];
