@@ -149,6 +149,7 @@ export function Map({
   mode,
   drawMode,
 }) {
+  // console.log('render map')
   useInjectReducer({ key: 'map', reducer });
   useInjectSaga({ key: 'map', saga });
 
@@ -168,6 +169,7 @@ export function Map({
 
   // init map
   useEffect(() => {
+    // console.log('map init')
     mapRef.current = L.map('ll-map', MAP_OPTIONS);
     // make sure group overlays are always rendered on top of basemap
     mapRef.current.createPane('groupOverlay');
@@ -190,6 +192,13 @@ export function Map({
 
     mapRef.current.on('zoomend', () => {
       setZoom(mapRef.current.getZoom());
+    });
+    mapRef.current.on('draw:created', e => {
+      // console.log('map draw created')
+      if (e.layer) {
+        const areaWKT = getAreaWKTFromLayer(e.layer);
+        updateQueryArea(areaWKT);
+      }
     });
     if (!fullscreen) {
       mapRef.current.scrollWheelZoom.disable();
@@ -310,6 +319,7 @@ export function Map({
 
   // change group or stored vector layers
   useEffect(() => {
+    // console.log('map change group')
     // add mapbox tile layer
     if (group && group.layer && group.layer.source === 'mapbox') {
       if (groupLayerGroupRef) {
@@ -531,6 +541,7 @@ export function Map({
       }
     }
   }, [queryRegionsActive, layers]);
+
   useEffect(() => {
     if (queryAreaLayerGroupRef && queryAreaLayerGroupRef.current) {
       if (!queryRegionsActive) {
@@ -591,6 +602,7 @@ export function Map({
 
   // enable leaflet draw
   useEffect(() => {
+    // console.log('map enable draw')
     // let drawControl;
     if (drawActive && drawFeatureGroupRef.current) {
       L.drawLocal.edit.handlers.edit.tooltip.text = intl.formatMessage(
@@ -646,6 +658,7 @@ export function Map({
 
   // // draw query area
   useEffect(() => {
+    // console.log('map draw controls')
     if (drawActive) {
       if (drawMode === 'polygon' && drawPolygonControl.current) {
         drawPolygonControl.current.enable();
@@ -675,6 +688,7 @@ export function Map({
 
   // draw query area
   useEffect(() => {
+    // console.log('map draw area')
     drawFeatureGroupRef.current.clearLayers();
     if (
       showQuery &&
@@ -699,15 +713,6 @@ export function Map({
       }
     }
   }, [showQuery, queryType, queryArea]);
-
-  if (mapRef.current) {
-    mapRef.current.on('draw:created', e => {
-      if (e.layer) {
-        const areaWKT = getAreaWKTFromLayer(e.layer);
-        updateQueryArea(areaWKT);
-      }
-    });
-  }
 
   return (
     <Styled>
