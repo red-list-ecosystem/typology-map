@@ -86,41 +86,39 @@ function AsideNavTypologyButton({
           <div>
             <Text size={getSize(level)}>{`${id} ${name}`}</Text>
           </div>
-          {showAreas && (
+          {showAreas && stats && stats.occurrences && (
             <Stats>
-              {stats &&
-                stats.occurrences &&
-                Object.keys(stats.occurrences).map(key => {
-                  const areaRelative = stats.occurrences[key].area_relative;
-                  // const oid = stats.occurrences[key].id;
-                  return (
-                    <Box direction="row" key={key}>
-                      <Box
-                        flex={{ shrink: 0 }}
-                        width="40px"
-                        style={{ position: 'relative' }}
-                      >
-                        <BarLabel>
-                          <span
-                            dangerouslySetInnerHTML={{
-                              __html: intl.formatMessage(messages.area, {
-                                value: formatAreaRelative(areaRelative, intl),
-                                unit: '%',
-                              }),
-                            }}
-                          />
-                        </BarLabel>
-                      </Box>
-                      <BarWrapper active={active}>
-                        <Bar
-                          color={GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color}
-                          percentage={(areaRelative || 0) * 100}
-                          hasArea={areaRelative > 0}
+              {Object.keys(stats.occurrences).map(key => {
+                const areaRelative = stats.occurrences[key].area_relative;
+                // const oid = stats.occurrences[key].id;
+                return (
+                  <Box direction="row" key={key}>
+                    <Box
+                      flex={{ shrink: 0 }}
+                      width="40px"
+                      style={{ position: 'relative' }}
+                    >
+                      <BarLabel>
+                        <span
+                          dangerouslySetInnerHTML={{
+                            __html: intl.formatMessage(messages.area, {
+                              value: formatAreaRelative(areaRelative, intl),
+                              unit: '%',
+                            }),
+                          }}
                         />
-                      </BarWrapper>
+                      </BarLabel>
                     </Box>
-                  );
-                })}
+                    <BarWrapper active={active}>
+                      <Bar
+                        color={GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color}
+                        percentage={(areaRelative || 0) * 100}
+                        hasArea={areaRelative > 0}
+                      />
+                    </BarWrapper>
+                  </Box>
+                );
+              })}
             </Stats>
           )}
         </div>
