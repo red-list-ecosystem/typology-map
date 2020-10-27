@@ -50,7 +50,7 @@ function Tooltip({
   const [open, setOpen] = useState(false);
   const button = useRef(null);
 
-  const mWidth = maxWidth || large ? '320px' : '200px';
+  const mWidth = maxWidth || large ? '300px' : '200px';
 
   return (
     <ResponsiveContext.Consumer>
