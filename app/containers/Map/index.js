@@ -165,8 +165,6 @@ export function Map({
   const [tilesLoading, setTilesLoading] = useState(false);
   const [zoom, setZoom] = useState(MAP_OPTIONS.zoom);
 
-  const showQuery = mode === 'analyse';
-
   // init map
   useEffect(() => {
     // console.log('map init')
@@ -394,9 +392,8 @@ export function Map({
       }
     }
   }, [group, layers, mode]);
-  // change group or stored vector layers
+  // add highlight layer
   useEffect(() => {
-    // add highlight layer
     if (
       group &&
       layers &&
@@ -546,7 +543,7 @@ export function Map({
     if (queryAreaLayerGroupRef && queryAreaLayerGroupRef.current) {
       if (!queryRegionsActive) {
         queryAreaLayerGroupRef.current.clearLayers();
-        if (queryType === 'region' && queryRegion) {
+        if (mode === 'analyse' && queryType === 'region' && queryRegion) {
           if (
             layers &&
             (QUERY_REGIONS_LAYER.type === 'geojson' ||
@@ -569,6 +566,20 @@ export function Map({
                     null,
                     queryRegion,
                   ),
+                onEachFeature: (feature, jsonLayer) => {
+                  const featureTitle = getRegionFeatureTitle(feature);
+                  jsonLayer.bindTooltip(featureTitle, { sticky: true });
+                  jsonLayer.on({
+                    mouseover: e => onRegionMouseOver(e, feature),
+                    mouseout: e => onRegionMouseOut(e, feature),
+                    click: e =>
+                      e &&
+                      e.target &&
+                      e.target.getBounds &&
+                      mapRef.current &&
+                      mapRef.current.fitBounds(e.target.getBounds()),
+                  });
+                },
               });
               queryAreaLayerGroupRef.current.addLayer(regions);
             }
@@ -576,7 +587,7 @@ export function Map({
         }
       }
     }
-  }, [queryRegionsActive, queryRegion, layers]);
+  }, [mode, queryRegionsActive, queryRegion, layers]);
 
   // update region layer style
   useEffect(() => {
@@ -691,7 +702,7 @@ export function Map({
     // console.log('map draw area')
     drawFeatureGroupRef.current.clearLayers();
     if (
-      showQuery &&
+      mode === 'analyse' &&
       queryType === 'area' &&
       queryArea &&
       queryArea.trim().length > 5
@@ -712,7 +723,7 @@ export function Map({
         }
       }
     }
-  }, [showQuery, queryType, queryArea]);
+  }, [mode, queryType, queryArea]);
 
   return (
     <Styled>
