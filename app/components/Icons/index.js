@@ -10,6 +10,8 @@ import Plus from './Plus';
 import Search from './Search';
 import Down from './Down';
 import Up from './Up';
+import AnalysePoly from './AnalysePoly';
+import AnalyseRect from './AnalyseRect';
 
 export {
   Close,
@@ -24,4 +26,6 @@ export {
   Search,
   Down,
   Up,
+  AnalyseRect,
+  AnalysePoly,
 };

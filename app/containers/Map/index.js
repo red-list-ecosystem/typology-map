@@ -147,7 +147,9 @@ export function Map({
   regionHighlight,
   size,
   mode,
+  drawMode,
 }) {
+  // console.log('render map')
   useInjectReducer({ key: 'map', reducer });
   useInjectSaga({ key: 'map', saga });
 
@@ -157,14 +159,15 @@ export function Map({
   const groupLayerGroupRef = useRef(null);
   const basemapLayerGroupRef = useRef(null);
   const countryLayerGroupRef = useRef(null);
+  const drawPolygonControl = useRef(null);
+  const drawRectangleControl = useRef(null);
 
   const [tilesLoading, setTilesLoading] = useState(false);
   const [zoom, setZoom] = useState(MAP_OPTIONS.zoom);
 
-  const showQuery = mode === 'analyse';
-
   // init map
   useEffect(() => {
+    // console.log('map init')
     mapRef.current = L.map('ll-map', MAP_OPTIONS);
     // make sure group overlays are always rendered on top of basemap
     mapRef.current.createPane('groupOverlay');
@@ -187,6 +190,13 @@ export function Map({
 
     mapRef.current.on('zoomend', () => {
       setZoom(mapRef.current.getZoom());
+    });
+    mapRef.current.on('draw:created', e => {
+      // console.log('map draw created')
+      if (e.layer) {
+        const areaWKT = getAreaWKTFromLayer(e.layer);
+        updateQueryArea(areaWKT);
+      }
     });
     if (!fullscreen) {
       mapRef.current.scrollWheelZoom.disable();
@@ -307,6 +317,7 @@ export function Map({
 
   // change group or stored vector layers
   useEffect(() => {
+    // console.log('map change group')
     // add mapbox tile layer
     if (group && group.layer && group.layer.source === 'mapbox') {
       if (groupLayerGroupRef) {
@@ -381,9 +392,8 @@ export function Map({
       }
     }
   }, [group, layers, mode]);
-  // change group or stored vector layers
+  // add highlight layer
   useEffect(() => {
-    // add highlight layer
     if (
       group &&
       layers &&
@@ -528,11 +538,12 @@ export function Map({
       }
     }
   }, [queryRegionsActive, layers]);
+
   useEffect(() => {
     if (queryAreaLayerGroupRef && queryAreaLayerGroupRef.current) {
       if (!queryRegionsActive) {
         queryAreaLayerGroupRef.current.clearLayers();
-        if (queryType === 'region' && queryRegion) {
+        if (mode === 'analyse' && queryType === 'region' && queryRegion) {
           if (
             layers &&
             (QUERY_REGIONS_LAYER.type === 'geojson' ||
@@ -555,6 +566,20 @@ export function Map({
                     null,
                     queryRegion,
                   ),
+                onEachFeature: (feature, jsonLayer) => {
+                  const featureTitle = getRegionFeatureTitle(feature);
+                  jsonLayer.bindTooltip(featureTitle, { sticky: true });
+                  jsonLayer.on({
+                    mouseover: e => onRegionMouseOver(e, feature),
+                    mouseout: e => onRegionMouseOut(e, feature),
+                    click: e =>
+                      e &&
+                      e.target &&
+                      e.target.getBounds &&
+                      mapRef.current &&
+                      mapRef.current.fitBounds(e.target.getBounds()),
+                  });
+                },
               });
               queryAreaLayerGroupRef.current.addLayer(regions);
             }
@@ -562,7 +587,7 @@ export function Map({
         }
       }
     }
-  }, [queryRegionsActive, queryRegion, layers]);
+  }, [mode, queryRegionsActive, queryRegion, layers]);
 
   // update region layer style
   useEffect(() => {
@@ -588,20 +613,9 @@ export function Map({
 
   // enable leaflet draw
   useEffect(() => {
-    let drawControl;
+    // console.log('map enable draw')
+    // let drawControl;
     if (drawActive && drawFeatureGroupRef.current) {
-      L.drawLocal.draw.toolbar.buttons.polygon = intl.formatMessage(
-        messages.drawToolbarPolygon,
-      );
-      L.drawLocal.draw.toolbar.buttons.rectangle = intl.formatMessage(
-        messages.drawToolbarReactangle,
-      );
-      L.drawLocal.edit.toolbar.buttons.edit = intl.formatMessage(
-        messages.drawToolbarEdit,
-      );
-      L.drawLocal.edit.toolbar.buttons.remove = intl.formatMessage(
-        messages.drawToolbarRemove,
-      );
       L.drawLocal.edit.handlers.edit.tooltip.text = intl.formatMessage(
         messages.drawTooltipEdit,
       );
@@ -626,82 +640,69 @@ export function Map({
       L.drawLocal.draw.handlers.polygon.tooltip.end = intl.formatMessage(
         messages.drawTooltipPolygonEnd,
       );
-      // prettier-ignore
-      drawControl = new L.Control.Draw({
-        position: 'topright',
-        draw: {
-          polyline: false,
-          circle: false, // Turns off this drawing tool
-          marker: false,
-          circlemarker: false,
-          polygon: {
-            allowIntersection: false, // Restricts shapes to simple polygons
-            drawError: {
-              // color: '#e1e100', // Color the shape will turn when intersects
-              message: intl.formatMessage(messages.drawError), // Message that will show when intersect
-            },
-            shapeOptions: {
-              color: theme.global.colors['brand-2-light'],
-              fillOpacity: 0.05,
-              weight: 1,
-              clickable: false,
-            },
-          },
-          rectangle: {
-            showArea: false,
-            shapeOptions: {
-              color: theme.global.colors['brand-2-light'],
-              fillOpacity: 0.05,
-              weight: 1,
-              clickable: false,
-            },
-          },
+
+      drawPolygonControl.current = new L.Draw.Polygon(mapRef.current, {
+        allowIntersection: false,
+        drawError: {
+          message: intl.formatMessage(messages.drawError),
+          // Message that will show when intersect
         },
-        edit:
-          drawFeatureGroupRef.current.getLayers().length > 0
-            ? {
-              allowIntersection: false,
-              remove: false,
-              edit: {
-                selectedPathOptions: {
-                  color: theme.global.colors['brand-2-light'],
-                  fillColor: theme.global.colors['brand-2-light'],
-                  fillOpacity: 0.025,
-                },
-              },
-              featureGroup: drawFeatureGroupRef.current,
-            }
-            : false,
+        shapeOptions: {
+          color: theme.global.colors['brand-2-light'],
+          fillOpacity: 0.05,
+          weight: 1,
+          clickable: false,
+        },
       });
-      mapRef.current.addControl(drawControl);
-      mapRef.current.on('draw:created', e => {
-        if (e.layer) {
-          const areaWKT = getAreaWKTFromLayer(e.layer);
-          updateQueryArea(areaWKT);
-        }
-      });
-      mapRef.current.on('draw:edited', e => {
-        if (e.layers) {
-          let areaWKT = '';
-          // there should only ever be one
-          e.layers.eachLayer(layer => {
-            areaWKT = getAreaWKTFromLayer(layer);
-          });
-          updateQueryArea(areaWKT);
-        }
-      });
-      mapRef.current.on('draw:deleted', () => {
-        updateQueryArea('');
+      drawRectangleControl.current = new L.Draw.Rectangle(mapRef.current, {
+        showArea: false,
+        shapeOptions: {
+          color: theme.global.colors['brand-2-light'],
+          fillOpacity: 0.05,
+          weight: 1,
+          clickable: false,
+        },
       });
     }
-    return () => drawControl && mapRef.current.removeControl(drawControl);
+    // return () => drawControl && mapRef.current.removeControl(drawControl);
   }, [drawActive, queryArea]);
+
+  // // draw query area
+  useEffect(() => {
+    // console.log('map draw controls')
+    if (drawActive) {
+      if (drawMode === 'polygon' && drawPolygonControl.current) {
+        drawPolygonControl.current.enable();
+        drawRectangleControl.current.disable();
+      }
+      if (drawMode === 'rectangle' && drawRectangleControl.current) {
+        drawRectangleControl.current.enable();
+        drawPolygonControl.current.disable();
+      }
+    } else {
+      if (drawPolygonControl.current) {
+        drawPolygonControl.current.disable();
+      }
+      if (drawRectangleControl.current) {
+        drawRectangleControl.current.disable();
+      }
+    }
+    return () => {
+      if (drawPolygonControl.current) {
+        drawPolygonControl.current.disable();
+      }
+      if (drawRectangleControl.current) {
+        drawRectangleControl.current.disable();
+      }
+    };
+  }, [drawMode, drawActive, queryArea]);
 
   // draw query area
   useEffect(() => {
+    // console.log('map draw area')
     drawFeatureGroupRef.current.clearLayers();
     if (
-      showQuery &&
+      mode === 'analyse' &&
       queryType === 'area' &&
       queryArea &&
       queryArea.trim().length > 5
@@ -722,7 +723,7 @@ export function Map({
         }
       }
     }
-  }, [showQuery, queryType, queryArea]);
+  }, [mode, queryType, queryArea]);
 
   return (
     <Styled>
@@ -778,6 +779,7 @@ Map.propTypes = {
   regionHighlight: PropTypes.number,
   size: PropTypes.string,
   mode: PropTypes.string,
+  drawMode: PropTypes.string,
   intl: intlShape.isRequired,
 };
 

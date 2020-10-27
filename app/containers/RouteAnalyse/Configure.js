@@ -24,10 +24,12 @@ import {
   selectQueryType,
 } from 'containers/App/selectors';
 
+import A from 'components/A';
 import ButtonPrimary from 'components/ButtonPrimary';
 import AsideNavSection from 'components/AsideNavSection';
 import Hint from 'components/Hint';
 
+import { PATHS } from 'config';
 import messages from './messages';
 
 import {
@@ -89,7 +91,7 @@ export function Configure({
     window.scrollTo(0, 0);
   }, []);
   useEffect(() => {
-    onSetQueryType(!hasArea && hasRegion ? 'region' : 'area');
+    onSetQueryType(hasArea && !hasRegion ? 'area' : 'region');
   }, []);
   useEffect(() => {
     resetActiveGroup();
@@ -117,6 +119,21 @@ export function Configure({
       background="white"
     >
       <AsideNavSection margin={{ top: 'ms' }}>
+        <div>
+          <FormattedMessage {...messages.intro} />
+          <FormattedMessage
+            {...messages.download}
+            values={{
+              link: (
+                <A href={PATHS.DATA_DOWNLOAD} target="_blank">
+                  {intl.formatMessage(messages.downloadAnchor)}
+                </A>
+              ),
+            }}
+          />
+        </div>
+      </AsideNavSection>
+      <AsideNavSection>
         <StepTitle>
           <FormattedMessage {...messages.defineArea} />
         </StepTitle>
@@ -128,6 +145,19 @@ export function Configure({
         >
           <ToggleButton
             plain
+            disabled={queryType === 'region'}
+            active={queryType === 'region'}
+            onClick={() => {
+              onSetQueryType('region');
+            }}
+            label={
+              <TextLabel>
+                <FormattedMessage {...messages.predefinedRegion} />
+              </TextLabel>
+            }
+          />
+          <ToggleButton
+            plain
             disabled={queryType === 'area'}
             active={queryType === 'area'}
             onClick={() => {
@@ -137,19 +167,6 @@ export function Configure({
             label={
               <TextLabel>
                 <FormattedMessage {...messages.customArea} />
-              </TextLabel>
-            }
-          />
-          <ToggleButton
-            plain
-            disabled={queryType === 'region'}
-            active={queryType === 'region'}
-            onClick={() => {
-              onSetQueryType('region');
-            }}
-            label={
-              <TextLabel>
-                <FormattedMessage {...messages.predefinedRegion} />
               </TextLabel>
             }
           />
@@ -242,9 +259,6 @@ export function Configure({
           }}
         />
         <FieldWrap margin={{ bottom: '0' }}>
-          <FieldLabel>
-            <FormattedMessage {...messages.addFiltersByOccurrenceLabel} />
-          </FieldLabel>
           <OccurrenceInput
             occurrence={occurrence}
             onSubmit={value =>

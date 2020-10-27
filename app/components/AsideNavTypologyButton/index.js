@@ -7,13 +7,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Text } from 'grommet';
-import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
+import { Button, Text, Box } from 'grommet';
+import { injectIntl, intlShape } from 'react-intl';
 
-import { formatNumber } from 'utils/numbers';
+import { formatAreaRelative } from 'utils/numbers';
 
 import { GROUP_LAYER_PROPERTIES } from 'config';
-import rootMessages from 'messages';
 import messages from './messages';
 
 const getSize = level => {
@@ -41,20 +40,30 @@ const StyledButton = styled(props => <Button {...props} plain />)`
 `;
 
 const Stats = styled.div`
-  margin-top: 3px;
+  margin-top: 10px;
+  margin-right: 10px;
 `;
-const BarWrapper = styled.div`
+const BarWrapper = styled(p => <Box {...p} fill="horizontal" />)`
   position: relative;
-  width: 100%;
-  height: 12px;
+  height: 11px;
+  margin-bottom: 3px;
+  background: ${({ theme, active }) =>
+    theme.global.colors[active ? 'light-4' : 'light-3']};
 `;
 const Bar = styled.div`
   position: absolute;
   left: 0;
   top: 0;
-  height: 12px;
+  height: 11px;
   width: ${({ percentage }) => percentage}%;
+  min-width: ${({ hasArea }) => (hasArea ? 1 : 0)}px;
   background: ${({ color }) => color};
+`;
+
+const BarLabel = styled(p => <Text size="xxsmall" {...p} color="dark" />)`
+  line-height: 11px;
+  padding-right: 5px;
+  text-align: right;
 `;
 
 function AsideNavTypologyButton({
@@ -64,57 +73,53 @@ function AsideNavTypologyButton({
   stats,
   showAreas,
   intl,
+  active,
   ...rest
 }) {
   /* eslint-disable react/no-danger */
   return (
     <StyledButton
+      active={active}
       label={
         <div>
           <div>
             <Text size={getSize(level)}>{`${id} ${name}`}</Text>
           </div>
-          {showAreas && (
+          {showAreas && stats && stats.occurrences && (
             <Stats>
-              {stats &&
-                stats.occurrences &&
-                Object.keys(stats.occurrences).map(key => {
-                  const { area } = stats.occurrences[key];
-                  const oid = stats.occurrences[key].id;
-                  if (area) {
-                    return (
-                      <div key={key}>
-                        <BarWrapper>
-                          <Bar
-                            color={GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color}
-                            percentage={(area / stats.maxOverall) * 100}
-                          />
-                        </BarWrapper>
-                        <div>
-                          <Text size="xsmall">
-                            <span
-                              dangerouslySetInnerHTML={{
-                                __html: intl.formatMessage(messages.area, {
-                                  type: intl.formatMessage(
-                                    rootMessages[`occurrence_${oid}`],
-                                  ),
-                                  value: formatNumber(area, intl),
-                                  unit: 'km<sup>2</sup>',
-                                }),
-                              }}
-                            />
-                          </Text>
-                        </div>
-                      </div>
-                    );
-                  }
-                  return null;
-                })}
-              {!stats && (
-                <Text size="xxsmall">
-                  <FormattedMessage {...messages.not_available} />
-                </Text>
-              )}
+              {Object.keys(stats.occurrences).map(key => {
+                const areaRelative = stats.occurrences[key].area_relative;
+                // const oid = stats.occurrences[key].id;
+                return (
+                  <Box direction="row" key={key}>
+                    <Box
+                      flex={{ shrink: 0 }}
+                      width="55px"
+                      style={{ position: 'relative' }}
+                    >
+                      <BarLabel>
+                        <span
+                          dangerouslySetInnerHTML={{
+                            __html: intl.formatMessage(messages.area, {
+                              value: areaRelative
+                                ? formatAreaRelative(areaRelative, intl)
+                                : 0,
+                              unit: '%',
+                            }),
+                          }}
+                        />
+                      </BarLabel>
+                    </Box>
+                    <BarWrapper active={active}>
+                      <Bar
+                        color={GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color}
+                        percentage={(areaRelative || 0) * 100}
+                        hasArea={areaRelative > 0}
+                      />
+                    </BarWrapper>
+                  </Box>
+                );
+              })}
             </Stats>
           )}
         </div>
@@ -124,6 +129,11 @@ function AsideNavTypologyButton({
   );
   /* eslint-enable react/no-danger */
 }
+// {!stats && (
+//   <Text size="xxsmall">
+//   <FormattedMessage {...messages.not_available} />
+//   </Text>
+// )}
 
 AsideNavTypologyButton.propTypes = {
   id: PropTypes.string,
@@ -132,6 +142,7 @@ AsideNavTypologyButton.propTypes = {
   hasInfo: PropTypes.bool,
   stats: PropTypes.object,
   showAreas: PropTypes.bool,
+  active: PropTypes.bool,
   intl: intlShape.isRequired,
 };
 

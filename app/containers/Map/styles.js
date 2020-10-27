@@ -2,20 +2,27 @@ import { createGlobalStyle } from 'styled-components';
 
 const Style = createGlobalStyle`
   #ll-map .leaflet-bar {
-    box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+    box-shadow: none;
   }
-  .leaflet-bar,
-  .leaflet-bar a {
+  .leaflet-bar {
     border-radius: 0 !important;
   }
   #ll-map .leaflet-bar a {
-    background-color: rgba(255,255,255,0.85);
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 9999px;
+    padding: 12px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    width: 48px;
+    height: 48px;
     &:hover {
       background-color: white;
     }
+    &:first-child {
+      margin-bottom: 6px;
+    }
   }
   #ll-map .leaflet-draw-actions {
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: none;
   }
   #ll-map .leaflet-draw-actions a {
     background-color: rgba(255,255,255,0.85);
@@ -60,6 +67,10 @@ const Style = createGlobalStyle`
   #ll-map .leaflet-draw-tooltip-subtext {
   	color: white;
     font-style: italic;
+  }
+
+  #ll-map .leaflet-draw-edit-edit.leaflet-disabled {
+    display: none;
   }
 
 `;

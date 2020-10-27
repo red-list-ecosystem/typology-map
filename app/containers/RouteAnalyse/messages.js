@@ -13,6 +13,20 @@ export default defineMessages({
     id: `${scope}.title`,
     defaultMessage: 'Functional Groups by Area',
   },
+  intro: {
+    id: `${scope}.intro`,
+    defaultMessage:
+      'Retrieve an indicative list of ecosystem functional groups for a given area. ',
+  },
+  download: {
+    id: `${scope}.download`,
+    defaultMessage:
+      'For additional analyses you can download the raw data from the {link}.',
+  },
+  downloadAnchor: {
+    id: `${scope}.downloadAnchor`,
+    defaultMessage: 'data repository',
+  },
   defineArea: {
     id: `${scope}.defineArea`,
     defaultMessage: '1. Define area (required)',
@@ -55,7 +69,7 @@ export default defineMessages({
   },
   selectRegionFieldPlaceholder: {
     id: `${scope}.selectRegionFieldPlaceholder`,
-    defaultMessage: 'Select region',
+    defaultMessage: 'Select region (EEZ)',
   },
   defineAreaFieldPlaceholder: {
     id: `${scope}.defineAreaFieldPlaceholder`,
@@ -126,6 +140,14 @@ export default defineMessages({
     id: `${scope}.resetQueryLabel`,
     defaultMessage: 'Reset query',
   },
+  cancelQueryLabel: {
+    id: `${scope}.cancelQueryLabel`,
+    defaultMessage: 'Cancel query',
+  },
+  changeQueryLabel: {
+    id: `${scope}.changeQueryLabel`,
+    defaultMessage: 'Change query',
+  },
   updateQueryLabel: {
     id: `${scope}.updateQueryLabel`,
     defaultMessage: 'Update query',
@@ -142,5 +164,72 @@ export default defineMessages({
     id: `${scope}.noResults`,
     defaultMessage:
       'We are sorry, but your query produced no results. Please try again with a different area or different filter settings',
+  },
+  awaitResults: {
+    id: `${scope}.awaitResults`,
+    defaultMessage:
+      'Retrieving list of ecosystem groups... Especially for large areas this may take a while.',
+  },
+  hintResultsRegion: {
+    id: `${scope}.hintResultsRegion`,
+    defaultMessage:
+      'Note that the retrieved list is intended to be indicative only. Further note that the area calculation is still experimental and has some limitations. ',
+  },
+  hintResultsArea: {
+    id: `${scope}.hintResultsArea`,
+    defaultMessage:
+      'Note that the retrieved list is intended to be indicative only. ',
+  },
+  hintResultsGraph: {
+    id: `${scope}.hintResultsGraph`,
+    defaultMessage: 'Showing % of global occurrence for each type',
+  },
+  downloadResultsLabel: {
+    id: `${scope}.downloadResultsLabel`,
+    defaultMessage: 'Download (CSV)',
+  },
+  csvColumnGroupID: {
+    id: `${scope}.csvColumnGroupID`,
+    defaultMessage: 'ID',
+  },
+  csvColumnGroupTitle: {
+    id: `${scope}.csvColumnGroupTitle`,
+    defaultMessage: 'Group',
+  },
+  csvColumnBiomeID: {
+    id: `${scope}.csvColumnBiomeID`,
+    defaultMessage: 'Biome ID',
+  },
+  csvColumnBiomeTitle: {
+    id: `${scope}.csvColumnBiomeTitle`,
+    defaultMessage: 'Biome',
+  },
+  csvColumnRealmID: {
+    id: `${scope}.csvColumnRealmID`,
+    defaultMessage: 'Realm ID',
+  },
+  csvColumnRealmTitle: {
+    id: `${scope}.csvColumnRealmTitle`,
+    defaultMessage: 'Realm',
+  },
+  csvColumnMajorOccurrence: {
+    id: `${scope}.csvColumnMajorOccurrence`,
+    defaultMessage: '% major occurrence',
+  },
+  csvColumnMinorOccurrence: {
+    id: `${scope}.csvColumnMinorOccurrence`,
+    defaultMessage: '% minor occurrence',
+  },
+  csvColumnRegionID: {
+    id: `${scope}.csvColumnRegionID`,
+    defaultMessage: 'Region ID',
+  },
+  csvColumnRegionTitle: {
+    id: `${scope}.csvColumnRegionTitle`,
+    defaultMessage: 'Region (EEZ)',
+  },
+  csvColumnCustomArea: {
+    id: `${scope}.csvColumnCustomArea`,
+    defaultMessage: 'Area WKT',
   },
 });

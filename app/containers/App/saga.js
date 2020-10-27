@@ -20,6 +20,7 @@ import {
 } from 'config';
 
 import { DEFAULT_LOCALE } from 'i18n';
+import { areaToPolygonWKT } from 'containers/Map/utils';
 
 import {
   LOAD_TYPOLOGY,
@@ -419,15 +420,14 @@ function* loadContentSaga({ key, contentType }) {
 function* queryGroupsByType(type, args) {
   // console.log('queryGroupsByType', type, args)
   const { area, regionId, occurrence, realm, biome } = args;
-  const polygonWKT =
-    area && area.trim() !== '' && encodeURI(`POLYGON((${area}))`);
+  const polygonWKT = areaToPolygonWKT(area);
   // requestedSelector returns the times that entities where fetched from the API
   const requestedAt = yield select(selectGroupsQueriedByType, type);
   const ready = yield select(selectGroupsQueryReadyByType, type);
   // If haven't loaded yet, do so now.
   if (!requestedAt && !ready) {
     let url = `${PATHS.GROUPS_QUERY_API[type]}`;
-    if (polygonWKT) {
+    if (polygonWKT !== '') {
       url = `${url}?poly=${polygonWKT}`;
     } else {
       url = `${url}?regionid=${regionId}`;
@@ -530,8 +530,14 @@ function* queryGroupsSaga({ args }) {
   const argsStored = yield select(selectGroupsByAreaArgs);
   if (needsQuery(args, argsStored)) {
     yield put(resetGroupsQuery());
-    yield fork(queryGroupsByType, 'vector', args);
-    yield fork(queryGroupsByType, 'raster', args);
+    if (args.regionId) {
+      yield queryGroupsByType('areasbyregion', args);
+    } else {
+      yield fork(queryGroupsByType, 'vector', args);
+      yield fork(queryGroupsByType, 'raster', args);
+    }
+  } else if (args.regionId) {
+    yield filterGroupsByType('areasbyregion', args);
   } else {
     yield fork(filterGroupsByType, 'vector', args);
     yield fork(filterGroupsByType, 'raster', args);

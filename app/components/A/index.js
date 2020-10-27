@@ -5,10 +5,20 @@
 import styled from 'styled-components';
 
 const A = styled.a`
-  color: #41addd;
-
+  color: ${({ theme }) => theme.global.colors.brand};
+  font-weight: 600;
+  text-decoration: none;
+  &:visited {
+    color: ${({ theme }) => theme.global.colors.brand};
+  }
   &:hover {
-    color: #6cc0e5;
+    text-decoration: underline;
+    color: ${({ theme }) => theme.global.colors['brand-dark']};
+  }
+  &:focus {
+    text-decoration: underline;
+    color: ${({ theme }) => theme.global.colors['brand-dark']};
+    outline: 0;
   }
 `;
 

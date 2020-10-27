@@ -12,11 +12,17 @@ import { createStructuredSelector } from 'reselect';
 import styled, { css } from 'styled-components';
 import { ResponsiveContext } from 'grommet';
 
-import { selectLocale, selectGroup } from 'containers/App/selectors';
+import {
+  selectLocale,
+  selectGroup,
+  selectDrawActive,
+} from 'containers/App/selectors';
+
+import { updateGroupsQuery } from 'containers/App/actions';
 
 import Map from 'containers/Map';
 
-import { Expand, Contract } from 'components/Icons';
+import { Expand, Contract, AnalysePoly, AnalyseRect } from 'components/Icons';
 import MapControls from 'components/MapControls';
 import MapControl from 'components/MapControl';
 import TopGraphic from 'components/TopGraphic';
@@ -44,8 +50,11 @@ export function MapContainer({
   groupId,
   expandWithAside,
   mode,
+  drawActive,
+  resetQueryArea,
 }) {
   const [isMapExpanded, setIsMapExpanded] = useState(false);
+  const [drawMode, setDrawMode] = useState('rectangle');
 
   return (
     <ResponsiveContext.Consumer>
@@ -62,6 +71,7 @@ export function MapContainer({
             locale={locale}
             size={size}
             mode={mode}
+            drawMode={drawMode}
           />
           {!expandWithAside && (
             <MapControls position="right">
@@ -77,6 +87,38 @@ export function MapContainer({
               />
             </MapControls>
           )}
+          {drawActive && (
+            <MapControls position="right" square>
+              <MapControl
+                square
+                active={drawMode === 'rectangle'}
+                disabled={drawMode === 'rectangle'}
+                icon={
+                  <AnalyseRect
+                    color={drawMode === 'rectangle' ? 'white' : 'black'}
+                  />
+                }
+                onClick={() => {
+                  resetQueryArea();
+                  setDrawMode('rectangle');
+                }}
+              />
+              <MapControl
+                square
+                active={drawMode === 'polygon'}
+                disabled={drawMode === 'polygon'}
+                icon={
+                  <AnalysePoly
+                    color={drawMode === 'polygon' ? 'white' : 'black'}
+                  />
+                }
+                onClick={() => {
+                  resetQueryArea();
+                  setDrawMode('polygon');
+                }}
+              />
+            </MapControls>
+          )}
         </Styled>
       )}
     </ResponsiveContext.Consumer>
@@ -88,17 +130,31 @@ MapContainer.propTypes = {
   locale: PropTypes.string,
   groupId: PropTypes.string,
   expandWithAside: PropTypes.bool,
+  drawActive: PropTypes.bool,
   mode: PropTypes.string,
+  resetQueryArea: PropTypes.func,
 };
+
+function mapDispatchToProps(dispatch) {
+  return {
+    resetQueryArea: () =>
+      dispatch(
+        updateGroupsQuery({
+          area: '',
+        }),
+      ),
+  };
+}
 
 const mapStateToProps = createStructuredSelector({
   locale: state => selectLocale(state),
   group: (state, { groupId }) => groupId && selectGroup(state, groupId),
+  drawActive: state => selectDrawActive(state),
 });
 
 const withConnect = connect(
   mapStateToProps,
-  null,
+  mapDispatchToProps,
 );
 
 export default compose(withConnect)(MapContainer);
