@@ -28,6 +28,7 @@ import A from 'components/A';
 import ButtonPrimary from 'components/ButtonPrimary';
 import AsideNavSection from 'components/AsideNavSection';
 import Hint from 'components/Hint';
+import SectionTitle from 'components/styled/SectionTitle';
 
 import { PATHS } from 'config';
 import messages from './messages';
@@ -113,210 +114,221 @@ export function Configure({
   // console.log(!hasArea && !hasRegion)
   // console.log(!(hasArea || hasRegion))
   return (
-    <Box
-      pad={{ horizontal: 'small', bottom: 'large' }}
-      flex={false}
-      background="white"
-    >
-      <AsideNavSection margin={{ top: 'ms' }}>
-        <div>
-          <FormattedMessage {...messages.intro} />
-          <FormattedMessage
-            {...messages.download}
-            values={{
-              link: (
-                <A href={PATHS.DATA_DOWNLOAD} target="_blank">
-                  {intl.formatMessage(messages.downloadAnchor)}
-                </A>
-              ),
-            }}
-          />
-        </div>
-      </AsideNavSection>
-      <AsideNavSection>
-        <StepTitle>
-          <FormattedMessage {...messages.defineArea} />
-        </StepTitle>
-        <Box
-          direction="row"
-          gap="none"
-          border="bottom"
-          margin={{ top: 'xxsmall', bottom: 'medium' }}
-        >
-          <ToggleButton
-            plain
-            disabled={queryType === 'region'}
-            active={queryType === 'region'}
-            onClick={() => {
-              onSetQueryType('region');
-            }}
-            label={
-              <TextLabel>
-                <FormattedMessage {...messages.predefinedRegion} />
-              </TextLabel>
-            }
-          />
-          <ToggleButton
-            plain
-            disabled={queryType === 'area'}
-            active={queryType === 'area'}
-            onClick={() => {
-              onSetQueryType('area');
-            }}
-            left
-            label={
-              <TextLabel>
-                <FormattedMessage {...messages.customArea} />
-              </TextLabel>
-            }
-          />
-        </Box>
-        <Hint>
-          {queryType === 'area' && (
-            <FormattedMessage {...messages.defineAreaInstructions} />
-          )}
-          {queryType === 'region' && (
-            <FormattedMessage {...messages.selectRegionInstructions} />
-          )}
-        </Hint>
-        <FieldWrap margin={{ top: 'medium' }}>
-          <FieldLabel>
+    <>
+      <Box
+        pad={{ horizontal: 'small', top: 'small' }}
+        flex={false}
+        background="white"
+      >
+        <SectionTitle aside>
+          <FormattedMessage {...messages.title} />
+        </SectionTitle>
+      </Box>
+      <Box
+        pad={{ horizontal: 'small', bottom: 'large' }}
+        flex={false}
+        background="white"
+      >
+        <AsideNavSection margin={{ top: 'ms' }}>
+          <div>
+            <FormattedMessage {...messages.intro} />
+            <FormattedMessage
+              {...messages.download}
+              values={{
+                link: (
+                  <A href={PATHS.DATA_DOWNLOAD} target="_blank">
+                    {intl.formatMessage(messages.downloadAnchor)}
+                  </A>
+                ),
+              }}
+            />
+          </div>
+        </AsideNavSection>
+        <AsideNavSection>
+          <StepTitle>
+            <FormattedMessage {...messages.defineArea} />
+          </StepTitle>
+          <Box
+            direction="row"
+            gap="none"
+            border="bottom"
+            margin={{ top: 'xxsmall', bottom: 'medium' }}
+          >
+            <ToggleButton
+              plain
+              disabled={queryType === 'region'}
+              active={queryType === 'region'}
+              onClick={() => {
+                onSetQueryType('region');
+              }}
+              label={
+                <TextLabel>
+                  <FormattedMessage {...messages.predefinedRegion} />
+                </TextLabel>
+              }
+            />
+            <ToggleButton
+              plain
+              disabled={queryType === 'area'}
+              active={queryType === 'area'}
+              onClick={() => {
+                onSetQueryType('area');
+              }}
+              left
+              label={
+                <TextLabel>
+                  <FormattedMessage {...messages.customArea} />
+                </TextLabel>
+              }
+            />
+          </Box>
+          <Hint>
             {queryType === 'area' && (
-              <FormattedMessage {...messages.defineAreaFieldLabel} />
+              <FormattedMessage {...messages.defineAreaInstructions} />
             )}
             {queryType === 'region' && (
-              <FormattedMessage {...messages.selectRegionFieldLabel} />
+              <FormattedMessage {...messages.selectRegionInstructions} />
             )}
-          </FieldLabel>
-          {queryType === 'area' && (
-            <AreaInput
-              area={areaOpen}
-              onSubmit={value => {
-                const points = value.split(',');
-                if (points[0] === points[points.length - 1]) {
+          </Hint>
+          <FieldWrap margin={{ top: 'medium' }}>
+            <FieldLabel>
+              {queryType === 'area' && (
+                <FormattedMessage {...messages.defineAreaFieldLabel} />
+              )}
+              {queryType === 'region' && (
+                <FormattedMessage {...messages.selectRegionFieldLabel} />
+              )}
+            </FieldLabel>
+            {queryType === 'area' && (
+              <AreaInput
+                area={areaOpen}
+                onSubmit={value => {
+                  const points = value.split(',');
+                  if (points[0] === points[points.length - 1]) {
+                    updateQuery({
+                      ...queryArgs,
+                      area: value,
+                    });
+                  } else {
+                    updateQuery({
+                      ...queryArgs,
+                      area: `${value}, ${points[0]}`,
+                    });
+                  }
+                }}
+              />
+            )}
+            {queryType === 'region' && (
+              <RegionInput
+                regionId={regionId}
+                onSubmit={value => {
                   updateQuery({
                     ...queryArgs,
-                    area: value,
+                    regionId: value,
                   });
-                } else {
+                }}
+              />
+            )}
+          </FieldWrap>
+        </AsideNavSection>
+        <AsideNavSection>
+          <StepTitle>
+            <FormattedMessage {...messages.addFilters} />
+          </StepTitle>
+          <TypologyFilter
+            type="realms"
+            options={realmOptions}
+            active={realmObject}
+            onSelect={id => {
+              updateQuery({
+                ...queryArgs,
+                realm: id,
+              });
+            }}
+            onDismiss={() => {
+              updateQuery({
+                ...queryArgs,
+                realm: '',
+              });
+            }}
+          />
+          <TypologyFilter
+            type="biomes"
+            options={biomeOptions}
+            active={biomeObject}
+            onSelect={id => {
+              updateQuery({
+                ...queryArgs,
+                biome: id,
+              });
+            }}
+            onDismiss={() => {
+              updateQuery({
+                ...queryArgs,
+                biome: '',
+              });
+            }}
+          />
+          <FieldWrap margin={{ bottom: '0' }}>
+            <OccurrenceInput
+              occurrence={occurrence}
+              onSubmit={value =>
+                updateQuery({
+                  ...queryArgs,
+                  occurrence: value,
+                })
+              }
+            />
+          </FieldWrap>
+        </AsideNavSection>
+        <AsideNavSection>
+          <StepTitle>
+            <FormattedMessage {...messages.submitQuery} />
+          </StepTitle>
+          <Box direction="row" gap="xsmall" align="center">
+            <SubmitButton
+              disabled={
+                (queryType === 'area' && !hasArea) ||
+                (queryType === 'region' && !hasRegion)
+              }
+              label={intl.formatMessage(messages.submitQueryLabel)}
+              onClick={() => {
+                onQueryGroups({
+                  area: queryType === 'area' ? area.trim() : null,
+                  regionId: queryType === 'region' ? regionId.trim() : null,
+                  realm: realm && realm.trim() !== '' ? realm : null,
+                  biome: biome && biome.trim() !== '' ? biome : null,
+                  occurrence:
+                    occurrence && occurrence.trim() !== '' ? occurrence : null,
+                });
+                if (queryType === 'area') {
                   updateQuery({
                     ...queryArgs,
-                    area: `${value}, ${points[0]}`,
+                    regionId: '',
+                  });
+                }
+                if (queryType === 'region') {
+                  updateQuery({
+                    ...queryArgs,
+                    area: '',
                   });
                 }
               }}
             />
-          )}
-          {queryType === 'region' && (
-            <RegionInput
-              regionId={regionId}
-              onSubmit={value => {
-                updateQuery({
-                  ...queryArgs,
-                  regionId: value,
-                });
-              }}
-            />
-          )}
-        </FieldWrap>
-      </AsideNavSection>
-      <AsideNavSection>
-        <StepTitle>
-          <FormattedMessage {...messages.addFilters} />
-        </StepTitle>
-        <TypologyFilter
-          type="realms"
-          options={realmOptions}
-          active={realmObject}
-          onSelect={id => {
-            updateQuery({
-              ...queryArgs,
-              realm: id,
-            });
-          }}
-          onDismiss={() => {
-            updateQuery({
-              ...queryArgs,
-              realm: '',
-            });
-          }}
-        />
-        <TypologyFilter
-          type="biomes"
-          options={biomeOptions}
-          active={biomeObject}
-          onSelect={id => {
-            updateQuery({
-              ...queryArgs,
-              biome: id,
-            });
-          }}
-          onDismiss={() => {
-            updateQuery({
-              ...queryArgs,
-              biome: '',
-            });
-          }}
-        />
-        <FieldWrap margin={{ bottom: '0' }}>
-          <OccurrenceInput
-            occurrence={occurrence}
-            onSubmit={value =>
-              updateQuery({
-                ...queryArgs,
-                occurrence: value,
-              })
-            }
-          />
-        </FieldWrap>
-      </AsideNavSection>
-      <AsideNavSection>
-        <StepTitle>
-          <FormattedMessage {...messages.submitQuery} />
-        </StepTitle>
-        <Box direction="row" gap="xsmall" align="center">
-          <SubmitButton
-            disabled={
-              (queryType === 'area' && !hasArea) ||
-              (queryType === 'region' && !hasRegion)
-            }
-            label={intl.formatMessage(messages.submitQueryLabel)}
-            onClick={() => {
-              onQueryGroups({
-                area: queryType === 'area' ? area.trim() : null,
-                regionId: queryType === 'region' ? regionId.trim() : null,
-                realm: realm && realm.trim() !== '' ? realm : null,
-                biome: biome && biome.trim() !== '' ? biome : null,
-                occurrence:
-                  occurrence && occurrence.trim() !== '' ? occurrence : null,
-              });
-              if (queryType === 'area') {
-                updateQuery({
-                  ...queryArgs,
-                  regionId: '',
-                });
-              }
-              if (queryType === 'region') {
-                updateQuery({
-                  ...queryArgs,
-                  area: '',
-                });
-              }
-            }}
-          />
-          {queryType === 'area' && !hasArea && (
-            <Hint>
-              <FormattedMessage {...messages.submitQueryNoAreaHint} />
-            </Hint>
-          )}
-          {queryType === 'region' && !hasRegion && (
-            <Hint>
-              <FormattedMessage {...messages.submitQueryNoRegionHint} />
-            </Hint>
-          )}
-        </Box>
-      </AsideNavSection>
-    </Box>
+            {queryType === 'area' && !hasArea && (
+              <Hint>
+                <FormattedMessage {...messages.submitQueryNoAreaHint} />
+              </Hint>
+            )}
+            {queryType === 'region' && !hasRegion && (
+              <Hint>
+                <FormattedMessage {...messages.submitQueryNoRegionHint} />
+              </Hint>
+            )}
+          </Box>
+        </AsideNavSection>
+      </Box>
+    </>
   );
 }
 

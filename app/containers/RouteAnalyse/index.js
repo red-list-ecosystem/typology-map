@@ -3,15 +3,18 @@
  * RouteExplore
  *
  */
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { FormattedMessage, intlShape, injectIntl } from 'react-intl';
-import { Box, ResponsiveContext } from 'grommet';
+import { intlShape, injectIntl, FormattedMessage } from 'react-intl';
+import { ResponsiveContext, Box } from 'grommet';
+
+import { isMinSize } from 'utils/responsive';
+
 import { queryGroups, updateGroupsQuery } from 'containers/App/actions';
 import {
   selectGroupsQueryArgs,
@@ -23,10 +26,11 @@ import {
 import ColumnAside from 'components/ColumnAside';
 import SectionTitle from 'components/styled/SectionTitle';
 
-import { isMinSize } from 'utils/responsive';
 import messages from './messages';
 import Results from './Results';
 import Configure from './Configure';
+import ConfigureArea from './ConfigureArea';
+import ConfigureFilters from './ConfigureFilters';
 import GroupInfo from './GroupInfo';
 
 const Styled = styled.div`
@@ -45,8 +49,13 @@ export function RouteAnalyse({
   biomes,
   intl,
   infoGroup,
+  updateQuery,
+  onQueryGroups,
 }) {
   // const [show, setShow] = useState(true);
+  const [areaUpdate, setAreaUpdate] = useState(false);
+  const [filterUpdate, setFilterUpdate] = useState(false);
+  const updating = areaUpdate || filterUpdate;
   return (
     <ResponsiveContext.Consumer>
       {size => (
@@ -56,24 +65,56 @@ export function RouteAnalyse({
           </Helmet>
           {isMinSize(size, 'large') && (
             <ColumnAside absolute>
-              <Box
-                pad={{ horizontal: 'small', top: 'small' }}
-                flex={false}
-                background="white"
-              >
-                <SectionTitle aside>
-                  <FormattedMessage {...messages.title} />
-                </SectionTitle>
-              </Box>
               {!queried && realms && biomes && (
                 <Configure realms={realms} biomes={biomes} />
               )}
-              {queried && (
+              {queried && !updating && (
                 <Results
                   queryArgs={queryArgs}
                   realms={realms}
                   biomes={biomes}
+                  setAreaUpdate={setAreaUpdate}
+                  setFilterUpdate={setFilterUpdate}
                 />
+              )}
+              {queried && updating && (
+                <>
+                  <Box
+                    pad={{ horizontal: 'small', top: 'small' }}
+                    flex={false}
+                    background="white"
+                    direction="row"
+                    fill="horizontal"
+                    justify="between"
+                    align="center"
+                  >
+                    <SectionTitle aside>
+                      <FormattedMessage {...messages.changeQueryLabel} />
+                    </SectionTitle>
+                  </Box>
+                  <Box pad={{ horizontal: 'small' }} flex={false}>
+                    {areaUpdate && (
+                      <ConfigureArea
+                        queryArgs={queryArgs}
+                        onSubmit={() => setAreaUpdate(false)}
+                        onCancel={() => setAreaUpdate(false)}
+                        updateQuery={updateQuery}
+                        onQueryGroups={onQueryGroups}
+                      />
+                    )}
+                    {filterUpdate && (
+                      <ConfigureFilters
+                        queryArgs={queryArgs}
+                        realms={realms}
+                        biomes={biomes}
+                        onSubmit={() => setFilterUpdate(false)}
+                        onCancel={() => setFilterUpdate(false)}
+                        updateQuery={updateQuery}
+                        onQueryGroups={onQueryGroups}
+                      />
+                    )}
+                  </Box>
+                </>
               )}
             </ColumnAside>
           )}
@@ -90,6 +131,8 @@ RouteAnalyse.propTypes = {
   realms: PropTypes.array,
   biomes: PropTypes.array,
   infoGroup: PropTypes.object,
+  onQueryGroups: PropTypes.func,
+  updateQuery: PropTypes.func,
   intl: intlShape.isRequired,
 };
 
