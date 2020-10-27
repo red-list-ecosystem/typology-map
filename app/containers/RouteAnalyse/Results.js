@@ -357,7 +357,11 @@ export function Results({
                 </Hint>
               )}
               {realm && (
-                <FieldWrap>
+                <FieldWrap
+                  margin={{
+                    bottom: (biome || occurrence) ? 'medium' : 'none',
+                  }}
+                >
                   <FieldLabel>
                     <FormattedMessage {...commonMessages.realm} />
                   </FieldLabel>
@@ -370,7 +374,7 @@ export function Results({
                 </FieldWrap>
               )}
               {biome && (
-                <FieldWrap>
+                <FieldWrap margin={{ bottom: occurrence ? 'medium' : 'none'}}>
                   <FieldLabel>
                     <FormattedMessage {...commonMessages.biome} />
                   </FieldLabel>
@@ -383,7 +387,7 @@ export function Results({
                 </FieldWrap>
               )}
               {occurrence && (
-                <FieldWrap>
+                <FieldWrap margin="none">
                   <Box
                     direction="row"
                     gap="small"
