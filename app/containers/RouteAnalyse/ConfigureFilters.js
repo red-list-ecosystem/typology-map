@@ -25,7 +25,6 @@ import { getRealmOptions, getBiomeOptions } from './utils';
 import TypologyFilter from './TypologyFilter';
 import StepTitle from './StepTitle';
 import FieldWrap from './FieldWrap';
-import FieldLabel from './FieldLabel';
 import OccurrenceInput from './OccurrenceInput';
 
 const UpdateButton = styled(p => <Button plain {...p} />)`
@@ -111,9 +110,6 @@ export function ConfigureFilters({
           }}
         />
         <FieldWrap margin={{ bottom: '0' }}>
-          <FieldLabel>
-            <FormattedMessage {...messages.addFiltersByOccurrenceLabel} />
-          </FieldLabel>
           <OccurrenceInput
             occurrence={occurrence}
             onSubmit={value =>

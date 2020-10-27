@@ -10,9 +10,14 @@ import { FormattedMessage } from 'react-intl';
 import { Button, Box, Text } from 'grommet';
 import styled from 'styled-components';
 
+import TooltipOccurrence from 'components/Tooltip/TooltipOccurrence';
+
 import { GROUP_LAYER_PROPERTIES } from 'config';
 
 import commonMessages from 'messages';
+import messages from './messages';
+
+import FieldLabel from './FieldLabel';
 
 const KeyColor = styled.span`
   display: inline-block;
@@ -44,30 +49,45 @@ const ToggleButton = styled(p => <Button plain {...p} />)`
 
 export function OccurrenceInput({ occurrence, onSubmit }) {
   return (
-    <Box direction="row" gap="small" margin={{ top: 'xxsmall' }}>
-      {Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).map(key => (
-        <ToggleButton
-          plain
-          key={key}
-          active={occurrence === key}
-          onClick={() => {
-            onSubmit(occurrence === key ? '' : key);
-          }}
-          label={
-            <Box direction="row" align="center" gap="xsmall">
-              <KeyColor color={GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color} />
-              <TextLabel>
-                <FormattedMessage
-                  {...commonMessages[
-                    `occurrence_${GROUP_LAYER_PROPERTIES.OCCURRENCE[key].id}`
-                  ]}
+    <>
+      <Box
+        direction="row"
+        gap="small"
+        align="center"
+        margin={{ top: 'xxsmall', bottom: 'xsmall' }}
+      >
+        <FieldLabel noMargin>
+          <FormattedMessage {...messages.addFiltersByOccurrenceLabel} />
+        </FieldLabel>
+        <TooltipOccurrence />
+      </Box>
+      <Box direction="row" gap="small" margin={{ top: 'xxsmall' }}>
+        {Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).map(key => (
+          <ToggleButton
+            plain
+            key={key}
+            active={occurrence === key}
+            onClick={() => {
+              onSubmit(occurrence === key ? '' : key);
+            }}
+            label={
+              <Box direction="row" align="center" gap="xsmall">
+                <KeyColor
+                  color={GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color}
                 />
-              </TextLabel>
-            </Box>
-          }
-        />
-      ))}
-    </Box>
+                <TextLabel>
+                  <FormattedMessage
+                    {...commonMessages[
+                      `occurrence_${GROUP_LAYER_PROPERTIES.OCCURRENCE[key].id}`
+                    ]}
+                  />
+                </TextLabel>
+              </Box>
+            }
+          />
+        ))}
+      </Box>
+    </>
   );
 }
 

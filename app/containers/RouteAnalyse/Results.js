@@ -45,6 +45,8 @@ import Hint from 'components/Hint';
 import quasiEquals from 'utils/quasi-equals';
 import { formatAreaRelative } from 'utils/numbers';
 
+import TooltipOccurrence from 'components/Tooltip/TooltipOccurrence';
+
 import commonMessages from 'messages';
 import messages from './messages';
 
@@ -382,9 +384,17 @@ export function Results({
               )}
               {occurrence && (
                 <FieldWrap>
-                  <FieldLabel>
-                    <FormattedMessage {...commonMessages.occurrence} />
-                  </FieldLabel>
+                  <Box
+                    direction="row"
+                    gap="small"
+                    align="center"
+                    margin={{ top: 'xxsmall', bottom: 'xsmall' }}
+                  >
+                    <FieldLabel noMargin>
+                      <FormattedMessage {...commonMessages.occurrence} />
+                    </FieldLabel>
+                    <TooltipOccurrence />
+                  </Box>
                   <Active>
                     <LabelWrap align="center">
                       <KeyColor
@@ -547,6 +557,7 @@ export function Results({
                           </Box>
                         ),
                       )}
+                      <TooltipOccurrence />
                     </Box>
                   )}
                 </Box>

@@ -19,7 +19,9 @@ import {
   Text,
   ResponsiveContext,
 } from 'grommet';
+
 import { Menu } from 'components/Icons';
+import TooltipOccurrence from 'components/Tooltip/TooltipOccurrence';
 
 import { GROUP_LAYER_PROPERTIES } from 'config';
 
@@ -108,7 +110,7 @@ const LayerTitle = styled(Text)`
 const Id = styled(LayerTitle)``;
 
 const SettingTitle = styled(props => (
-  <Text size="xsmall" {...props} margin={{ bottom: 'xsmall' }} />
+  <Text size="xsmall" margin={{ bottom: 'xsmall' }} {...props} />
 ))`
   font-weight: 600;
 `;
@@ -184,9 +186,17 @@ export function Settings({
               >
                 {showKey && (
                   <WrapControl>
-                    <SettingTitle>
-                      <FormattedMessage {...commonMessages.occurrence} />
-                    </SettingTitle>
+                    <Box
+                      direction="row"
+                      gap="small"
+                      align="center"
+                      margin={{ bottom: 'xsmall' }}
+                    >
+                      <SettingTitle margin="none">
+                        <FormattedMessage {...commonMessages.occurrence} />
+                      </SettingTitle>
+                      <TooltipOccurrence />
+                    </Box>
                     <Box direction="row" gap="small">
                       {Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).map(
                         key => (

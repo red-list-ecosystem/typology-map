@@ -259,9 +259,6 @@ export function Configure({
           }}
         />
         <FieldWrap margin={{ bottom: '0' }}>
-          <FieldLabel>
-            <FormattedMessage {...messages.addFiltersByOccurrenceLabel} />
-          </FieldLabel>
           <OccurrenceInput
             occurrence={occurrence}
             onSubmit={value =>
