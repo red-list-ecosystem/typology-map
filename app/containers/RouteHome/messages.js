@@ -30,6 +30,19 @@ export default defineMessages({
     defaultMessage:
       'Start by selecting a Realm of interest, then drill down to learn more about its Biomes and Ecosystem Functional Groups',
   },
+  titleSectionAnalysis: {
+    id: `${scope}.titleSectionAnalysis`,
+    defaultMessage: 'Analyse functional groups by area',
+  },
+  teaserSectionAnalysis: {
+    id: `${scope}.teaserSectionAnalysis`,
+    defaultMessage:
+      'Identify occurrence of functional groups by country or custom area',
+  },
+  buttonSectionAnalysis: {
+    id: `${scope}.buttonSectionAnalysis`,
+    defaultMessage: 'Analyse by area',
+  },
   titleSectionAbout: {
     id: `${scope}.titleSectionAbout`,
     defaultMessage: 'About',

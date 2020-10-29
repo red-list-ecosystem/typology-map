@@ -17,14 +17,13 @@ import {
   queryGroups,
   updateGroupsQuery,
   setQueryType,
-  setActiveGroupQuery,
 } from 'containers/App/actions';
 import {
   selectGroupsQueryArgs,
   selectQueryType,
 } from 'containers/App/selectors';
 
-import A from 'components/A';
+import A from 'components/styled/A';
 import ButtonPrimary from 'components/ButtonPrimary';
 import AsideNavSection from 'components/AsideNavSection';
 import Hint from 'components/Hint';
@@ -83,7 +82,6 @@ export function Configure({
   intl,
   realms,
   biomes,
-  resetActiveGroup,
 }) {
   const { area, realm, biome, occurrence, regionId } = queryArgs;
   const hasArea = area && area.trim() !== '' && testArea(area);
@@ -93,9 +91,6 @@ export function Configure({
   }, []);
   useEffect(() => {
     onSetQueryType(hasArea && !hasRegion ? 'area' : 'region');
-  }, []);
-  useEffect(() => {
-    resetActiveGroup();
   }, []);
 
   // must be a closed area (first point === last point)
@@ -355,7 +350,6 @@ export function mapDispatchToProps(dispatch) {
     onQueryGroups: args => dispatch(queryGroups(args)),
     updateQuery: args => dispatch(updateGroupsQuery(args)),
     onSetQueryType: type => dispatch(setQueryType(type)),
-    resetActiveGroup: () => dispatch(setActiveGroupQuery('')),
   };
 }
 

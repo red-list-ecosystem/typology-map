@@ -3,4 +3,5 @@ import { Paragraph } from 'grommet';
 
 export default styled(Paragraph)`
   font-weight: 600;
+  position: relative;
 `;

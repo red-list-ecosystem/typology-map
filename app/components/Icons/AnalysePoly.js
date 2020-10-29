@@ -17,7 +17,7 @@ function AnalysePoly({ color, ...props }) {
         <polygon
           fill="inherit"
           stroke="inherit"
-          points="0,24 20,8 38,8 38,22 23,38"
+          points="0,24 20,8 38,8 38,22 23,32"
         />
       </g>
     </StyledIcon>

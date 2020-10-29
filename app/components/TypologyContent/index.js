@@ -13,6 +13,7 @@ import { getContentMaxWidth } from 'utils/responsive';
 
 const StyledBox = styled(Box)`
   margin: 0 auto;
+  padding-bottom: ${({ theme }) => theme.global.edgeSize.large};
   max-width: ${getContentMaxWidth('small')}px;
   /* responsive height */
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {

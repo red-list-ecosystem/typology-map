@@ -13,6 +13,8 @@ import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { Box, ResponsiveContext } from 'grommet';
 
+import { ROUTES } from 'config';
+
 import {
   selectRealm,
   selectRealms,
@@ -23,6 +25,7 @@ import {
   loadContent,
   navigateTypology,
   navigate,
+  resetGroupsQuery,
 } from 'containers/App/actions';
 
 import ColumnMain from 'components/ColumnMain';
@@ -39,6 +42,7 @@ import TopGraphic from 'components/TopGraphic';
 import TypologyImage from 'components/TypologyImage';
 import TypologyContent from 'components/TypologyContent';
 import RelatedHint from 'components/RelatedHint';
+import AnalysisShortcut from 'components/AnalysisShortcut';
 
 import { isMinSize } from 'utils/responsive';
 
@@ -54,6 +58,7 @@ export function ExploreBiome({
   navGroup,
   navRealm,
   navExplore,
+  navAnalysis,
   intl,
   realm,
   realms,
@@ -114,6 +119,13 @@ export function ExploreBiome({
                       itemClick={id => navGroup(id)}
                       locale={locale}
                       parent={typology}
+                    />
+                  )}
+                  {isMinSize(size, 'large') && (
+                    <AnalysisShortcut
+                      type="biome"
+                      name={typology.title[locale]}
+                      onClick={() => navAnalysis(typology.id)}
                     />
                   )}
                 </TypologyContent>
@@ -177,6 +189,7 @@ ExploreBiome.propTypes = {
   navGroup: PropTypes.func.isRequired,
   navRealm: PropTypes.func.isRequired,
   navExplore: PropTypes.func.isRequired,
+  navAnalysis: PropTypes.func.isRequired,
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   intl: intlShape.isRequired,
 };
@@ -199,7 +212,23 @@ function mapDispatchToProps(dispatch) {
     },
     navGroup: id => dispatch(navigateTypology('groups', id)),
     navRealm: id => dispatch(navigateTypology('realms', id)),
-    navExplore: () => dispatch(navigate('explore')),
+    navExplore: () => dispatch(navigate(ROUTES.EXPLORE)),
+    navAnalysis: biome => {
+      dispatch(resetGroupsQuery());
+      dispatch(
+        navigate(
+          {
+            pathname: ROUTES.ANALYSE,
+            search: {
+              biome,
+            },
+          },
+          {
+            deleteSearchParams: ['realm', 'info', 'active'],
+          },
+        ),
+      );
+    },
   };
 }
 

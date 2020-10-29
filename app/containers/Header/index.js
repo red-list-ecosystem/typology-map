@@ -10,7 +10,13 @@ import { Button, Box, Text, ResponsiveContext, Layer } from 'grommet';
 import { Menu, Search as SearchIcon } from 'components/Icons';
 
 import { selectRouterPath } from 'containers/App/selectors';
-import { navigate, navigateHome, navigatePage } from 'containers/App/actions';
+import {
+  navigate,
+  navigateHome,
+  navigatePage,
+  resetGroupsQuery,
+  resetGroupsQueryNav,
+} from 'containers/App/actions';
 import { PRIMARY, SECONDARY } from 'containers/App/constants';
 import { PAGES, ICONS, ROUTES } from 'config';
 
@@ -432,8 +438,16 @@ const mapStateToProps = createStructuredSelector({
 
 export function mapDispatchToProps(dispatch) {
   return {
-    nav: path => dispatch(navigate(path)),
-    navHome: () => dispatch(navigateHome()),
+    nav: path => {
+      dispatch(resetGroupsQuery());
+      dispatch(resetGroupsQueryNav());
+      dispatch(navigate(path));
+    },
+    navHome: () => {
+      dispatch(resetGroupsQuery());
+      dispatch(resetGroupsQueryNav());
+      dispatch(navigateHome());
+    },
     navPage: id => dispatch(navigatePage(id)),
   };
 }

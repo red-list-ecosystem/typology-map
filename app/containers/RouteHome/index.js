@@ -13,10 +13,14 @@ import { createStructuredSelector } from 'reselect';
 import styled from 'styled-components';
 import { ResponsiveContext } from 'grommet';
 
-import { PATHS, PAGES } from 'config';
+import { PATHS, PAGES, ROUTES } from 'config';
 
 import { selectRealmsWithStats, selectLocale } from 'containers/App/selectors';
-import { navigateTypology, navigatePage } from 'containers/App/actions';
+import {
+  navigateTypology,
+  navigatePage,
+  navigate,
+} from 'containers/App/actions';
 
 import Partners from 'components/Partners';
 import Footer from 'containers/Footer';
@@ -30,6 +34,7 @@ import messages from './messages';
 import Intro from './Intro';
 import SectionExplore from './SectionExplore';
 import SectionAbout from './SectionAbout';
+import SectionAnalysis from './SectionAnalysis';
 
 const Styled = styled.div`
   position: relative;
@@ -60,7 +65,14 @@ const MainContent = styled.div`
 const scrollToRef = (ref, size) =>
   window.scrollTo(0, ref.current.offsetTop - getHeaderHeight(size || 'large'));
 
-export function HomePage({ realms, navRealm, navPage, locale, intl }) {
+export function HomePage({
+  realms,
+  navRealm,
+  navPage,
+  locale,
+  intl,
+  navAnalysis,
+}) {
   const targetRef = useRef(null);
   const onScroll = size => scrollToRef(targetRef, size);
   return (
@@ -80,6 +92,7 @@ export function HomePage({ realms, navRealm, navPage, locale, intl }) {
               navRealm={navRealm}
               locale={locale}
             />
+            <SectionAnalysis onClick={() => navAnalysis()} />
             <SectionAbout
               links={[
                 {
@@ -107,6 +120,7 @@ HomePage.propTypes = {
   realms: PropTypes.array,
   navRealm: PropTypes.func,
   navPage: PropTypes.func,
+  navAnalysis: PropTypes.func,
   locale: PropTypes.string,
   intl: intlShape.isRequired,
 };
@@ -120,6 +134,7 @@ export function mapDispatchToProps(dispatch) {
   return {
     navRealm: id => dispatch(navigateTypology('realms', id)),
     navPage: id => dispatch(navigatePage(id)),
+    navAnalysis: () => dispatch(navigate(ROUTES.ANALYSE)),
   };
 }
 

@@ -33,7 +33,7 @@ import {
 } from 'containers/App/actions';
 import { selectLayerByKey } from 'containers/Map/selectors';
 import ButtonPrimary from 'components/ButtonPrimary';
-import A from 'components/A';
+import A from 'components/styled/A';
 import AsideNavTypologyList from 'components/AsideNavTypologyList';
 import LoadingIndicator from 'components/LoadingIndicator';
 import AsideNavSection from 'components/AsideNavSection';

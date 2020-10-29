@@ -93,7 +93,7 @@ export const colors = {
   white: '#ffffff',
   // active: '#ffffff',
   brand: '#C60000', // rle red
-  'brand-dark': '#8D0202', // rle red
+  'brand-dark': '#B10000', // rle red
   'brand-2': '#00183A', // rle blue
   'brand-2-dark': '#011126', // rle blue
   'brand-2-light': '#1A76F8', // rle red

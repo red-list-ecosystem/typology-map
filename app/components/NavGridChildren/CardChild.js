@@ -15,6 +15,7 @@ import { PATHS } from 'config';
 import commonMessages from 'messages';
 
 import ButtonCard from 'components/ButtonCard';
+import H4 from 'components/styled/H4';
 
 const ContentWrap = styled(Box)``;
 
@@ -78,10 +79,10 @@ export function CardChild({ onCardClick, label, typology, type, ...rest }) {
                   horizontal: 'small',
                 }}
               >
-                <h4>
+                <H4>
                   <Text margin={{ right: 'xsmall' }}>{typology.id}</Text>
                   <Text>{label}</Text>
-                </h4>
+                </H4>
                 {type === 'biomes' && (
                   <Box direction="row" gap="xsmall">
                     <Text>{typology.groupNo}</Text>
