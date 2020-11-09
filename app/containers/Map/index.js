@@ -157,6 +157,7 @@ export function Map({
   const queryAreaLayerGroupRef = useRef(null);
   const drawFeatureGroupRef = useRef(null);
   const groupLayerGroupRef = useRef(null);
+  const highlightLayerGroupRef = useRef(null);
   const basemapLayerGroupRef = useRef(null);
   const countryLayerGroupRef = useRef(null);
   const drawPolygonControl = useRef(null);
@@ -169,24 +170,20 @@ export function Map({
   useEffect(() => {
     // console.log('map init')
     mapRef.current = L.map('ll-map', MAP_OPTIONS);
-    // make sure group overlays are always rendered on top of basemap
-    mapRef.current.createPane('groupOverlay');
-    mapRef.current.getPane('groupOverlay').style.zIndex = 200;
-    mapRef.current.getPane('groupOverlay').style.pointerEvents = 'none';
-    mapRef.current.createPane('areaOverlay');
-    mapRef.current.getPane('areaOverlay').style.zIndex = 300;
-    mapRef.current.getPane('areaOverlay').style.pointerEvents = 'none';
     // make sure country overlays are always rendered on top of basemap and groups
     mapRef.current.createPane('countryOverlay');
     mapRef.current.getPane('countryOverlay').style.zIndex = 250;
+    mapRef.current.getPane('countryOverlay').style.pointerEvents = 'none';
     mapRef.current.createPane('basemapPane');
     mapRef.current.getPane('basemapPane').style.zIndex = 100;
+    // group and highlight layers added to tilePane
     mapRef.current.getPane('tilePane').style.zIndex = 200;
     basemapLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
     groupLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
     countryLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
     queryAreaLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
     drawFeatureGroupRef.current = L.featureGroup().addTo(mapRef.current);
+    highlightLayerGroupRef.current = L.featureGroup().addTo(mapRef.current);
 
     mapRef.current.on('zoomend', () => {
       setZoom(mapRef.current.getZoom());
@@ -312,6 +309,7 @@ export function Map({
     // clear group layer
     if (groupLayerGroupRef) {
       groupLayerGroupRef.current.clearLayers();
+      highlightLayerGroupRef.current.clearLayers();
     }
   }, [group]);
 
@@ -320,13 +318,15 @@ export function Map({
     // console.log('map change group')
     // add mapbox tile layer
     if (group && group.layer && group.layer.source === 'mapbox') {
-      if (groupLayerGroupRef) {
+      if (
+        groupLayerGroupRef &&
+        groupLayerGroupRef.current.getLayers().length === 0
+      ) {
         groupLayerGroupRef.current.addLayer(
           L.tileLayer(MAPBOX.RASTER_URL_TEMPLATE, {
             id: group.layer.tileset,
             accessToken: MAPBOX.TOKEN,
             opacity,
-            pane: 'groupOverlay',
             ...GROUP_LAYER_OPTIONS.RASTER,
           }).on({
             loading: () => setTilesLoading(true),
@@ -362,10 +362,15 @@ export function Map({
         onLoadLayer(group.id, group.layer);
       }
       // display layer once loaded
-      if (layers[group.id] && groupLayerGroupRef.current) {
+      if (
+        layers[group.id] &&
+        groupLayerGroupRef.current &&
+        groupLayerGroupRef.current.getLayers().length === 0
+      ) {
         const layer = layers[group.id];
         const geoType = getGeometryType(group.layer.geometryType);
         const vectorGrid = L.vectorGrid.slicer(layer.data, {
+          interactive: false,
           rendererFactory: L.svg.tile,
           vectorTileLayerStyles: {
             sliced: properties =>
@@ -407,7 +412,11 @@ export function Map({
         onLoadLayer(auxId, group['highlight-layer']);
       }
       // display layer once loaded
-      if (layers[auxId] && groupLayerGroupRef.current) {
+      if (
+        layers[auxId] &&
+        highlightLayerGroupRef.current &&
+        highlightLayerGroupRef.current.getLayers().length === 0
+      ) {
         const layer = layers[auxId];
         const maxZoom = parseInt(group['highlight-layer']['max-zoom'], 10) || 4;
         const vectorGrid = L.vectorGrid.slicer(layer.data, {
@@ -418,13 +427,14 @@ export function Map({
           },
           maxZoom,
         });
-        groupLayerGroupRef.current.addLayer(vectorGrid);
+        highlightLayerGroupRef.current.addLayer(vectorGrid);
+        highlightLayerGroupRef.current.bringToFront();
         vectorGrid.on('click', e => {
           mapRef.current.setView(e.latlng, maxZoom + 1);
         });
       }
     }
-  }, [group, layers, zoom]);
+  }, [group, layers]);
 
   useEffect(() => {
     // zoom to bounds when enabled
