@@ -17,7 +17,7 @@ export default defineMessages({
   occurrence_major: {
     id: `${scope}.occurrence_major`,
     defaultMessage:
-      'Major occurrences are areas where an ecosystem functional group is the dominant group',
+      'Major occurrences are areas where an ecosystem functional group is very likely to occur',
   },
   occurrence_minor: {
     id: `${scope}.occurrence_minor`,
