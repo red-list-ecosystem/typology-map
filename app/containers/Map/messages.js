@@ -78,6 +78,23 @@ export default defineMessages({
     id: `${scope}.mapAttributionBasemapsLink`,
     defaultMessage: 'Improve the basemaps',
   },
+  mapAttributionRegionsTitle: {
+    id: `${scope}.mapAttributionRegionsTitle`,
+    defaultMessage: 'Predefined regions for analysis',
+  },
+  mapAttributionRegionsInfo: {
+    id: `${scope}.mapAttributionRegionsInfo`,
+    defaultMessage:
+      'Countries and their Exclusive Economic Zones by Flanders Marine Institute (version 3, consulted on 2020-10-02)',
+  },
+  mapAttributionRegionsLinkURL: {
+    id: `${scope}.mapAttributionRegionsLinkURL`,
+    defaultMessage: 'http://www.vliz.be/en/imis?dasid=6406&doiid=403',
+  },
+  mapAttributionRegionsLink: {
+    id: `${scope}.mapAttributionRegionsLink`,
+    defaultMessage: 'More info and download',
+  },
   drawError: {
     id: `${scope}.drawError`,
     defaultMessage: 'Edges cannot intersect',
