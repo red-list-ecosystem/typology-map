@@ -81,7 +81,7 @@ export const initialState = {
   contentReady: Object.assign({}, initialContent),
   // // record error time
   // contentError: Object.assign({}, initialContent),
-  showDisclaimer: true,
+  showDisclaimer: false,
   fullscreenImage: null,
   groupsByArea: Object.assign({}, initialGroupsByArea),
   groupsByAreaQueried: Object.assign({}, initialGroupsByArea),
