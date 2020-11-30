@@ -65,7 +65,7 @@ export function CookieConsent({
   cookieConsentApp,
   onConsent,
   checked,
-  navPrivacy,
+  nav,
   show,
 }) {
   useInjectSaga({ key: 'consent', saga });
@@ -124,11 +124,16 @@ export function CookieConsent({
                 <FormattedMessage {...messages.buttonReject} />
               </StyledButton>
             </ButtonWrap>
-            <StyledButtonText
-              alignSelf="end"
-              onClick={() => navPrivacy()}
-              label={<FormattedMessage {...messages.linkPrivacyPolicy} />}
-            />
+            <Box direction="row" justify="between">
+              <StyledButtonText
+                onClick={() => nav('privacy')}
+                label={<FormattedMessage {...messages.linkPrivacyPolicy} />}
+              />
+              <StyledButtonText
+                onClick={() => nav('terms')}
+                label={<FormattedMessage {...messages.linkTerms} />}
+              />
+            </Box>
           </Box>
         </Layer>
       )}
@@ -139,7 +144,7 @@ export function CookieConsent({
 CookieConsent.propTypes = {
   init: PropTypes.func,
   onConsent: PropTypes.func,
-  navPrivacy: PropTypes.func,
+  nav: PropTypes.func,
   cookieConsent: PropTypes.string,
   cookieConsentApp: PropTypes.string,
   checked: PropTypes.bool,
@@ -158,7 +163,7 @@ export function mapDispatchToProps(dispatch) {
   return {
     init: () => dispatch(checkCookieConsent()),
     onConsent: status => dispatch(setCookieConsent(status)),
-    navPrivacy: () => dispatch(navigatePage(PAGES.privacy.path)),
+    nav: page => dispatch(navigatePage(PAGES[page].path)),
   };
 }
 

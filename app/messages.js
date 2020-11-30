@@ -108,6 +108,10 @@ export default defineMessages({
     id: `${scope}.page_privacy`,
     defaultMessage: 'Privacy policy',
   },
+  page_terms: {
+    id: `${scope}.page_terms`,
+    defaultMessage: 'Terms of use',
+  },
   imageCreditBy: {
     id: `${scope}.imageCreditBy`,
     defaultMessage: 'Image by: ',

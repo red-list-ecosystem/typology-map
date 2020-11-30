@@ -86,6 +86,11 @@ export const PAGES = {
     backgroundImage: 'bg_home',
     needsConsent: 'true',
   },
+  terms: {
+    path: 'terms',
+    nav: FOOTER,
+    backgroundImage: 'bg_home',
+  },
   privacy: {
     path: 'privacy',
     nav: FOOTER,

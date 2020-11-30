@@ -27,6 +27,7 @@
   "app.common.page_glossary": "Glossary",
   "app.common.page_methods": "Methods",
   "app.common.page_privacy": "Privacy policy",
+  "app.common.page_terms": "Terms of use",
   "app.common.page_typology": "Typology",
   "app.common.partner_0": "IUCN Red List of Ecosystems",
   "app.common.partner_0_url": "https://iucnrle.org/",
@@ -186,7 +187,7 @@
   "rle.containers.CookieConsent.buttonAccept": "Allow third-party services",
   "rle.containers.CookieConsent.buttonReject": "Decline",
   "rle.containers.CookieConsent.info": "By using this Website you agree to store some of your Personal Data where it is essential for the Website to function. In addition, you can enable non-essential third-party services that may store Cookies and Usage Data",
-  "rle.containers.CookieConsent.linkDialogue": "Privacy Settings",
   "rle.containers.CookieConsent.linkPrivacyPolicy": "Our privacy policy",
+  "rle.containers.CookieConsent.linkTerms": "Our terms of use",
   "rle.containers.CookieConsent.title": "Cookie preference & privacy"
 }

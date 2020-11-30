@@ -30,8 +30,8 @@ export default defineMessages({
     id: `${scope}.linkPrivacyPolicy`,
     defaultMessage: 'Our privacy policy',
   },
-  linkDialogue: {
-    id: `${scope}.linkDialogue`,
-    defaultMessage: 'Privacy Settings',
+  linkTerms: {
+    id: `${scope}.linkTerms`,
+    defaultMessage: 'Our terms of use',
   },
 });
