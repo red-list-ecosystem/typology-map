@@ -161,11 +161,12 @@ export const QUERY_REGIONS_LAYER = {
 };
 
 export const MAPBOX = {
-  TOKEN: 'pk.eyJ1IjoidG1mcm56IiwiYSI6IkRNZURKUHcifQ._ljgPcF75Yig1Of8adL93A',
-  USER: 'tmfrnz',
+  TOKEN:
+    'pk.eyJ1IjoianJmZXAiLCJhIjoiY2s5N3RxZWhwMTl5NjNnbjFmdzhubTFjdiJ9.KFBzgxBPjKnERRfR9awR_g',
+  USER: 'jrfep',
   BASEMAP_STYLES: {
-    light: 'ckae0r0to0say1ir3a13wvscu',
-    satellite: 'ckacdj3yp5pmb1iqky0khmlc8',
+    light: 'cki644hdi0p9g19o1euw0l3hd',
+    satellite: 'cki643k240ixj19rydj6ubdgq',
   },
   RASTER_URL_TEMPLATE:
     'https://api.mapbox.com/v4/{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}',
@@ -194,7 +195,7 @@ export const LAYERS = {
   countries: {
     source: 'mapbox',
     type: 'style',
-    style: 'ckapdq83917dj1imw9jtqtjte',
+    style: 'cki643ylc72no19omqdoqoynt',
   },
 };
 
