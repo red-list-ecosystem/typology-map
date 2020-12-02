@@ -22,6 +22,8 @@ import {
   navigate,
 } from 'containers/App/actions';
 
+import SectionInner from 'components/styled/SectionInner';
+import SectionOuter from 'components/styled/SectionOuter';
 import Partners from 'components/Partners';
 import Footer from 'containers/Footer';
 import PageBackground from 'components/PageBackground';
@@ -107,7 +109,11 @@ export function HomePage({
                 },
               ]}
             />
-            <Partners />
+            <SectionOuter background="light-2">
+              <SectionInner>
+                <Partners />
+              </SectionInner>
+            </SectionOuter>
             <Footer />
           </MainContent>
         </Styled>

@@ -37,6 +37,10 @@ const Styled = styled.div`
   z-index: 2;
 `;
 
+const HR = styled.hr`
+  margin-top: 40px;
+`;
+
 // prettier-ignore
 const ContentWrap = styled.div`
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
@@ -47,7 +51,9 @@ const ContentWrap = styled.div`
   margin-top: ${250 - getHeaderHeight('small')}px;
   margin-right: auto;
   margin-left: auto;
-  padding: ${({ theme }) => theme.global.edgeSize.small};
+  padding:
+    ${({ theme }) => theme.global.edgeSize.ml}
+    ${({ theme }) => theme.global.edgeSize.small};
   padding-bottom: ${({ theme, hasPad }) =>
     hasPad ? '0' : theme.global.edgeSize.small};
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
@@ -150,7 +156,12 @@ export function RoutePage({
           (consent === 'true' && content)) && (
           <HTMLWrapper innerhtml={content} classNames={['rle-html-page']} />
         )}
-        {content && partners && <Partners />}
+        {content && partners && (
+          <>
+            <HR />
+            <Partners />
+          </>
+        )}
       </ContentWrap>
       <Footer elevated />
     </Styled>
