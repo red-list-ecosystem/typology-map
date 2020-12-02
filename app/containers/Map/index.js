@@ -400,6 +400,7 @@ export function Map({
   // add highlight layer
   useEffect(() => {
     if (
+      mode !== 'analyse' &&
       group &&
       layers &&
       group['highlight-layer'] &&
