@@ -155,6 +155,47 @@ const GlobalStyle = createGlobalStyle`
       content: none;
     }
   }
+
+  .rle-content table {
+    width: 100%;
+    margin: 40px 0;
+    font-size: 13px;
+    line-height: 17px;
+    @media (min-width: 721px) {
+      width: auto;
+    }
+  }
+
+  .rle-content th,
+  .rle-content td {
+    padding: 3px 5px;
+    @media (min-width: 721px) {
+      min-width: 100px;
+      padding: 3px 10px;
+    }
+  }
+  .rle-content th:first-child,
+  .rle-content td:first-child {
+    padding-left: 0;
+  }
+  .rle-content th:last-child,
+  .rle-content td:last-child {
+    padding-right: 0;
+  }
+  .rle-content th {
+    text-align: left;
+    border-bottom: 1px solid;
+    vertical-align: top;
+  }
+  .rle-content th em{
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 13px;
+    @media (min-width: 721px}) {
+      font-size: 13px;
+      line-height: 17px;
+    }
+  }
 `;
 
 export default GlobalStyle;
