@@ -158,7 +158,7 @@ const GlobalStyle = createGlobalStyle`
 
   .rle-content table {
     width: 100%;
-    margin: 40px 0;
+    margin: 20px 0 40px;
     font-size: 13px;
     line-height: 17px;
     @media (min-width: 721px) {
