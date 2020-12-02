@@ -6,7 +6,12 @@ import { DEFAULT_LOCALE, appLocales } from 'i18n';
 
 import { groupBy } from 'lodash/collection';
 
-import { biomesForRealm, groupsForBiome, groupsForBiomes } from 'utils/store';
+import {
+  biomesForRealm,
+  groupsForBiome,
+  groupsForBiomes,
+  sortGroups,
+} from 'utils/store';
 import { startsWith } from 'utils/string';
 import quasiEquals from 'utils/quasi-equals';
 
@@ -281,157 +286,106 @@ export const selectGroupsByAreaArgs = createSelector(
   selectGroupsByArea,
   data => data && data.args,
 );
-export const selectGroupsByAreaAll = createSelector(
+
+const getGroupsByAreaAll = (data, groups, biomes, realms) => {
+  let rGroups = [];
+  let vGroups = [];
+  if (groups && data.groups.raster) {
+    rGroups = data.groups.raster.map(d => ({
+      ...d,
+      ...groups.find(g => g.id === d.layer_id),
+    }));
+  }
+  if (groups && data.groups.vector) {
+    vGroups = data.groups.vector.map(d => ({
+      ...d,
+      ...groups.find(g => g.id === d.layer_id),
+    }));
+  }
+  // if (groups && data.groups.vector) {
+  //   // console.log(groupBy(data.groups.vector, l => l.layer_id))
+  //   const maxOverall = data.groups.vector.reduce(
+  //     (max, g) => (g.area ? Math.max(max, g.area) : max),
+  //     0,
+  //   );
+  //   const grouped = groupBy(data.groups.vector, l => l.layer_id);
+  //   vGroups = Object.keys(grouped).map(lid => ({
+  //     ...groups.find(g => g.id === lid),
+  //     stats: {
+  //       occurrences: Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).reduce(
+  //         (memo, occurr) => {
+  //           const o = grouped[lid].find(a =>
+  //             quasiEquals(a.occurrence, occurr),
+  //           );
+  //           return {
+  //             ...memo,
+  //             [occurr]: {
+  //               id: GROUP_LAYER_PROPERTIES.OCCURRENCE[occurr].id,
+  //               area: o ? o.area : null,
+  //             },
+  //           };
+  //         },
+  //         {},
+  //       ),
+  //       total: grouped[lid].reduce((sum, group) => sum + group.area, 0),
+  //       max: grouped[lid].reduce(
+  //         (max, group) => Math.max(group.area, max),
+  //         0,
+  //       ),
+  //       min: grouped[lid].reduce(
+  //         (min, group) => (!min ? group.area : Math.min(min, group.area)),
+  //         null,
+  //       ),
+  //       maxOverall,
+  //     },
+  //   }));
+  // }
+  const allGroups = [...vGroups, ...rGroups];
+  return sortGroups(allGroups, biomes, realms);
+};
+const getGroupsForRegionAll = (data, groups, biomes, realms) => {
+  let aGroups = [];
+  if (groups && data.groups.areasbyregion) {
+    // aGroups = data.groups.areasbyregion.map(d => ({
+    //   ...d,
+    //   ...groups.find(g => g.id === d.layer_id),
+    // }));
+    const grouped = groupBy(data.groups.areasbyregion, l => l.layer_id);
+    aGroups = Object.keys(grouped).map(lid => ({
+      ...groups.find(g => g.id === lid),
+      stats: {
+        occurrences: Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).reduce(
+          (memo, occurr) => {
+            const o = grouped[lid].find(a => quasiEquals(a.occurrence, occurr));
+            return {
+              ...memo,
+              [occurr]: {
+                id: GROUP_LAYER_PROPERTIES.OCCURRENCE[occurr].id,
+                area: o ? o.area : null,
+                area_relative: o ? o.area_relative : null,
+              },
+            };
+          },
+          {},
+        ),
+        maxOverall: 1,
+      },
+    }));
+  }
+  return sortGroups(aGroups, biomes, realms);
+};
+
+export const selectQueryGroups = createSelector(
   selectGroupsByArea,
   selectGroups,
   selectBiomes,
   selectRealms,
-  (data, groups, biomes, realms) => {
-    let rGroups = [];
-    let vGroups = [];
-    if (groups && data.groups.raster) {
-      rGroups = data.groups.raster.map(d => ({
-        ...d,
-        ...groups.find(g => g.id === d.layer_id),
-      }));
+  selectQueryType,
+  (data, groups, biomes, realms, type) => {
+    if (type === 'region') {
+      return getGroupsForRegionAll(data, groups, biomes, realms);
     }
-    if (groups && data.groups.vector) {
-      vGroups = data.groups.vector.map(d => ({
-        ...d,
-        ...groups.find(g => g.id === d.layer_id),
-      }));
-    }
-    // if (groups && data.groups.vector) {
-    //   // console.log(groupBy(data.groups.vector, l => l.layer_id))
-    //   const maxOverall = data.groups.vector.reduce(
-    //     (max, g) => (g.area ? Math.max(max, g.area) : max),
-    //     0,
-    //   );
-    //   const grouped = groupBy(data.groups.vector, l => l.layer_id);
-    //   vGroups = Object.keys(grouped).map(lid => ({
-    //     ...groups.find(g => g.id === lid),
-    //     stats: {
-    //       occurrences: Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).reduce(
-    //         (memo, occurr) => {
-    //           const o = grouped[lid].find(a =>
-    //             quasiEquals(a.occurrence, occurr),
-    //           );
-    //           return {
-    //             ...memo,
-    //             [occurr]: {
-    //               id: GROUP_LAYER_PROPERTIES.OCCURRENCE[occurr].id,
-    //               area: o ? o.area : null,
-    //             },
-    //           };
-    //         },
-    //         {},
-    //       ),
-    //       total: grouped[lid].reduce((sum, group) => sum + group.area, 0),
-    //       max: grouped[lid].reduce(
-    //         (max, group) => Math.max(group.area, max),
-    //         0,
-    //       ),
-    //       min: grouped[lid].reduce(
-    //         (min, group) => (!min ? group.area : Math.min(min, group.area)),
-    //         null,
-    //       ),
-    //       maxOverall,
-    //     },
-    //   }));
-    // }
-    const allGroups = [...vGroups, ...rGroups];
-    return allGroups.sort((a, b) => {
-      // if (a.stats && !b.stats) return -1;
-      // if (!a.stats && b.stats) return 1;
-      // if (a.stats && b.stats && a.stats.max !== b.stats.max) {
-      //   return a.stats.max > b.stats.max ? -1 : 1;
-      // }
-      const biomeA = biomes && biomes.find(biome => biome.id === a.biome);
-      const realmA = realms && realms.find(r => r.id === biomeA.realm);
-      const biomeB = biomes && biomes.find(biome => biome.id === b.biome);
-      const realmB = realms && realms.find(r => r.id === biomeB.realm);
-      // if same biome, go by id
-      if (biomeA.id === biomeB.id) {
-        return a.id > b.id ? 1 : -1;
-      }
-      // if different biome but same realm go by biome id
-      if (realmA.id === realmB.id) {
-        return biomeA.id > biomeB.id ? 1 : -1;
-      }
-      // if different realm but same type, go by realm id
-      if (realmA.type === realmB.type) {
-        return realmA.id > realmB.id ? 1 : -1;
-      }
-      // if different realm and different type, go by type
-      return realmA.type === 'core' ? -1 : 1;
-    });
-  },
-);
-export const selectGroupsForRegionsAll = createSelector(
-  selectGroupsByArea,
-  selectGroups,
-  selectBiomes,
-  selectRealms,
-  (data, groups, biomes, realms) => {
-    let aGroups = [];
-    if (groups && data.groups.areasbyregion) {
-      // aGroups = data.groups.areasbyregion.map(d => ({
-      //   ...d,
-      //   ...groups.find(g => g.id === d.layer_id),
-      // }));
-      const grouped = groupBy(data.groups.areasbyregion, l => l.layer_id);
-      aGroups = Object.keys(grouped).map(lid => ({
-        ...groups.find(g => g.id === lid),
-        stats: {
-          occurrences: Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).reduce(
-            (memo, occurr) => {
-              const o = grouped[lid].find(a =>
-                quasiEquals(a.occurrence, occurr),
-              );
-              return {
-                ...memo,
-                [occurr]: {
-                  id: GROUP_LAYER_PROPERTIES.OCCURRENCE[occurr].id,
-                  area: o ? o.area : null,
-                  area_relative: o ? o.area_relative : null,
-                },
-              };
-            },
-            {},
-          ),
-          maxOverall: 1,
-        },
-      }));
-    }
-    return aGroups.sort((a, b) => {
-      if (a.area_relative && !b.area_relative) return -1;
-      if (!a.area_relative && b.area_relative) return 1;
-      if (
-        a.area_relative &&
-        b.area_relative &&
-        a.area_relative !== b.area_relative
-      ) {
-        return a.area_relative > b.area_relative ? -1 : 1;
-      }
-      const biomeA = biomes && biomes.find(biome => biome.id === a.biome);
-      const realmA = realms && realms.find(r => r.id === biomeA.realm);
-      const biomeB = biomes && biomes.find(biome => biome.id === b.biome);
-      const realmB = realms && realms.find(r => r.id === biomeB.realm);
-      // if same biome, go by id
-      if (biomeA.id === biomeB.id) {
-        return a.id > b.id ? 1 : -1;
-      }
-      // if different biome but same realm go by biome id
-      if (realmA.id === realmB.id) {
-        return biomeA.id > biomeB.id ? 1 : -1;
-      }
-      // if different realm but same type, go by realm id
-      if (realmA.type === realmB.type) {
-        return realmA.id > realmB.id ? 1 : -1;
-      }
-      // if different realm and different type, go by type
-      return realmA.type === 'core' ? -1 : 1;
-    });
+    return getGroupsByAreaAll(data, groups, biomes, realms);
   },
 );
 

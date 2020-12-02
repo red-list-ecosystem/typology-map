@@ -15,6 +15,8 @@ import { Box, ResponsiveContext } from 'grommet';
 
 import { ROUTES } from 'config';
 
+import { sortGroups } from 'utils/store';
+
 import {
   selectRealm,
   selectRealms,
@@ -70,15 +72,8 @@ export function ExploreBiome({
 
   const { locale } = intl;
 
-  const sortedGroups =
-    groups &&
-    groups.sort((a, b) => {
-      const aTrueId =
-        a.id.indexOf('.') > -1 ? parseInt(a.id.split('.')[1], 0) : a.id;
-      const bTrueId =
-        b.id.indexOf('.') > -1 ? parseInt(b.id.split('.')[1], 0) : a.id;
-      return aTrueId > bTrueId ? 1 : -1;
-    });
+  const sortedGroups = sortGroups(groups);
+
   return (
     <ResponsiveContext.Consumer>
       {size => (

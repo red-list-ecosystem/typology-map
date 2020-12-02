@@ -18,8 +18,7 @@ import { FormattedMessage, intlShape, injectIntl } from 'react-intl';
 import { GROUP_LAYER_PROPERTIES, QUERY_REGIONS_LAYER, PATHS } from 'config';
 
 import {
-  selectGroupsByAreaAll,
-  selectGroupsForRegionsAll,
+  selectQueryGroups,
   selectGroupsQueryReadyAll,
   selectGroupsByAreaArgs,
   selectActiveGroup,
@@ -80,7 +79,7 @@ const SettingTitle = styled(props => <Text size="xsmall" {...props} />)`
 `;
 
 export function Results({
-  groups,
+  resultGroups,
   queriesReady,
   onCancelQuery,
   onResetQuery,
@@ -94,7 +93,6 @@ export function Results({
   onSetInfoGroup,
   queryType,
   regionLayer,
-  groupsForRegions,
   setAreaUpdate,
   setFilterUpdate,
 }) {
@@ -118,7 +116,7 @@ export function Results({
       quasiEquals(feature.properties[QUERY_REGIONS_LAYER.featureId], regionId),
     );
 
-  const resultGroups = queryType === 'region' ? groupsForRegions : groups;
+  // const resultGroups = queryType === 'region' ? groupsForRegion : groupsForArea;
 
   // prettier-ignore
   return (
@@ -299,8 +297,7 @@ export function Results({
 }
 
 Results.propTypes = {
-  groups: PropTypes.array,
-  groupsForRegions: PropTypes.array,
+  resultGroups: PropTypes.array,
   queriesReady: PropTypes.bool,
   queryArgsFromQuery: PropTypes.object,
   queryArgs: PropTypes.object,
@@ -322,8 +319,7 @@ const mapStateToProps = createStructuredSelector({
   queriesReady: state => selectGroupsQueryReadyAll(state),
   queryArgsFromQuery: state => selectGroupsByAreaArgs(state),
   activeGroup: state => selectActiveGroup(state),
-  groups: state => selectGroupsByAreaAll(state),
-  groupsForRegions: state => selectGroupsForRegionsAll(state),
+  resultGroups: state => selectQueryGroups(state),
   queryType: state => selectQueryType(state),
   regionLayer: state => selectLayerByKey(state, QUERY_REGIONS_LAYER.key),
 });
