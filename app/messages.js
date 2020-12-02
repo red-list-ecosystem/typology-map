@@ -136,6 +136,18 @@ export default defineMessages({
     id: `${scope}.imageCredit_glossary`,
     defaultMessage: 'Shifaaz Shamoon on Unsplash',
   },
+  imageCredit_terms: {
+    id: `${scope}.imageCredit_terms`,
+    defaultMessage: 'Shifaaz Shamoon on Unsplash',
+  },
+  imageCredit_privacy: {
+    id: `${scope}.imageCredit_privacy`,
+    defaultMessage: 'Shifaaz Shamoon on Unsplash',
+  },
+  imageCredit_feedback: {
+    id: `${scope}.imageCredit_feedback`,
+    defaultMessage: 'Shifaaz Shamoon on Unsplash',
+  },
   occurrence: {
     id: `${scope}.occurrence`,
     defaultMessage: 'Occurrence',
