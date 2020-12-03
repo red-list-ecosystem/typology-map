@@ -46,7 +46,7 @@ import TypologyContent from 'components/TypologyContent';
 import RelatedHint from 'components/RelatedHint';
 import AnalysisShortcut from 'components/AnalysisShortcut';
 
-import { isMinSize } from 'utils/responsive';
+import { isMinSize, isMaxSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
 
@@ -106,6 +106,7 @@ export function ExploreBiome({
                   <HTMLWrapper
                     innerhtml={content}
                     classNames={['rle-html-biome']}
+                    truncate={isMaxSize(size, 'medium')}
                   />
                   {groups && (
                     <NavGridChildren

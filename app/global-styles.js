@@ -131,7 +131,10 @@ const GlobalStyle = createGlobalStyle`
   .rle-html-group .rle-content blockquote,
   .rle-html-group .rle-content blockquote p,
   .rle-html-group .rle-content > p:first-of-type {
-    font-size: 20px;
+    font-size: 16px;
+    @media (min-width: 721px) {
+      font-size: 20px;
+    }
   }
   .rle-html-group .rle-content > p:first-of-type {
     margin-bottom: 40px;

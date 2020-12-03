@@ -46,7 +46,7 @@ import TypologyImage from 'components/TypologyImage';
 import RelatedHint from 'components/RelatedHint';
 import AnalysisShortcut from 'components/AnalysisShortcut';
 
-import { isMinSize } from 'utils/responsive';
+import { isMinSize, isMaxSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
 
@@ -134,6 +134,7 @@ export function ExploreGroup({
                   <HTMLWrapper
                     innerhtml={content}
                     classNames={['rle-html-group']}
+                    truncate={isMaxSize(size, 'medium')}
                     inject={[
                       {
                         tag: '[DIAGRAM]',

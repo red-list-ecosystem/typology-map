@@ -43,7 +43,7 @@ import TypologyImage from 'components/TypologyImage';
 import TypologyContent from 'components/TypologyContent';
 import RelatedHint from 'components/RelatedHint';
 
-import { isMinSize } from 'utils/responsive';
+import { isMinSize, isMaxSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
 import messages from './messages';
@@ -87,6 +87,7 @@ export function ExploreRealm({
                   <HTMLWrapper
                     innerhtml={content}
                     classNames={['rle-html-realm']}
+                    truncate={isMaxSize(size, 'medium')}
                   />
                   {biomes && (
                     <NavGridChildren
