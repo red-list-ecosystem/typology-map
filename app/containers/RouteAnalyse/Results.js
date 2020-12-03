@@ -195,7 +195,10 @@ export function Results({
             biomes={biomes}
             queryType={queryType}
             activeRegion={activeRegion}
-            enableAreaUpdate={() => setAreaUpdate(true)}
+            enableAreaUpdate={() => {
+              onSetActiveGroup('');
+              setAreaUpdate(true);
+            }}
             enableFilterUpdate={() => setFilterUpdate(true)}
           />
         )}
