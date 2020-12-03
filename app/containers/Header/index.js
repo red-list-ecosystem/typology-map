@@ -252,7 +252,10 @@ function Header({ nav, navHome, navPage, path }) {
             {(isMinSize(size, 'large') || !showSearch) && (
               <BrandWrap>
                 <Brand
-                  onClick={() => navHome()}
+                  onClick={() => {
+                    setShowMenu(false);
+                    navHome();
+                  }}
                   active={contentType === ''}
                   label={
                     <Box direction="row" fill="vertical" align="center">
@@ -270,7 +273,10 @@ function Header({ nav, navHome, navPage, path }) {
             {(isMinSize(size, 'large') || !showSearch) && (
               <NavPrimary>
                 <Primary
-                  onClick={() => nav(ROUTES.EXPLORE)}
+                  onClick={() => {
+                    setShowMenu(false);
+                    nav(ROUTES.EXPLORE);
+                  }}
                   label={
                     <PrimaryLabel>
                       <IconImgWrap>
@@ -287,7 +293,10 @@ function Header({ nav, navHome, navPage, path }) {
                   active={contentType === ROUTES.EXPLORE}
                 />
                 <Primary
-                  onClick={() => nav(ROUTES.ANALYSE)}
+                  onClick={() => {
+                    setShowMenu(false);
+                    nav(ROUTES.ANALYSE);
+                  }}
                   label={
                     <PrimaryLabel>
                       <IconImgWrap>
