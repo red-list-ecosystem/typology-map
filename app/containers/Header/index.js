@@ -32,9 +32,9 @@ import NavBar from './NavBar';
 // prettier-ignore
 const Brand = styled(props => <Button plain color="white" {...props} />)`
   /* responsive height */
-  padding-right: ${({ theme }) => theme.global.edgeSize.small};
   height: ${getHeaderHeight('small')}px;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    padding-right: ${({ theme }) => theme.global.edgeSize.small};
     height: ${getHeaderHeight('medium')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
@@ -65,8 +65,11 @@ const BrandWrap = styled(Box)`
 `;
 
 const LogoWrap = styled(p => <Box flex={{ shrink: 0 }} {...p} />)`
-  width: 50px;
+  width: 40px;
   height: 100%;
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    width: 50px;
+  }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     width: 80px;
   }
@@ -110,7 +113,14 @@ const NavSearch = styled(props => (
   <Box {...props} direction="row" basis="1/2" align="center" />
 ))``;
 const NavSearchSmall = styled(p => (
-  <Box direction="row" align="center" fill="horizontal" flex {...p} />
+  <Box
+    direction="row"
+    align="center"
+    fill="horizontal"
+    flex
+    margin={{ left: 'medium' }}
+    {...p}
+  />
 ))`
   height: ${getHeaderHeight('small')}px;
 `;
@@ -149,7 +159,7 @@ const Primary = styled(props => (
   background: ${({ theme, active }) =>
     active ? theme.global.colors.brand : 'transparent'};
   color: ${({ theme }) => theme.global.colors.white};
-  padding: ${({ theme }) => theme.global.edgeSize.xxsmall};
+  padding: ${({ theme }) => theme.global.edgeSize.xsmall};
   &:hover {
     background: ${({ theme }) => theme.global.colors.brand};
   }
@@ -175,7 +185,7 @@ const Primary = styled(props => (
 `;
 // prettier-ignore
 const Secondary = styled(props => <Button {...props} plain />)`
-  padding: ${({ theme }) => theme.global.edgeSize.small} ${({ theme }) => theme.global.edgeSize.medium};
+  padding: ${({ theme }) => theme.global.edgeSize.xsmall} ${({ theme }) => theme.global.edgeSize.medium};
   color: ${({ theme }) => theme.global.colors.white};
   text-decoration: ${({ active }) => (active ? 'underline' : 'none')};
   background: transparent;
@@ -195,6 +205,9 @@ const Secondary = styled(props => <Button {...props} plain />)`
 const IconImg = styled(Img)`
   vertical-align: middle;
   max-height: 100%;
+`;
+const Border = styled.div`
+  border-top: 1px solid white;
 `;
 const IconImgHelper = styled.div`
   display: inline-block;
@@ -254,65 +267,71 @@ function Header({ nav, navHome, navPage, path }) {
                 />
               </BrandWrap>
             )}
-            <NavPrimary>
-              <Primary
-                onClick={() => nav(ROUTES.EXPLORE)}
-                label={
-                  <PrimaryLabel>
-                    <IconImgWrap>
-                      <IconImgHelper />
-                      <IconImg src={ICONS.EXPLORE} alt="" />
-                    </IconImgWrap>
-                    <Text
-                      size={isMinSize(size, 'medium') ? 'medium' : 'xxsmall'}
-                    >
-                      <FormattedMessage {...commonMessages.navExplore} />
-                    </Text>
-                  </PrimaryLabel>
-                }
-                active={contentType === ROUTES.EXPLORE}
-              />
-              <Primary
-                onClick={() => nav(ROUTES.ANALYSE)}
-                label={
-                  <PrimaryLabel>
-                    <IconImgWrap>
-                      <IconImgHelper />
-                      <IconImg src={ICONS.ANALYSIS} alt="" />
-                    </IconImgWrap>
-                    <Text
-                      size={isMinSize(size, 'medium') ? 'medium' : 'xxsmall'}
-                    >
-                      <FormattedMessage {...commonMessages.navAnalyse} />
-                    </Text>
-                  </PrimaryLabel>
-                }
-                active={contentType === ROUTES.ANALYSE}
-              />
-              {isMinSize(size, 'large') &&
-                pagesPrimary.map(p => (
-                  <Primary
-                    key={p.key}
-                    onClick={() => navPage(p.key)}
-                    label={
-                      <PrimaryLabel>
-                        <IconImgWrap>
-                          <IconImgHelper />
-                          <IconImg src={p.icon} alt="" />
-                        </IconImgWrap>
-                        <Text>
-                          {commonMessages[`page_${p.key}`] && (
-                            <FormattedMessage
-                              {...commonMessages[`page_${p.key}`]}
-                            />
-                          )}
-                        </Text>
-                      </PrimaryLabel>
-                    }
-                    active={contentType === 'page' && contentId === p.key}
-                  />
-                ))}
-            </NavPrimary>
+            {(isMinSize(size, 'large') || !showSearch) && (
+              <NavPrimary>
+                <Primary
+                  onClick={() => nav(ROUTES.EXPLORE)}
+                  label={
+                    <PrimaryLabel>
+                      <IconImgWrap>
+                        <IconImgHelper />
+                        <IconImg src={ICONS.EXPLORE} alt="" />
+                      </IconImgWrap>
+                      <Text
+                        size={isMinSize(size, 'medium') ? 'medium' : 'xxsmall'}
+                      >
+                        <FormattedMessage {...commonMessages.navExplore} />
+                      </Text>
+                    </PrimaryLabel>
+                  }
+                  active={contentType === ROUTES.EXPLORE}
+                />
+                <Primary
+                  onClick={() => nav(ROUTES.ANALYSE)}
+                  label={
+                    <PrimaryLabel>
+                      <IconImgWrap>
+                        <IconImgHelper />
+                        <IconImg src={ICONS.ANALYSIS} alt="" />
+                      </IconImgWrap>
+                      <Text
+                        size={isMinSize(size, 'medium') ? 'medium' : 'xxsmall'}
+                      >
+                        <FormattedMessage {...commonMessages.navAnalyse} />
+                      </Text>
+                    </PrimaryLabel>
+                  }
+                  active={contentType === ROUTES.ANALYSE}
+                />
+                {isMinSize(size, 'medium') &&
+                  pagesPrimary.map(p => (
+                    <Primary
+                      key={p.key}
+                      onClick={() => navPage(p.key)}
+                      label={
+                        <PrimaryLabel>
+                          <IconImgWrap>
+                            <IconImgHelper />
+                            <IconImg src={p.icon} alt="" />
+                          </IconImgWrap>
+                          <Text
+                            size={
+                              isMinSize(size, 'medium') ? 'medium' : 'xxsmall'
+                            }
+                          >
+                            {commonMessages[`page_${p.key}`] && (
+                              <FormattedMessage
+                                {...commonMessages[`page_${p.key}`]}
+                              />
+                            )}
+                          </Text>
+                        </PrimaryLabel>
+                      }
+                      active={contentType === 'page' && contentId === p.key}
+                    />
+                  ))}
+              </NavPrimary>
+            )}
             {isMinSize(size, 'large') && (
               <Box
                 fill="vertical"
@@ -357,7 +376,7 @@ function Header({ nav, navHome, navPage, path }) {
                 flex={{ grow: 0 }}
               >
                 {!showSearch && (
-                  <Box flex={false} style={{ width: '40px' }}>
+                  <Box flex={false} style={{ width: '35px' }}>
                     <MenuButton
                       onClick={() => {
                         setShowMenu(false);
@@ -372,7 +391,7 @@ function Header({ nav, navHome, navPage, path }) {
                     <Search onClose={() => setShowSearch(false)} stretch />
                   </NavSearchSmall>
                 )}
-                <Box flex={false} style={{ width: '40px' }}>
+                <Box flex={false} style={{ width: '35px' }}>
                   <MenuButton
                     plain
                     onClick={() => {
@@ -400,6 +419,7 @@ function Header({ nav, navHome, navPage, path }) {
               modal={false}
               animate={false}
               position="top"
+              style={{ zIndex: 1300 }}
             >
               <Box
                 background="brand-2"
@@ -409,11 +429,20 @@ function Header({ nav, navHome, navPage, path }) {
                 <Secondary
                   onClick={() => {
                     setShowMenu(false);
-                    nav('explore');
+                    nav(ROUTES.EXPLORE);
                   }}
                   label={<FormattedMessage {...commonMessages.navExplore} />}
                   active={contentType === 'explore'}
                 />
+                <Secondary
+                  onClick={() => {
+                    setShowMenu(false);
+                    nav(ROUTES.ANALYSE);
+                  }}
+                  label={<FormattedMessage {...commonMessages.navAnalyse} />}
+                  active={contentType === 'analyse'}
+                />
+                <Border />
                 {pagesArray.map(p => (
                   <Secondary
                     key={p.key}
