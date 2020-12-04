@@ -26,6 +26,7 @@ import {
   TOGGLE_DRAW,
   SHOW_QUERY_REGIONS,
   SET_QUERY_TYPE,
+  SET_ANALYSE_PANEL,
 } from './constants';
 
 /* eslint-disable no-param-reassign */
@@ -89,6 +90,7 @@ export const initialState = {
   drawActive: false,
   queryRegionsActive: false,
   queryType: null,
+  analysePanelOpen: true,
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -180,6 +182,9 @@ const appReducer = (state = initialState, action) =>
         break;
       case SET_QUERY_TYPE:
         draft.queryType = action.queryType;
+        break;
+      case SET_ANALYSE_PANEL:
+        draft.analysePanelOpen = action.analysePanelOpen;
         break;
     }
   });

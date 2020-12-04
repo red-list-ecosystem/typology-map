@@ -43,7 +43,7 @@ export const dimensions = {
   },
   aside: {
     // by breakpoint
-    width: [0, 0, 350, 420, 550],
+    width: [0, 320, 350, 420, 550],
     zIndex: 1150,
   },
   realmIcons: {
@@ -138,7 +138,7 @@ const text = {
   small: { size: '14px', height: '18px', maxWidth: '700px' },
   medium: { size: '16px', height: '22px', maxWidth: '800px' },
   large: { size: '18px', height: '24px', maxWidth: '800px' },
-  xlarge: { size: '22px', height: '30px', maxWidth: '800px' },
+  xlarge: { size: '28px', height: '36px', maxWidth: '800px' },
   xxlarge: { size: '40px', height: '48px', maxWidth: '800px' },
   xxxlarge: { size: '60px', height: '75px', maxWidth: '800px' },
 };

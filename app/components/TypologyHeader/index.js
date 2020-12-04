@@ -16,9 +16,10 @@ const Styled = styled(Box)``;
 const TitleWrap = styled.h1`
   margin-bottom: ${({ theme }) => theme.global.edgeSize.medium};
   margin-top: ${({ theme }) => theme.global.edgeSize.small};
-  font-size: ${({ theme }) => theme.text.xxlarge.size};
+  font-size: ${({ theme }) => theme.text.xlarge.size};
   line-height: 1.1em;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    font-size: ${({ theme }) => theme.text.xxlarge.size};
     line-height: 1.25em;
   }
 `;

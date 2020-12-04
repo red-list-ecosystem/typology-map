@@ -12,7 +12,7 @@ const Styled = styled(Box)`
   min-height: 100vh;
   margin-right: ${getAsideWidth('small')}px;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
-    right: ${getAsideWidth('medium')}px;
+    margin-right: ${getAsideWidth('medium')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     margin-right: ${getAsideWidth('large')}px;

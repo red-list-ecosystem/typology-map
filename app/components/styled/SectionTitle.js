@@ -5,7 +5,7 @@ export default styled.h2`
   font-family: Kanit, Arial, sans-serif;
   font-weight: 500;
   font-size: ${({ theme }) => theme.text.xlarge.size};
-  line-height: 30px;
+  line-height: ${({ theme }) => theme.text.xlarge.height};
   margin: ${({ aside }) => (aside ? 35 : 40)}px 0 14px 0;
   position: relative;
   &::before {

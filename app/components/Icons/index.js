@@ -12,6 +12,7 @@ import Down from './Down';
 import Up from './Up';
 import AnalysePoly from './AnalysePoly';
 import AnalyseRect from './AnalyseRect';
+import Previous from './Previous';
 
 export {
   Close,
@@ -28,4 +29,5 @@ export {
   Up,
   AnalyseRect,
   AnalysePoly,
+  Previous,
 };

@@ -241,7 +241,8 @@ export function Settings({
                     />
                   </WrapControl>
                 )}
-                {showBasemap && isMinSize(size, 'large') && (
+                {((showBasemap && isMinSize(size, 'large')) ||
+                  mode === 'analyse') && (
                   <WrapControl>
                     <SettingTitle>
                       <FormattedMessage {...messages.settingBasemap} />

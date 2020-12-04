@@ -432,3 +432,7 @@ export const selectGroupsQueryReadyAll = createSelector(
     ((!!data.groups.raster && !!data.groups.vector) ||
       !!data.groups.areasbyregion),
 );
+export const selectAnalysePanelOpen = createSelector(
+  selectGlobal,
+  global => global.analysePanelOpen,
+);

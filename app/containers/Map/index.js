@@ -29,7 +29,11 @@ import {
   QUERY_REGIONS_LAYER,
 } from 'config';
 
-import { navigatePage, updateGroupsQuery } from 'containers/App/actions';
+import {
+  navigatePage,
+  updateGroupsQuery,
+  setAnalysePanelOpen,
+} from 'containers/App/actions';
 import {
   selectGroupsQueryArea,
   selectGroupsQueryRegion,
@@ -148,6 +152,8 @@ export function Map({
   size,
   mode,
   drawMode,
+  showControls,
+  onOpenAnalysePanel,
 }) {
   // console.log('render map')
   useInjectReducer({ key: 'map', reducer });
@@ -476,6 +482,7 @@ export function Map({
   };
   const onRegionClick = (e, feature) => {
     if (feature && feature.properties) {
+      onOpenAnalysePanel();
       updateQueryRegion(feature.properties[QUERY_REGIONS_LAYER.featureId]);
     }
   };
@@ -739,29 +746,37 @@ export function Map({
   return (
     <Styled>
       <LeafletContainer id="ll-map" />
-      <Settings group={group} fullscreen={fullscreen} mode={mode} />
-      <Attribution navFeedback={() => onNavPage(PAGES.feedback.path)} />
+      {showControls && (
+        <Settings group={group} fullscreen={fullscreen} mode={mode} />
+      )}
+      {showControls && (
+        <Attribution navFeedback={() => onNavPage(PAGES.feedback.path)} />
+      )}
       {(tilesLoading || loading) && (
         <LoadingWrap>
           <LoadingIndicator />
         </LoadingWrap>
       )}
-      <MapControls position="left">
-        <MapControl
-          disabled={MAP_OPTIONS.maxZoom === zoom}
-          icon={
-            <Plus color={MAP_OPTIONS.maxZoom === zoom ? 'dark-4' : 'black'} />
-          }
-          onClick={() => setZoom(zoom + 1)}
-        />
-        <MapControl
-          disabled={MAP_OPTIONS.minZoom === zoom}
-          icon={
-            <Minus color={MAP_OPTIONS.minZoom === zoom ? 'dark-4' : 'black'} />
-          }
-          onClick={() => setZoom(zoom - 1)}
-        />
-      </MapControls>
+      {showControls && (
+        <MapControls position="left">
+          <MapControl
+            disabled={MAP_OPTIONS.maxZoom === zoom}
+            icon={
+              <Plus color={MAP_OPTIONS.maxZoom === zoom ? 'dark-4' : 'black'} />
+            }
+            onClick={() => setZoom(zoom + 1)}
+          />
+          <MapControl
+            disabled={MAP_OPTIONS.minZoom === zoom}
+            icon={
+              <Minus
+                color={MAP_OPTIONS.minZoom === zoom ? 'dark-4' : 'black'}
+              />
+            }
+            onClick={() => setZoom(zoom - 1)}
+          />
+        </MapControls>
+      )}
       <Style />
     </Styled>
   );
@@ -771,6 +786,7 @@ Map.propTypes = {
   layers: PropTypes.object,
   group: PropTypes.object,
   fullscreen: PropTypes.bool,
+  showControls: PropTypes.bool,
   onLoadLayer: PropTypes.func,
   onNavPage: PropTypes.func,
   basemap: PropTypes.string,
@@ -787,6 +803,7 @@ Map.propTypes = {
   updateQueryArea: PropTypes.func,
   updateQueryRegion: PropTypes.func,
   onSetRegionHighlight: PropTypes.func,
+  onOpenAnalysePanel: PropTypes.func,
   regionHighlight: PropTypes.number,
   size: PropTypes.string,
   mode: PropTypes.string,
@@ -831,6 +848,7 @@ function mapDispatchToProps(dispatch, props) {
         }),
       ),
     onSetRegionHighlight: regionId => dispatch(setRegionHighlight(regionId)),
+    onOpenAnalysePanel: () => dispatch(setAnalysePanelOpen(true)),
   };
 }
 

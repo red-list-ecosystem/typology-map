@@ -45,6 +45,7 @@ import {
   TOGGLE_DRAW,
   SHOW_QUERY_REGIONS,
   SET_QUERY_TYPE,
+  SET_ANALYSE_PANEL,
 } from './constants';
 
 export function setLocale(locale) {
@@ -283,5 +284,11 @@ export function setQueryType(queryType) {
   return {
     type: SET_QUERY_TYPE,
     queryType,
+  };
+}
+export function setAnalysePanelOpen(analysePanelOpen) {
+  return {
+    type: SET_ANALYSE_PANEL,
+    analysePanelOpen,
   };
 }

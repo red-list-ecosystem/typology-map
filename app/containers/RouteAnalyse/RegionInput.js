@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -9,7 +9,6 @@ import styled from 'styled-components';
 
 import { Close, Down, Up } from 'components/Icons';
 
-import { showQueryRegions } from 'containers/App/actions';
 import { setRegionHighlight } from 'containers/Map/actions';
 import { selectLayerByKey } from 'containers/Map/selectors';
 import { getRegionFeatureTitle } from 'containers/Map/utils';
@@ -64,17 +63,11 @@ const prepFeatures = layer => {
 export function RegionInput({
   regionId,
   onSubmit,
-  onShowQueryRegions,
   layer,
   // intl,
 }) {
   const [open, setOpen] = useState(false);
   const dropButtonRef = useRef(null);
-
-  useEffect(() => {
-    onShowQueryRegions(true);
-    return () => onShowQueryRegions(false);
-  }, []);
 
   const options = prepFeatures(layer);
   // console.log(options)
@@ -139,7 +132,6 @@ export function RegionInput({
 RegionInput.propTypes = {
   onSubmit: PropTypes.func,
   onOptionHover: PropTypes.func,
-  onShowQueryRegions: PropTypes.func,
   onSetRegionHighlight: PropTypes.func,
   regionId: PropTypes.string,
   layer: PropTypes.object,
@@ -152,7 +144,6 @@ const mapStateToProps = createStructuredSelector({
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onShowQueryRegions: isActive => dispatch(showQueryRegions(isActive)),
     onSetRegionHighlight: regionId => dispatch(setRegionHighlight(regionId)),
   };
 }

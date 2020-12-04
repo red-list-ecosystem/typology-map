@@ -16,6 +16,7 @@ import {
   selectLocale,
   selectGroup,
   selectDrawActive,
+  selectAnalysePanelOpen,
 } from 'containers/App/selectors';
 
 import { updateGroupsQuery } from 'containers/App/actions';
@@ -27,7 +28,7 @@ import MapControls from 'components/MapControls';
 import MapControl from 'components/MapControl';
 import TopGraphic from 'components/TopGraphic';
 
-import { getAsideWidth } from 'utils/responsive';
+import { getAsideWidth, isMinSize } from 'utils/responsive';
 
 // prettier-ignore
 const Styled = styled(TopGraphic)`
@@ -51,11 +52,15 @@ export function MapContainer({
   expandWithAside,
   mode,
   drawActive,
+  analysePanelOpen,
   resetQueryArea,
 }) {
   const [isMapExpanded, setIsMapExpanded] = useState(false);
   const [drawMode, setDrawMode] = useState('rectangle');
 
+  const showControlsSmall = mode !== 'analyse' || !analysePanelOpen;
+
+  // prettier-ignore
   return (
     <ResponsiveContext.Consumer>
       {size => (
@@ -72,8 +77,10 @@ export function MapContainer({
             size={size}
             mode={mode}
             drawMode={drawMode}
+            showControls={isMinSize(size, 'medium') || showControlsSmall}
           />
-          {!expandWithAside && (
+          {(isMinSize(size, 'medium') || showControlsSmall) &&
+            !expandWithAside && (
             <MapControls position="right">
               <MapControl
                 icon={
@@ -87,7 +94,7 @@ export function MapContainer({
               />
             </MapControls>
           )}
-          {drawActive && (
+          {(isMinSize(size, 'medium') || showControlsSmall) && drawActive && (
             <MapControls position="right" square>
               <MapControl
                 square
@@ -131,6 +138,7 @@ MapContainer.propTypes = {
   groupId: PropTypes.string,
   expandWithAside: PropTypes.bool,
   drawActive: PropTypes.bool,
+  analysePanelOpen: PropTypes.bool,
   mode: PropTypes.string,
   resetQueryArea: PropTypes.func,
 };
@@ -150,6 +158,7 @@ const mapStateToProps = createStructuredSelector({
   locale: state => selectLocale(state),
   group: (state, { groupId }) => groupId && selectGroup(state, groupId),
   drawActive: state => selectDrawActive(state),
+  analysePanelOpen: state => selectAnalysePanelOpen(state),
 });
 
 const withConnect = connect(
