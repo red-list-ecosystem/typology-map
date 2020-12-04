@@ -148,7 +148,7 @@ export const QUERY_REGIONS_LAYER = {
   key: 'query-regions',
   source: 'github',
   type: 'topojson',
-  path: 'auxiliary/eez_wrapped.topo.json',
+  path: 'auxiliary/eez_wrapped_simpl.topo.json',
   featureId: 'OGC_FID',
   featureTitle: 'UNION',
   featureTitleAdditional: 'SOVEREIGN1',
