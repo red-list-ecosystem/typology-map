@@ -23,7 +23,7 @@ const StyledButton = styled(props => <Button plain {...props} />)`
 `;
 
 const Label = styled(p => <Text size="small" {...p} />)`
-  min-width: 50px;
+  min-width: 45px;
   margin-right: ${({ theme }) => theme.global.edgeSize.small};
 `;
 

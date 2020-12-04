@@ -117,13 +117,11 @@ export function ExploreBiome({
                       parent={typology}
                     />
                   )}
-                  {isMinSize(size, 'large') && (
-                    <AnalysisShortcut
-                      type="biome"
-                      name={typology.title[locale]}
-                      onClick={() => navAnalysis(typology.id)}
-                    />
-                  )}
+                  <AnalysisShortcut
+                    type="biome"
+                    name={typology.title[locale]}
+                    onClick={() => navAnalysis(typology.id)}
+                  />
                 </TypologyContent>
               </ColumnMainContent>
             </ColumnMain>

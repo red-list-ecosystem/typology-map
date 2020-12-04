@@ -23,7 +23,7 @@ const ImageWrap = styled(Box)`
   height: 140px;
   overflow: hidden;
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
-    height: 100px;
+    height: 120px;
   }
 `;
 
@@ -85,12 +85,14 @@ export function CardChild({ onCardClick, label, typology, type, ...rest }) {
                 </H4>
                 {type === 'biomes' && (
                   <Box direction="row" gap="xsmall">
-                    <Text>{typology.groupNo}</Text>
-                    <FormattedMessage
-                      {...commonMessages[
-                        typology.groupNo === 1 ? 'group' : 'groups'
-                      ]}
-                    />
+                    <Text size="medium">{typology.groupNo}</Text>
+                    <Text size="medium">
+                      <FormattedMessage
+                        {...commonMessages[
+                          typology.groupNo === 1 ? 'group' : 'groups'
+                        ]}
+                      />
+                    </Text>
                   </Box>
                 )}
               </ContentWrap>

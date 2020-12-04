@@ -43,7 +43,12 @@ export function SectionAnalysis({ intl, onClick }) {
         <SectionTeaser>
           <FormattedMessage {...messages.teaserSectionAnalysis} />
         </SectionTeaser>
-        <Box align="center" fill="horizontal" margin={{ vertical: 'medium' }}>
+        <Box
+          align="center"
+          fill="horizontal"
+          margin={{ vertical: 'medium' }}
+          responsive={false}
+        >
           <ButtonPrimary
             icon={<AnalysePoly color="white" />}
             label={intl.formatMessage(messages.buttonSectionAnalysis)}

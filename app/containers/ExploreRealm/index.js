@@ -105,13 +105,11 @@ export function ExploreRealm({
                       wrap={false}
                     />
                   )}
-                  {isMinSize(size, 'large') && (
-                    <AnalysisShortcut
-                      type="realm"
-                      name={typology.title[locale]}
-                      onClick={() => navAnalysis(typology.id)}
-                    />
-                  )}
+                  <AnalysisShortcut
+                    type="realm"
+                    name={typology.title[locale]}
+                    onClick={() => navAnalysis(typology.id)}
+                  />
                 </TypologyContent>
               </ColumnMainContent>
             </ColumnMain>

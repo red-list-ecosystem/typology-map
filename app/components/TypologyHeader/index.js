@@ -16,8 +16,11 @@ const Styled = styled(Box)``;
 const TitleWrap = styled.h1`
   margin-bottom: ${({ theme }) => theme.global.edgeSize.medium};
   margin-top: ${({ theme }) => theme.global.edgeSize.small};
-  line-height: 1.25em;
   font-size: ${({ theme }) => theme.text.xxlarge.size};
+  line-height: 1.1em;
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    line-height: 1.25em;
+  }
 `;
 
 const Id = styled.span`
@@ -44,16 +47,19 @@ function TypologyHeader({ typology, ancestors, locale }) {
         <Id>{typology.id}</Id>
         <Title>{typology.title[locale]}</Title>
       </TitleWrap>
-      {ancestors &&
-        ancestors.map(a => (
-          <NavAncestor
-            key={a.id}
-            type={a.typologyType}
-            onClick={() => a.nav()}
-            id={a.id}
-            name={a.title[locale]}
-          />
-        ))}
+      {ancestors && (
+        <Box margin={{ bottom: 'small' }} responsive={false}>
+          {ancestors.map(a => (
+            <NavAncestor
+              key={a.id}
+              type={a.typologyType}
+              onClick={() => a.nav()}
+              id={a.id}
+              name={a.title[locale]}
+            />
+          ))}
+        </Box>
+      )}
     </Styled>
   );
 }

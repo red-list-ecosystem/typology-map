@@ -149,13 +149,11 @@ export function ExploreGroup({
                       },
                     ]}
                   />
-                  {isMinSize(size, 'large') && (
-                    <AnalysisShortcut
-                      type="group"
-                      name={typology.title[locale]}
-                      onClick={() => navAnalysis(typology.biome)}
-                    />
-                  )}
+                  <AnalysisShortcut
+                    type="group"
+                    name={typology.title[locale]}
+                    onClick={() => navAnalysis(typology.biome)}
+                  />
                 </TypologyContent>
               </ColumnMainContent>
             </ColumnMain>

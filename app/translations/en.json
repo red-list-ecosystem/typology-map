@@ -52,7 +52,7 @@
   "app.common.requireConsent": "Please {showConsentLink} to view the feedback form.",
   "app.common.showConsentLink": "allow third-party services and cookies",
   "app.components.AnalysisShortcut.button": "Analyse by area",
-  "app.components.AnalysisShortcut.header_biome": "Analyse {name} biome by area",
+  "app.components.AnalysisShortcut.header_biome": "Analyse {name} by area",
   "app.components.AnalysisShortcut.header_group": "Analyse biome of {name} by area",
   "app.components.AnalysisShortcut.header_realm": "Analyse {name} realm by area",
   "app.components.AnalysisShortcut.text_biome": "Identify biome's functional groups by area",

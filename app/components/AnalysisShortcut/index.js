@@ -30,7 +30,7 @@ export function AnalysisShortcut({ type, name, onClick, intl }) {
           }}
         />
       </H4>
-      <StyledPara>
+      <StyledPara responsive={false}>
         <FormattedMessage {...messages[`text_${type}`]} />
       </StyledPara>
       <ButtonPrimary

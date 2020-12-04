@@ -75,14 +75,16 @@ const LogoWrap = styled(p => <Box flex={{ shrink: 0 }} {...p} />)`
   }
 `;
 const TitleWrap = styled(Box)`
-  font-size: 12px;
-  line-height: 14px;
+  font-size: 11px;
+  line-height: 13px;
   width: 70px;
-  font-weight: 600;
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    font-weight: 600;
+    width: auto;
+  }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     font-size: 16px;
     line-height: 18px;
-    width: auto;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     min-width: ${getHeaderHeight('large')}px;
@@ -185,7 +187,9 @@ const Primary = styled(props => (
 `;
 // prettier-ignore
 const Secondary = styled(props => <Button {...props} plain />)`
-  padding: ${({ theme }) => theme.global.edgeSize.xsmall} ${({ theme }) => theme.global.edgeSize.medium};
+  padding:
+    ${({ theme }) => theme.global.edgeSize.xxsmall}
+    ${({ theme }) => theme.global.edgeSize.small};
   color: ${({ theme }) => theme.global.colors.white};
   text-decoration: ${({ active }) => (active ? 'underline' : 'none')};
   background: transparent;
@@ -206,9 +210,7 @@ const IconImg = styled(Img)`
   vertical-align: middle;
   max-height: 100%;
 `;
-const Border = styled.div`
-  border-top: 1px solid white;
-`;
+
 const IconImgHelper = styled.div`
   display: inline-block;
   height: 100%;
@@ -284,7 +286,7 @@ function Header({ nav, navHome, navPage, path }) {
                         <IconImg src={ICONS.EXPLORE} alt="" />
                       </IconImgWrap>
                       <Text
-                        size={isMinSize(size, 'medium') ? 'medium' : 'xxsmall'}
+                        size={isMinSize(size, 'medium') ? 'medium' : 'xxxsmall'}
                       >
                         <FormattedMessage {...commonMessages.navExplore} />
                       </Text>
@@ -304,7 +306,7 @@ function Header({ nav, navHome, navPage, path }) {
                         <IconImg src={ICONS.ANALYSIS} alt="" />
                       </IconImgWrap>
                       <Text
-                        size={isMinSize(size, 'medium') ? 'medium' : 'xxsmall'}
+                        size={isMinSize(size, 'medium') ? 'medium' : 'xxxsmall'}
                       >
                         <FormattedMessage {...commonMessages.navAnalyse} />
                       </Text>
@@ -385,7 +387,7 @@ function Header({ nav, navHome, navPage, path }) {
                 flex={{ grow: 0 }}
               >
                 {!showSearch && (
-                  <Box flex={false} style={{ width: '35px' }}>
+                  <Box flex={false} style={{ width: '40px' }}>
                     <MenuButton
                       onClick={() => {
                         setShowMenu(false);
@@ -400,7 +402,7 @@ function Header({ nav, navHome, navPage, path }) {
                     <Search onClose={() => setShowSearch(false)} stretch />
                   </NavSearchSmall>
                 )}
-                <Box flex={false} style={{ width: '35px' }}>
+                <Box flex={false} style={{ width: '40px' }}>
                   <MenuButton
                     plain
                     onClick={() => {
@@ -434,24 +436,8 @@ function Header({ nav, navHome, navPage, path }) {
                 background="brand-2"
                 elevation="medium"
                 style={{ borderTop: '1px solid white' }}
+                pad={{ top: 'small', bottom: 'medium' }}
               >
-                <Secondary
-                  onClick={() => {
-                    setShowMenu(false);
-                    nav(ROUTES.EXPLORE);
-                  }}
-                  label={<FormattedMessage {...commonMessages.navExplore} />}
-                  active={contentType === 'explore'}
-                />
-                <Secondary
-                  onClick={() => {
-                    setShowMenu(false);
-                    nav(ROUTES.ANALYSE);
-                  }}
-                  label={<FormattedMessage {...commonMessages.navAnalyse} />}
-                  active={contentType === 'analyse'}
-                />
-                <Border />
                 {pagesArray.map(p => (
                   <Secondary
                     key={p.key}
@@ -460,7 +446,11 @@ function Header({ nav, navHome, navPage, path }) {
                       navPage(p.key);
                     }}
                     label={
-                      <FormattedMessage {...commonMessages[`page_${p.key}`]} />
+                      <Text size="xsmall">
+                        <FormattedMessage
+                          {...commonMessages[`page_${p.key}`]}
+                        />
+                      </Text>
                     }
                     active={contentType === 'page' && contentId === p.key}
                   />

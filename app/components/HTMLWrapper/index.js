@@ -90,7 +90,10 @@ const HTMLWrapper = ({
           },
         })}
       {truncate && !show && (
-        <ButtonTextBold onClick={() => setShow(true)}>
+        <ButtonTextBold
+          onClick={() => setShow(true)}
+          style={{ marginBottom: '30px' }}
+        >
           <FormattedMessage {...messages.showMore} />
         </ButtonTextBold>
       )}

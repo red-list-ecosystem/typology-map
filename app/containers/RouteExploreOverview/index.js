@@ -18,6 +18,7 @@ import { navigateTypology } from 'containers/App/actions';
 // import messages from './messages';
 
 import SectionExplore from 'containers/RouteHome/SectionExplore';
+import Footer from 'containers/Footer';
 
 import messages from './messages';
 
@@ -44,6 +45,7 @@ export function RouteExploreOverview({ realms, navRealm, locale, intl }) {
         title={intl.formatMessage(messages.title)}
         teaser={intl.formatMessage(messages.teaser)}
       />
+      <Footer />
     </Styled>
   );
 }

@@ -75,7 +75,7 @@ export function CardRealm({ onCardClick, label, realm, icon, ...rest }) {
               margin={{ vertical: 'xsmall' }}
               pad={{ horizontal: 'small' }}
               direction={isMinSize(size, 'medium') ? 'column' : 'row'}
-              gap={isMinSize(size, 'medium') ? 'hair' : 'small'}
+              gap="{isMinSize(size, 'medium') ? 'hair' : 'xxsmall'}"
               align={isMinSize(size, 'medium') ? 'start' : 'center'}
               flex={{ shrink: 0 }}
             >

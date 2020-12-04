@@ -16,7 +16,10 @@ import { ICONS } from 'config';
 const StyledBox = styled(props => (
   <Box direction="row" align="center" {...props} wrap />
 ))`
-  height: ${({ theme }) => theme.dimensions.realmIcons.single + 20}px;
+  height: ${({ theme }) => theme.dimensions.realmIconsSmall.single + 20}px;
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    height: ${({ theme }) => theme.dimensions.realmIcons.single + 20}px;
+  }
 `;
 // prettier-ignore
 const IconImg = styled(Img)`
@@ -29,6 +32,12 @@ const IconImg = styled(Img)`
     if (count === 3) return 12;
     return 0;
   }}px;
+  &:first-child {
+    margin-left: 0;
+  }
+  &:last-child {
+    margin-right: 0;
+  }
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
     width: ${({ theme, multiple }) =>
     theme.dimensions.realmIcons[multiple ? 'multi' : 'single']}px;
