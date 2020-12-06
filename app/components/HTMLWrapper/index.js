@@ -84,7 +84,7 @@ const HTMLWrapper = ({
               node.attribs.class &&
               node.attribs.class.split(' ').indexOf(needsConsentClass) > -1
             ) {
-              return consentPlaceholder;
+              return <div key={index}>{consentPlaceholder}</div>;
             }
             return undefined;
           },
@@ -108,7 +108,7 @@ HTMLWrapper.propTypes = {
   classNames: PropTypes.array,
   inject: PropTypes.array,
   needsConsentClass: PropTypes.string,
-  truncate: PropTypes.string,
+  truncate: PropTypes.bool,
   consentPlaceholder: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 };
 

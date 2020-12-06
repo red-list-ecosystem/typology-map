@@ -142,7 +142,7 @@ export function Results({
                   onClick={() => onResetQuery()}
                   label={
                     <FormattedMessage
-                      {...messages[isMinSize(size, 'medium')
+                      {...messages[isMinSize(size, 'large')
                         ? 'resetQueryLabel'
                         : 'resetQueryLabelSmall']
                       }
@@ -155,7 +155,7 @@ export function Results({
                   onClick={() => onCancelQuery()}
                   label={
                     <FormattedMessage
-                      {...messages[isMinSize(size, 'medium')
+                      {...messages[isMinSize(size, 'large')
                         ? 'cancelQueryLabel'
                         : 'cancelQueryLabelSmall']
                       }

@@ -134,7 +134,7 @@ export function ExploreGroup({
                   <HTMLWrapper
                     innerhtml={content}
                     classNames={['rle-html-group']}
-                    truncate={isMaxSize(size, 'medium')}
+                    truncate={isMaxSize(size, 'small')}
                     inject={[
                       {
                         tag: '[DIAGRAM]',
@@ -157,7 +157,7 @@ export function ExploreGroup({
                 </TypologyContent>
               </ColumnMainContent>
             </ColumnMain>
-            {isMinSize(size, 'large') && (
+            {isMinSize(size, 'medium') && (
               <ColumnAside>
                 <AsideNavSection>
                   <AsideNavLabel

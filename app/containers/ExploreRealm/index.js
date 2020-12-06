@@ -87,7 +87,7 @@ export function ExploreRealm({
                   <HTMLWrapper
                     innerhtml={content}
                     classNames={['rle-html-realm']}
-                    truncate={isMaxSize(size, 'medium')}
+                    truncate={isMaxSize(size, 'small')}
                   />
                   {biomes && (
                     <NavGridChildren
@@ -113,7 +113,7 @@ export function ExploreRealm({
                 </TypologyContent>
               </ColumnMainContent>
             </ColumnMain>
-            {isMinSize(size, 'large') && (
+            {isMinSize(size, 'medium') && (
               <ColumnAside>
                 <AsideNavSection>
                   <AsideNavLabel

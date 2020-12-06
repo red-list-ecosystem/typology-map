@@ -7,18 +7,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Text, Box } from 'grommet';
+import { Button, Text, Box, ResponsiveContext } from 'grommet';
 import { injectIntl, intlShape } from 'react-intl';
 
 import { formatAreaRelative } from 'utils/numbers';
+import { isMinSize } from 'utils/responsive';
 
 import { GROUP_LAYER_PROPERTIES } from 'config';
 import messages from './messages';
 
-const getSize = level => {
-  if (level === 0) return 'xlarge';
-  if (level === 1) return 'large';
-  return 'medium';
+const getSize = (level, size) => {
+  if (level === 0) {
+    return isMinSize(size, 'large') ? 'xlarge' : 'large';
+  }
+  if (level === 1) {
+    return isMinSize(size, 'large') ? 'large' : 'medium';
+  }
+  return isMinSize(size, 'large') ? 'medium' : 'small';
 };
 
 // prettier-ignore
@@ -78,54 +83,58 @@ function AsideNavTypologyButton({
 }) {
   /* eslint-disable react/no-danger */
   return (
-    <StyledButton
-      active={active}
-      label={
-        <div>
-          <div>
-            <Text size={getSize(level)}>{`${id} ${name}`}</Text>
-          </div>
-          {showAreas && stats && stats.occurrences && (
-            <Stats>
-              {Object.keys(stats.occurrences).map(key => {
-                const areaRelative = stats.occurrences[key].area_relative;
-                // const oid = stats.occurrences[key].id;
-                return (
-                  <Box direction="row" key={key}>
-                    <Box
-                      flex={{ shrink: 0 }}
-                      width="55px"
-                      style={{ position: 'relative' }}
-                    >
-                      <BarLabel>
-                        <span
-                          dangerouslySetInnerHTML={{
-                            __html: intl.formatMessage(messages.area, {
-                              value: areaRelative
-                                ? formatAreaRelative(areaRelative, intl)
-                                : 0,
-                              unit: '%',
-                            }),
-                          }}
-                        />
-                      </BarLabel>
-                    </Box>
-                    <BarWrapper active={active}>
-                      <Bar
-                        color={GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color}
-                        percentage={(areaRelative || 0) * 100}
-                        hasArea={areaRelative > 0}
-                      />
-                    </BarWrapper>
-                  </Box>
-                );
-              })}
-            </Stats>
-          )}
-        </div>
-      }
-      {...rest}
-    />
+    <ResponsiveContext.Consumer>
+      {size => (
+        <StyledButton
+          active={active}
+          label={
+            <div>
+              <div>
+                <Text size={getSize(level, size)}>{`${id} ${name}`}</Text>
+              </div>
+              {showAreas && stats && stats.occurrences && (
+                <Stats>
+                  {Object.keys(stats.occurrences).map(key => {
+                    const areaRelative = stats.occurrences[key].area_relative;
+                    // const oid = stats.occurrences[key].id;
+                    return (
+                      <Box direction="row" key={key}>
+                        <Box
+                          flex={{ shrink: 0 }}
+                          width="55px"
+                          style={{ position: 'relative' }}
+                        >
+                          <BarLabel>
+                            <span
+                              dangerouslySetInnerHTML={{
+                                __html: intl.formatMessage(messages.area, {
+                                  value: areaRelative
+                                    ? formatAreaRelative(areaRelative, intl)
+                                    : 0,
+                                  unit: '%',
+                                }),
+                              }}
+                            />
+                          </BarLabel>
+                        </Box>
+                        <BarWrapper active={active}>
+                          <Bar
+                            color={GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color}
+                            percentage={(areaRelative || 0) * 100}
+                            hasArea={areaRelative > 0}
+                          />
+                        </BarWrapper>
+                      </Box>
+                    );
+                  })}
+                </Stats>
+              )}
+            </div>
+          }
+          {...rest}
+        />
+      )}
+    </ResponsiveContext.Consumer>
   );
   /* eslint-enable react/no-danger */
 }

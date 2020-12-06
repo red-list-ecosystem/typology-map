@@ -100,16 +100,14 @@ export function ConfigureArea({
   return (
     <ResponsiveContext.Consumer>
       {size => {
-        const actualQueryType = isMinSize(size, 'medium')
-          ? queryType
-          : 'region';
+        const actualQueryType = isMinSize(size, 'large') ? queryType : 'region';
         return (
           <>
             <AsideNavSection margin={{ vertical: 'ms' }}>
               <StepTitle>
                 <FormattedMessage {...messages.areaChange} />
               </StepTitle>
-              {isMinSize(size, 'medium') && (
+              {isMinSize(size, 'large') && (
                 <Box
                   direction="row"
                   gap="none"

@@ -37,13 +37,13 @@ export const sizes = {
 export const dimensions = {
   header: {
     // by breakpoint
-    height: [50, 50, 95, 95, 95],
+    height: [50, 70, 95, 95, 95],
     zIndex: 1200,
     primaryIcons: 40,
   },
   aside: {
     // by breakpoint
-    width: [0, 320, 350, 420, 550],
+    width: [0, 280, 350, 420, 550],
     zIndex: 1150,
   },
   realmIcons: {

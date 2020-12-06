@@ -106,7 +106,7 @@ export function ExploreBiome({
                   <HTMLWrapper
                     innerhtml={content}
                     classNames={['rle-html-biome']}
-                    truncate={isMaxSize(size, 'medium')}
+                    truncate={isMaxSize(size, 'small')}
                   />
                   {groups && (
                     <NavGridChildren
@@ -125,7 +125,7 @@ export function ExploreBiome({
                 </TypologyContent>
               </ColumnMainContent>
             </ColumnMain>
-            {isMinSize(size, 'large') && (
+            {isMinSize(size, 'medium') && (
               <ColumnAside>
                 <AsideNavSection>
                   <AsideNavLabel

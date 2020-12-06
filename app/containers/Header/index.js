@@ -68,7 +68,7 @@ const LogoWrap = styled(p => <Box flex={{ shrink: 0 }} {...p} />)`
   width: 40px;
   height: 100%;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
-    width: 50px;
+    width: 70px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     width: 80px;
@@ -80,16 +80,15 @@ const TitleWrap = styled(Box)`
   width: 70px;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
     font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
     width: auto;
+    max-width: ${getHeaderHeight('large') + 20}px;
+    min-width: ${getHeaderHeight('large')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     font-size: 16px;
     line-height: 18px;
-  }
-  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
-    min-width: ${getHeaderHeight('large')}px;
-    max-width: ${getHeaderHeight('large') + 20}px;
-    line-height: 19px;
   }
 `;
 
@@ -120,7 +119,7 @@ const NavSearchSmall = styled(p => (
     align="center"
     fill="horizontal"
     flex
-    margin={{ left: 'medium' }}
+    margin={{ horizontal: 'small' }}
     {...p}
   />
 ))`
@@ -217,12 +216,16 @@ const IconImgHelper = styled.div`
   vertical-align: middle;
 `;
 const IconImgWrap = styled.div`
+  height: 22px;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    height: 30px;
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     height: ${({ theme }) => theme.dimensions.header.primaryIcons}px;
   }
 `;
 const PrimaryLabel = styled(props => (
-  <Box {...props} justify="center" gap="xsmall" fill />
+  <Box {...props} justify="center" fill />
 ))``;
 
 const pagesArray = Object.keys(PAGES).map(key => ({
@@ -242,6 +245,7 @@ function Header({ nav, navHome, navPage, path }) {
       : paths.length > 0 && paths[1];
   const pagesPrimary = filter(pagesArray, p => p.nav === PRIMARY);
   const pagesSecondary = filter(pagesArray, p => p.nav === SECONDARY);
+  const pagesOther = filter(pagesArray, p => p.nav !== PRIMARY);
   return (
     <ResponsiveContext.Consumer>
       {size => (
@@ -280,7 +284,9 @@ function Header({ nav, navHome, navPage, path }) {
                     nav(ROUTES.EXPLORE);
                   }}
                   label={
-                    <PrimaryLabel>
+                    <PrimaryLabel
+                      gap={isMinSize(size, 'large') ? 'xsmall' : 'hair'}
+                    >
                       <IconImgWrap>
                         <IconImgHelper />
                         <IconImg src={ICONS.EXPLORE} alt="" />
@@ -300,7 +306,9 @@ function Header({ nav, navHome, navPage, path }) {
                     nav(ROUTES.ANALYSE);
                   }}
                   label={
-                    <PrimaryLabel>
+                    <PrimaryLabel
+                      gap={isMinSize(size, 'large') ? 'xsmall' : 'hair'}
+                    >
                       <IconImgWrap>
                         <IconImgHelper />
                         <IconImg src={ICONS.ANALYSIS} alt="" />
@@ -320,7 +328,9 @@ function Header({ nav, navHome, navPage, path }) {
                       key={p.key}
                       onClick={() => navPage(p.key)}
                       label={
-                        <PrimaryLabel>
+                        <PrimaryLabel
+                          gap={isMinSize(size, 'large') ? 'xsmall' : 'hair'}
+                        >
                           <IconImgWrap>
                             <IconImgHelper />
                             <IconImg src={p.icon} alt="" />
@@ -382,12 +392,17 @@ function Header({ nav, navHome, navPage, path }) {
             {isMaxSize(size, 'medium') && (
               <Box
                 direction="row"
-                justify="end"
+                justify="center"
                 fill={showSearch ? true : 'vertical'}
                 flex={{ grow: 0 }}
               >
                 {!showSearch && (
-                  <Box flex={false} style={{ width: '40px' }}>
+                  <Box
+                    flex={false}
+                    style={{
+                      width: isMaxSize(size, 'small') ? '40px' : '50px',
+                    }}
+                  >
                     <MenuButton
                       onClick={() => {
                         setShowMenu(false);
@@ -397,34 +412,41 @@ function Header({ nav, navHome, navPage, path }) {
                     />
                   </Box>
                 )}
+                {!showSearch && (
+                  <Box
+                    flex={false}
+                    style={{
+                      width: isMaxSize(size, 'small') ? '40px' : '50px',
+                    }}
+                  >
+                    <MenuButton
+                      plain
+                      onClick={() => {
+                        setShowSearch(false);
+                        setShowMenu(!showMenu);
+                      }}
+                      label={
+                        showMenu ? (
+                          <MenuOpen color="white" />
+                        ) : (
+                          <Menu color="white" />
+                        )
+                      }
+                    />
+                  </Box>
+                )}
                 {showSearch && (
                   <NavSearchSmall>
                     <Search onClose={() => setShowSearch(false)} stretch />
                   </NavSearchSmall>
                 )}
-                <Box flex={false} style={{ width: '40px' }}>
-                  <MenuButton
-                    plain
-                    onClick={() => {
-                      setShowSearch(false);
-                      setShowMenu(!showMenu);
-                    }}
-                    label={
-                      showMenu ? (
-                        <MenuOpen color="white" />
-                      ) : (
-                        <Menu color="white" />
-                      )
-                    }
-                  />
-                </Box>
               </Box>
             )}
           </NavBar>
           {isMaxSize(size, 'medium') && showMenu && (
             <Layer
               full="horizontal"
-              margin={{ top: '50px' }}
+              margin={{ top: `${getHeaderHeight(size)}px` }}
               onClickOutside={() => setShowMenu(false)}
               responsive={false}
               modal={false}
@@ -438,23 +460,42 @@ function Header({ nav, navHome, navPage, path }) {
                 style={{ borderTop: '1px solid white' }}
                 pad={{ top: 'small', bottom: 'medium' }}
               >
-                {pagesArray.map(p => (
-                  <Secondary
-                    key={p.key}
-                    onClick={() => {
-                      setShowMenu(false);
-                      navPage(p.key);
-                    }}
-                    label={
-                      <Text size="xsmall">
-                        <FormattedMessage
-                          {...commonMessages[`page_${p.key}`]}
-                        />
-                      </Text>
-                    }
-                    active={contentType === 'page' && contentId === p.key}
-                  />
-                ))}
+                {isMinSize(size, 'medium') &&
+                  pagesOther.map(p => (
+                    <Secondary
+                      key={p.key}
+                      onClick={() => {
+                        setShowMenu(false);
+                        navPage(p.key);
+                      }}
+                      label={
+                        <Text size="medium">
+                          <FormattedMessage
+                            {...commonMessages[`page_${p.key}`]}
+                          />
+                        </Text>
+                      }
+                      active={contentType === 'page' && contentId === p.key}
+                    />
+                  ))}
+                {isMaxSize(size, 'small') &&
+                  pagesArray.map(p => (
+                    <Secondary
+                      key={p.key}
+                      onClick={() => {
+                        setShowMenu(false);
+                        navPage(p.key);
+                      }}
+                      label={
+                        <Text size="xsmall">
+                          <FormattedMessage
+                            {...commonMessages[`page_${p.key}`]}
+                          />
+                        </Text>
+                      }
+                      active={contentType === 'page' && contentId === p.key}
+                    />
+                  ))}
                 <LocaleToggle />
               </Box>
             </Layer>

@@ -113,9 +113,7 @@ export function Configure({
   return (
     <ResponsiveContext.Consumer>
       {size => {
-        const actualQueryType = isMinSize(size, 'medium')
-          ? queryType
-          : 'region';
+        const actualQueryType = isMinSize(size, 'large') ? queryType : 'region';
         return (
           <>
             <Box
@@ -151,7 +149,7 @@ export function Configure({
                 <StepTitle>
                   <FormattedMessage {...messages.defineArea} />
                 </StepTitle>
-                {isMinSize(size, 'medium') && (
+                {isMinSize(size, 'large') && (
                   <Box
                     direction="row"
                     gap="none"

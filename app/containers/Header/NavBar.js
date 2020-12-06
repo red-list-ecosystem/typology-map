@@ -17,7 +17,7 @@ export default styled(props => (
   height: ${getHeaderHeight('small')}px;
   padding-left: ${({ theme }) => theme.global.edgeSize.hair};
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
-    padding-left: ${({ theme }) => theme.global.edgeSize.medium};
+    padding: 0 ${({ theme }) => theme.global.edgeSize.xsmall};
     height: ${getHeaderHeight('medium')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
