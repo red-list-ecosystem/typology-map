@@ -52,6 +52,8 @@ const Results = styled(Box)`
   right: ${({ inLayer }) => (inLayer ? 0 : 'auto')};
   bottom: ${({ inLayer }) => (inLayer ? 0 : 'auto')};
   overflow-y: ${({ inLayer }) => (inLayer ? 'auto' : 'unset')};
+`;
+const ResultsInner = styled(Box)`
   padding: 8px 0;
 `;
 
@@ -137,28 +139,33 @@ export function RegionInputOptions({
             <FormattedMessage {...messages.noRegionsFound} />
           </Box>
         )}
-        {filteredOptions &&
-          filteredOptions.map(option => (
-            <OptionButton
-              key={option.id}
-              plain
-              label={
-                <LabelWrap pad={{ vertical: 'small', horizontal: 'small' }}>
-                  <Text size="small" truncate>
-                    {option.title}
-                  </Text>
-                </LabelWrap>
-              }
-              onFocus={() => onSetRegionHighlight(parseInt(option.id, 10))}
-              onMouseOver={() => onSetRegionHighlight(parseInt(option.id, 10))}
-              onMouseOut={() => onSetRegionHighlight()}
-              onBlur={() => onSetRegionHighlight()}
-              onClick={() => {
-                setSearch('');
-                onSubmit(option.id);
-              }}
-            />
-          ))}
+        {filteredOptions && (
+          <ResultsInner flex={{ shrink: 0 }}>
+            {filteredOptions.map(option => (
+              <OptionButton
+                key={option.id}
+                plain
+                label={
+                  <LabelWrap pad={{ vertical: 'small', horizontal: 'small' }}>
+                    <Text size="small" truncate>
+                      {option.title}
+                    </Text>
+                  </LabelWrap>
+                }
+                onFocus={() => onSetRegionHighlight(parseInt(option.id, 10))}
+                onMouseOver={() =>
+                  onSetRegionHighlight(parseInt(option.id, 10))
+                }
+                onMouseOut={() => onSetRegionHighlight()}
+                onBlur={() => onSetRegionHighlight()}
+                onClick={() => {
+                  setSearch('');
+                  onSubmit(option.id);
+                }}
+              />
+            ))}
+          </ResultsInner>
+        )}
       </Results>
     </Styled>
   );
