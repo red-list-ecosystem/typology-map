@@ -21,7 +21,7 @@ const Styled = styled(p => (
   position: absolute;
   bottom: ${({ theme }) => theme.global.edgeSize.xsmall};
   right: ${({ theme }) => theme.global.edgeSize.xsmall};
-  z-index: 99999;
+  z-index: 99998;
 `;
 
 const StyledHeading = styled(Heading)`

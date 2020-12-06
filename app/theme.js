@@ -43,7 +43,7 @@ export const dimensions = {
   },
   aside: {
     // by breakpoint
-    width: [0, 280, 350, 420, 550],
+    width: [0, 280, 300, 420, 550],
     zIndex: 1150,
   },
   realmIcons: {

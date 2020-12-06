@@ -289,9 +289,9 @@ export function Configure({
                   <FormattedMessage {...messages.submitQuery} />
                 </StepTitle>
                 <Box
-                  direction={isMinSize(size, 'medium') ? 'row' : 'column'}
+                  direction={isMinSize(size, 'xlarge') ? 'row' : 'column'}
                   gap="xsmall"
-                  align={isMinSize(size, 'medium') ? 'center' : 'start'}
+                  align={isMinSize(size, 'xlarge') ? 'center' : 'start'}
                 >
                   <SubmitButton
                     disabled={

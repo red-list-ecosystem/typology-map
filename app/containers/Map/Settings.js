@@ -42,7 +42,7 @@ import messages from './messages';
 
 const Styled = styled(props => <Box direction="row" {...props} />)`
   position: absolute;
-  z-index: 401;
+  z-index: 99999;
   bottom: ${({ theme }) => theme.global.edgeSize.xsmall};
   left: ${({ theme }) => theme.global.edgeSize.xsmall};
   height: ${({ theme, fs }) =>
@@ -107,7 +107,9 @@ const LayerTitle = styled(Text)`
   font-weight: 600;
 `;
 
-const Id = styled(LayerTitle)``;
+const Id = styled(LayerTitle)`
+  white-space: nowrap;
+`;
 
 const SettingTitle = styled(props => (
   <Text size="xsmall" margin={{ bottom: 'xsmall' }} {...props} />
@@ -173,8 +175,14 @@ export function Settings({
                     bottom: 'xsmall',
                   }}
                 >
-                  <Id>{group.id}</Id>
-                  <LayerTitle>{group.title[locale]}</LayerTitle>
+                  <Id size={isMinSize(size, 'medium') ? 'medium' : 'small'}>
+                    {group.id}
+                  </Id>
+                  <LayerTitle
+                    size={isMinSize(size, 'medium') ? 'medium' : 'small'}
+                  >
+                    {group.title[locale]}
+                  </LayerTitle>
                 </Box>
               )}
               <Box
@@ -227,7 +235,7 @@ export function Settings({
                     </Box>
                   </WrapControl>
                 )}
-                {showOpacity && isMinSize(size, 'large') && (
+                {showOpacity && isMinSize(size, 'medium') && (
                   <WrapControl>
                     <SettingTitle>
                       <FormattedMessage {...messages.settingOpacity} />
@@ -241,7 +249,7 @@ export function Settings({
                     />
                   </WrapControl>
                 )}
-                {((showBasemap && isMinSize(size, 'large')) ||
+                {((showBasemap && isMinSize(size, 'small')) ||
                   mode === 'analyse') && (
                   <WrapControl>
                     <SettingTitle>
@@ -263,7 +271,7 @@ export function Settings({
                     />
                   </WrapControl>
                 )}
-                {showCountries && isMinSize(size, 'large') && (
+                {showCountries && isMinSize(size, 'medium') && (
                   <WrapControl>
                     <SettingTitle>
                       <FormattedMessage {...messages.settingCountries} />
@@ -282,7 +290,7 @@ export function Settings({
                     />
                   </WrapControl>
                 )}
-                {showAutoZoom && isMinSize(size, 'large') && (
+                {showAutoZoom && isMinSize(size, 'medium') && (
                   <WrapControl>
                     <SettingTitle>
                       <FormattedMessage {...messages.settingZoomToBounds} />
