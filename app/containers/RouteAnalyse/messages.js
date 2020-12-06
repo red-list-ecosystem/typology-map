@@ -232,4 +232,12 @@ export default defineMessages({
     id: `${scope}.csvColumnCustomArea`,
     defaultMessage: 'Area WKT',
   },
+  noRegionsFound: {
+    id: `${scope}.noRegionsFound`,
+    defaultMessage: 'Sorry no regions matched your search',
+  },
+  filterRegions: {
+    id: `${scope}.filterRegions`,
+    defaultMessage: 'Filter regions',
+  },
 });

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
-import { Button, Drop, Box, Text } from 'grommet';
+import { Button, Drop, Box, Text, ResponsiveContext, Layer } from 'grommet';
 import styled from 'styled-components';
 
 import { Close, Down, Up } from 'components/Icons';
@@ -16,6 +16,7 @@ import { getRegionFeatureTitle } from 'containers/Map/utils';
 import { QUERY_REGIONS_LAYER } from 'config';
 
 import quasiEquals from 'utils/quasi-equals';
+import { isMinSize, isMaxSize } from 'utils/responsive';
 
 import RegionInputOptions from './RegionInputOptions';
 import messages from './messages';
@@ -77,55 +78,85 @@ export function RegionInput({
     layer &&
     options.find(option => quasiEquals(option.id, regionId));
   // onSelect={id => onSubmit(id)}
-  // placeholder={intl.formatMessage(messages.selectRegionFieldPlaceholder)}
+  // prettier-ignore
   return (
-    <>
-      {activeRegion && (
-        <Active>
-          <LabelWrap align="center">
-            <Title>{activeRegion.title}</Title>
-          </LabelWrap>
-          <CloseButton
-            onClick={() => {
-              onSubmit('');
-              setOpen(false);
-            }}
-            icon={<Close size="medium" color="black" />}
-          />
-        </Active>
+    <ResponsiveContext.Consumer>
+      {size => (
+        <>
+          {activeRegion && (
+            <Active>
+              <LabelWrap align="center">
+                <Title>{activeRegion.title}</Title>
+              </LabelWrap>
+              <CloseButton
+                onClick={() => {
+                  onSubmit('');
+                  setOpen(false);
+                }}
+                icon={<Close size="medium" color="black" />}
+              />
+            </Active>
+          )}
+          {!activeRegion && (
+            <DropButton
+              ref={dropButtonRef}
+              label={
+                <Select pad={{ right: '3px' }}>
+                  <Text color="dark-4">
+                    <FormattedMessage
+                      {...messages.selectRegionFieldPlaceholder}
+                    />
+                  </Text>
+                  {open ? <Up color="black" /> : <Down color="black" />}
+                </Select>
+              }
+              onClick={() => setOpen(!open)}
+            />
+          )}
+          {isMinSize(size, 'medium') &&
+            !activeRegion &&
+            open &&
+            dropButtonRef &&
+            dropButtonRef.current && (
+            <Drop
+              stretch
+              target={dropButtonRef.current}
+              align={{ top: 'bottom', right: 'right' }}
+              style={{ maxWidth: dropButtonRef.current.offsetWidth }}
+            >
+              <RegionInputOptions
+                dropWidth={dropButtonRef.current.offsetWidth}
+                onSubmit={id => {
+                  onSubmit(id);
+                  setOpen(false);
+                }}
+                options={options}
+              />
+            </Drop>
+          )}
+          {isMaxSize(size, 'small') &&
+            !activeRegion &&
+            open && (
+            <Layer
+              full
+              plain
+              onEsc={() => setOpen(false)}
+            >
+              <RegionInputOptions
+                dropWidth="100%"
+                onSubmit={id => {
+                  onSubmit(id);
+                  setOpen(false);
+                }}
+                options={options}
+                inLayer
+                onClose={() => setOpen(false)}
+              />
+            </Layer>
+          )}
+        </>
       )}
-      {!activeRegion && (
-        <DropButton
-          ref={dropButtonRef}
-          label={
-            <Select pad={{ right: '3px' }}>
-              <Text color="dark-4">
-                <FormattedMessage {...messages.selectRegionFieldPlaceholder} />
-              </Text>
-              {open ? <Up color="black" /> : <Down color="black" />}
-            </Select>
-          }
-          onClick={() => setOpen(!open)}
-        />
-      )}
-      {!activeRegion && open && dropButtonRef && dropButtonRef.current && (
-        <Drop
-          stretch
-          target={dropButtonRef.current}
-          align={{ top: 'bottom', right: 'right' }}
-          style={{ maxWidth: dropButtonRef.current.offsetWidth }}
-        >
-          <RegionInputOptions
-            dropWidth={dropButtonRef.current.offsetWidth}
-            onSubmit={id => {
-              onSubmit(id);
-              setOpen(false);
-            }}
-            options={options}
-          />
-        </Drop>
-      )}
-    </>
+    </ResponsiveContext.Consumer>
   );
 }
 

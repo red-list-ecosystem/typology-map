@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-// import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import { Button, Box, Text } from 'grommet';
 import styled from 'styled-components';
 
@@ -15,30 +15,59 @@ import {
   regExMultipleWords,
 } from 'containers/Search/search';
 
-// import messages from './messages';
+import { Close } from 'components/Icons';
+
+import messages from './messages';
+
+const Styled = styled(Box)`
+  position: ${({ inLayer }) => (inLayer ? 'absolute' : 'static')};
+  left: ${({ inLayer }) => (inLayer ? 0 : 'auto')};
+  top: ${({ inLayer }) => (inLayer ? 0 : 'auto')};
+  right: ${({ inLayer }) => (inLayer ? 0 : 'auto')};
+  bottom: ${({ inLayer }) => (inLayer ? 0 : 'auto')};
+  overflow-y: ${({ inLayer }) => (inLayer ? 'hidden' : 'auto')};
+  background: white;
+`;
+const Header = styled(Box)`
+  height: 40px;
+  background: ${({ theme }) => theme.global.colors['light-grey']};
+  padding: ${({ theme }) => theme.global.edgeSize.xsmall};
+  position: ${({ inLayer }) => (inLayer ? 'absolute' : 'static')};
+  left: ${({ inLayer }) => (inLayer ? 0 : 'auto')};
+  top: ${({ inLayer }) => (inLayer ? 0 : 'auto')};
+  right: ${({ inLayer }) => (inLayer ? 0 : 'auto')};
+`;
+const SearchWrap = styled(Box)``;
+const TextInputWrap = styled(Box)`
+  display: block;
+  background: white;
+  padding: ${({ theme }) => theme.global.edgeSize.hair}
+    ${({ theme }) => theme.global.edgeSize.xxsmall};
+`;
+
+const Results = styled(Box)`
+  position: ${({ inLayer }) => (inLayer ? 'absolute' : 'static')};
+  left: ${({ inLayer }) => (inLayer ? 0 : 'auto')};
+  top: ${({ inLayer }) => (inLayer ? '40px' : 'auto')};
+  right: ${({ inLayer }) => (inLayer ? 0 : 'auto')};
+  bottom: ${({ inLayer }) => (inLayer ? 0 : 'auto')};
+  overflow-y: ${({ inLayer }) => (inLayer ? 'auto' : 'unset')};
+  padding: 8px 0;
+`;
 
 const LabelWrap = styled(p => <Box {...p} />)``;
 
 const OptionButton = styled(p => <Button {...p} />)`
-  min-height: 30px;
   &:hover {
     background: ${({ theme }) => theme.global.colors['light-grey']};
   }
 `;
 
-const DropContent = styled(Box)``;
-const SearchWrap = styled.div`
-  height: 40px;
-  display: block;
-  background: ${({ theme }) => theme.global.colors['light-grey']};
-  padding: ${({ theme }) => theme.global.edgeSize.xsmall};
-`;
-const TextInputWrap = styled.div`
-  display: block;
-  background: white;
-  padding: ${({ theme }) => theme.global.edgeSize.hair}
-    ${({ theme }) => theme.global.edgeSize.xxsmall};
-  width: 100%;
+const CloseButton = styled(Button)`
+  padding: 0 5px;
+  &:hover {
+    color: ${({ theme }) => theme.global.colors.brand};
+  }
 `;
 
 export function RegionInputOptions({
@@ -46,7 +75,9 @@ export function RegionInputOptions({
   dropWidth,
   onSetRegionHighlight,
   options,
-  // intl,
+  inLayer,
+  onClose,
+  intl,
 }) {
   const [search, setSearch] = useState('');
   const textInputRef = useRef(null);
@@ -74,56 +105,73 @@ export function RegionInputOptions({
   // onSelect={id => onSubmit(id)}
   // placeholder={intl.formatMessage(messages.selectRegionFieldPlaceholder)}
   return (
-    <DropContent style={{ maxWidth: dropWidth }}>
-      <SearchWrap>
-        <TextInputWrap>
-          <TextInput
-            plain
-            value={search}
-            onChange={evt => {
-              if (evt && evt.target) {
-                setSearch(sanitise(evt.target.value));
+    <Styled inLayer={inLayer} style={{ maxWidth: dropWidth }}>
+      <Header
+        direction="row"
+        flex={false}
+        elevation={inLayer ? 'small' : 'none'}
+        inLayer={inLayer}
+      >
+        <SearchWrap flex={{ grow: 1 }}>
+          <TextInputWrap>
+            <TextInput
+              plain
+              value={search}
+              onChange={evt => {
+                if (evt && evt.target) {
+                  setSearch(sanitise(evt.target.value));
+                }
+              }}
+              placeholder={intl.formatMessage(messages.filterRegions)}
+              ref={textInputRef}
+            />
+          </TextInputWrap>
+        </SearchWrap>
+        {inLayer && onClose && (
+          <CloseButton plain onClick={() => onClose()} label={<Close />} />
+        )}
+      </Header>
+      <Results inLayer={inLayer}>
+        {(!filteredOptions || filteredOptions.length === 0) && (
+          <Box pad="small">
+            <FormattedMessage {...messages.noRegionsFound} />
+          </Box>
+        )}
+        {filteredOptions &&
+          filteredOptions.map(option => (
+            <OptionButton
+              key={option.id}
+              plain
+              label={
+                <LabelWrap pad={{ vertical: 'small', horizontal: 'small' }}>
+                  <Text size="small" truncate>
+                    {option.title}
+                  </Text>
+                </LabelWrap>
               }
-            }}
-            placeholder="Filter list"
-            ref={textInputRef}
-          />
-        </TextInputWrap>
-      </SearchWrap>
-      {(!filteredOptions || filteredOptions.length === 0) && (
-        <Box pad="small">Sorry no regions matched your search</Box>
-      )}
-      {filteredOptions &&
-        filteredOptions.map(option => (
-          <OptionButton
-            key={option.id}
-            plain
-            label={
-              <LabelWrap pad={{ vertical: 'hair', horizontal: 'xsmall' }}>
-                <Text size="small" truncate>
-                  {option.title}
-                </Text>
-              </LabelWrap>
-            }
-            onFocus={() => onSetRegionHighlight(parseInt(option.id, 10))}
-            onMouseOver={() => onSetRegionHighlight(parseInt(option.id, 10))}
-            onMouseOut={() => onSetRegionHighlight()}
-            onBlur={() => onSetRegionHighlight()}
-            onClick={() => {
-              setSearch('');
-              onSubmit(option.id);
-            }}
-          />
-        ))}
-    </DropContent>
+              onFocus={() => onSetRegionHighlight(parseInt(option.id, 10))}
+              onMouseOver={() => onSetRegionHighlight(parseInt(option.id, 10))}
+              onMouseOut={() => onSetRegionHighlight()}
+              onBlur={() => onSetRegionHighlight()}
+              onClick={() => {
+                setSearch('');
+                onSubmit(option.id);
+              }}
+            />
+          ))}
+      </Results>
+    </Styled>
   );
 }
 
 RegionInputOptions.propTypes = {
   onSubmit: PropTypes.func,
+  onClose: PropTypes.func,
   onSetRegionHighlight: PropTypes.func,
   options: PropTypes.array,
   dropWidth: PropTypes.number,
+  inLayer: PropTypes.bool,
+  intl: intlShape.isRequired,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -138,5 +186,5 @@ const withConnect = connect(
 );
 
 // export default RouteExplore;
-export default compose(withConnect)(RegionInputOptions);
+export default compose(withConnect)(injectIntl(RegionInputOptions));
 // export default RegionInputOptions;
