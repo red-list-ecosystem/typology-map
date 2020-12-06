@@ -125,7 +125,7 @@ export function RegionInput({
               style={{ maxWidth: dropButtonRef.current.offsetWidth }}
             >
               <RegionInputOptions
-                dropWidth={dropButtonRef.current.offsetWidth}
+                dropWidth={`${dropButtonRef.current.offsetWidth}px`}
                 onSubmit={id => {
                   onSubmit(id);
                   setOpen(false);

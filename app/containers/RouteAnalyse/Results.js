@@ -12,8 +12,11 @@ import CsvDownloader from 'react-csv-downloader';
 
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { Box, Text, Button } from 'grommet';
+import { Box, Text, Button, ResponsiveContext } from 'grommet';
 import { FormattedMessage, intlShape, injectIntl } from 'react-intl';
+
+import quasiEquals from 'utils/quasi-equals';
+import { isMinSize } from 'utils/responsive';
 
 import { GROUP_LAYER_PROPERTIES, QUERY_REGIONS_LAYER, PATHS } from 'config';
 
@@ -36,11 +39,8 @@ import A from 'components/styled/A';
 import AsideNavTypologyList from 'components/AsideNavTypologyList';
 import LoadingIndicator from 'components/LoadingIndicator';
 import AsideNavSection from 'components/AsideNavSection';
-import SectionTitle from 'components/styled/SectionTitle';
-
-import quasiEquals from 'utils/quasi-equals';
-
 import TooltipOccurrence from 'components/Tooltip/TooltipOccurrence';
+import SectionTitle from 'components/styled/SectionTitle';
 
 import commonMessages from 'messages';
 import messages from './messages';
@@ -120,182 +120,203 @@ export function Results({
 
   // prettier-ignore
   return (
-    <>
-      <Box
-        pad={{ horizontal: 'small', top: 'small' }}
-        flex={false}
-        background="white"
-        direction="row"
-        fill="horizontal"
-        justify="between"
-        align="center"
-      >
-        <SectionTitle aside>
-          <FormattedMessage {...messages.queryResults} />
-        </SectionTitle>
-        {queriesReady && (
-          <ButtonPrimary
-            onClick={() => onResetQuery()}
-            label={<FormattedMessage {...messages.resetQueryLabel} />}
-          />
-        )}
-        {!queriesReady && (
-          <ButtonPrimary
-            onClick={() => onCancelQuery()}
-            label={<FormattedMessage {...messages.cancelQueryLabel} />}
-          />
-        )}
-      </Box>
-      <Box pad={{ bottom: 'large' }} flex={false} background="white">
-        <AsideNavSection margin={{ top: 'ms' }}>
+    <ResponsiveContext.Consumer>
+      {size => (
+        <>
           <Box
-            pad={{ horizontal: 'small' }}
-            margin={{ bottom: 'medium' }}
+            pad={{ horizontal: 'small', top: 'small' }}
             flex={false}
+            background="white"
+            direction="row"
+            fill="horizontal"
+            justify="between"
+            align="center"
+            gap="small"
           >
-            {!queriesReady && (
-              <FormattedMessage {...messages.awaitResults} />
-            )}
-            {queriesReady && resultGroups.length === 0 && (
-              <FormattedMessage {...messages.noResults} />
-            )}
-            {queriesReady &&
-              resultGroups.length > 0 && (
-              <div>
-                {queryType === 'region' && (
-                  <FormattedMessage {...messages.hintResultsRegion} />
-                )}
-                {queryType === 'area' && (
-                  <FormattedMessage {...messages.hintResultsArea} />
-                )}
-                <FormattedMessage
-                  {...messages.download}
-                  values={{
-                    link: (
-                      <A href={PATHS.DATA_DOWNLOAD} target="_blank">
-                        {intl.formatMessage(messages.downloadAnchor)}
-                      </A>
-                    ),
-                  }}
-                />
-              </div>
-            )}
-          </Box>
-        </AsideNavSection>
-        {!queriesReady && <LoadingIndicator />}
-        {queriesReady && (
-          <ResultsFilters
-            queryArgs={{
-              area,
-              realm,
-              biome,
-              occurrence,
-            }}
-            realms={realms}
-            biomes={biomes}
-            queryType={queryType}
-            activeRegion={activeRegion}
-            enableAreaUpdate={() => {
-              onSetActiveGroup('');
-              setAreaUpdate(true);
-            }}
-            enableFilterUpdate={() => setFilterUpdate(true)}
-          />
-        )}
-        {queriesReady && resultGroups && resultGroups.length > 0 && (
-          <AsideNavSection margin={{ top: 'ml' }}>
-            <Box pad={{ horizontal: 'small' }} flex={false}>
-              <StepTitleWrap>
-                <Box>
-                  <Text size="large">
-                    <strong>
-                      {`${resultGroups.length} ${intl.formatMessage(
-                        commonMessages.groups,
-                      )}`}
-                    </strong>
-                  </Text>
-                </Box>
-                {queriesReady && resultGroups.length > 0 && (
-                  <CsvDownloader
-                    datas={prepareCSVData(
-                      resultGroups,
-                      queryType,
-                      queryArgsFromQuery,
-                      realms,
-                      biomes,
-                      activeRegion,
-                      intl,
-                    )}
-                    columns={getCSVColumns(queryType, intl)}
-                    filename={generateCSVFilename(queryArgsFromQuery, locale)}
-                    suffix
-                    wrapColumnChar='"'
-                  >
-                    <UpdateButton
-                      onClick={e => e.preventDefault()}
-                      label={<FormattedMessage {...messages.downloadResultsLabel} />}
+            <SectionTitle aside style={{ margin: '30px 0' }}>
+              <FormattedMessage {...messages.queryResults} />
+            </SectionTitle>
+            <Box flex={{ shrink: 0 }}>
+              {queriesReady && (
+                <ButtonPrimary
+                  onClick={() => onResetQuery()}
+                  label={
+                    <FormattedMessage
+                      {...messages[isMinSize(size, 'medium')
+                        ? 'resetQueryLabel'
+                        : 'resetQueryLabelSmall']
+                      }
                     />
-                  </CsvDownloader>
-                )}
-              </StepTitleWrap>
-              {queryType === 'region' && (
-                <Box pad={{ bottom: 'xsmall' }}>
-                  <Text size="xsmall">
-                    <FormattedMessage {...messages.hintResultsGraph} />
-                  </Text>
-                </Box>
+                  }
+                />
               )}
-              {queryType === 'region' && (
-                <Box direction="row" gap="small" pad={{ bottom: 'small' }}>
-                  <SettingTitle>
-                    <FormattedMessage {...commonMessages.occurrence} />
-                    {`: `}
-                  </SettingTitle>
-                  {Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).map(
-                    key => (
-                      <Box
-                        direction="row"
-                        align="center"
-                        gap="xsmall"
-                        key={key}
-                      >
-                        <KeyColor
-                          color={
-                            GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color
-                          }
-                          opacity={1}
-                        />
-                        <TextLabel>
-                          <FormattedMessage
-                            {...commonMessages[
-                              `occurrence_${
-                                GROUP_LAYER_PROPERTIES.OCCURRENCE[key].id
-                              }`
-                            ]}
-                          />
-                        </TextLabel>
-                      </Box>
-                    ),
-                  )}
-                  <TooltipOccurrence />
-                </Box>
+              {!queriesReady && (
+                <ButtonPrimary
+                  onClick={() => onCancelQuery()}
+                  label={
+                    <FormattedMessage
+                      {...messages[isMinSize(size, 'medium')
+                        ? 'cancelQueryLabel'
+                        : 'cancelQueryLabelSmall']
+                      }
+                    />
+                  }
+                />
               )}
             </Box>
-            <AsideNavTypologyList
-              items={resultGroups}
-              level={2}
-              locale={locale}
-              selectItem={id =>
-                onSetActiveGroup(activeGroup === id ? '' : id)
-              }
-              activeId={activeGroup}
-              infoItem={id => onSetInfoGroup(id)}
-              showAreas
-            />
-          </AsideNavSection>
-        )}
-      </Box>
-    </>
+          </Box>
+          <Box pad={{ bottom: 'large' }} flex={false} background="white">
+            <AsideNavSection margin="0">
+              <Box
+                pad={{ horizontal: 'small' }}
+                margin={{ bottom: 'medium' }}
+                flex={false}
+              >
+                {!queriesReady && (
+                  <FormattedMessage {...messages.awaitResults} />
+                )}
+                {queriesReady && resultGroups.length === 0 && (
+                  <FormattedMessage {...messages.noResults} />
+                )}
+                {queriesReady &&
+                  resultGroups.length > 0 && (
+                  <div>
+                    {queryType === 'region' && (
+                      <FormattedMessage {...messages.hintResultsRegion} />
+                    )}
+                    {queryType === 'area' && (
+                      <FormattedMessage {...messages.hintResultsArea} />
+                    )}
+                    <FormattedMessage
+                      {...messages.download}
+                      values={{
+                        link: (
+                          <A href={PATHS.DATA_DOWNLOAD} target="_blank">
+                            {intl.formatMessage(messages.downloadAnchor)}
+                          </A>
+                        ),
+                      }}
+                    />
+                  </div>
+                )}
+              </Box>
+            </AsideNavSection>
+            {!queriesReady && <LoadingIndicator />}
+            {queriesReady && (
+              <ResultsFilters
+                queryArgs={{
+                  area,
+                  realm,
+                  biome,
+                  occurrence,
+                }}
+                realms={realms}
+                biomes={biomes}
+                queryType={queryType}
+                activeRegion={activeRegion}
+                enableAreaUpdate={() => {
+                  onSetActiveGroup('');
+                  setAreaUpdate(true);
+                }}
+                enableFilterUpdate={() => setFilterUpdate(true)}
+              />
+            )}
+            {queriesReady && resultGroups && resultGroups.length > 0 && (
+              <AsideNavSection margin={{ top: 'ml' }}>
+                <Box pad={{ horizontal: 'small' }} flex={false}>
+                  <StepTitleWrap>
+                    <Box>
+                      <Text size="large">
+                        <strong>
+                          {`${resultGroups.length} ${intl.formatMessage(
+                            commonMessages.groups,
+                          )}`}
+                        </strong>
+                      </Text>
+                    </Box>
+                    {queriesReady && resultGroups.length > 0 && (
+                      <CsvDownloader
+                        datas={prepareCSVData(
+                          resultGroups,
+                          queryType,
+                          queryArgsFromQuery,
+                          realms,
+                          biomes,
+                          activeRegion,
+                          intl,
+                        )}
+                        columns={getCSVColumns(queryType, intl)}
+                        filename={generateCSVFilename(queryArgsFromQuery, locale)}
+                        suffix
+                        wrapColumnChar='"'
+                      >
+                        <UpdateButton
+                          onClick={e => e.preventDefault()}
+                          label={<FormattedMessage {...messages.downloadResultsLabel} />}
+                        />
+                      </CsvDownloader>
+                    )}
+                  </StepTitleWrap>
+                  {queryType === 'region' && (
+                    <Box pad={{ bottom: 'xsmall' }}>
+                      <Text size="xsmall">
+                        <FormattedMessage {...messages.hintResultsGraph} />
+                      </Text>
+                    </Box>
+                  )}
+                  {queryType === 'region' && (
+                    <Box direction="row" gap="small" pad={{ bottom: 'small' }}>
+                      <SettingTitle>
+                        <FormattedMessage {...commonMessages.occurrence} />
+                        {`: `}
+                      </SettingTitle>
+                      {Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).map(
+                        key => (
+                          <Box
+                            direction="row"
+                            align="center"
+                            gap="xsmall"
+                            key={key}
+                          >
+                            <KeyColor
+                              color={
+                                GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color
+                              }
+                              opacity={1}
+                            />
+                            <TextLabel>
+                              <FormattedMessage
+                                {...commonMessages[
+                                  `occurrence_${
+                                    GROUP_LAYER_PROPERTIES.OCCURRENCE[key].id
+                                  }`
+                                ]}
+                              />
+                            </TextLabel>
+                          </Box>
+                        ),
+                      )}
+                      <TooltipOccurrence />
+                    </Box>
+                  )}
+                </Box>
+                <AsideNavTypologyList
+                  items={resultGroups}
+                  level={2}
+                  locale={locale}
+                  selectItem={id =>
+                    onSetActiveGroup(activeGroup === id ? '' : id)
+                  }
+                  activeId={activeGroup}
+                  infoItem={id => onSetInfoGroup(id)}
+                  showAreas
+                />
+              </AsideNavSection>
+            )}
+          </Box>
+        </>
+      )}
+    </ResponsiveContext.Consumer>
   );
 }
 

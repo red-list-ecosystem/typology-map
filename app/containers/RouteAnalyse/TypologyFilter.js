@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import { Button, Box, Text, ResponsiveContext, Drop, Layer } from 'grommet';
 import styled from 'styled-components';
+
 import { isMinSize, isMaxSize } from 'utils/responsive';
 
 import { Close, Down, Up } from 'components/Icons';
@@ -117,7 +118,7 @@ export function TypologyFilter({
               style={{ maxWidth: dropButtonRef.current.offsetWidth }}
             >
               <TypologyFilterOptions
-                dropWidth={dropButtonRef.current.offsetWidth}
+                dropWidth={`${dropButtonRef.current.offsetWidth}px`}
                 onSubmit={id => {
                   onSelect(id);
                   setOpen(false);

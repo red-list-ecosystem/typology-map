@@ -4,8 +4,8 @@ import styled from 'styled-components';
 export default styled.h2`
   font-family: Kanit, Arial, sans-serif;
   font-weight: 500;
-  font-size: ${({ theme }) => theme.text.xlarge.size};
-  line-height: ${({ theme }) => theme.text.xlarge.height};
+  font-size: ${({ theme }) => theme.text.larger.size};
+  line-height: ${({ theme }) => theme.text.larger.height};
   margin: ${({ aside }) => (aside ? 35 : 40)}px 0 14px 0;
   position: relative;
   &::before {

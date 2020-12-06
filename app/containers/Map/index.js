@@ -628,6 +628,30 @@ export function Map({
       );
     }
   }, [queryRegionsActive, regionHighlight, queryRegion]);
+  // zoom to region layer
+  useEffect(() => {
+    if (
+      queryRegionsActive &&
+      queryAreaLayerGroupRef &&
+      queryAreaLayerGroupRef.current &&
+      queryAreaLayerGroupRef.current.getLayers &&
+      queryAreaLayerGroupRef.current.getLayers().length > 0
+    ) {
+      const regions = queryAreaLayerGroupRef.current.getLayers()[0];
+      let hiLayer;
+      regions.eachLayer(layer => {
+        hiLayer = quasiEquals(
+          queryRegion,
+          layer.feature.properties[QUERY_REGIONS_LAYER.featureId],
+        )
+          ? layer
+          : hiLayer;
+      });
+      if (hiLayer) {
+        mapRef.current.fitBounds(hiLayer.getBounds());
+      }
+    }
+  }, [queryRegion]);
 
   // enable leaflet draw
   useEffect(() => {
@@ -742,7 +766,6 @@ export function Map({
       }
     }
   }, [mode, queryType, queryArea]);
-
   return (
     <Styled>
       <LeafletContainer id="ll-map" />

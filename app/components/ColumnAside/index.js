@@ -42,7 +42,7 @@ const Styled = styled(Box)`
   }
 `;
 
-const ToggleWrap = styled(p => <Box align="top" {...p} />)`
+const ToggleWrap = styled(p => <Box align="start" {...p} />)`
   position: fixed;
   z-index: ${({ theme }) => theme.dimensions.aside.zIndex};
   right: ${({ collapsed }) => (collapsed ? 0 : 'auto')};

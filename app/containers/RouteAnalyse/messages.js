@@ -144,6 +144,14 @@ export default defineMessages({
     id: `${scope}.cancelQueryLabel`,
     defaultMessage: 'Cancel query',
   },
+  resetQueryLabelSmall: {
+    id: `${scope}.resetQueryLabelSmall`,
+    defaultMessage: 'Reset',
+  },
+  cancelQueryLabelSmall: {
+    id: `${scope}.cancelQueryLabelSmall`,
+    defaultMessage: 'Cancel',
+  },
   changeQueryLabel: {
     id: `${scope}.changeQueryLabel`,
     defaultMessage: 'Change query',

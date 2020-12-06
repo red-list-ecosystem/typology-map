@@ -138,6 +138,7 @@ const text = {
   small: { size: '14px', height: '18px', maxWidth: '700px' },
   medium: { size: '16px', height: '22px', maxWidth: '800px' },
   large: { size: '18px', height: '24px', maxWidth: '800px' },
+  larger: { size: '24px', height: '30px', maxWidth: '800px' },
   xlarge: { size: '28px', height: '36px', maxWidth: '800px' },
   xxlarge: { size: '40px', height: '48px', maxWidth: '800px' },
   xxxlarge: { size: '60px', height: '75px', maxWidth: '800px' },

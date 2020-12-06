@@ -51,11 +51,10 @@ function Tooltip({
   const button = useRef(null);
 
   const mWidth = maxWidth || large ? '300px' : '200px';
-
   return (
     <ResponsiveContext.Consumer>
       {size => {
-        const openModal = large && isMaxSize(size, 'sm');
+        const openModal = large && isMaxSize(size, 'small');
         // prettier-ignore
         return (
           <>

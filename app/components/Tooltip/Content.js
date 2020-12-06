@@ -29,7 +29,7 @@ function Content({ maxWidth, component, text, onClose, inModal, inverse }) {
           }}
           margin={{ left: 'auto' }}
         >
-          <Close color="white" size="large" />
+          <Close size="large" />
         </Button>
       )}
       <ContentWrap>

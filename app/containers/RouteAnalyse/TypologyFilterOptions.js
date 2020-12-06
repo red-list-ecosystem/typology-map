@@ -117,7 +117,7 @@ TypologyFilterOptions.propTypes = {
   onClose: PropTypes.func,
   onSetRegionHighlight: PropTypes.func,
   options: PropTypes.array,
-  dropWidth: PropTypes.number,
+  dropWidth: PropTypes.string,
   inLayer: PropTypes.bool,
   intl: intlShape.isRequired,
   type: PropTypes.string,
