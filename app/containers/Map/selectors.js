@@ -15,6 +15,10 @@ export const selectZoomToBounds = createSelector(
   selectDomain,
   domain => domain.zoomToBounds,
 );
+export const selectRegionHighlight = createSelector(
+  selectDomain,
+  domain => domain.regionHighlightId,
+);
 export const selectCountry = createSelector(
   selectDomain,
   domain => domain.country,

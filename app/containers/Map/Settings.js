@@ -19,7 +19,9 @@ import {
   Text,
   ResponsiveContext,
 } from 'grommet';
+
 import { Menu } from 'components/Icons';
+import TooltipOccurrence from 'components/Tooltip/TooltipOccurrence';
 
 import { GROUP_LAYER_PROPERTIES } from 'config';
 
@@ -40,7 +42,7 @@ import messages from './messages';
 
 const Styled = styled(props => <Box direction="row" {...props} />)`
   position: absolute;
-  z-index: 401;
+  z-index: 99999;
   bottom: ${({ theme }) => theme.global.edgeSize.xsmall};
   left: ${({ theme }) => theme.global.edgeSize.xsmall};
   height: ${({ theme, fs }) =>
@@ -105,10 +107,12 @@ const LayerTitle = styled(Text)`
   font-weight: 600;
 `;
 
-const Id = styled(LayerTitle)``;
+const Id = styled(LayerTitle)`
+  white-space: nowrap;
+`;
 
 const SettingTitle = styled(props => (
-  <Text size="xsmall" {...props} margin={{ bottom: 'xsmall' }} />
+  <Text size="xsmall" margin={{ bottom: 'xsmall' }} {...props} />
 ))`
   font-weight: 600;
 `;
@@ -126,6 +130,7 @@ export function Settings({
   zoomToBounds,
   onSetZoomToBounds,
   intl,
+  mode,
 }) {
   useInjectReducer({ key: 'map', reducer });
 
@@ -133,6 +138,14 @@ export function Settings({
   const [showSettings, setShowSettings] = useState(false);
   const { locale } = intl;
   const satellite = basemap === 'satellite';
+
+  const showTitle = group && fullscreen;
+  const showKey = !!group;
+  const showOpacity = !!group && (showSettings || fullscreen);
+  const showBasemap = showSettings || fullscreen;
+  const showCountries = mode !== 'analyse' && (showSettings || fullscreen);
+  const showAutoZoom = mode !== 'analyse' && (showSettings || fullscreen);
+
   return (
     <ResponsiveContext.Consumer>
       {size => (
@@ -151,7 +164,7 @@ export function Settings({
           />
           {showPanel && (
             <StyledInner>
-              {fullscreen && (
+              {showTitle && (
                 <Box
                   alignContent="center"
                   pad={{ vertical: 'xsmall' }}
@@ -162,47 +175,67 @@ export function Settings({
                     bottom: 'xsmall',
                   }}
                 >
-                  <Id>{group.id}</Id>
-                  <LayerTitle>{group.title[locale]}</LayerTitle>
+                  <Id size={isMinSize(size, 'medium') ? 'medium' : 'small'}>
+                    {group.id}
+                  </Id>
+                  <LayerTitle
+                    size={isMinSize(size, 'medium') ? 'medium' : 'small'}
+                  >
+                    {group.title[locale]}
+                  </LayerTitle>
                 </Box>
               )}
               <Box
                 direction="row"
                 gap="medium"
                 margin={{
-                  top: !fullscreen ? 'small' : '0',
+                  top: !showTitle ? 'small' : '0',
                 }}
               >
-                <WrapControl>
-                  <SettingTitle>
-                    <FormattedMessage {...commonMessages.occurrence} />
-                  </SettingTitle>
-                  <Box direction="row" gap="small">
-                    {Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).map(key => (
-                      <Box
-                        direction="row"
-                        align="center"
-                        gap="xsmall"
-                        key={key}
-                      >
-                        <KeyColor
-                          color={GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color}
-                          opacity={opacity}
-                        />
-                        <TextLabel>
-                          <FormattedMessage
-                            {...commonMessages[
-                              `occurrence_${
-                                GROUP_LAYER_PROPERTIES.OCCURRENCE[key].id
-                              }`
-                            ]}
-                          />
-                        </TextLabel>
-                      </Box>
-                    ))}
-                  </Box>
-                </WrapControl>
-                {isMinSize(size, 'large') && (fullscreen || showSettings) && (
+                {showKey && (
+                  <WrapControl>
+                    <Box
+                      direction="row"
+                      gap="small"
+                      align="center"
+                      margin={{ bottom: 'xsmall' }}
+                    >
+                      <SettingTitle margin="none">
+                        <FormattedMessage {...commonMessages.occurrence} />
+                      </SettingTitle>
+                      <TooltipOccurrence />
+                    </Box>
+                    <Box direction="row" gap="small">
+                      {Object.keys(GROUP_LAYER_PROPERTIES.OCCURRENCE).map(
+                        key => (
+                          <Box
+                            direction="row"
+                            align="center"
+                            gap="xsmall"
+                            key={key}
+                          >
+                            <KeyColor
+                              color={
+                                GROUP_LAYER_PROPERTIES.OCCURRENCE[key].color
+                              }
+                              opacity={opacity}
+                            />
+                            <TextLabel>
+                              <FormattedMessage
+                                {...commonMessages[
+                                  `occurrence_${
+                                    GROUP_LAYER_PROPERTIES.OCCURRENCE[key].id
+                                  }`
+                                ]}
+                              />
+                            </TextLabel>
+                          </Box>
+                        ),
+                      )}
+                    </Box>
+                  </WrapControl>
+                )}
+                {showOpacity && isMinSize(size, 'medium') && (
                   <WrapControl>
                     <SettingTitle>
                       <FormattedMessage {...messages.settingOpacity} />
@@ -216,7 +249,8 @@ export function Settings({
                     />
                   </WrapControl>
                 )}
-                {isMinSize(size, 'large') && (fullscreen || showSettings) && (
+                {((showBasemap && isMinSize(size, 'small')) ||
+                  mode === 'analyse') && (
                   <WrapControl>
                     <SettingTitle>
                       <FormattedMessage {...messages.settingBasemap} />
@@ -237,7 +271,7 @@ export function Settings({
                     />
                   </WrapControl>
                 )}
-                {isMinSize(size, 'large') && (fullscreen || showSettings) && (
+                {showCountries && isMinSize(size, 'medium') && (
                   <WrapControl>
                     <SettingTitle>
                       <FormattedMessage {...messages.settingCountries} />
@@ -256,7 +290,7 @@ export function Settings({
                     />
                   </WrapControl>
                 )}
-                {isMinSize(size, 'large') && (fullscreen || showSettings) && (
+                {showAutoZoom && isMinSize(size, 'medium') && (
                   <WrapControl>
                     <SettingTitle>
                       <FormattedMessage {...messages.settingZoomToBounds} />
@@ -301,6 +335,7 @@ Settings.propTypes = {
   fullscreen: PropTypes.bool,
   basemap: PropTypes.string,
   locale: PropTypes.string,
+  mode: PropTypes.string,
   opacity: PropTypes.number,
   country: PropTypes.bool,
   zoomToBounds: PropTypes.bool,

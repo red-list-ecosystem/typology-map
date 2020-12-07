@@ -26,6 +26,7 @@ const Caption = styled.div`
   text-transform: uppercase;
   font-weight: 600;
   font-size: 12px;
+  text-align: right;
 `;
 
 const Credit = styled(Caption)`

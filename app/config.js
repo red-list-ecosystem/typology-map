@@ -4,24 +4,15 @@ import ICON_F from 'images/f.svg';
 import ICON_S from 'images/s.svg';
 import ICON_TYPOLOGY from 'images/typology.svg';
 import ICON_X from 'images/explore.svg';
-import ICON_X0 from 'images/explore_0.svg';
-import ICON_X1 from 'images/explore_1.svg';
-import ICON_X2 from 'images/explore_2.svg';
+import ICON_ANALYSIS from 'images/analysis.svg';
 import ICON_LOGO from 'images/logo_RLE_icon.svg';
-import ICON_CLOSE from 'images/icon_close.svg';
-import ICON_FS_CONTRACT from 'images/icon_fullscreen-contract.svg';
-import ICON_FS_EXPAND from 'images/icon_fullscreen-expand.svg';
-import ICON_INFO from 'images/icon_info.svg';
-import ICON_LAYERS from 'images/icon_layers.svg';
-import ICON_MENU from 'images/icon_menu.svg';
-import ICON_MINUS from 'images/icon_minus.svg';
-import ICON_PLUS from 'images/icon_plus.svg';
-import ICON_SEARCH from 'images/icon_search.svg';
 import LOGO_0 from 'images/logo_RLE.png';
 import LOGO_1 from 'images/logo_IUCN.jpg';
 import LOGO_2 from 'images/logo_CEM.jpg';
 import LOGO_3 from 'images/logo_CES.png';
 import LOGO_4 from 'images/logo_UNSW.png';
+
+import { colors } from 'theme';
 
 import { PRIMARY, SECONDARY, FOOTER } from 'containers/App/constants';
 
@@ -33,11 +24,23 @@ export const ROUTES = {
 };
 
 export const PATHS = {
+  DATA_DOWNLOAD: 'https://doi.org/10.5281/zenodo.3546513',
   DATA: 'https://red-list-ecosystem.github.io/typology-map-data/data',
   CONTENT: 'https://red-list-ecosystem.github.io/typology-map-content',
   IMAGES:
     'https://red-list-ecosystem.github.io/typology-map-content/assets/uploads',
+  GROUPS_QUERY_API: {
+    areasbyregion:
+      'https://psiqp2ecjf.execute-api.ap-southeast-2.amazonaws.com/default/rle_areasbyregion_api',
+    vector:
+      'https://v1mnzwc793.execute-api.ap-southeast-2.amazonaws.com/default/rle_intersects_vectors_api',
+    raster:
+      'https://4rl7fsjrfk.execute-api.ap-southeast-2.amazonaws.com/default/rle_intersects_raster_api',
+  },
 };
+
+export const MAX_LOAD_ATTEMPTS = 5;
+export const MAX_LOAD_ATTEMPTS_GROUPS = 2;
 
 export const TYPOLOGY = {
   realms: {
@@ -83,14 +86,17 @@ export const PAGES = {
     backgroundImage: 'bg_home',
     needsConsent: 'true',
   },
+  terms: {
+    path: 'terms',
+    nav: FOOTER,
+    backgroundImage: 'bg_home',
+  },
   privacy: {
     path: 'privacy',
     nav: FOOTER,
     backgroundImage: 'bg_home',
   },
 };
-
-export const MAX_LOAD_ATTEMPTS = 5;
 
 export const GROUP_LAYER_PROPERTIES = {
   OCCURRENCE: {
@@ -123,18 +129,44 @@ export const GROUP_LAYER_OPTIONS = {
       weight: 1.5,
     },
   },
+  'VECTOR-AUX': {
+    stroke: true,
+    weight: 0.5,
+    fill: true,
+    fillOpacity: 0.01,
+    color: colors['brand-2-light'],
+    fillColor: 'white',
+    opacity: 1,
+  },
   RASTER: {
     tileSize: 256,
     noWrap: false,
   },
 };
 
+export const QUERY_REGIONS_LAYER = {
+  key: 'query-regions',
+  source: 'github',
+  type: 'topojson',
+  path: 'auxiliary/eez_wrapped_simpl.topo.json',
+  featureId: 'OGC_FID',
+  featureTitle: 'UNION',
+  featureTitleAdditional: 'SOVEREIGN1',
+  featureTitleAdditional2: 'SOVEREIGN2',
+  style: {
+    weight: 0.5,
+    opacity: 1,
+    fillOpacity: 0,
+  },
+};
+
 export const MAPBOX = {
-  TOKEN: 'pk.eyJ1IjoidG1mcm56IiwiYSI6IkRNZURKUHcifQ._ljgPcF75Yig1Of8adL93A',
-  USER: 'tmfrnz',
+  TOKEN:
+    'pk.eyJ1IjoianJmZXAiLCJhIjoiY2s5N3RxZWhwMTl5NjNnbjFmdzhubTFjdiJ9.KFBzgxBPjKnERRfR9awR_g',
+  USER: 'jrfep',
   BASEMAP_STYLES: {
-    light: 'ckae0r0to0say1ir3a13wvscu',
-    satellite: 'ckacdj3yp5pmb1iqky0khmlc8',
+    light: 'cki644hdi0p9g19o1euw0l3hd',
+    satellite: 'cki643k240ixj19rydj6ubdgq',
   },
   RASTER_URL_TEMPLATE:
     'https://api.mapbox.com/v4/{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}',
@@ -163,7 +195,7 @@ export const LAYERS = {
   countries: {
     source: 'mapbox',
     type: 'style',
-    style: 'ckapdq83917dj1imw9jtqtjte',
+    style: 'cki643ylc72no19omqdoqoynt',
   },
 };
 
@@ -179,19 +211,8 @@ export const ICONS = {
   SM: [ICON_S, ICON_M],
   TF: [ICON_T, ICON_F],
   EXPLORE: ICON_X,
-  EXPLORE_0: ICON_X0,
-  EXPLORE_1: ICON_X1,
-  EXPLORE_2: ICON_X2,
+  ANALYSIS: ICON_ANALYSIS,
   LOGO: ICON_LOGO,
-  contract: ICON_FS_CONTRACT,
-  expand: ICON_FS_EXPAND,
-  layers: ICON_LAYERS,
-  info: ICON_INFO,
-  menu: ICON_MENU,
-  plus: ICON_PLUS,
-  minus: ICON_MINUS,
-  search: ICON_SEARCH,
-  close: ICON_CLOSE,
 };
 
 export const LOGOS = [

@@ -80,6 +80,10 @@ export default defineMessages({
     id: `${scope}.navExplore`,
     defaultMessage: 'Explore',
   },
+  navAnalyse: {
+    id: `${scope}.navAnalyse`,
+    defaultMessage: 'By Area',
+  },
   page_typology: {
     id: `${scope}.page_typology`,
     defaultMessage: 'Typology',
@@ -104,6 +108,10 @@ export default defineMessages({
     id: `${scope}.page_privacy`,
     defaultMessage: 'Privacy policy',
   },
+  page_terms: {
+    id: `${scope}.page_terms`,
+    defaultMessage: 'Terms of use',
+  },
   imageCreditBy: {
     id: `${scope}.imageCreditBy`,
     defaultMessage: 'Image by: ',
@@ -126,6 +134,18 @@ export default defineMessages({
   },
   imageCredit_glossary: {
     id: `${scope}.imageCredit_glossary`,
+    defaultMessage: 'Shifaaz Shamoon on Unsplash',
+  },
+  imageCredit_terms: {
+    id: `${scope}.imageCredit_terms`,
+    defaultMessage: 'Shifaaz Shamoon on Unsplash',
+  },
+  imageCredit_privacy: {
+    id: `${scope}.imageCredit_privacy`,
+    defaultMessage: 'Shifaaz Shamoon on Unsplash',
+  },
+  imageCredit_feedback: {
+    id: `${scope}.imageCredit_feedback`,
     defaultMessage: 'Shifaaz Shamoon on Unsplash',
   },
   occurrence: {

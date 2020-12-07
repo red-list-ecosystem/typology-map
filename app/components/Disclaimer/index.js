@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import { Paragraph, Layer, Box, ResponsiveContext } from 'grommet';
 import { FormattedMessage } from 'react-intl';
 
-import H2 from 'components/H2';
+import H2 from 'components/styled/H2';
 import ButtonPrimary from 'components/ButtonPrimary';
 import ButtonText from 'components/ButtonText';
 

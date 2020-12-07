@@ -7,16 +7,22 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
+import styled from 'styled-components';
 import { Box, Paragraph } from 'grommet';
-
+import H4 from 'components/styled/H4';
+import H5 from 'components/styled/H5';
 import CardChild from './CardChild';
 
 import messages from './messages';
 
+const Grid = styled.div`
+  margin: 0 -${({ theme }) => theme.global.edgeSize.small};
+`;
+
 function NavGridChildren({ type, items, itemClick, locale, parent }) {
   return (
     <div>
-      <h4>
+      <H4>
         <FormattedMessage
           {...messages[`${type}Title`]}
           values={{
@@ -24,25 +30,27 @@ function NavGridChildren({ type, items, itemClick, locale, parent }) {
             parent: parent.title[locale],
           }}
         />
-      </h4>
+      </H4>
       <Paragraph>
         <FormattedMessage {...messages[`${type}Info`]} />
       </Paragraph>
-      <h5>
+      <H5>
         <FormattedMessage {...messages[`${type}Select`]} />
-      </h5>
-      <Box direction="row" wrap fill="horizontal">
-        {items &&
-          items.map(i => (
-            <CardChild
-              key={i.id}
-              onCardClick={() => itemClick(i.id)}
-              type={type}
-              label={i.title[locale]}
-              typology={i}
-            />
-          ))}
-      </Box>
+      </H5>
+      <Grid>
+        <Box direction="row" wrap fill="horizontal" responsive={false}>
+          {items &&
+            items.map(i => (
+              <CardChild
+                key={i.id}
+                onCardClick={() => itemClick(i.id)}
+                type={type}
+                label={i.title[locale]}
+                typology={i}
+              />
+            ))}
+        </Box>
+      </Grid>
     </div>
   );
 }

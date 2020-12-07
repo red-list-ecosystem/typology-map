@@ -10,9 +10,15 @@ import { Button, Box, Text, ResponsiveContext, Layer } from 'grommet';
 import { Menu, Search as SearchIcon } from 'components/Icons';
 
 import { selectRouterPath } from 'containers/App/selectors';
-import { navigate, navigateHome, navigatePage } from 'containers/App/actions';
+import {
+  navigate,
+  navigateHome,
+  navigatePage,
+  resetGroupsQuery,
+  resetGroupsQueryNav,
+} from 'containers/App/actions';
 import { PRIMARY, SECONDARY } from 'containers/App/constants';
-import { PAGES, ICONS } from 'config';
+import { PAGES, ICONS, ROUTES } from 'config';
 
 import Img from 'components/Img';
 import LocaleToggle from 'containers/LocaleToggle';
@@ -26,9 +32,9 @@ import NavBar from './NavBar';
 // prettier-ignore
 const Brand = styled(props => <Button plain color="white" {...props} />)`
   /* responsive height */
-  padding-right: ${({ theme }) => theme.global.edgeSize.small};
   height: ${getHeaderHeight('small')}px;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    padding-right: ${({ theme }) => theme.global.edgeSize.small};
     height: ${getHeaderHeight('medium')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
@@ -59,19 +65,30 @@ const BrandWrap = styled(Box)`
 `;
 
 const LogoWrap = styled(p => <Box flex={{ shrink: 0 }} {...p} />)`
-  width: 50px;
+  width: 40px;
   height: 100%;
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    width: 70px;
+  }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     width: 80px;
   }
 `;
 const TitleWrap = styled(Box)`
-  font-weight: 600;
-  line-height: 18px;
-  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
-    min-width: ${getHeaderHeight('large')}px;
+  font-size: 11px;
+  line-height: 13px;
+  width: 70px;
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+    width: auto;
     max-width: ${getHeaderHeight('large') + 20}px;
-    line-height: 19px;
+    min-width: ${getHeaderHeight('large')}px;
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+    font-size: 16px;
+    line-height: 18px;
   }
 `;
 
@@ -97,7 +114,14 @@ const NavSearch = styled(props => (
   <Box {...props} direction="row" basis="1/2" align="center" />
 ))``;
 const NavSearchSmall = styled(p => (
-  <Box direction="row" align="center" fill="horizontal" flex {...p} />
+  <Box
+    direction="row"
+    align="center"
+    fill="horizontal"
+    flex
+    margin={{ horizontal: 'small' }}
+    {...p}
+  />
 ))`
   height: ${getHeaderHeight('small')}px;
 `;
@@ -133,11 +157,10 @@ const Primary = styled(props => (
   <Button plain margin={{ horizontal: 'hair' }} {...props} />
 ))`
   text-align: center;
-  font-weight: 600;
-  padding: ${({ theme }) => theme.global.edgeSize.small};
   background: ${({ theme, active }) =>
     active ? theme.global.colors.brand : 'transparent'};
   color: ${({ theme }) => theme.global.colors.white};
+  padding: ${({ theme }) => theme.global.edgeSize.xsmall};
   &:hover {
     background: ${({ theme }) => theme.global.colors.brand};
   }
@@ -146,6 +169,8 @@ const Primary = styled(props => (
   }
   height: ${getHeaderHeight('small')}px;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    font-weight: 600;
+    padding: ${({ theme }) => theme.global.edgeSize.small};
     height: ${getHeaderHeight('medium')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
@@ -161,7 +186,9 @@ const Primary = styled(props => (
 `;
 // prettier-ignore
 const Secondary = styled(props => <Button {...props} plain />)`
-  padding: ${({ theme }) => theme.global.edgeSize.small} ${({ theme }) => theme.global.edgeSize.medium};
+  padding:
+    ${({ theme }) => theme.global.edgeSize.xxsmall}
+    ${({ theme }) => theme.global.edgeSize.small};
   color: ${({ theme }) => theme.global.colors.white};
   text-decoration: ${({ active }) => (active ? 'underline' : 'none')};
   background: transparent;
@@ -182,16 +209,23 @@ const IconImg = styled(Img)`
   vertical-align: middle;
   max-height: 100%;
 `;
+
 const IconImgHelper = styled.div`
   display: inline-block;
   height: 100%;
   vertical-align: middle;
 `;
 const IconImgWrap = styled.div`
-  height: ${({ theme }) => theme.dimensions.header.primaryIcons}px;
+  height: 22px;
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    height: 30px;
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+    height: ${({ theme }) => theme.dimensions.header.primaryIcons}px;
+  }
 `;
 const PrimaryLabel = styled(props => (
-  <Box {...props} justify="center" gap="xsmall" fill />
+  <Box {...props} justify="center" fill />
 ))``;
 
 const pagesArray = Object.keys(PAGES).map(key => ({
@@ -211,6 +245,7 @@ function Header({ nav, navHome, navPage, path }) {
       : paths.length > 0 && paths[1];
   const pagesPrimary = filter(pagesArray, p => p.nav === PRIMARY);
   const pagesSecondary = filter(pagesArray, p => p.nav === SECONDARY);
+  const pagesOther = filter(pagesArray, p => p.nav !== PRIMARY);
   return (
     <ResponsiveContext.Consumer>
       {size => (
@@ -223,7 +258,10 @@ function Header({ nav, navHome, navPage, path }) {
             {(isMinSize(size, 'large') || !showSearch) && (
               <BrandWrap>
                 <Brand
-                  onClick={() => navHome()}
+                  onClick={() => {
+                    setShowMenu(false);
+                    navHome();
+                  }}
                   active={contentType === ''}
                   label={
                     <Box direction="row" fill="vertical" align="center">
@@ -238,86 +276,81 @@ function Header({ nav, navHome, navPage, path }) {
                 />
               </BrandWrap>
             )}
-            {isMaxSize(size, 'medium') && (
-              <Box
-                direction="row"
-                justify="end"
-                fill={showSearch ? true : 'vertical'}
-                flex={{ grow: 0 }}
-              >
-                {!showSearch && (
-                  <Box flex={false} style={{ width: '40px' }}>
-                    <MenuButton
-                      onClick={() => {
-                        setShowMenu(false);
-                        setShowSearch(!showSearch);
-                      }}
-                      label={<SearchIcon color="white" size="medium" />}
-                    />
-                  </Box>
-                )}
-                {showSearch && (
-                  <NavSearchSmall>
-                    <Search onClose={() => setShowSearch(false)} stretch />
-                  </NavSearchSmall>
-                )}
-                <Box flex={false} style={{ width: '40px' }}>
-                  <MenuButton
-                    plain
-                    onClick={() => {
-                      setShowSearch(false);
-                      setShowMenu(!showMenu);
-                    }}
-                    label={
-                      showMenu ? (
-                        <MenuOpen color="white" />
-                      ) : (
-                        <Menu color="white" />
-                      )
-                    }
-                  />
-                </Box>
-              </Box>
-            )}
-            {isMinSize(size, 'large') && (
+            {(isMinSize(size, 'large') || !showSearch) && (
               <NavPrimary>
                 <Primary
-                  onClick={() => nav('explore')}
+                  onClick={() => {
+                    setShowMenu(false);
+                    nav(ROUTES.EXPLORE);
+                  }}
                   label={
-                    <PrimaryLabel>
+                    <PrimaryLabel
+                      gap={isMinSize(size, 'large') ? 'xsmall' : 'hair'}
+                    >
                       <IconImgWrap>
                         <IconImgHelper />
                         <IconImg src={ICONS.EXPLORE} alt="" />
                       </IconImgWrap>
-                      <Text>
+                      <Text
+                        size={isMinSize(size, 'medium') ? 'medium' : 'xxxsmall'}
+                      >
                         <FormattedMessage {...commonMessages.navExplore} />
                       </Text>
                     </PrimaryLabel>
                   }
-                  active={contentType === 'explore'}
+                  active={contentType === ROUTES.EXPLORE}
                 />
-                {pagesPrimary.map(p => (
-                  <Primary
-                    key={p.key}
-                    onClick={() => navPage(p.key)}
-                    label={
-                      <PrimaryLabel>
-                        <IconImgWrap>
-                          <IconImgHelper />
-                          <IconImg src={p.icon} alt="" />
-                        </IconImgWrap>
-                        <Text>
-                          {commonMessages[`page_${p.key}`] && (
-                            <FormattedMessage
-                              {...commonMessages[`page_${p.key}`]}
-                            />
-                          )}
-                        </Text>
-                      </PrimaryLabel>
-                    }
-                    active={contentType === 'page' && contentId === p.key}
-                  />
-                ))}
+                <Primary
+                  onClick={() => {
+                    setShowMenu(false);
+                    nav(ROUTES.ANALYSE);
+                  }}
+                  label={
+                    <PrimaryLabel
+                      gap={isMinSize(size, 'large') ? 'xsmall' : 'hair'}
+                    >
+                      <IconImgWrap>
+                        <IconImgHelper />
+                        <IconImg src={ICONS.ANALYSIS} alt="" />
+                      </IconImgWrap>
+                      <Text
+                        size={isMinSize(size, 'medium') ? 'medium' : 'xxxsmall'}
+                      >
+                        <FormattedMessage {...commonMessages.navAnalyse} />
+                      </Text>
+                    </PrimaryLabel>
+                  }
+                  active={contentType === ROUTES.ANALYSE}
+                />
+                {isMinSize(size, 'medium') &&
+                  pagesPrimary.map(p => (
+                    <Primary
+                      key={p.key}
+                      onClick={() => navPage(p.key)}
+                      label={
+                        <PrimaryLabel
+                          gap={isMinSize(size, 'large') ? 'xsmall' : 'hair'}
+                        >
+                          <IconImgWrap>
+                            <IconImgHelper />
+                            <IconImg src={p.icon} alt="" />
+                          </IconImgWrap>
+                          <Text
+                            size={
+                              isMinSize(size, 'medium') ? 'medium' : 'xxsmall'
+                            }
+                          >
+                            {commonMessages[`page_${p.key}`] && (
+                              <FormattedMessage
+                                {...commonMessages[`page_${p.key}`]}
+                              />
+                            )}
+                          </Text>
+                        </PrimaryLabel>
+                      }
+                      active={contentType === 'page' && contentId === p.key}
+                    />
+                  ))}
               </NavPrimary>
             )}
             {isMinSize(size, 'large') && (
@@ -356,43 +389,113 @@ function Header({ nav, navHome, navPage, path }) {
                 </NavSearch>
               </Box>
             )}
+            {isMaxSize(size, 'medium') && (
+              <Box
+                direction="row"
+                justify="center"
+                fill={showSearch ? true : 'vertical'}
+                flex={{ grow: 0 }}
+              >
+                {!showSearch && (
+                  <Box
+                    flex={false}
+                    style={{
+                      width: isMaxSize(size, 'small') ? '40px' : '50px',
+                    }}
+                  >
+                    <MenuButton
+                      onClick={() => {
+                        setShowMenu(false);
+                        setShowSearch(!showSearch);
+                      }}
+                      label={<SearchIcon color="white" size="medium" />}
+                    />
+                  </Box>
+                )}
+                {!showSearch && (
+                  <Box
+                    flex={false}
+                    style={{
+                      width: isMaxSize(size, 'small') ? '40px' : '50px',
+                    }}
+                  >
+                    <MenuButton
+                      plain
+                      onClick={() => {
+                        setShowSearch(false);
+                        setShowMenu(!showMenu);
+                      }}
+                      label={
+                        showMenu ? (
+                          <MenuOpen color="white" />
+                        ) : (
+                          <Menu color="white" />
+                        )
+                      }
+                    />
+                  </Box>
+                )}
+                {showSearch && (
+                  <NavSearchSmall>
+                    <Search onClose={() => setShowSearch(false)} stretch />
+                  </NavSearchSmall>
+                )}
+              </Box>
+            )}
           </NavBar>
           {isMaxSize(size, 'medium') && showMenu && (
             <Layer
               full="horizontal"
-              margin={{ top: '50px' }}
+              margin={{ top: `${getHeaderHeight(size)}px` }}
               onClickOutside={() => setShowMenu(false)}
               responsive={false}
               modal={false}
               animate={false}
               position="top"
+              style={{ zIndex: 1300 }}
             >
               <Box
                 background="brand-2"
                 elevation="medium"
                 style={{ borderTop: '1px solid white' }}
+                pad={{ top: 'small', bottom: 'medium' }}
               >
-                <Secondary
-                  onClick={() => {
-                    setShowMenu(false);
-                    nav('explore');
-                  }}
-                  label={<FormattedMessage {...commonMessages.navExplore} />}
-                  active={contentType === 'explore'}
-                />
-                {pagesArray.map(p => (
-                  <Secondary
-                    key={p.key}
-                    onClick={() => {
-                      setShowMenu(false);
-                      navPage(p.key);
-                    }}
-                    label={
-                      <FormattedMessage {...commonMessages[`page_${p.key}`]} />
-                    }
-                    active={contentType === 'page' && contentId === p.key}
-                  />
-                ))}
+                {isMinSize(size, 'medium') &&
+                  pagesOther.map(p => (
+                    <Secondary
+                      key={p.key}
+                      onClick={() => {
+                        setShowMenu(false);
+                        navPage(p.key);
+                      }}
+                      label={
+                        <Text size="medium">
+                          <FormattedMessage
+                            {...commonMessages[`page_${p.key}`]}
+                          />
+                        </Text>
+                      }
+                      active={contentType === 'page' && contentId === p.key}
+                    />
+                  ))}
+                {isMaxSize(size, 'small') &&
+                  pagesArray.map(p => (
+                    <Secondary
+                      key={p.key}
+                      onClick={() => {
+                        setShowMenu(false);
+                        navPage(p.key);
+                      }}
+                      label={
+                        <Text size="xsmall">
+                          <FormattedMessage
+                            {...commonMessages[`page_${p.key}`]}
+                          />
+                        </Text>
+                      }
+                      active={contentType === 'page' && contentId === p.key}
+                    />
+                  ))}
                 <LocaleToggle />
               </Box>
             </Layer>
@@ -417,8 +520,16 @@ const mapStateToProps = createStructuredSelector({
 
 export function mapDispatchToProps(dispatch) {
   return {
-    nav: path => dispatch(navigate(path)),
-    navHome: () => dispatch(navigateHome()),
+    nav: path => {
+      dispatch(resetGroupsQuery());
+      dispatch(resetGroupsQueryNav());
+      dispatch(navigate(path));
+    },
+    navHome: () => {
+      dispatch(resetGroupsQuery());
+      dispatch(resetGroupsQueryNav());
+      dispatch(navigateHome());
+    },
     navPage: id => dispatch(navigatePage(id)),
   };
 }

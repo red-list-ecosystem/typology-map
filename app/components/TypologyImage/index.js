@@ -57,7 +57,7 @@ function TypologyImage({ typology, inText, locale }) {
           <LoadingIndicator />
         </LoadingWrap>
       )}
-      <Box as="figure">
+      <Box as="figure" fill="vertical">
         <Image
           fill
           fit="cover"

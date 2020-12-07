@@ -10,3 +10,4 @@ package-lock.json
 npm-debug.log
 .idea
 .firebase
+firebase-debug.log

@@ -14,6 +14,8 @@ import { createStructuredSelector } from 'reselect';
 import styled from 'styled-components';
 import { Box, ResponsiveContext } from 'grommet';
 
+import { ROUTES } from 'config';
+
 import {
   selectBiome,
   selectRealmForBiome,
@@ -25,6 +27,7 @@ import {
   loadContent,
   navigateTypology,
   navigate,
+  resetGroupsQuery,
   setFullscreenImage,
 } from 'containers/App/actions';
 
@@ -41,8 +44,9 @@ import TypologyHeader from 'components/TypologyHeader';
 import TypologyContent from 'components/TypologyContent';
 import TypologyImage from 'components/TypologyImage';
 import RelatedHint from 'components/RelatedHint';
+import AnalysisShortcut from 'components/AnalysisShortcut';
 
-import { isMinSize } from 'utils/responsive';
+import { isMinSize, isMaxSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
 
@@ -61,6 +65,7 @@ export function ExploreGroup({
   navBiome,
   navRealm,
   navExplore,
+  navAnalysis,
   intl,
   biome,
   realm,
@@ -129,6 +134,7 @@ export function ExploreGroup({
                   <HTMLWrapper
                     innerhtml={content}
                     classNames={['rle-html-group']}
+                    truncate={isMaxSize(size, 'small')}
                     inject={[
                       {
                         tag: '[DIAGRAM]',
@@ -143,10 +149,15 @@ export function ExploreGroup({
                       },
                     ]}
                   />
+                  <AnalysisShortcut
+                    type="group"
+                    name={typology.title[locale]}
+                    onClick={() => navAnalysis(typology.biome)}
+                  />
                 </TypologyContent>
               </ColumnMainContent>
             </ColumnMain>
-            {isMinSize(size, 'large') && (
+            {isMinSize(size, 'medium') && (
               <ColumnAside>
                 <AsideNavSection>
                   <AsideNavLabel
@@ -185,8 +196,8 @@ export function ExploreGroup({
                     items={sortedGroups}
                     level={2}
                     locale={locale}
-                    navItem={id => navGroup(id)}
-                    navParent={() => navBiome(biome.id)}
+                    selectItem={id => navGroup(id)}
+                    selectParent={() => navBiome(biome.id)}
                     activeId={typology.id}
                   />
                 </AsideNavSection>
@@ -210,6 +221,7 @@ ExploreGroup.propTypes = {
   navBiome: PropTypes.func.isRequired,
   navRealm: PropTypes.func.isRequired,
   navExplore: PropTypes.func.isRequired,
+  navAnalysis: PropTypes.func.isRequired,
   onSetFullscreenImage: PropTypes.func.isRequired,
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   intl: intlShape.isRequired,
@@ -238,6 +250,22 @@ function mapDispatchToProps(dispatch) {
     navExplore: () => dispatch(navigate('explore')),
     onSetFullscreenImage: args =>
       dispatch(setFullscreenImage('GroupDiagram', args)),
+    navAnalysis: biome => {
+      dispatch(resetGroupsQuery());
+      dispatch(
+        navigate(
+          {
+            pathname: ROUTES.ANALYSE,
+            search: {
+              biome,
+            },
+          },
+          {
+            deleteSearchParams: ['realm', 'info', 'active'],
+          },
+        ),
+      );
+    },
   };
 }
 

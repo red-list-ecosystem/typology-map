@@ -13,6 +13,8 @@ import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { Box, ResponsiveContext } from 'grommet';
 
+import { ROUTES } from 'config';
+
 import {
   selectContentByKey,
   selectBiomesForRealmWithStats,
@@ -22,8 +24,10 @@ import {
   loadContent,
   navigateTypology,
   navigate,
+  resetGroupsQuery,
 } from 'containers/App/actions';
 
+import AnalysisShortcut from 'components/AnalysisShortcut';
 import ColumnMain from 'components/ColumnMain';
 import ColumnMainContent from 'components/ColumnMainContent';
 import ColumnAside from 'components/ColumnAside';
@@ -39,7 +43,7 @@ import TypologyImage from 'components/TypologyImage';
 import TypologyContent from 'components/TypologyContent';
 import RelatedHint from 'components/RelatedHint';
 
-import { isMinSize } from 'utils/responsive';
+import { isMinSize, isMaxSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
 import messages from './messages';
@@ -51,6 +55,7 @@ export function ExploreRealm({
   biomes,
   navBiome,
   navExplore,
+  navAnalysis,
   intl,
   realms,
 }) {
@@ -82,6 +87,7 @@ export function ExploreRealm({
                   <HTMLWrapper
                     innerhtml={content}
                     classNames={['rle-html-realm']}
+                    truncate={isMaxSize(size, 'small')}
                   />
                   {biomes && (
                     <NavGridChildren
@@ -93,12 +99,21 @@ export function ExploreRealm({
                     />
                   )}
                   {realms && (
-                    <RelatedHint typology={typology} realms={realms} />
+                    <RelatedHint
+                      typology={typology}
+                      realms={realms}
+                      wrap={false}
+                    />
                   )}
+                  <AnalysisShortcut
+                    type="realm"
+                    name={typology.title[locale]}
+                    onClick={() => navAnalysis(typology.id)}
+                  />
                 </TypologyContent>
               </ColumnMainContent>
             </ColumnMain>
-            {isMinSize(size, 'large') && (
+            {isMinSize(size, 'medium') && (
               <ColumnAside>
                 <AsideNavSection>
                   <AsideNavLabel
@@ -121,7 +136,7 @@ export function ExploreRealm({
                     items={sortedBiomes}
                     level={1}
                     locale={locale}
-                    navItem={id => navBiome(id)}
+                    selectItem={id => navBiome(id)}
                   />
                 </AsideNavSection>
               </ColumnAside>
@@ -140,6 +155,7 @@ ExploreRealm.propTypes = {
   onLoadContent: PropTypes.func.isRequired,
   navBiome: PropTypes.func.isRequired,
   navExplore: PropTypes.func.isRequired,
+  navAnalysis: PropTypes.func.isRequired,
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   intl: intlShape.isRequired,
 };
@@ -161,7 +177,24 @@ function mapDispatchToProps(dispatch) {
       dispatch(loadContent('realms', path));
     },
     navBiome: id => dispatch(navigateTypology('biomes', id)),
-    navExplore: () => dispatch(navigate('explore')),
+    navExplore: () => dispatch(navigate(ROUTES.EXPLORE)),
+    navAnalysis: realm => {
+      dispatch(resetGroupsQuery());
+      dispatch(
+        navigate(
+          {
+            pathname: ROUTES.ANALYSE,
+            search: {
+              realm,
+              biome: '',
+            },
+          },
+          {
+            deleteSearchParams: ['biome', 'info', 'active'],
+          },
+        ),
+      );
+    },
   };
 }
 

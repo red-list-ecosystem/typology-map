@@ -78,4 +78,73 @@ export default defineMessages({
     id: `${scope}.mapAttributionBasemapsLink`,
     defaultMessage: 'Improve the basemaps',
   },
+  mapAttributionRegionsTitle: {
+    id: `${scope}.mapAttributionRegionsTitle`,
+    defaultMessage: 'Predefined regions for analysis',
+  },
+  mapAttributionRegionsInfo: {
+    id: `${scope}.mapAttributionRegionsInfo`,
+    defaultMessage:
+      'Countries and their Exclusive Economic Zones by Flanders Marine Institute (version 3, consulted on 2020-10-02)',
+  },
+  mapAttributionRegionsLinkURL: {
+    id: `${scope}.mapAttributionRegionsLinkURL`,
+    defaultMessage: 'http://www.vliz.be/en/imis?dasid=6406&doiid=403',
+  },
+  mapAttributionRegionsLink: {
+    id: `${scope}.mapAttributionRegionsLink`,
+    defaultMessage: 'More info and download',
+  },
+  drawError: {
+    id: `${scope}.drawError`,
+    defaultMessage: 'Edges cannot intersect',
+  },
+  drawToolbarPolygon: {
+    id: `${scope}.drawToolbarPolygon`,
+    defaultMessage: 'Draw a polygon',
+  },
+  drawToolbarReactangle: {
+    id: `${scope}.drawToolbarReactangle`,
+    defaultMessage: 'Draw a rectangle',
+  },
+  drawToolbarEdit: {
+    id: `${scope}.drawToolbarEdit`,
+    defaultMessage: 'Update area',
+  },
+  drawToolbarRemove: {
+    id: `${scope}.drawToolbarRemove`,
+    defaultMessage: 'Delete area',
+  },
+  drawTooltipEdit: {
+    id: `${scope}.drawTooltipEdit`,
+    defaultMessage: "Drag handles to edit, then 'Save' to update area",
+  },
+  drawTooltipEditSub: {
+    id: `${scope}.drawTooltipEditSub`,
+    defaultMessage: "Click 'Cancel' to undo changes",
+  },
+  drawTooltipRemove: {
+    id: `${scope}.drawTooltipRemove`,
+    defaultMessage: "Click on area, then 'Save' to delete area",
+  },
+  drawTooltipRectangleStart: {
+    id: `${scope}.drawTooltipRectangleStart`,
+    defaultMessage: 'Click and drag to draw rectangular area',
+  },
+  drawTooltipRectangleEnd: {
+    id: `${scope}.drawTooltipRectangleEnd`,
+    defaultMessage: 'Release mouse to finish drawing',
+  },
+  drawTooltipPolygonStart: {
+    id: `${scope}.drawTooltipPolygonStart`,
+    defaultMessage: 'Click to start drawing polygon',
+  },
+  drawTooltipPolygonCont: {
+    id: `${scope}.drawTooltipPolygonCont`,
+    defaultMessage: 'Click to continue drawing polygon',
+  },
+  drawTooltipPolygonEnd: {
+    id: `${scope}.drawTooltipPolygonEnd`,
+    defaultMessage: 'Click to add points or click first point to close area',
+  },
 });

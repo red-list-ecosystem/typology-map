@@ -30,6 +30,18 @@ const Label = styled(Text)`
   font-weight: 600;
 `;
 
+const ContentWrap = styled(p => (
+  <Box
+    pad={{
+      horizontal: 'small',
+      vertical: 'small',
+    }}
+    justify="between"
+    {...p}
+  />
+))`
+  ${({ size }) => (size === 'small' ? 'display: block' : '')};
+`;
 const IconWrap = styled(p => <Box align="center" flex={false} {...p} />)`
   min-width: 100px;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
@@ -63,20 +75,15 @@ export function CardRealm({ onCardClick, label, realm, icon, ...rest }) {
               margin={{ vertical: 'xsmall' }}
               pad={{ horizontal: 'small' }}
               direction={isMinSize(size, 'medium') ? 'column' : 'row'}
-              gap={isMinSize(size, 'medium') ? 'hair' : 'small'}
+              gap="{isMinSize(size, 'medium') ? 'hair' : 'xxsmall'}"
               align={isMinSize(size, 'medium') ? 'start' : 'center'}
               flex={{ shrink: 0 }}
             >
               <IconWrap fill={isMinSize(size, 'medium') ? 'horizontal' : false}>
                 {icon}
               </IconWrap>
-              <Box
-                flex={isMinSize(size, 'medium')}
-                pad={{
-                  horizontal: 'small',
-                  vertical: 'small',
-                }}
-                justify="between"
+              <ContentWrap
+                size={size}
                 fill={isMinSize(size, 'medium') ? 'horizontal' : false}
               >
                 <Label>{label}</Label>
@@ -102,7 +109,7 @@ export function CardRealm({ onCardClick, label, realm, icon, ...rest }) {
                     </ChildLabel>
                   </Box>
                 </Box>
-              </Box>
+              </ContentWrap>
             </Box>
           </ButtonCard>
         </Styled>

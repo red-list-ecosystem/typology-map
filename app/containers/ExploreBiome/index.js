@@ -13,6 +13,10 @@ import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { Box, ResponsiveContext } from 'grommet';
 
+import { ROUTES } from 'config';
+
+import { sortGroups } from 'utils/store';
+
 import {
   selectRealm,
   selectRealms,
@@ -23,6 +27,7 @@ import {
   loadContent,
   navigateTypology,
   navigate,
+  resetGroupsQuery,
 } from 'containers/App/actions';
 
 import ColumnMain from 'components/ColumnMain';
@@ -39,8 +44,9 @@ import TopGraphic from 'components/TopGraphic';
 import TypologyImage from 'components/TypologyImage';
 import TypologyContent from 'components/TypologyContent';
 import RelatedHint from 'components/RelatedHint';
+import AnalysisShortcut from 'components/AnalysisShortcut';
 
-import { isMinSize } from 'utils/responsive';
+import { isMinSize, isMaxSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
 
@@ -54,6 +60,7 @@ export function ExploreBiome({
   navGroup,
   navRealm,
   navExplore,
+  navAnalysis,
   intl,
   realm,
   realms,
@@ -65,15 +72,8 @@ export function ExploreBiome({
 
   const { locale } = intl;
 
-  const sortedGroups =
-    groups &&
-    groups.sort((a, b) => {
-      const aTrueId =
-        a.id.indexOf('.') > -1 ? parseInt(a.id.split('.')[1], 0) : a.id;
-      const bTrueId =
-        b.id.indexOf('.') > -1 ? parseInt(b.id.split('.')[1], 0) : a.id;
-      return aTrueId > bTrueId ? 1 : -1;
-    });
+  const sortedGroups = sortGroups(groups);
+
   return (
     <ResponsiveContext.Consumer>
       {size => (
@@ -106,6 +106,7 @@ export function ExploreBiome({
                   <HTMLWrapper
                     innerhtml={content}
                     classNames={['rle-html-biome']}
+                    truncate={isMaxSize(size, 'small')}
                   />
                   {groups && (
                     <NavGridChildren
@@ -116,10 +117,15 @@ export function ExploreBiome({
                       parent={typology}
                     />
                   )}
+                  <AnalysisShortcut
+                    type="biome"
+                    name={typology.title[locale]}
+                    onClick={() => navAnalysis(typology.id)}
+                  />
                 </TypologyContent>
               </ColumnMainContent>
             </ColumnMain>
-            {isMinSize(size, 'large') && (
+            {isMinSize(size, 'medium') && (
               <ColumnAside>
                 <AsideNavSection>
                   <AsideNavLabel
@@ -156,7 +162,7 @@ export function ExploreBiome({
                     items={sortedGroups}
                     level={2}
                     locale={locale}
-                    navItem={id => navGroup(id)}
+                    selectItem={id => navGroup(id)}
                   />
                 </AsideNavSection>
               </ColumnAside>
@@ -177,6 +183,7 @@ ExploreBiome.propTypes = {
   navGroup: PropTypes.func.isRequired,
   navRealm: PropTypes.func.isRequired,
   navExplore: PropTypes.func.isRequired,
+  navAnalysis: PropTypes.func.isRequired,
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   intl: intlShape.isRequired,
 };
@@ -199,7 +206,23 @@ function mapDispatchToProps(dispatch) {
     },
     navGroup: id => dispatch(navigateTypology('groups', id)),
     navRealm: id => dispatch(navigateTypology('realms', id)),
-    navExplore: () => dispatch(navigate('explore')),
+    navExplore: () => dispatch(navigate(ROUTES.EXPLORE)),
+    navAnalysis: biome => {
+      dispatch(resetGroupsQuery());
+      dispatch(
+        navigate(
+          {
+            pathname: ROUTES.ANALYSE,
+            search: {
+              biome,
+            },
+          },
+          {
+            deleteSearchParams: ['realm', 'info', 'active'],
+          },
+        ),
+      );
+    },
   };
 }
 

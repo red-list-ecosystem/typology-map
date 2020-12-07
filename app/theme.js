@@ -37,13 +37,13 @@ export const sizes = {
 export const dimensions = {
   header: {
     // by breakpoint
-    height: [50, 50, 95, 95, 95],
+    height: [50, 70, 95, 95, 95],
     zIndex: 1200,
     primaryIcons: 40,
   },
   aside: {
     // by breakpoint
-    width: [0, 0, 350, 420, 550],
+    width: [0, 280, 300, 420, 550],
     zIndex: 1150,
   },
   realmIcons: {
@@ -51,7 +51,7 @@ export const dimensions = {
     multi: 56,
   },
   realmIconsSmall: {
-    single: 68,
+    single: 60,
     multi: 48,
   },
   icons: {
@@ -93,9 +93,11 @@ export const colors = {
   white: '#ffffff',
   // active: '#ffffff',
   brand: '#C60000', // rle red
+  'brand-dark': '#B10000', // rle red
   'brand-2': '#00183A', // rle blue
-  'brand-dark': '#8D0202', // rle red
   'brand-2-dark': '#011126', // rle blue
+  'brand-2-light': '#1A76F8', // rle red
+  'brand-2-lighter': '#85B6FB', // rle red
   focus: '#333333',
   hover: '#AD190F',
   // placeholder: '#ffffff',
@@ -130,12 +132,14 @@ export const colors = {
 
 // grommet text
 const text = {
+  xxxsmall: { size: '11px', height: '13px', maxWidth: '500px' },
   xxsmall: { size: '12px', height: '15px', maxWidth: '500px' },
   xsmall: { size: '13px', height: '16px', maxWidth: '600px' },
   small: { size: '14px', height: '18px', maxWidth: '700px' },
   medium: { size: '16px', height: '22px', maxWidth: '800px' },
   large: { size: '18px', height: '24px', maxWidth: '800px' },
-  xlarge: { size: '22px', height: '30px', maxWidth: '800px' },
+  larger: { size: '24px', height: '30px', maxWidth: '800px' },
+  xlarge: { size: '28px', height: '36px', maxWidth: '800px' },
   xxlarge: { size: '40px', height: '48px', maxWidth: '800px' },
   xxxlarge: { size: '60px', height: '75px', maxWidth: '800px' },
 };
