@@ -14,6 +14,8 @@ The project wiki: [Wiki](https://github.com/red-list-ecosystem/typology-map/wiki
 
 ### Related repositories
 Content: [red-list-ecosystem/typology-map-content](https://github.com/red-list-ecosystem/typology-map-content)
+Data: [red-list-ecosystem/typology-map-data](https://github.com/red-list-ecosystem/typology-map-data)
+API/analyse: [red-list-ecosystem/typology-map-analyse](https://github.com/red-list-ecosystem/typology-map-analyse)
 
 ---
 
