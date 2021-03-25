@@ -157,6 +157,7 @@ export const QUERY_REGIONS_LAYER = {
     weight: 0.5,
     opacity: 1,
     fillOpacity: 0,
+    dashArray: 4,
   },
 };
 
