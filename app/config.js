@@ -31,7 +31,7 @@ export const PATHS = {
     'https://red-list-ecosystem.github.io/typology-map-content/assets/uploads',
   GROUPS_QUERY_API: {
     areasbyregion:
-      'https://psiqp2ecjf.execute-api.ap-southeast-2.amazonaws.com/default/rle_areasbyregion_api',
+      'https://qavzskt524.execute-api.ap-southeast-2.amazonaws.com/default/rle_areasbyregion2_api',
     vector:
       'https://v1mnzwc793.execute-api.ap-southeast-2.amazonaws.com/default/rle_intersects_vectors_api',
     raster:
