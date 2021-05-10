@@ -44,15 +44,6 @@ export const getLatLngsFromArea = area => {
 export const getRegionFeatureTitle = feature => {
   if (!feature) return '';
   const featureTitle = feature.properties[QUERY_REGIONS_LAYER.featureTitle];
-  const featureTitleAdd =
-    feature.properties[QUERY_REGIONS_LAYER.featureTitleAdditional];
-  const featureTitleAdd2 =
-    feature.properties[QUERY_REGIONS_LAYER.featureTitleAdditional2];
-  if (featureTitle === featureTitleAdd) {
-    return featureTitle;
-  }
-  if (featureTitleAdd2 && featureTitleAdd2 !== '') {
-    return `${featureTitleAdd}/${featureTitleAdd2} (${featureTitle})`;
-  }
-  return `${featureTitleAdd} (${featureTitle})`;
+  const featureType = feature.properties[QUERY_REGIONS_LAYER.featureType];
+  return `${featureTitle} (${featureType})`;
 };
