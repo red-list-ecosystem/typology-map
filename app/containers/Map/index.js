@@ -27,6 +27,7 @@ import {
   MAP_OPTIONS,
   PAGES,
   QUERY_REGIONS_LAYER,
+  QUERY_REGIONS_LAYER_MASK,
 } from 'config';
 
 import {
@@ -56,7 +57,7 @@ import saga from './saga';
 import {
   getAreaWKTFromLayer,
   getLatLngsFromArea,
-  getRegionFeatureTitle,
+  getRegionFeatureTooltip,
 } from './utils';
 
 import Settings from './Settings';
@@ -171,6 +172,8 @@ export function Map({
 
   const [tilesLoading, setTilesLoading] = useState(false);
   const [zoom, setZoom] = useState(MAP_OPTIONS.zoom);
+
+  const { locale } = intl;
 
   // init map
   useEffect(() => {
@@ -541,7 +544,7 @@ export function Map({
                   queryRegion,
                 ),
               onEachFeature: (feature, jsonLayer) => {
-                const featureTitle = getRegionFeatureTitle(feature);
+                const featureTitle = getRegionFeatureTooltip(feature, locale);
                 jsonLayer.bindTooltip(featureTitle, { sticky: true });
                 jsonLayer.on({
                   mouseover: e => onRegionMouseOver(e, feature),
@@ -551,6 +554,27 @@ export function Map({
               },
             });
             queryAreaLayerGroupRef.current.addLayer(regions);
+          }
+          if (QUERY_REGIONS_LAYER_MASK) {
+            if (!layers[QUERY_REGIONS_LAYER_MASK.key]) {
+              onLoadLayer(
+                QUERY_REGIONS_LAYER_MASK.key,
+                QUERY_REGIONS_LAYER_MASK,
+              );
+            }
+            if (layers[QUERY_REGIONS_LAYER_MASK.key]) {
+              const layer = layers[QUERY_REGIONS_LAYER_MASK.key];
+              const regions = L.geoJSON(layer.data, {
+                style: {
+                  ...QUERY_REGIONS_LAYER_MASK.style,
+                  interactive: true,
+                },
+                // onEachFeature: (feature, jsonLayer) => {
+                //   jsonLayer.bindTooltip('Overlapping area', { sticky: true });
+                // },
+              });
+              queryAreaLayerGroupRef.current.addLayer(regions);
+            }
           }
         }
       }
@@ -585,7 +609,7 @@ export function Map({
                     queryRegion,
                   ),
                 onEachFeature: (feature, jsonLayer) => {
-                  const featureTitle = getRegionFeatureTitle(feature);
+                  const featureTitle = getRegionFeatureTooltip(feature, locale);
                   jsonLayer.bindTooltip(featureTitle, { sticky: true });
                   jsonLayer.on({
                     mouseover: e => onRegionMouseOver(e, feature),
@@ -600,6 +624,27 @@ export function Map({
                 },
               });
               queryAreaLayerGroupRef.current.addLayer(regions);
+            }
+            if (QUERY_REGIONS_LAYER_MASK) {
+              if (!layers[QUERY_REGIONS_LAYER_MASK.key]) {
+                onLoadLayer(
+                  QUERY_REGIONS_LAYER_MASK.key,
+                  QUERY_REGIONS_LAYER_MASK,
+                );
+              }
+              if (layers[QUERY_REGIONS_LAYER_MASK.key]) {
+                const layer = layers[QUERY_REGIONS_LAYER_MASK.key];
+                const regions = L.geoJSON(layer.data, {
+                  style: {
+                    ...QUERY_REGIONS_LAYER_MASK.style,
+                    interactive: true,
+                  },
+                  // onEachFeature: (feature, jsonLayer) => {
+                  //   jsonLayer.bindTooltip('Overlapping area', { sticky: true });
+                  // },
+                });
+                queryAreaLayerGroupRef.current.addLayer(regions);
+              }
             }
           }
         }
@@ -827,7 +872,7 @@ Map.propTypes = {
   updateQueryRegion: PropTypes.func,
   onSetRegionHighlight: PropTypes.func,
   onOpenAnalysePanel: PropTypes.func,
-  regionHighlight: PropTypes.number,
+  regionHighlight: PropTypes.string,
   size: PropTypes.string,
   mode: PropTypes.string,
   drawMode: PropTypes.string,

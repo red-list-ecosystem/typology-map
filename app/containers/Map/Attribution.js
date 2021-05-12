@@ -149,14 +149,32 @@ export function Attribution({ navFeedback, intl }) {
                   <FormattedMessage {...messages.mapAttributionRegionsTitle} />
                 </StyledHeading>
                 <Paragraph size="xxsmall" margin={{ bottom: 'xsmall' }}>
-                  <FormattedMessage {...messages.mapAttributionRegionsInfo} />
+                  <FormattedMessage
+                    {...messages.mapAttributionRegionsInfoADM}
+                  />
                 </Paragraph>
                 <AttLinkUnderlined
                   href={intl.formatMessage(
-                    messages.mapAttributionRegionsLinkURL,
+                    messages.mapAttributionRegionsLinkURLADM,
                   )}
                 >
-                  <FormattedMessage {...messages.mapAttributionRegionsLink} />
+                  <FormattedMessage
+                    {...messages.mapAttributionRegionsLinkADM}
+                  />
+                </AttLinkUnderlined>
+                <Paragraph size="xxsmall" margin={{ bottom: 'xsmall' }}>
+                  <FormattedMessage
+                    {...messages.mapAttributionRegionsInfoLME}
+                  />
+                </Paragraph>
+                <AttLinkUnderlined
+                  href={intl.formatMessage(
+                    messages.mapAttributionRegionsLinkURLLME,
+                  )}
+                >
+                  <FormattedMessage
+                    {...messages.mapAttributionRegionsLinkLME}
+                  />
                 </AttLinkUnderlined>
               </Box>
             </Box>

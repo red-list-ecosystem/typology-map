@@ -82,17 +82,31 @@ export default defineMessages({
     id: `${scope}.mapAttributionRegionsTitle`,
     defaultMessage: 'Predefined regions for analysis',
   },
-  mapAttributionRegionsInfo: {
-    id: `${scope}.mapAttributionRegionsInfo`,
+  mapAttributionRegionsInfoADM: {
+    id: `${scope}.mapAttributionRegionsInfoADM`,
     defaultMessage:
-      'Countries and their Exclusive Economic Zones by Flanders Marine Institute (version 3, consulted on 2020-10-02)',
+      'Country boundaries adapted from "World Bank Official Boundaries" (consulted on 2021-05-03)',
   },
-  mapAttributionRegionsLinkURL: {
-    id: `${scope}.mapAttributionRegionsLinkURL`,
-    defaultMessage: 'http://www.vliz.be/en/imis?dasid=6406&doiid=403',
+  mapAttributionRegionsLinkURLADM: {
+    id: `${scope}.mapAttributionRegionsLinkURLADM`,
+    defaultMessage:
+      'https://datacatalog.worldbank.org/dataset/world-bank-official-boundaries',
   },
-  mapAttributionRegionsLink: {
-    id: `${scope}.mapAttributionRegionsLink`,
+  mapAttributionRegionsLinkADM: {
+    id: `${scope}.mapAttributionRegionsLinkADM`,
+    defaultMessage: 'More info and download',
+  },
+  mapAttributionRegionsInfoLME: {
+    id: `${scope}.mapAttributionRegionsInfoLME`,
+    defaultMessage:
+      'Marine regions adapted from "Pope, Addy. (2017). Large Marine Ecosystems of the World" (consulted on 2021-05-04)',
+  },
+  mapAttributionRegionsLinkURLLME: {
+    id: `${scope}.mapAttributionRegionsLinkURLLME`,
+    defaultMessage: 'https://doi.org/10.7488/ds/1902',
+  },
+  mapAttributionRegionsLinkLME: {
+    id: `${scope}.mapAttributionRegionsLinkLME`,
     defaultMessage: 'More info and download',
   },
   drawError: {

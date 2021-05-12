@@ -67,9 +67,13 @@ export default defineMessages({
     id: `${scope}.selectRegionFieldLabel`,
     defaultMessage: 'Select region',
   },
-  selectRegionFieldPlaceholder: {
-    id: `${scope}.selectRegionFieldPlaceholder`,
-    defaultMessage: 'Select region (EEZ)',
+  selectRegionFieldPlaceholderADM: {
+    id: `${scope}.selectRegionFieldPlaceholderADM`,
+    defaultMessage: 'Select country',
+  },
+  selectRegionFieldPlaceholderLME: {
+    id: `${scope}.selectRegionFieldPlaceholderLME`,
+    defaultMessage: 'Select marine region',
   },
   defineAreaFieldPlaceholder: {
     id: `${scope}.defineAreaFieldPlaceholder`,

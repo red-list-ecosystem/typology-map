@@ -149,14 +149,31 @@ export const QUERY_REGIONS_LAYER = {
   source: 'github',
   type: 'topojson',
   path: 'analysis/lme_admin.topo.json',
-  mask: 'analysis/disputed.topo.json',
   featureId: 'region_id',
   featureTitle: 'title_EN',
-  featureType: 'regiontype',
+  featureTypeField: 'regiontype',
+  featureIgnoreField: 'ignore',
+  featureType: {
+    en: {
+      LME: 'Marine Area',
+      ADM: 'Country',
+    },
+  },
   style: {
     weight: 0.5,
     opacity: 1,
     fillOpacity: 0.05,
+  },
+};
+export const QUERY_REGIONS_LAYER_MASK = {
+  key: 'query-regions-mask',
+  source: 'github',
+  type: 'topojson',
+  path: 'analysis/disputed.topo.json',
+  style: {
+    weight: 0,
+    opacity: 0,
+    fillOpacity: 0,
   },
 };
 

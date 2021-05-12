@@ -152,10 +152,8 @@ export function RegionInputOptions({
                     </Text>
                   </LabelWrap>
                 }
-                onFocus={() => onSetRegionHighlight(parseInt(option.id, 10))}
-                onMouseOver={() =>
-                  onSetRegionHighlight(parseInt(option.id, 10))
-                }
+                onFocus={() => onSetRegionHighlight(option.id)}
+                onMouseOver={() => onSetRegionHighlight(option.id)}
                 onMouseOut={() => onSetRegionHighlight()}
                 onBlur={() => onSetRegionHighlight()}
                 onClick={() => {
