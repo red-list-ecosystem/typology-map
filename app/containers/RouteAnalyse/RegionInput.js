@@ -11,6 +11,8 @@ import { groupBy } from 'lodash/collection';
 
 import { Close, Down, Up } from 'components/Icons';
 
+import TooltipRegionAttribution from 'components/Tooltip/TooltipRegionAttribution';
+
 // import { setRegionHighlight } from 'containers/Map/actions';
 import { selectLayerByKey } from 'containers/Map/selectors';
 import { getRegionFeatureTitle } from 'containers/Map/utils';
@@ -20,6 +22,10 @@ import { QUERY_REGIONS_LAYER } from 'config';
 import quasiEquals from 'utils/quasi-equals';
 import { isMinSize, isMaxSize } from 'utils/responsive';
 
+import Hint from 'components/Hint';
+
+import FieldWrap from './FieldWrap';
+import FieldLabel from './FieldLabel';
 import RegionInputOptions from './RegionInputOptions';
 import messages from './messages';
 
@@ -94,90 +100,108 @@ export function RegionInput({
   return (
     <ResponsiveContext.Consumer>
       {size => (
-        <Box direction="row" gap="small">
-          {Object.keys(optionsGrouped).filter(key => !!key).map(regionType => {
-            const groupOptions = optionsGrouped[regionType];
-            const isActive = activeRegion && activeRegion.type === regionType;
-            const isOpen = open === regionType;
-            const dropButtonRef = regionType === 'ADM' ? dropButtonRefADM : dropButtonRefLME;
-            return (
-              <Box basis="1/2" key={regionType}>
-                {isActive && (
-                  <Active>
-                    <LabelWrap align="center">
-                      <Title>{activeRegion.title}</Title>
-                    </LabelWrap>
-                    <CloseButton
-                      onClick={() => {
-                        onSubmit('');
-                        setOpen('');
-                      }}
-                      icon={<Close size="medium" color="black" />}
-                    />
-                  </Active>
-                )}
-                {!isActive && (
-                  <DropButton
-                    ref={dropButtonRef}
-                    label={
-                      <Select pad={{ right: '3px' }}>
-                        <Text color="dark-4">
-                          {messages[`selectRegionFieldPlaceholder${regionType}`] && (
-                            <FormattedMessage
-                              {...messages[`selectRegionFieldPlaceholder${regionType}`]}
-                            />
-                          )}
-                        </Text>
-                        {isOpen ? <Up color="black" /> : <Down color="black" />}
-                      </Select>
-                    }
-                    onClick={() => setOpen(isOpen ? null : regionType)}
-                  />
-                )}
-                {isMinSize(size, 'medium') &&
-                  !isActive &&
-                  isOpen &&
-                  dropButtonRef &&
-                  dropButtonRef.current && (
-                  <Drop
-                    stretch
-                    target={dropButtonRef.current}
-                    align={{ top: 'bottom', right: 'right' }}
-                    style={{ maxWidth: dropButtonRef.current.offsetWidth }}
-                  >
-                    <RegionInputOptions
-                      dropWidth={`${dropButtonRef.current.offsetWidth}px`}
-                      onSubmit={id => {
-                        onSubmit(id);
-                        setOpen(null);
-                      }}
-                      options={groupOptions}
-                    />
-                  </Drop>
-                )}
-                {isMaxSize(size, 'small') &&
-                  !isActive &&
-                  isOpen && (
-                  <Layer
-                    full
-                    plain
-                    onEsc={() => setOpen(null)}
-                  >
-                    <RegionInputOptions
-                      dropWidth="100%"
-                      onSubmit={id => {
-                        onSubmit(id);
-                        setOpen(null);
-                      }}
-                      options={groupOptions}
-                      inLayer
-                      onClose={() => setOpen(null)}
-                    />
-                  </Layer>
-                )}
-              </Box>
-            );
-          })}
+        <Box>
+          <Hint>
+            <FormattedMessage {...messages.selectRegionInstructions} />
+          </Hint>
+          <FieldWrap margin={{ top: 'medium' }}>
+            <Box
+              direction="row"
+              gap="small"
+              align="center"
+              margin={{ top: 'xxsmall', bottom: 'xsmall' }}
+            >
+              <FieldLabel noMargin>
+                <FormattedMessage {...messages.selectRegionFieldLabel} />
+              </FieldLabel>
+              <TooltipRegionAttribution />
+            </Box>
+            <Box direction="row" gap="small">
+              {Object.keys(optionsGrouped).filter(key => !!key).map(regionType => {
+                const groupOptions = optionsGrouped[regionType];
+                const isActive = activeRegion && activeRegion.type === regionType;
+                const isOpen = open === regionType;
+                const dropButtonRef = regionType === 'ADM' ? dropButtonRefADM : dropButtonRefLME;
+                return (
+                  <Box basis="1/2" key={regionType}>
+                    {isActive && (
+                      <Active>
+                        <LabelWrap align="center">
+                          <Title>{activeRegion.title}</Title>
+                        </LabelWrap>
+                        <CloseButton
+                          onClick={() => {
+                            onSubmit('');
+                            setOpen('');
+                          }}
+                          icon={<Close size="medium" color="black" />}
+                        />
+                      </Active>
+                    )}
+                    {!isActive && (
+                      <DropButton
+                        ref={dropButtonRef}
+                        label={
+                          <Select pad={{ right: '3px' }}>
+                            <Text color="dark-4">
+                              {messages[`selectRegionFieldPlaceholder${regionType}`] && (
+                                <FormattedMessage
+                                  {...messages[`selectRegionFieldPlaceholder${regionType}`]}
+                                />
+                              )}
+                            </Text>
+                            {isOpen ? <Up color="black" /> : <Down color="black" />}
+                          </Select>
+                        }
+                        onClick={() => setOpen(isOpen ? null : regionType)}
+                      />
+                    )}
+                    {isMinSize(size, 'medium') &&
+                      !isActive &&
+                      isOpen &&
+                      dropButtonRef &&
+                      dropButtonRef.current && (
+                      <Drop
+                        stretch
+                        target={dropButtonRef.current}
+                        align={{ top: 'bottom', right: 'right' }}
+                        style={{ maxWidth: dropButtonRef.current.offsetWidth }}
+                      >
+                        <RegionInputOptions
+                          dropWidth={`${dropButtonRef.current.offsetWidth}px`}
+                          onSubmit={id => {
+                            onSubmit(id);
+                            setOpen(null);
+                          }}
+                          options={groupOptions}
+                        />
+                      </Drop>
+                    )}
+                    {isMaxSize(size, 'small') &&
+                      !isActive &&
+                      isOpen && (
+                      <Layer
+                        full
+                        plain
+                        onEsc={() => setOpen(null)}
+                      >
+                        <RegionInputOptions
+                          dropWidth="100%"
+                          onSubmit={id => {
+                            onSubmit(id);
+                            setOpen(null);
+                          }}
+                          options={groupOptions}
+                          inLayer
+                          onClose={() => setOpen(null)}
+                        />
+                      </Layer>
+                    )}
+                  </Box>
+                );
+              })}
+            </Box>
+          </FieldWrap>
         </Box>
       )}
     </ResponsiveContext.Consumer>
