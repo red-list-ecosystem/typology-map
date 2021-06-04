@@ -116,14 +116,17 @@ export function RegionInput({
               </FieldLabel>
               <TooltipRegionAttribution />
             </Box>
-            <Box direction="row" gap="small">
+            <Box
+              direction={isMinSize(size, 'medium') ? 'row' : 'column'}
+              gap="small"
+            >
               {Object.keys(optionsGrouped).filter(key => !!key).map(regionType => {
                 const groupOptions = optionsGrouped[regionType];
                 const isActive = activeRegion && activeRegion.type === regionType;
                 const isOpen = open === regionType;
                 const dropButtonRef = regionType === 'ADM' ? dropButtonRefADM : dropButtonRefLME;
                 return (
-                  <Box basis="1/2" key={regionType}>
+                  <Box basis={isMinSize(size, 'medium') ? '1/2' : '1'} key={regionType}>
                     {isActive && (
                       <Active>
                         <LabelWrap align="center">
