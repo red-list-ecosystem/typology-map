@@ -64,7 +64,9 @@ const BrandWrap = styled(Box)`
   }
 `;
 
-const LogoWrap = styled(p => <Box flex={{ shrink: 0 }} {...p} />)`
+const LogoWrap = styled(p => (
+  <Box justify="center" flex={{ shrink: 0 }} {...p} />
+))`
   width: 40px;
   height: 100%;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
