@@ -8,13 +8,17 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { injectIntl, intlShape } from 'react-intl';
-import { Button, TextInput } from 'grommet';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import { Button, TextInput, Box } from 'grommet';
 import styled from 'styled-components';
 
-import { Close } from 'components/Icons';
-
 import { toggleDraw } from 'containers/App/actions';
+
+import { Close } from 'components/Icons';
+import Hint from 'components/Hint';
+
+import FieldWrap from './FieldWrap';
+import FieldLabel from './FieldLabel';
 
 import messages from './messages';
 
@@ -48,27 +52,39 @@ export function AreaInput({ area, onSubmit, intl, onToggleDraw }) {
   }, []);
 
   return (
-    <TextInputWrap>
-      <AreaTextInput
-        value={area}
-        placeholder={intl.formatMessage(messages.defineAreaFieldPlaceholder)}
-        onChange={e => {
-          const cursor = e.target.selectionStart;
-          const element = e.target;
-          window.requestAnimationFrame(() => {
-            element.selectionStart = cursor;
-            element.selectionEnd = cursor;
-          });
-          onSubmit(e.target.value);
-        }}
-      />
-      {area && (
-        <CloseButton
-          onClick={() => onSubmit('')}
-          icon={<Close size="medium" color="black" />}
-        />
-      )}
-    </TextInputWrap>
+    <Box>
+      <Hint>
+        <FormattedMessage {...messages.defineAreaInstructions} />
+      </Hint>
+      <FieldWrap margin={{ top: 'medium' }}>
+        <FieldLabel>
+          <FormattedMessage {...messages.defineAreaFieldLabel} />
+        </FieldLabel>
+        <TextInputWrap>
+          <AreaTextInput
+            value={area}
+            placeholder={intl.formatMessage(
+              messages.defineAreaFieldPlaceholder,
+            )}
+            onChange={e => {
+              const cursor = e.target.selectionStart;
+              const element = e.target;
+              window.requestAnimationFrame(() => {
+                element.selectionStart = cursor;
+                element.selectionEnd = cursor;
+              });
+              onSubmit(e.target.value);
+            }}
+          />
+          {area && (
+            <CloseButton
+              onClick={() => onSubmit('')}
+              icon={<Close size="medium" color="black" />}
+            />
+          )}
+        </TextInputWrap>
+      </FieldWrap>
+    </Box>
   );
 }
 

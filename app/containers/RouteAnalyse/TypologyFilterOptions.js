@@ -1,12 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
 import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
 import { Button, Box, Text } from 'grommet';
 import styled from 'styled-components';
-
-import { setRegionHighlight } from 'containers/Map/actions';
 
 import { Close } from 'components/Icons';
 import messages from './messages';
@@ -115,7 +111,6 @@ export function TypologyFilterOptions({
 TypologyFilterOptions.propTypes = {
   onSubmit: PropTypes.func,
   onClose: PropTypes.func,
-  onSetRegionHighlight: PropTypes.func,
   options: PropTypes.array,
   dropWidth: PropTypes.string,
   inLayer: PropTypes.bool,
@@ -123,17 +118,6 @@ TypologyFilterOptions.propTypes = {
   type: PropTypes.string,
 };
 
-export function mapDispatchToProps(dispatch) {
-  return {
-    onSetRegionHighlight: regionId => dispatch(setRegionHighlight(regionId)),
-  };
-}
-
-const withConnect = connect(
-  null,
-  mapDispatchToProps,
-);
-
 // export default RouteExplore;
-export default compose(withConnect)(injectIntl(TypologyFilterOptions));
+export default injectIntl(TypologyFilterOptions);
 // export default RegionInputOptions;

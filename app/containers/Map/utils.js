@@ -44,15 +44,18 @@ export const getLatLngsFromArea = area => {
 export const getRegionFeatureTitle = feature => {
   if (!feature) return '';
   const featureTitle = feature.properties[QUERY_REGIONS_LAYER.featureTitle];
-  const featureTitleAdd =
-    feature.properties[QUERY_REGIONS_LAYER.featureTitleAdditional];
-  const featureTitleAdd2 =
-    feature.properties[QUERY_REGIONS_LAYER.featureTitleAdditional2];
-  if (featureTitle === featureTitleAdd) {
-    return featureTitle;
-  }
-  if (featureTitleAdd2 && featureTitleAdd2 !== '') {
-    return `${featureTitleAdd}/${featureTitleAdd2} (${featureTitle})`;
-  }
-  return `${featureTitleAdd} (${featureTitle})`;
+  return featureTitle;
+};
+export const getRegionFeatureTooltip = (feature, locale) => {
+  if (!feature) return '';
+  const featureTitle = getRegionFeatureTitle(feature);
+  if (!locale) return featureTitle;
+  const featureType =
+    QUERY_REGIONS_LAYER.featureType[locale][
+      feature.properties[QUERY_REGIONS_LAYER.featureTypeField]
+    ];
+  return `<div>
+    <div><small>${featureType}</small></div>
+    <div><strong>${featureTitle}</strong></div>
+  </div>`;
 };

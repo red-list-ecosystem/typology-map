@@ -17,7 +17,7 @@ function TooltipOccurrence() {
       color="light-grey"
       component={
         <Box flex={false}>
-          <Heading level={4} style={{ margin: '10px 0 5px' }}>
+          <Heading level={5} style={{ margin: '10px 0 5px' }}>
             <FormattedMessage {...commonMessages.occurrence} />
           </Heading>
           <Paragraph margin={{ bottom: 'small' }}>
