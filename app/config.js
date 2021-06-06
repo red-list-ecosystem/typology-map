@@ -31,7 +31,7 @@ export const PATHS = {
     'https://red-list-ecosystem.github.io/typology-map-content/assets/uploads',
   GROUPS_QUERY_API: {
     areasbyregion:
-      'https://psiqp2ecjf.execute-api.ap-southeast-2.amazonaws.com/default/rle_areasbyregion_api',
+      'https://qavzskt524.execute-api.ap-southeast-2.amazonaws.com/default/rle_areasbyregion2_api',
     vector:
       'https://v1mnzwc793.execute-api.ap-southeast-2.amazonaws.com/default/rle_intersects_vectors_api',
     raster:
@@ -148,14 +148,31 @@ export const QUERY_REGIONS_LAYER = {
   key: 'query-regions',
   source: 'github',
   type: 'topojson',
-  path: 'auxiliary/eez_wrapped_simpl.topo.json',
-  featureId: 'OGC_FID',
-  featureTitle: 'UNION',
-  featureTitleAdditional: 'SOVEREIGN1',
-  featureTitleAdditional2: 'SOVEREIGN2',
+  path: 'analysis/lme_admin.topo.json',
+  featureId: 'region_id',
+  featureTitle: 'title_EN',
+  featureTypeField: 'regiontype',
+  featureIgnoreField: 'ignore',
+  featureType: {
+    en: {
+      LME: 'Marine Area',
+      ADM: 'Country',
+    },
+  },
   style: {
     weight: 0.5,
     opacity: 1,
+    fillOpacity: 0.05,
+  },
+};
+export const QUERY_REGIONS_LAYER_MASK = {
+  key: 'query-regions-mask',
+  source: 'github',
+  type: 'topojson',
+  path: 'analysis/disputed.topo.json',
+  style: {
+    weight: 0,
+    opacity: 0,
     fillOpacity: 0,
   },
 };

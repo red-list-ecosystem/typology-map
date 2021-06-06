@@ -23,7 +23,6 @@ import {
 import { setQueryType } from 'containers/App/actions';
 
 import AsideNavSection from 'components/AsideNavSection';
-import Hint from 'components/Hint';
 import ButtonPrimary from 'components/ButtonPrimary';
 
 import messages from './messages';
@@ -31,8 +30,6 @@ import messages from './messages';
 import { testArea, getOpenArea } from './utils';
 
 import StepTitle from './StepTitle';
-import FieldWrap from './FieldWrap';
-import FieldLabel from './FieldLabel';
 import AreaInput from './AreaInput';
 import RegionInput from './RegionInput';
 
@@ -143,54 +140,36 @@ export function ConfigureArea({
                   />
                 </Box>
               )}
-              <Hint>
-                {actualQueryType === 'area' && (
-                  <FormattedMessage {...messages.defineAreaInstructions} />
-                )}
-                {actualQueryType === 'region' && (
-                  <FormattedMessage {...messages.selectRegionInstructions} />
-                )}
-              </Hint>
-              <FieldWrap margin={{ top: 'medium' }}>
-                <FieldLabel>
-                  {actualQueryType === 'area' && (
-                    <FormattedMessage {...messages.defineAreaFieldLabel} />
-                  )}
-                  {actualQueryType === 'region' && (
-                    <FormattedMessage {...messages.selectRegionFieldLabel} />
-                  )}
-                </FieldLabel>
-                {actualQueryType === 'area' && (
-                  <AreaInput
-                    area={getOpenArea(area)}
-                    onSubmit={value => {
-                      const points = value.split(',');
-                      if (points[0] === points[points.length - 1]) {
-                        updateQuery({
-                          ...queryArgs,
-                          area: value,
-                        });
-                      } else {
-                        updateQuery({
-                          ...queryArgs,
-                          area: `${value}, ${points[0]}`,
-                        });
-                      }
-                    }}
-                  />
-                )}
-                {actualQueryType === 'region' && (
-                  <RegionInput
-                    regionId={regionId}
-                    onSubmit={value => {
+              {actualQueryType === 'area' && (
+                <AreaInput
+                  area={getOpenArea(area)}
+                  onSubmit={value => {
+                    const points = value.split(',');
+                    if (points[0] === points[points.length - 1]) {
                       updateQuery({
                         ...queryArgs,
-                        regionId: value,
+                        area: value,
                       });
-                    }}
-                  />
-                )}
-              </FieldWrap>
+                    } else {
+                      updateQuery({
+                        ...queryArgs,
+                        area: `${value}, ${points[0]}`,
+                      });
+                    }
+                  }}
+                />
+              )}
+              {actualQueryType === 'region' && (
+                <RegionInput
+                  regionId={regionId}
+                  onSubmit={value => {
+                    updateQuery({
+                      ...queryArgs,
+                      regionId: value,
+                    });
+                  }}
+                />
+              )}
             </AsideNavSection>
             <Box direction="row" gap="small" margin={{ top: 'small' }}>
               <SubmitButton
