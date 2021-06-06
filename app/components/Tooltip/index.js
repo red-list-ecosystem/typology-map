@@ -102,7 +102,7 @@ function Tooltip({
                 />
               </StyledDrop>
             )}
-            {(over || open) && openModal && (
+            {open && openModal && (
               <Layer
                 position="center"
                 elevation="small"
