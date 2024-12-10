@@ -10,8 +10,6 @@ module.exports = {
   ],
   plugins: [
     'styled-components',
-    '@babel/plugin-transform-class-properties',
-    '@babel/plugin-syntax-dynamic-import',
   ],
   env: {
     production: {
