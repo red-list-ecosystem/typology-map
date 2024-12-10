@@ -54,6 +54,9 @@ export default [
       "import/resolver": {
         webpack: {
           config: "./internals/webpack/webpack.prod.babel.js",
+        }, 
+        node: {
+          extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },
       },
       "react": {
