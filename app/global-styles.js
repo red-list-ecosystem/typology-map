@@ -149,11 +149,11 @@ const GlobalStyle = createGlobalStyle`
     vertical-align: baseline;
     background: transparent;
     quotes: none;
-    &:after {
+    &::after {
       content: '';
       content: none;
     }
-    &:before {
+    &::before {
       content: '';
       content: none;
     }
