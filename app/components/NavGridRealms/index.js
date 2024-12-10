@@ -23,7 +23,6 @@ const Label = styled.h4`
 `;
 
 function NavGridRealms({ label, items, itemClick, locale, type }) {
-  /* eslint-disable react/no-array-index-key */
   return (
     <div>
       <Label>{`${items.length} ${label}`}</Label>
@@ -43,7 +42,6 @@ function NavGridRealms({ label, items, itemClick, locale, type }) {
       </WrapGrid>
     </div>
   );
-  /* eslint-enable react/no-array-index-key */
 }
 
 NavGridRealms.propTypes = {

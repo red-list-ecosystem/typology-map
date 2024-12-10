@@ -97,7 +97,7 @@ export function RegionInputOptions({
       try {
         const regex = new RegExp(regExMultipleWords(search), 'i');
         return regex.test(cleanupSearchTarget(option.title));
-      } catch (e) {
+      } catch {
         return true;
       }
     }

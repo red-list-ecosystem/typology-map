@@ -29,7 +29,6 @@ import {
   SET_ANALYSE_PANEL,
 } from './constants';
 
-/* eslint-disable no-param-reassign */
 const locales = appLocales.reduce((memo, locale) => {
   memo[locale] = null;
   return memo;
@@ -55,7 +54,6 @@ const initialGroupsByArea = {
 
 // The initial state of the App
 export const initialState = {
-  /* eslint-disable no-param-reassign */
   typologyConfig: Object.keys(TYPOLOGY).reduce((memo, key) => {
     memo[key] = null;
     return memo;
@@ -93,7 +91,6 @@ export const initialState = {
   analysePanelOpen: true,
 };
 
-/* eslint-disable default-case, no-param-reassign */
 const appReducer = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
@@ -105,7 +102,7 @@ const appReducer = (state = initialState, action) =>
         draft.typologyConfigReady[action.key] = action.time;
         break;
       case TYPOLOGY_LOAD_ERROR:
-        console.log('Error loading typology data... giving up!', action.key);
+        // console.log('Error loading typology data... giving up!', action.key);
         draft.typologyConfigRequested[action.key] = action.time;
         break;
       case CONTENT_REQUESTED:
@@ -125,10 +122,7 @@ const appReducer = (state = initialState, action) =>
           };
         break;
       case CONTENT_LOAD_ERROR:
-        console.log(
-          'Error loading content ... giving up!',
-          `${action.contentType}/${action.key}`,
-        );
+        // console.log('Error loading content ... giving up!',`${action.contentType}/${action.key}`);
         if (draft.contentRequested[action.contentType])
           draft.contentRequested[action.contentType][action.key] = {
             [action.locale]: action.time,
@@ -168,10 +162,7 @@ const appReducer = (state = initialState, action) =>
         draft.groupsByAreaReady.groups[action.layerType] = action.time;
         break;
       case GROUPS_QUERY_ERROR:
-        console.log(
-          'Error querying groups ... giving up!',
-          `${action.layerType}`,
-        );
+        // console.log('Error querying groups ... giving up!',`${action.layerType}`);
         draft.groupsByAreaQueried.groups[action.layerType] = action.time;
         break;
       case TOGGLE_DRAW:

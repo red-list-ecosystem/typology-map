@@ -81,7 +81,6 @@ function AsideNavTypologyButton({
   active,
   ...rest
 }) {
-  /* eslint-disable react/no-danger */
   return (
     <ResponsiveContext.Consumer>
       {size => (
@@ -136,7 +135,6 @@ function AsideNavTypologyButton({
       )}
     </ResponsiveContext.Consumer>
   );
-  /* eslint-enable react/no-danger */
 }
 // {!stats && (
 //   <Text size="xxsmall">

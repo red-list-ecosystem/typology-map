@@ -27,7 +27,6 @@ import { translationMessages } from 'i18n';
 import configureStore from 'configureStore';
 
 // Load the favicon and the .htaccess file
-/* eslint-disable import/no-unresolved, import/extensions */
 import '!file-loader?name=[name].[ext]!./images/favicon.ico';
 import '!file-loader?name=[name].[ext]!./images/favicon-16x16.png';
 import '!file-loader?name=[name].[ext]!./images/favicon-32x32.png';
@@ -38,7 +37,6 @@ import '!file-loader?name=[name].[ext]!./images/browserconfig.xml';
 import '!file-loader?name=[name].[ext]!./images/mstile-150x150.png';
 import '!file-loader?name=[name].[ext]!./images/safari-pinned-tab.svg';
 import 'file-loader?name=.htaccess!./.htaccess';
-/* eslint-enable import/no-unresolved, import/extensions */
 
 // Create redux store with history
 const initialState = {};
@@ -87,7 +85,7 @@ if (!window.Intl) {
 // we do not want it installed
 // updating SW according to https://github.com/react-boilerplate/react-boilerplate/issues/2750#issuecomment-536215256
 if (process.env.NODE_ENV === 'production') {
-  const runtime = require('offline-plugin/runtime'); // eslint-disable-line global-require
+  const runtime = require('offline-plugin/runtime');
   runtime.install({
     onUpdateReady: () => {
       // Tells to new SW to take control immediately

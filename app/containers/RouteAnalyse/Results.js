@@ -100,7 +100,6 @@ export function Results({
   let { area, realm, biome, occurrence, regionId } = queryArgs;
 
   if (queriesReady && queryArgsFromQuery) {
-    /* eslint-disable prefer-destructuring */
     area = queryArgsFromQuery.area;
     regionId = queryArgsFromQuery.regionId;
     realm = queryArgsFromQuery.realm;
