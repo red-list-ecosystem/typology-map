@@ -6,18 +6,18 @@ import globals from "globals";
 import babelParser from "@babel/eslint-parser";
 import js from "@eslint/js";
 import { includeIgnoreFile } from "@eslint/compat";
-
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 const gitignorePath = path.resolve(__dirname, ".gitignore");
 
 export default [
   js.configs.recommended,
   includeIgnoreFile(gitignorePath),
+  eslintPluginPrettierRecommended,
   {
     plugins: {
       "redux-saga": reduxSaga,
@@ -59,11 +59,10 @@ export default [
           extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },
       },
-      "react": {
-        "version": "detect",
+      react: {
+        version: "detect",
       },
     },
-
     rules: {
       "arrow-parens": 0,
       "arrow-body-style": [2, "as-needed"],
@@ -82,11 +81,9 @@ export default [
       "import/no-named-as-default": 0,
       "import/no-unresolved": 2,
       "import/prefer-default-export": 0,
-
       "indent": [2, 2, {
         "SwitchCase": 1,
       }],
-
       "jsx-a11y/aria-props": 2,
       "jsx-a11y/heading-has-content": 0,
       "jsx-a11y/label-has-for": 2,
@@ -98,19 +95,15 @@ export default [
       "no-confusing-arrow": 0,
       "no-console": 1,
       "no-use-before-define": 0,
-
       "no-unused-vars": "error",
-
       "prefer-template": 2,
       "class-methods-use-this": 0,
       "react/forbid-prop-types": 0,
       "react/jsx-first-prop-new-line": [2, "multiline"],
       "react/jsx-filename-extension": 0,
       "react/jsx-no-target-blank": 0,
-
       "react/jsx-uses-react": "error",
       "react/jsx-uses-vars": "error",
-
       "react/no-array-index-key": 0,
       "react/require-default-props": 0,
       "react/require-extension": 0,
@@ -121,6 +114,5 @@ export default [
       "redux-saga/yield-effects": 2,
       "require-yield": 0,
       "import/no-webpack-loader-syntax": 0,
-
     },
   }];
