@@ -20,7 +20,7 @@ export function injectReducerFactory(store, isValid) {
     )
       return;
 
-    store.injectedReducers[key] = reducer; 
+    store.injectedReducers[key] = reducer;
     store.replaceReducer(createReducer(store.injectedReducers));
   };
 }

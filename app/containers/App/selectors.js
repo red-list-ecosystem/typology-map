@@ -77,18 +77,15 @@ export const selectRouterPathNamed = createSelector(
 /**
  * Get the language locale
  */
-export const selectLocale = createSelector(
-  selectRouterPath,
-  path => {
-    if (path) {
-      const splitPath = path.split('/');
-      return splitPath.length > 1 && appLocales.indexOf(splitPath[1]) >= 0
-        ? splitPath[1]
-        : DEFAULT_LOCALE;
-    }
-    return DEFAULT_LOCALE;
-  },
-);
+export const selectLocale = createSelector(selectRouterPath, path => {
+  if (path) {
+    const splitPath = path.split('/');
+    return splitPath.length > 1 && appLocales.indexOf(splitPath[1]) >= 0
+      ? splitPath[1]
+      : DEFAULT_LOCALE;
+  }
+  return DEFAULT_LOCALE;
+});
 
 export const selectDrawActive = createSelector(
   selectGlobal,

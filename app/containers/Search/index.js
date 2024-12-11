@@ -223,9 +223,6 @@ const mapStateToProps = state => ({
   realms: selectRealms(state),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(injectIntl(Search));

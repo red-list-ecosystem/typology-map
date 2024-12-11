@@ -224,10 +224,7 @@ const mapStateToProps = createStructuredSelector({
   layer: state => selectLayerByKey(state, QUERY_REGIONS_LAYER.key),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  null,
-);
+const withConnect = connect(mapStateToProps, null);
 
 // export default RouteExplore;
 export default compose(withConnect)(RegionInput);

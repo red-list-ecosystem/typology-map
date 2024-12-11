@@ -198,8 +198,14 @@ export const MAP_OPTIONS = {
   maxZoom: 10,
   attributionControl: false,
   zoomControl: false,
-  maxBounds: [[-90, -315], [90, 315]],
-  defaultBounds: [[85, -180], [-85, 180]],
+  maxBounds: [
+    [-90, -315],
+    [90, 315],
+  ],
+  defaultBounds: [
+    [85, -180],
+    [-85, 180],
+  ],
 };
 
 export const GEOJSON = {

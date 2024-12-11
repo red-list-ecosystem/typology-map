@@ -101,10 +101,7 @@ export function mapDispatchToProps(dispatch) {
   };
 }
 
-const withConnect = connect(
-  null,
-  mapDispatchToProps,
-);
+const withConnect = connect(null, mapDispatchToProps);
 
 // export default RouteExplore;
 export default compose(withConnect)(injectIntl(AreaInput));

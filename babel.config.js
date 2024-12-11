@@ -8,9 +8,7 @@ module.exports = {
     ],
     '@babel/preset-react',
   ],
-  plugins: [
-    'styled-components',
-  ],
+  plugins: ['styled-components'],
   env: {
     production: {
       only: ['app'],

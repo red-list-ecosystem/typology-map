@@ -165,10 +165,7 @@ const mapStateToProps = createStructuredSelector({
   queryArgsFromQuery: state => selectGroupsByAreaArgs(state),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  null,
-);
+const withConnect = connect(mapStateToProps, null);
 
 // export default RouteExplore;
 export default compose(withConnect)(injectIntl(ConfigureFilters));

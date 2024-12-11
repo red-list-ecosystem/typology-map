@@ -72,7 +72,7 @@ export function ejectSagaFactory(store, isValid) {
         // Clean up in production; in development we need `descriptor.saga` for hot reloading
         if (process.env.NODE_ENV === 'production') {
           // Need some value to be able to detect `ONCE_TILL_UNMOUNT` sagas in `injectSaga`
-          store.injectedSagas[key] = 'done'; 
+          store.injectedSagas[key] = 'done';
         }
       }
     }
