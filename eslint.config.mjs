@@ -2,13 +2,14 @@ import reduxSaga from 'eslint-plugin-redux-saga';
 import react from 'eslint-plugin-react';
 import jsxA11Y from 'eslint-plugin-jsx-a11y';
 import importPlugin from 'eslint-plugin-import';
-import globals from 'globals';
-import babelParser from '@babel/eslint-parser';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import eslintPluginHooks from 'eslint-plugin-react-hooks';
 import js from '@eslint/js';
 import { includeIgnoreFile } from '@eslint/compat';
+import babelParser from '@babel/eslint-parser';
+import globals from 'globals';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,13 +18,14 @@ const gitignorePath = path.resolve(__dirname, '.gitignore');
 export default [
   js.configs.recommended,
   includeIgnoreFile(gitignorePath),
+  importPlugin.flatConfigs.recommended,
   eslintPluginPrettierRecommended,
   {
     plugins: {
       'redux-saga': reduxSaga,
       react,
       'jsx-a11y': jsxA11Y,
-      import: importPlugin,
+      'react-hooks': eslintPluginHooks,
     },
 
     languageOptions: {
@@ -32,18 +34,14 @@ export default [
         ...globals.node,
         ...globals.jest,
       },
-
       parser: babelParser,
       ecmaVersion: 'latest',
       sourceType: 'module',
-
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
         },
-
         requireConfigFile: false,
-
         babelOptions: {
           presets: ['@babel/preset-react'],
         },
@@ -63,6 +61,7 @@ export default [
         version: 'detect',
       },
     },
+
     rules: {
       'arrow-parens': 0,
       'arrow-body-style': [2, 'as-needed'],
@@ -121,6 +120,7 @@ export default [
       'redux-saga/yield-effects': 2,
       'require-yield': 0,
       'import/no-webpack-loader-syntax': 0,
+      ...eslintPluginHooks.configs.recommended.rules,
     },
   },
 ];
