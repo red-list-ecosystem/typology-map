@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Box, Text, ResponsiveContext, Drop, Layer } from 'grommet';
 import styled from 'styled-components';
 
@@ -160,7 +160,7 @@ TypologyFilter.propTypes = {
   active: PropTypes.object,
   onDismiss: PropTypes.func,
   onSelect: PropTypes.func,
-  intl: intlShape.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default injectIntl(TypologyFilter);

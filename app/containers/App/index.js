@@ -8,7 +8,7 @@
 
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { Helmet } from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -180,7 +180,7 @@ function App({
 }
 
 // App.propTypes = {
-//   intl: intlShape.isRequired,
+//   intl: PropTypes.object.isRequired,
 // };
 
 // export default injectIntl(App);
@@ -193,7 +193,7 @@ App.propTypes = {
   showDisclaimer: PropTypes.bool,
   path: PropTypes.object,
   fullscreenImage: PropTypes.object,
-  intl: intlShape.isRequired,
+  intl: PropTypes.object.isRequired,
   activeGroup: PropTypes.string,
 };
 

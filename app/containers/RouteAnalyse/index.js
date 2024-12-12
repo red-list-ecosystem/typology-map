@@ -156,7 +156,7 @@ RouteAnalyse.propTypes = {
   onQueryGroups: PropTypes.func,
   updateQuery: PropTypes.func,
   onOpenPanel: PropTypes.func,
-  intl: intlShape.isRequired,
+  intl: PropTypes.object.isRequired,
   onShowQueryRegions: PropTypes.func,
   queryType: PropTypes.string,
 };

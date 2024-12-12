@@ -876,7 +876,7 @@ Map.propTypes = {
   size: PropTypes.string,
   mode: PropTypes.string,
   drawMode: PropTypes.string,
-  intl: intlShape.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({

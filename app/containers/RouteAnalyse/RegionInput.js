@@ -217,7 +217,7 @@ RegionInput.propTypes = {
   // onSetRegionHighlight: PropTypes.func,
   regionId: PropTypes.string,
   layer: PropTypes.object,
-  // intl: intlShape.isRequired,
+  // intl: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({

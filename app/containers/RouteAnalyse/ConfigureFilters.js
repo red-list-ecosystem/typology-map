@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { Box, Button } from 'grommet';
-import { FormattedMessage, intlShape, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { selectGroupsByAreaArgs } from 'containers/App/selectors';
 
@@ -152,7 +152,7 @@ export function ConfigureFilters({
 ConfigureFilters.propTypes = {
   queryArgsFromQuery: PropTypes.object,
   queryArgs: PropTypes.object,
-  intl: intlShape.isRequired,
+  intl: PropTypes.object.isRequired,
   updateQuery: PropTypes.func,
   onQueryGroups: PropTypes.func,
   realms: PropTypes.array,

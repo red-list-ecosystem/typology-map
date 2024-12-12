@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Image } from 'grommet';
 import styled, { css } from 'styled-components';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { Expand, Contract } from 'components/Icons';
 
 import LoadingIndicator from 'components/LoadingIndicator';
@@ -123,7 +123,7 @@ GroupDiagram.propTypes = {
   group: PropTypes.object,
   fullscreen: PropTypes.bool,
   onFullscreen: PropTypes.func,
-  intl: intlShape.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default injectIntl(GroupDiagram);

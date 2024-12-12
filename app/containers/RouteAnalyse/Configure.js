@@ -8,7 +8,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { Box, Button, Text, ResponsiveContext } from 'grommet';
 import styled from 'styled-components';
@@ -336,7 +336,7 @@ Configure.propTypes = {
   queryType: PropTypes.string,
   realms: PropTypes.array,
   biomes: PropTypes.array,
-  intl: intlShape.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({

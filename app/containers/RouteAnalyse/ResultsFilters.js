@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import { Box, Text, Button } from 'grommet';
-import { FormattedMessage, intlShape, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { GROUP_LAYER_PROPERTIES } from 'config';
 
@@ -209,7 +209,7 @@ ResultsFilters.propTypes = {
   enableAreaUpdate: PropTypes.func,
   enableFilterUpdate: PropTypes.func,
   activeRegion: PropTypes.object,
-  intl: intlShape.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 // export default RouteExplore;

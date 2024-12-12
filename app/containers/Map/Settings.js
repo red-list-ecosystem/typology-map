@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import styled from 'styled-components';
 import {
   Button,
@@ -339,7 +339,7 @@ Settings.propTypes = {
   opacity: PropTypes.number,
   country: PropTypes.bool,
   zoomToBounds: PropTypes.bool,
-  intl: intlShape.isRequired,
+  intl: PropTypes.object.isRequired,
   onSetOpacity: PropTypes.func,
   onSetBasemap: PropTypes.func,
   onSetCountry: PropTypes.func,

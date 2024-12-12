@@ -62,7 +62,7 @@ export function SectionAnalysis({ intl, onClick }) {
 
 SectionAnalysis.propTypes = {
   onClick: PropTypes.func,
-  intl: intlShape.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default injectIntl(SectionAnalysis);

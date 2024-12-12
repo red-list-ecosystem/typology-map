@@ -54,7 +54,7 @@ RouteExploreOverview.propTypes = {
   realms: PropTypes.array,
   navRealm: PropTypes.func,
   locale: PropTypes.string,
-  intl: intlShape.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({

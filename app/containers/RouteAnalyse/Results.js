@@ -13,7 +13,7 @@ import CsvDownloader from 'react-csv-downloader';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { Box, Text, Button, ResponsiveContext } from 'grommet';
-import { FormattedMessage, intlShape, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import quasiEquals from 'utils/quasi-equals';
 import { isMinSize } from 'utils/responsive';
@@ -328,7 +328,7 @@ Results.propTypes = {
   onCancelQuery: PropTypes.func,
   onSetActiveGroup: PropTypes.func,
   onSetInfoGroup: PropTypes.func,
-  intl: intlShape.isRequired,
+  intl: PropTypes.object.isRequired,
   realms: PropTypes.array,
   biomes: PropTypes.array,
   activeGroup: PropTypes.string,

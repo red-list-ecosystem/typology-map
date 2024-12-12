@@ -8,7 +8,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Text, Box, ResponsiveContext } from 'grommet';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 
 import { formatAreaRelative } from 'utils/numbers';
 import { isMinSize } from 'utils/responsive';
@@ -150,7 +150,7 @@ AsideNavTypologyButton.propTypes = {
   stats: PropTypes.object,
   showAreas: PropTypes.bool,
   active: PropTypes.bool,
-  intl: intlShape.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default injectIntl(AsideNavTypologyButton);

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { Button, Box, Text } from 'grommet';
 import styled from 'styled-components';
 
@@ -114,7 +114,7 @@ TypologyFilterOptions.propTypes = {
   options: PropTypes.array,
   dropWidth: PropTypes.string,
   inLayer: PropTypes.bool,
-  intl: intlShape.isRequired,
+  intl: PropTypes.object.isRequired,
   type: PropTypes.string,
 };
 

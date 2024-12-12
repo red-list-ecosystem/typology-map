@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Helmet } from 'react-helmet';
-import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import styled from 'styled-components';
 import { Box, Text } from 'grommet';
@@ -174,7 +174,7 @@ RoutePage.propTypes = {
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   consent: PropTypes.string,
   match: PropTypes.object,
-  intl: intlShape.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
