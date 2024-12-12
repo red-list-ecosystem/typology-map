@@ -26,18 +26,6 @@ import { translationMessages } from 'i18n';
 
 import configureStore from 'configureStore';
 
-// Load the favicon and the .htaccess file
-import '!file-loader?name=[name].[ext]!./images/favicon.ico';
-import '!file-loader?name=[name].[ext]!./images/favicon-16x16.png';
-import '!file-loader?name=[name].[ext]!./images/favicon-32x32.png';
-import '!file-loader?name=[name].[ext]!./images/android-chrome-192x192.png';
-import '!file-loader?name=[name].[ext]!./images/android-chrome-256x256.png';
-import '!file-loader?name=[name].[ext]!./images/apple-touch-icon.png';
-import '!file-loader?name=[name].[ext]!./images/browserconfig.xml';
-import '!file-loader?name=[name].[ext]!./images/mstile-150x150.png';
-import '!file-loader?name=[name].[ext]!./images/safari-pinned-tab.svg';
-import 'file-loader?name=.htaccess!./.htaccess';
-
 // Create redux store with history
 const initialState = {};
 const store = configureStore(initialState, history);
