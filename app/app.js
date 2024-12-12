@@ -10,7 +10,7 @@ import 'regenerator-runtime/runtime';
 
 // Import all the third party stuff
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import history from 'utils/history';
@@ -29,18 +29,18 @@ import configureStore from 'configureStore';
 // Create redux store with history
 const initialState = {};
 const store = configureStore(initialState, history);
-const MOUNT_NODE = document.getElementById('app');
 
-const render = messages => {
-  ReactDOM.render(
+const container = document.getElementById('app');
+const root = createRoot(container);
+const render = (messages) => {
+  root.render(
     <Provider store={store}>
       <LanguageProvider messages={messages}>
         <ConnectedRouter history={history}>
           <App />
         </ConnectedRouter>
       </LanguageProvider>
-    </Provider>,
-    MOUNT_NODE,
+    </Provider>
   );
 };
 
