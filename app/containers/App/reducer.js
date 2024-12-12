@@ -7,7 +7,7 @@
  *
  */
 
-import produce from 'immer';
+import { produce } from 'immer';
 import { TYPOLOGY, PAGES } from 'config';
 import { appLocales } from 'i18n';
 import {

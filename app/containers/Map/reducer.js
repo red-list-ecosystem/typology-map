@@ -3,7 +3,7 @@
  * Map reducer
  *
  */
-import produce from 'immer';
+import { produce } from 'immer';
 
 import { GROUP_LAYER_OPTIONS } from 'config';
 

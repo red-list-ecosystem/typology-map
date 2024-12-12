@@ -7,7 +7,7 @@
  *
  */
 
-import produce from 'immer';
+import { produce } from 'immer';
 import {
   COOKIECONSENT_CHECKED,
   SET_COOKIECONSENT,
