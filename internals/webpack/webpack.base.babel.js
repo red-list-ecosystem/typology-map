@@ -9,6 +9,8 @@ const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin'); 
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
+const buildWithReport = process.env.withBuildReport ? true : false;
+
 module.exports = options => ({
   mode: options.mode,
   entry: options.entry,
@@ -76,11 +78,13 @@ module.exports = options => ({
     new webpack.ProvidePlugin({
       process: 'process/browser',
     }),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      generateStatsFile: true,
-      statsOptions: { source: false }
-    }),
+    ...(
+      buildWithReport ? [new BundleAnalyzerPlugin({
+        analyzerMode: 'static',
+        generateStatsFile: true,
+        statsOptions: { source: false }
+      })] : []
+    ),
   ],
   resolve: {
     modules: ['node_modules', 'app'],
