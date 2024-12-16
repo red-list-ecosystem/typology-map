@@ -4,10 +4,10 @@
 
 const path = require('path');
 const webpack = require('webpack');
-
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
-const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin'); 
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
+const BundleAnalyzerPlugin =
+  require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const buildWithReport = process.env.withBuildReport ? true : false;
 
@@ -22,7 +22,6 @@ module.exports = options => ({
     },
     options.output,
   ), // Merge with env dependent settings
-  optimization: options.optimization,
   module: {
     rules: [
       {
@@ -51,7 +50,7 @@ module.exports = options => ({
         test: /\.(eot|otf|ttf|woff|woff2)$/,
         type: 'asset/resource',
         generator: {
-          filename: "[name].[ext]",
+          filename: '[name].[ext]',
         },
       },
       {
@@ -66,6 +65,12 @@ module.exports = options => ({
         test: /\.(mp4|webm)$/,
         type: 'asset',
       },
+      {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
     ],
   },
   plugins: [
@@ -78,13 +83,15 @@ module.exports = options => ({
     new webpack.ProvidePlugin({
       process: 'process/browser',
     }),
-    ...(
-      buildWithReport ? [new BundleAnalyzerPlugin({
-        analyzerMode: 'static',
-        generateStatsFile: true,
-        statsOptions: { source: false }
-      })] : []
-    ),
+    ...(buildWithReport
+      ? [
+        new BundleAnalyzerPlugin({
+          analyzerMode: 'static',
+          generateStatsFile: true,
+          statsOptions: { source: false },
+        })
+      ]
+      : []),
   ],
   resolve: {
     modules: ['node_modules', 'app'],
@@ -108,28 +115,26 @@ module.exports = options => ({
           options: {
             // Lossless optimization with custom option
             plugins: [
-              ["gifsicle", { interlaced: true }],
-              ["jpegtran", { progressive: true }],
-              ["optipng", { optimizationLevel: 7 }],
+              ['gifsicle', { interlaced: true }],
+              ['jpegtran', { progressive: true }],
+              ['optipng', { optimizationLevel: 7 }],
               // Svgo configuration here https://github.com/svg/svgo#configuration
               [
-                "svgo",
+                'svgo',
                 {
                   plugins: [
                     {
-                      name: "preset-default",
+                      name: 'preset-default',
                       params: {
                         overrides: {
-                          removeViewBox: false, 
+                          removeViewBox: false,
                         },
                       },
                     },
                   ],
                   addAttributesToSVGElement: {
                     params: {
-                      attributes: [
-                        { xmlns: "http://www.w3.org/2000/svg" },
-                      ],
+                      attributes: [{ xmlns: 'http://www.w3.org/2000/svg' }],
                     },
                   },
                 },
