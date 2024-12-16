@@ -6,7 +6,7 @@ import {
   call,
   fork,
 } from 'redux-saga/effects';
-import { push } from 'connected-react-router';
+import { push } from 'redux-first-history';
 import extend from 'lodash/extend';
 import 'whatwg-fetch';
 import 'url-search-params-polyfill';

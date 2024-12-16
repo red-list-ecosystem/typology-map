@@ -12,8 +12,8 @@ import 'regenerator-runtime/runtime';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { ConnectedRouter } from 'connected-react-router';
-import history from 'utils/history';
+import { HistoryRouter as Router } from 'redux-first-history/rr6';
+// import history from 'utils/history';
 import 'sanitize.css/sanitize.css';
 
 // Import root app
@@ -24,32 +24,27 @@ import LanguageProvider from 'containers/LanguageProvider';
 // Import i18n messages
 import { translationMessages } from 'i18n';
 
-import configureStore from 'configureStore';
-
-// Create redux store with history
-const initialState = {};
-const store = configureStore(initialState, history);
+// Import store and browserHistory
+import { store, history } from 'configureStore';
 
 const container = document.getElementById('app');
 const root = createRoot(container);
-const render = (messages) => {
+const render = messages => {
   root.render(
     <Provider store={store}>
       <LanguageProvider messages={messages}>
-        <ConnectedRouter history={history}>
+        <Router history={history}>
           <App />
-        </ConnectedRouter>
+        </Router>
       </LanguageProvider>
-    </Provider>
+    </Provider>,
   );
 };
 
 if (module.hot) {
-  // Hot reloadable React components and translation json files
   // modules.hot.accept does not accept dynamic dependencies,
   // have to be constants at compile-time
-  module.hot.accept(['./i18n', 'containers/App'], () => {
-    ReactDOM.unmountComponentAtNode(MOUNT_NODE);
+  module.hot.accept('./i18n', () => {
     render(translationMessages);
   });
 }
@@ -66,18 +61,4 @@ if (!window.Intl) {
     });
 } else {
   render(translationMessages);
-}
-
-// Install ServiceWorker and AppCache in the end since
-// it's not most important operation and if main code fails,
-// we do not want it installed
-// updating SW according to https://github.com/react-boilerplate/react-boilerplate/issues/2750#issuecomment-536215256
-if (process.env.NODE_ENV === 'production') {
-  const runtime = require('offline-plugin/runtime');
-  runtime.install({
-    onUpdateReady: () => {
-      // Tells to new SW to take control immediately
-      runtime.applyUpdate();
-    },
-  });
 }

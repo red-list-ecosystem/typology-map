@@ -10,7 +10,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import { Helmet } from 'react-helmet';
-import { Switch, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -130,47 +130,55 @@ function App({
             expandWithAside={path.route === ROUTES.ANALYSE}
             mode={path.route}
           />
-          <Switch>
+          <Routes>
             <Route
               exact
-              path={[`/${ROUTES.HOME}`, `/:locale(${appLocales.join('|')})`]}
-              component={RouteHome}
-            />
-            <Route
-              exact
-              path={[
-                `/${ROUTES.EXPLORE}`,
-                `/:locale(${appLocales.join('|')})/${ROUTES.EXPLORE}`,
-              ]}
-              component={RouteExploreOverview}
+              key="home"
+              path={`/${ROUTES.HOME}`}
+              element={<RouteHome />}
             />
             <Route
               exact
-              path={[
-                `/${ROUTES.EXPLORE}/:level/:id`,
-                `/:locale(${appLocales.join('|')})/${
-                  ROUTES.EXPLORE
-                }/:level/:id`,
-              ]}
-              component={RouteExplore}
+              path={`/:locale(${appLocales.join('|')})`}
+              element={<RouteHome />}
             />
             <Route
               exact
-              path={[
-                `/${ROUTES.ANALYSE}`,
-                `/:locale(${appLocales.join('|')})/${ROUTES.ANALYSE}`,
-              ]}
-              component={RouteAnalyse}
+              path={`/${ROUTES.EXPLORE}`}
+              element={<RouteExploreOverview />}
             />
             <Route
-              path={[
-                `/${ROUTES.PAGE}/:id`,
-                `/:locale(${appLocales.join('|')})/${ROUTES.PAGE}/:id`,
-              ]}
-              component={RoutePage}
+              exact
+              path={`/:locale(${appLocales.join('|')})/${ROUTES.EXPLORE}`}
+              element={<RouteExploreOverview />}
             />
-            <Route path="" component={NotFoundPage} />
-          </Switch>
+            <Route
+              exact
+              path={`/${ROUTES.EXPLORE}/:level/:id`}
+              element={<RouteExplore />}
+            />
+            <Route
+              exact
+              path={`/:locale(${appLocales.join('|')})/${ROUTES.EXPLORE}/:level/:id`}
+              element={<RouteExplore />}
+            />
+            <Route
+              exact
+              path={`/${ROUTES.ANALYSE}`}
+              element={<RouteAnalyse />}
+            />
+            <Route
+              exact
+              path={`/:locale(${appLocales.join('|')})/${ROUTES.ANALYSE}`}
+              element={<RouteAnalyse />}
+            />
+            <Route path={`/${ROUTES.PAGE}/:id`} element={<RoutePage />} />
+            <Route
+              path={`/:locale(${appLocales.join('|')})/${ROUTES.PAGE}/:id`}
+              element={<RoutePage />}
+            />
+            <Route path="" element={<NotFoundPage />} />
+          </Routes>
           {fullscreenImage && <FullscreenImage config={fullscreenImage} />}
         </Content>
         <GlobalStyle />

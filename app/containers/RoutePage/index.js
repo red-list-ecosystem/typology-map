@@ -6,8 +6,8 @@
 
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
+import { connect, useSelector } from 'react-redux';
+import { useParams } from 'react-router';
 import { Helmet } from 'react-helmet';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
@@ -87,22 +87,23 @@ const ContentWrap = styled.div`
   }
 `;
 
-export function RoutePage({
-  match,
-  onLoadContent,
-  content,
-  intl,
-  consent,
-  onShowCookieConsent,
-}) {
-  const config = PAGES[match.params.id];
+export function RoutePage({ onLoadContent, intl, onShowCookieConsent }) {
+  const { id } = useParams();
+  const consent = useSelector(state => selectCookieConsent(state));
+  const content = useSelector(state =>
+    selectContentByKey(state, {
+      contentType: 'pages',
+      key: id,
+    }),
+  );
+  const config = PAGES[id];
   useEffect(() => {
     // kick off loading of page content
-    onLoadContent(match.params.id);
-  }, [match.params.id]);
+    onLoadContent(id);
+  }, [id]);
   const partners = config.partners && config.partners === 'true';
-  const title = commonMessages[`page_${match.params.id}`]
-    ? intl.formatMessage(commonMessages[`page_${match.params.id}`])
+  const title = commonMessages[`page_${id}`]
+    ? intl.formatMessage(commonMessages[`page_${id}`])
     : '';
   return (
     <Styled>
@@ -113,10 +114,8 @@ export function RoutePage({
         image={{
           src: `${PATHS.IMAGES}/${config.backgroundImage}.jpg`,
           credit:
-            commonMessages[`imageCredit_${match.params.id}`] &&
-            intl.formatMessage(
-              commonMessages[`imageCredit_${match.params.id}`],
-            ),
+            commonMessages[`imageCredit_${id}`] &&
+            intl.formatMessage(commonMessages[`imageCredit_${id}`]),
         }}
       />
       <ContentWrap hasPad={partners}>
@@ -177,15 +176,6 @@ RoutePage.propTypes = {
   intl: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = createStructuredSelector({
-  consent: state => selectCookieConsent(state),
-  content: (state, props) =>
-    selectContentByKey(state, {
-      contentType: 'pages',
-      key: props.match.params.id,
-    }),
-});
-
 function mapDispatchToProps(dispatch) {
   return {
     onLoadContent: id => {
@@ -195,6 +185,6 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(null, mapDispatchToProps);
 
 export default compose(withConnect)(injectIntl(RoutePage));

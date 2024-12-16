@@ -1,7 +1,7 @@
 /**
  * The global state selectors
  */
-import { createSelector } from 'reselect';
+import { createSelector } from '@reduxjs/toolkit';
 import { DEFAULT_LOCALE, appLocales } from 'i18n';
 
 import { groupBy } from 'lodash/collection';
