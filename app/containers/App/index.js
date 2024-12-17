@@ -129,9 +129,8 @@ function App({
         <Routes>
           <Route
             exact
-            key="home"
             path={`/${ROUTES.HOME}`}
-            lement={<RouteHome />}
+            element={<RouteHome />}
           />
           <Route
             exact
