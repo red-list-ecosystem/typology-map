@@ -120,7 +120,7 @@ export function Configure({
               flex={false}
               background="white"
             >
-              <SectionTitle aside>
+              <SectionTitle variant="aside">
                 <FormattedMessage {...messages.title} />
               </SectionTitle>
             </Box>

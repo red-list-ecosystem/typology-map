@@ -110,7 +110,7 @@ export function RouteAnalyse({
                   justify="between"
                   align="center"
                 >
-                  <SectionTitle aside>
+                  <SectionTitle variant="aside">
                     <FormattedMessage {...messages.changeQueryLabel} />
                   </SectionTitle>
                 </Box>

@@ -132,7 +132,7 @@ export function Results({
             align="center"
             gap="small"
           >
-            <SectionTitle aside style={{ margin: '30px 0' }}>
+            <SectionTitle variant="aside" style={{ margin: '30px 0' }}>
               <FormattedMessage {...messages.queryResults} />
             </SectionTitle>
             <Box flex={{ shrink: 0 }}>
