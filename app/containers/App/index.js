@@ -15,8 +15,6 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import styled from 'styled-components';
-import { Grommet } from 'grommet';
-import theme from 'theme';
 
 import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
@@ -50,7 +48,6 @@ import CookieConsent from 'containers/CookieConsent';
 import { getHeaderHeight } from 'utils/responsive';
 
 import { ROUTES, PAGES } from 'config';
-import GlobalStyle from 'global-styles';
 import { appLocales } from 'i18n';
 
 import commonMessages from 'messages';
@@ -105,85 +102,78 @@ function App({
   }
 
   return (
-    <Grommet theme={theme}>
-      <AppWrapper>
-        <Helmet
-          titleTemplate={`%s - ${intl.formatMessage(commonMessages.appTitle)}`}
-          defaultTitle={intl.formatMessage(commonMessages.appTitle)}
-        >
-          <meta
-            name="description"
-            content={intl.formatMessage(commonMessages.metaDescription)}
+    <AppWrapper>
+      <Helmet
+        titleTemplate={`%s - ${intl.formatMessage(commonMessages.appTitle)}`}
+        defaultTitle={intl.formatMessage(commonMessages.appTitle)}
+      >
+        <meta
+          name="description"
+          content={intl.formatMessage(commonMessages.metaDescription)}
+        />
+      </Helmet>
+      <CookieConsent />
+      {showDisclaimer && (
+        <Disclaimer
+          onDismiss={() => onDismissDisclaimer()}
+          onMore={() => onNavigateAbout()}
+        />
+      )}
+      <Header />
+      <Content>
+        <MapContainer
+          groupId={groupId}
+          expandWithAside={path.route === ROUTES.ANALYSE}
+          mode={path.route}
+        />
+        <Routes>
+          <Route
+            exact
+            key="home"
+            path={`/${ROUTES.HOME}`}
+            lement={<RouteHome />}
           />
-        </Helmet>
-        <CookieConsent />
-        {showDisclaimer && (
-          <Disclaimer
-            onDismiss={() => onDismissDisclaimer()}
-            onMore={() => onNavigateAbout()}
+          <Route
+            exact
+            path={`/:locale(${appLocales.join('|')})`}
+            element={<RouteHome />}
           />
-        )}
-        <Header />
-        <Content>
-          <MapContainer
-            groupId={groupId}
-            expandWithAside={path.route === ROUTES.ANALYSE}
-            mode={path.route}
+          <Route
+            exact
+            path={`/${ROUTES.EXPLORE}`}
+            element={<RouteExploreOverview />}
           />
-          <Routes>
-            <Route
-              exact
-              key="home"
-              path={`/${ROUTES.HOME}`}
-              element={<RouteHome />}
-            />
-            <Route
-              exact
-              path={`/:locale(${appLocales.join('|')})`}
-              element={<RouteHome />}
-            />
-            <Route
-              exact
-              path={`/${ROUTES.EXPLORE}`}
-              element={<RouteExploreOverview />}
-            />
-            <Route
-              exact
-              path={`/:locale(${appLocales.join('|')})/${ROUTES.EXPLORE}`}
-              element={<RouteExploreOverview />}
-            />
-            <Route
-              exact
-              path={`/${ROUTES.EXPLORE}/:level/:id`}
-              element={<RouteExplore />}
-            />
-            <Route
-              exact
-              path={`/:locale(${appLocales.join('|')})/${ROUTES.EXPLORE}/:level/:id`}
-              element={<RouteExplore />}
-            />
-            <Route
-              exact
-              path={`/${ROUTES.ANALYSE}`}
-              element={<RouteAnalyse />}
-            />
-            <Route
-              exact
-              path={`/:locale(${appLocales.join('|')})/${ROUTES.ANALYSE}`}
-              element={<RouteAnalyse />}
-            />
-            <Route path={`/${ROUTES.PAGE}/:id`} element={<RoutePage />} />
-            <Route
-              path={`/:locale(${appLocales.join('|')})/${ROUTES.PAGE}/:id`}
-              element={<RoutePage />}
-            />
-            <Route path="" element={<NotFoundPage />} />
-          </Routes>
-          {fullscreenImage && <FullscreenImage config={fullscreenImage} />}
-        </Content>
-        <GlobalStyle />
-      </AppWrapper>
-    </Grommet>
+          <Route
+            exact
+            path={`/:locale(${appLocales.join('|')})/${ROUTES.EXPLORE}`}
+            element={<RouteExploreOverview />}
+          />
+          <Route
+            exact
+            path={`/${ROUTES.EXPLORE}/:level/:id`}
+            element={<RouteExplore />}
+          />
+          <Route
+            exact
+            path={`/:locale(${appLocales.join('|')})/${ROUTES.EXPLORE}/:level/:id`}
+            element={<RouteExplore />}
+          />
+          <Route exact path={`/${ROUTES.ANALYSE}`} element={<RouteAnalyse />} />
+          <Route
+            exact
+            path={`/:locale(${appLocales.join('|')})/${ROUTES.ANALYSE}`}
+            element={<RouteAnalyse />}
+          />
+          <Route path={`/${ROUTES.PAGE}/:id`} element={<RoutePage />} />
+          <Route
+            path={`/:locale(${appLocales.join('|')})/${ROUTES.PAGE}/:id`}
+            element={<RoutePage />}
+          />
+          <Route path="" element={<NotFoundPage />} />
+        </Routes>
+        {fullscreenImage && <FullscreenImage config={fullscreenImage} />}
+      </Content>
+    </AppWrapper>
   );
 }
 

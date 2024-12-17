@@ -27,6 +27,11 @@ import { translationMessages } from 'i18n';
 // Import store and browserHistory
 import { store, history } from 'configureStore';
 
+// Import ThemeProvider
+import { Grommet } from 'grommet';
+import theme from './theme';
+import GlobalStyle from 'global-styles';
+
 const container = document.getElementById('app');
 const root = createRoot(container);
 const render = messages => {
@@ -34,7 +39,10 @@ const render = messages => {
     <Provider store={store}>
       <LanguageProvider messages={messages}>
         <Router history={history}>
-          <App />
+          <Grommet theme={theme}>
+            <GlobalStyle />
+            <App />
+          </Grommet>
         </Router>
       </LanguageProvider>
     </Provider>,
