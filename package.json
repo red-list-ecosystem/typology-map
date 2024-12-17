@@ -34,6 +34,7 @@
     "lint:eslint:fix": "eslint --ignore-pattern internals --ignore-pattern server --fix",
     "lint:js": "npm run lint:eslint -- . ",
     "lint:staged": "lint-staged",
+    "prettier:check": "prettier --check 'app/**/*.{js,jsx,ts,tsx,css,scss,md}'",
     "prettify": "prettier --write"
   },
   "browserslist": [

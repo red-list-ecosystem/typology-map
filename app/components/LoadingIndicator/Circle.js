@@ -35,8 +35,8 @@ const CirclePrimitive = styled.div`
     background-color: #999;
     border-radius: 100%;
     animation: ${circleFadeDelay} 1.2s infinite ease-in-out both;
-  ${({ delay }) =>
-    delay &&
+    ${({ delay }) =>
+      delay &&
       `
         -webkit-animation-delay: ${delay}s;
         animation-delay: ${delay}s;

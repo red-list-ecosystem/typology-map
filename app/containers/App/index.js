@@ -127,11 +127,7 @@ function App({
           mode={path.route}
         />
         <Routes>
-          <Route
-            exact
-            path={`/${ROUTES.HOME}`}
-            element={<RouteHome />}
-          />
+          <Route exact path={`/${ROUTES.HOME}`} element={<RouteHome />} />
           <Route
             exact
             path={`/:locale(${appLocales.join('|')})`}
