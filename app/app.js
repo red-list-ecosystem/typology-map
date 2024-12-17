@@ -29,8 +29,11 @@ import { store, history } from 'configureStore';
 
 // Import ThemeProvider
 import { Grommet } from 'grommet';
-import theme from './theme';
 import GlobalStyle from 'global-styles';
+import { StyleSheetManager } from 'styled-components';
+import isPropValid from '@emotion/is-prop-valid';
+
+import theme from './theme';
 
 const container = document.getElementById('app');
 const root = createRoot(container);
@@ -39,10 +42,22 @@ const render = messages => {
     <Provider store={store}>
       <LanguageProvider messages={messages}>
         <Router history={history}>
-          <Grommet theme={theme}>
-            <GlobalStyle />
-            <App />
-          </Grommet>
+          <StyleSheetManager
+            enableVendorPrefixes
+            shouldForwardProp={(propName, target) => {
+              if (typeof target === 'string') {
+                // For HTML elements, forward the prop if it is a valid HTML attribute
+                return isPropValid(propName);
+              }
+              // For other elements, forward all props
+              return true;
+            }}
+          >
+            <Grommet theme={theme}>
+              <GlobalStyle />
+              <App />
+            </Grommet>
+          </StyleSheetManager>
         </Router>
       </LanguageProvider>
     </Provider>,
