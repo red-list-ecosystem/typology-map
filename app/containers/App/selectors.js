@@ -109,18 +109,9 @@ export const selectTypologyByKey = createSelector(
   selectTypology,
   (key, data) => data[key],
 );
-export const selectRealms = createSelector(
-  state => selectTypologyByKey(state, 'realms'),
-  data => data,
-);
-export const selectBiomes = createSelector(
-  state => selectTypologyByKey(state, 'biomes'),
-  data => data,
-);
-export const selectGroups = createSelector(
-  state => selectTypologyByKey(state, 'groups'),
-  data => data,
-);
+export const selectRealms = state => selectTypologyByKey(state, 'realms');
+export const selectBiomes = state => selectTypologyByKey(state, 'biomes');
+export const selectGroups = state => selectTypologyByKey(state, 'groups');
 
 export const selectRealm = createSelector(
   (state, id) => id,
