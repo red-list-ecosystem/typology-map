@@ -156,7 +156,7 @@
     "prettier": "3.3.2",
     "react-app-polyfill": "3.0.0",
     "react-testing-library": "6.1.0",
-    "rimraf": "2.7.1",
+    "rimraf": "5.0.7",
     "shelljs": "^0.8.3",
     "style-loader": "4.0.0",
     "stylelint": "16.6.1",
