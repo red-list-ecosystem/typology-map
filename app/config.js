@@ -42,7 +42,7 @@ export const PATHS = {
 export const MAX_LOAD_ATTEMPTS = 5;
 export const MAX_LOAD_ATTEMPTS_GROUPS = 2;
 
-export const TYPOLOGY = {
+export const CONFIG = {
   realms: {
     path: 'config/realms.json',
     contentPath: 'realms',
@@ -54,6 +54,9 @@ export const TYPOLOGY = {
   groups: {
     path: 'config/groups.json',
     contentPath: 'groups',
+  },
+  faqs: {
+    path: 'config/faqs.json',
   },
 };
 
@@ -69,11 +72,26 @@ export const PAGES = {
     nav: SECONDARY,
     backgroundImage: 'bg_home',
     partners: 'true',
+    group: 'about',
   },
   methods: {
     path: 'methods',
     nav: SECONDARY,
     backgroundImage: 'bg_home',
+    group: 'about',
+  },
+  faqs: {
+    type: 'faqs',
+    path: 'faqs',
+    nav: SECONDARY,
+    backgroundImage: 'bg_home',
+    group: 'about',
+  },
+  resources: {
+    path: 'resources',
+    nav: SECONDARY,
+    backgroundImage: 'bg_home',
+    group: 'about',
   },
   glossary: {
     path: 'glossary',

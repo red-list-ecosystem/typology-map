@@ -13,11 +13,10 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import styled from 'styled-components';
 import { Box, Text } from 'grommet';
-
 import { PATHS, PAGES } from 'config';
 
-import { selectContentByKey } from 'containers/App/selectors';
-import { loadContent } from 'containers/App/actions';
+import { selectContentByKey, selectConfig } from 'containers/App/selectors';
+import { loadContent, loadConfig } from 'containers/App/actions';
 import { selectCookieConsent } from 'containers/CookieConsent/selectors';
 import { showCookieConsent } from 'containers/CookieConsent/actions';
 
@@ -31,6 +30,7 @@ import { getHeaderHeight, getContentMaxWidth } from 'utils/responsive';
 
 // import messages from './messages';
 import commonMessages from 'messages';
+import { FAQs } from './FAQs';
 
 const Styled = styled.div`
   position: relative;
@@ -87,7 +87,12 @@ const ContentWrap = styled.div`
   }
 `;
 
-export function RoutePage({ onLoadContent, intl, onShowCookieConsent }) {
+export function RoutePage({
+  onLoadContent,
+  onLoadData,
+  intl,
+  onShowCookieConsent,
+}) {
   const { id } = useParams();
   const consent = useSelector(state => selectCookieConsent(state));
   const content = useSelector(state =>
@@ -96,12 +101,25 @@ export function RoutePage({ onLoadContent, intl, onShowCookieConsent }) {
       key: id,
     }),
   );
-  const config = PAGES[id];
+  const data = useSelector(state =>
+    selectConfig(state),
+  );
+  console.log('data', data);
+  const pageConfig = PAGES[id];
   useEffect(() => {
     // kick off loading of page content
     onLoadContent(id);
   }, [id]);
-  const partners = config.partners && config.partners === 'true';
+
+
+  useEffect(() => {
+    // kick off loading of data
+    if (pageConfig.path && pageConfig.type === 'faqs') {
+      onLoadData(pageConfig.path);
+    }
+  }, [pageConfig]);
+
+  const partners = pageConfig.partners && pageConfig.partners === 'true';
   const title = commonMessages[`page_${id}`]
     ? intl.formatMessage(commonMessages[`page_${id}`])
     : '';
@@ -112,18 +130,19 @@ export function RoutePage({ onLoadContent, intl, onShowCookieConsent }) {
       </Helmet>
       <PageBackground
         image={{
-          src: `${PATHS.IMAGES}/${config.backgroundImage}.jpg`,
+          src: `${PATHS.IMAGES}/${pageConfig.backgroundImage}.jpg`,
           credit:
             commonMessages[`imageCredit_${id}`] &&
             intl.formatMessage(commonMessages[`imageCredit_${id}`]),
         }}
       />
       <ContentWrap hasPad={partners}>
-        {config.needsConsent === 'true' && consent !== 'true' && (
+        {pageConfig.needsConsent === 'true' && consent !== 'true' && (
           <HTMLWrapper
             innerhtml={content}
             classNames={['rle-html-page']}
             needsConsentClass="rle-needs-consent"
+            inject={[{ tag: '[FAQS]', el: <FAQs /> }]}
             consentPlaceholder={
               <Box
                 background="light-3"
@@ -151,9 +170,21 @@ export function RoutePage({ onLoadContent, intl, onShowCookieConsent }) {
             }
           />
         )}
-        {(config.needsConsent !== 'true' ||
-          (consent === 'true' && content)) && (
-          <HTMLWrapper innerhtml={content} classNames={['rle-html-page']} />
+        {(
+          pageConfig.needsConsent !== 'true' ||
+          (consent === 'true' && content)
+        ) && 
+        data && (
+          <HTMLWrapper
+            innerhtml={content}
+            classNames={['rle-html-page']}
+            inject={[{
+              tag: '[FAQS]',
+              el: () => (
+                <FAQs data={data && data[pageConfig.path]} />
+              ),
+            }]}
+          />
         )}
         {content && partners && (
           <>
@@ -169,9 +200,11 @@ export function RoutePage({ onLoadContent, intl, onShowCookieConsent }) {
 
 RoutePage.propTypes = {
   onLoadContent: PropTypes.func.isRequired,
+  onLoadData: PropTypes.func.isRequired,
   onShowCookieConsent: PropTypes.func,
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   consent: PropTypes.string,
+  data: PropTypes.object,
   match: PropTypes.object,
   intl: PropTypes.object.isRequired,
 };
@@ -180,6 +213,9 @@ function mapDispatchToProps(dispatch) {
   return {
     onLoadContent: id => {
       dispatch(loadContent('pages', id));
+    },
+    onLoadData: key => {
+      dispatch(loadConfig(key));
     },
     onShowCookieConsent: () => dispatch(showCookieConsent(true)),
   };

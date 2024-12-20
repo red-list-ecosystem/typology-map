@@ -100,18 +100,18 @@ export const selectFullscreenImage = createSelector(
   selectGlobal,
   global => global.fullscreenImage,
 );
-export const selectTypology = createSelector(
+export const selectConfig = createSelector(
   selectGlobal,
-  global => global.typologyConfig,
+  global => global.config,
 );
-export const selectTypologyByKey = createSelector(
+export const selectConfigByKey = createSelector(
   (state, key) => key,
-  selectTypology,
+  selectConfig,
   (key, data) => data[key],
 );
-export const selectRealms = state => selectTypologyByKey(state, 'realms');
-export const selectBiomes = state => selectTypologyByKey(state, 'biomes');
-export const selectGroups = state => selectTypologyByKey(state, 'groups');
+export const selectRealms = state => selectConfigByKey(state, 'realms');
+export const selectBiomes = state => selectConfigByKey(state, 'biomes');
+export const selectGroups = state => selectConfigByKey(state, 'groups');
 
 export const selectRealm = createSelector(
   (state, id) => id,
@@ -189,23 +189,23 @@ export const selectGroupsForBiome = createSelector(
   },
 );
 
-const selectTypologyRequested = createSelector(
+const selectConfigRequested = createSelector(
   selectGlobal,
-  global => global.typologyConfigRequested,
+  global => global.configRequested,
 );
-export const selectTypologyRequestedByKey = createSelector(
+export const selectConfigRequestedByKey = createSelector(
   (state, key) => key,
-  selectTypologyRequested,
+  selectConfigRequested,
   (key, data) => data[key],
 );
 
-const selectTypologyReady = createSelector(
+const selectConfigReady = createSelector(
   selectGlobal,
-  global => global.typologyConfigReady,
+  global => global.configReady,
 );
-export const selectTypologyReadyByKey = createSelector(
+export const selectConfigReadyByKey = createSelector(
   (state, key) => key,
-  selectTypologyReady,
+  selectConfigReady,
   (key, data) => data[key],
 );
 

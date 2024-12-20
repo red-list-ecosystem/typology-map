@@ -22,7 +22,7 @@ import { useInjectSaga } from 'utils/injectSaga';
 import reducer from 'containers/App/reducer';
 import saga from 'containers/App/saga';
 import {
-  loadTypologyConfig,
+  loadConfig,
   dismissDisclaimer,
   navigatePage,
 } from 'containers/App/actions';
@@ -48,7 +48,6 @@ import CookieConsent from 'containers/CookieConsent';
 import { getHeaderHeight } from 'utils/responsive';
 
 import { ROUTES, PAGES } from 'config';
-import { appLocales } from 'i18n';
 
 import commonMessages from 'messages';
 
@@ -127,41 +126,24 @@ function App({
           mode={path.route}
         />
         <Routes>
-          <Route exact path={`/${ROUTES.HOME}`} element={<RouteHome />} />
           <Route
-            exact
-            path={`/:locale(${appLocales.join('|')})`}
+            path={`/:locale?/${ROUTES.HOME}`}
             element={<RouteHome />}
           />
           <Route
-            exact
-            path={`/${ROUTES.EXPLORE}`}
+            path={`/:locale?/${ROUTES.EXPLORE}`}
             element={<RouteExploreOverview />}
           />
           <Route
-            exact
-            path={`/:locale(${appLocales.join('|')})/${ROUTES.EXPLORE}`}
-            element={<RouteExploreOverview />}
-          />
-          <Route
-            exact
-            path={`/${ROUTES.EXPLORE}/:level/:id`}
+            path={`/:locale?/${ROUTES.EXPLORE}/:level/:id`}
             element={<RouteExplore />}
           />
           <Route
-            exact
-            path={`/:locale(${appLocales.join('|')})/${ROUTES.EXPLORE}/:level/:id`}
-            element={<RouteExplore />}
-          />
-          <Route exact path={`/${ROUTES.ANALYSE}`} element={<RouteAnalyse />} />
-          <Route
-            exact
-            path={`/:locale(${appLocales.join('|')})/${ROUTES.ANALYSE}`}
+            path={`/:locale?/${ROUTES.ANALYSE}`}
             element={<RouteAnalyse />}
           />
-          <Route path={`/${ROUTES.PAGE}/:id`} element={<RoutePage />} />
           <Route
-            path={`/:locale(${appLocales.join('|')})/${ROUTES.PAGE}/:id`}
+            path={`/:locale?/${ROUTES.PAGE}/:id`}
             element={<RoutePage />}
           />
           <Route path="" element={<NotFoundPage />} />
@@ -200,9 +182,9 @@ const mapStateToProps = createStructuredSelector({
 export function mapDispatchToProps(dispatch) {
   return {
     onLoadTypology: () => {
-      dispatch(loadTypologyConfig('realms'));
-      dispatch(loadTypologyConfig('biomes'));
-      dispatch(loadTypologyConfig('groups'));
+      dispatch(loadConfig('realms'));
+      dispatch(loadConfig('biomes'));
+      dispatch(loadConfig('groups'));
     },
     onDismissDisclaimer: () => dispatch(dismissDisclaimer()),
     onNavigateAbout: () => dispatch(navigatePage(PAGES.about.path)),

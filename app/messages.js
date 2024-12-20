@@ -84,6 +84,10 @@ export default defineMessages({
     id: `${scope}.navAnalyse`,
     defaultMessage: 'By Area',
   },
+  navGroup_about: {
+    id: `${scope}.navGroup_about`,
+    defaultMessage: 'About',
+  },
   page_typology: {
     id: `${scope}.page_typology`,
     defaultMessage: 'Typology',
@@ -111,6 +115,14 @@ export default defineMessages({
   page_terms: {
     id: `${scope}.page_terms`,
     defaultMessage: 'Terms of use',
+  },
+  page_resources: {
+    id: `${scope}.page_resources`,
+    defaultMessage: 'Resources',
+  },
+  page_faqs: {
+    id: `${scope}.page_faqs`,
+    defaultMessage: 'FAQs',
   },
   imageCreditBy: {
     id: `${scope}.imageCreditBy`,

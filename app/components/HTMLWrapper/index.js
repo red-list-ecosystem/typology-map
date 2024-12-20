@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import ReactHtmlParser from 'html-react-parser';
+import parse from 'html-react-parser';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { FormattedMessage } from 'react-intl';
@@ -26,69 +26,74 @@ const HTMLWrapper = ({
   truncate,
 }) => {
   const [show, setShow] = useState(false);
+  // console.log('HTMLWrapper', innerhtml, classNames, inject, needsConsentClass, consentPlaceholder)
   return (
     <div className={`rle-html ${classNames.join(' ')}`}>
       {!innerhtml && <LoadingIndicator />}
       {innerhtml &&
-        ReactHtmlParser(innerhtml, {
-          transform: (node, index) => {
-            if (
-              truncate &&
-              !show &&
-              node.parent &&
-              !node.parent.parent &&
-              index > 0
-            ) {
-              return null;
-            }
-            if (node.name === 'a' && node.attribs && node.attribs.href) {
-              if (node.attribs.href.indexOf('/explore') === 0) {
+        parse(
+          innerhtml,
+          {
+            transform(reactNode, domNode, index) {
+              // console.log('reactNode', reactNode, domNode)
+              if (
+                truncate &&
+                !show &&
+                reactNode.parent &&
+                !reactNode.parent.parent &&
+                index > 0
+              ) {
+                return null;
+              }
+              if (reactNode.name === 'a' && reactNode.attribs && reactNode.attribs.href) {
+                if (reactNode.attribs.href.indexOf('/explore') === 0) {
+                  return (
+                    <a
+                      key={index}
+                      href={reactNode.attribs.href}
+                      onClick={e => {
+                        e.preventDefault();
+                        onNavigate(
+                          reactNode.attribs.href.replace('/explore', 'explore'),
+                        );
+                      }}
+                    >
+                      {reactNode.children[0].data}
+                    </a>
+                  );
+                }
                 return (
-                  <a
-                    key={index}
-                    href={node.attribs.href}
-                    onClick={e => {
-                      e.preventDefault();
-                      onNavigate(
-                        node.attribs.href.replace('/explore', 'explore'),
-                      );
-                    }}
-                  >
-                    {node.children[0].data}
+                  <a key={index} href={reactNode.attribs.href} target="_blank">
+                    {reactNode.children[0].data}
                   </a>
                 );
               }
-              return (
-                <a key={index} href={node.attribs.href} target="_blank">
-                  {node.children[0].data}
-                </a>
-              );
-            }
-            if (
-              inject &&
-              inject.length > 0 &&
-              node.name === 'p' &&
-              node.children &&
-              node.children.length === 1 &&
-              node.children[0]
-            ) {
-              const inj = inject.find(
-                ({ tag }) => tag === node.children[0].data,
-              );
-              return inj ? <span key={index}>{inj.el}</span> : undefined;
-            }
-            if (
-              needsConsentClass &&
-              consentPlaceholder &&
-              node.attribs &&
-              node.attribs.class &&
-              node.attribs.class.split(' ').indexOf(needsConsentClass) > -1
-            ) {
-              return <div key={index}>{consentPlaceholder}</div>;
-            }
-            return undefined;
+              // console.log('inject', inject)
+              // console.log('reactNode', reactNode)
+              // console.log('domNode', domNode)
+              if (
+                inject &&
+                inject.length > 0 &&
+                inject.find(({ tag }) => reactNode === tag)
+              ) {
+                const inj = inject.find(
+                  ({ tag }) => tag === reactNode,
+                );
+                return (inj && inj.el) ? <span key={index}>{inj.el()}</span> : reactNode;
+              }
+              if (
+                needsConsentClass &&
+                consentPlaceholder &&
+                reactNode.attribs &&
+                reactNode.attribs.class &&
+                reactNode.attribs.class.split(' ').indexOf(needsConsentClass) > -1
+              ) {
+                return <div key={index}>{consentPlaceholder}</div>;
+              }
+              return reactNode;
+            },
           },
-        })}
+        )}
       {truncate && !show && (
         <ButtonTextBold
           onClick={() => setShow(true)}

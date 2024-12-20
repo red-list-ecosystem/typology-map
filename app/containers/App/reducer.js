@@ -8,12 +8,12 @@
  */
 
 import { produce } from 'immer';
-import { TYPOLOGY, PAGES } from 'config';
+import { CONFIG, PAGES } from 'config';
 import { appLocales } from 'i18n';
 import {
-  TYPOLOGY_REQUESTED,
-  TYPOLOGY_LOAD_SUCCESS,
-  TYPOLOGY_LOAD_ERROR,
+  CONFIG_REQUESTED,
+  CONFIG_LOAD_SUCCESS,
+  CONFIG_LOAD_ERROR,
   GROUPS_QUERIED,
   GROUPS_QUERY_SUCCESS,
   GROUPS_QUERY_ERROR,
@@ -42,6 +42,7 @@ const initialContent = {
   realms: {},
   biomes: {},
   groups: {},
+  faqs: {},
 };
 
 const initialGroupsByArea = {
@@ -54,22 +55,22 @@ const initialGroupsByArea = {
 
 // The initial state of the App
 export const initialState = {
-  typologyConfig: Object.keys(TYPOLOGY).reduce((memo, key) => {
+  config: Object.keys(CONFIG).reduce((memo, key) => {
     memo[key] = null;
     return memo;
   }, {}),
   // record request time
-  typologyConfigRequested: Object.keys(TYPOLOGY).reduce((memo, key) => {
+  configRequested: Object.keys(CONFIG).reduce((memo, key) => {
     memo[key] = null;
     return memo;
   }, {}),
   // record return time
-  typologyConfigReady: Object.keys(TYPOLOGY).reduce((memo, key) => {
+  configReady: Object.keys(CONFIG).reduce((memo, key) => {
     memo[key] = null;
     return memo;
   }, {}),
   // // record error time
-  // typologyConfigError: TYPOLOGY.reduce((memo, resource, key) => {
+  // configError: CONFIG.reduce((memo, resource, key) => {
   //   memo[key] = false;
   //   return memo;
   // }, {}),
@@ -94,16 +95,16 @@ export const initialState = {
 const appReducer = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
-      case TYPOLOGY_REQUESTED:
-        draft.typologyConfigRequested[action.key] = action.time;
+      case CONFIG_REQUESTED:
+        draft.configRequested[action.key] = action.time;
         break;
-      case TYPOLOGY_LOAD_SUCCESS:
-        draft.typologyConfig[action.key] = action.data;
-        draft.typologyConfigReady[action.key] = action.time;
+      case CONFIG_LOAD_SUCCESS:
+        draft.config[action.key] = action.data;
+        draft.configReady[action.key] = action.time;
         break;
-      case TYPOLOGY_LOAD_ERROR:
+      case CONFIG_LOAD_ERROR:
         // console.log('Error loading typology data... giving up!', action.key);
-        draft.typologyConfigRequested[action.key] = action.time;
+        draft.configRequested[action.key] = action.time;
         break;
       case CONTENT_REQUESTED:
         if (draft.contentRequested[action.contentType])
