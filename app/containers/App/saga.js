@@ -318,24 +318,22 @@ function* queryGroupsErrorHandler(err, { layerType, args }) {
 
 function* loadConfigSaga({ key }) {
   if (CONFIG[key]) {
-    console.log('key', key)
     // requestedSelector returns the times that entities where fetched from the API
     const requestedAt = yield select(selectConfigRequestedByKey, key);
     const ready = yield select(selectConfigReadyByKey, key);
+
     // If haven't loaded yet, do so now.
     if (!requestedAt && !ready) {
       const url = `${PATHS.DATA}/${CONFIG[key].path}`;
-      console.log('url', url)
       try {
         // First record that we are requesting
         yield put(setConfigRequested(key, Date.now()));
         const response = yield fetch(url);
+        
         const responseOk = yield response.ok;
-        console.log('response', response)
         if (responseOk && typeof response.json === 'function') {
           const json = yield response.json();
           if (json) {
-            console.log('json', json)
             yield put(setConfigLoadSuccess(key, json, Date.now()));
           } else {
             yield put(setConfigRequested(key, false));
@@ -346,6 +344,7 @@ function* loadConfigSaga({ key }) {
           throw new Error(response.statusText);
         }
       } catch (err) {
+        console.log('error loading config/data: ', key, err);
         yield put(setConfigRequested(key, false));
         // throw error
         throw new Error(err);
@@ -375,7 +374,6 @@ function* loadContentSaga({ key, contentType }) {
       }
       if (CONFIG[contentType]) {
         const typo = CONFIG[contentType];
-        console.log('typo', typo)
         url = `${PATHS.CONTENT}/${currentLocale}/${typo.contentPath}/${key}`;
       }
       if (url) {
@@ -411,6 +409,7 @@ function* loadContentSaga({ key, contentType }) {
             throw new Error(response.statusText);
           }
         } catch (err) {
+          console.log('error loading content: ', key, err);
           // throw error
           yield put(
             setContentRequested(contentType, currentLocale, key, false),

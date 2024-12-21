@@ -35,42 +35,38 @@ const HTMLWrapper = ({
           innerhtml,
           {
             transform(reactNode, domNode, index) {
-              // console.log('reactNode', reactNode, domNode)
               if (
                 truncate &&
                 !show &&
-                reactNode.parent &&
-                !reactNode.parent.parent &&
+                domNode.parent &&
+                !domNode.parent.parent &&
                 index > 0
               ) {
                 return null;
               }
-              if (reactNode.name === 'a' && reactNode.attribs && reactNode.attribs.href) {
-                if (reactNode.attribs.href.indexOf('/explore') === 0) {
+              if (domNode.name === 'a' && domNode.attribs && domNode.attribs.href) {
+                if (domNode.attribs.href.indexOf('/explore') === 0) {
                   return (
                     <a
                       key={index}
-                      href={reactNode.attribs.href}
+                      href={domNode.attribs.href}
                       onClick={e => {
                         e.preventDefault();
                         onNavigate(
-                          reactNode.attribs.href.replace('/explore', 'explore'),
+                          domNode.attribs.href.replace('/explore', 'explore'),
                         );
                       }}
                     >
-                      {reactNode.children[0].data}
+                      {domNode.children[0].data}
                     </a>
                   );
                 }
                 return (
-                  <a key={index} href={reactNode.attribs.href} target="_blank">
-                    {reactNode.children[0].data}
+                  <a key={index} href={domNode.attribs.href} target="_blank">
+                    {domNode.children[0].data}
                   </a>
                 );
               }
-              // console.log('inject', inject)
-              // console.log('reactNode', reactNode)
-              // console.log('domNode', domNode)
               if (
                 inject &&
                 inject.length > 0 &&
@@ -79,14 +75,17 @@ const HTMLWrapper = ({
                 const inj = inject.find(
                   ({ tag }) => tag === reactNode,
                 );
-                return (inj && inj.el) ? <span key={index}>{inj.el()}</span> : reactNode;
+                if (inj && inj.el && typeof inj.el === 'function') {
+                  return <span key={index}>{inj.el()}</span>;
+                }
+                return reactNode;
               }
               if (
                 needsConsentClass &&
                 consentPlaceholder &&
-                reactNode.attribs &&
-                reactNode.attribs.class &&
-                reactNode.attribs.class.split(' ').indexOf(needsConsentClass) > -1
+                domNode.attribs &&
+                domNode.attribs.class &&
+                domNode.attribs.class.split(' ').indexOf(needsConsentClass) > -1
               ) {
                 return <div key={index}>{consentPlaceholder}</div>;
               }

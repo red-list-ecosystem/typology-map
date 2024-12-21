@@ -104,7 +104,7 @@ export function RoutePage({
   const data = useSelector(state =>
     selectConfig(state),
   );
-  console.log('data', data);
+
   const pageConfig = PAGES[id];
   useEffect(() => {
     // kick off loading of page content

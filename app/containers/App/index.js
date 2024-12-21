@@ -17,10 +17,9 @@ import { createStructuredSelector } from 'reselect';
 import styled from 'styled-components';
 
 import { useInjectReducer } from 'utils/injectReducer';
-import { useInjectSaga } from 'utils/injectSaga';
 
 import reducer from 'containers/App/reducer';
-import saga from 'containers/App/saga';
+
 import {
   loadConfig,
   dismissDisclaimer,
@@ -88,11 +87,12 @@ function App({
   activeGroup,
 }) {
   useInjectReducer({ key: 'global', reducer });
-  useInjectSaga({ key: 'default', saga });
+
   // kick off loading of typology configuration files
   useEffect(() => {
     onLoadTypology();
   }, []);
+
   let groupId;
   if (path.route === ROUTES.EXPLORE && path.level === 'groups') {
     groupId = path.id;
@@ -185,6 +185,7 @@ export function mapDispatchToProps(dispatch) {
       dispatch(loadConfig('realms'));
       dispatch(loadConfig('biomes'));
       dispatch(loadConfig('groups'));
+      // dispatch(loadConfig('faqs'));
     },
     onDismissDisclaimer: () => dispatch(dismissDisclaimer()),
     onNavigateAbout: () => dispatch(navigatePage(PAGES.about.path)),

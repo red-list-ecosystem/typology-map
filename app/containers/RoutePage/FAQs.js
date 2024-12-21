@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 
 export function FAQs({ data }) {
 
-  console.log('FAQs', data)
+  console.log('FAQs', data);
 
   return (
     <>
@@ -19,7 +19,7 @@ export function FAQs({ data }) {
 }
 
 FAQs.propTypes = {
-  data: PropTypes.object,
+  data: PropTypes.array,
 };
 
 export default FAQs;
