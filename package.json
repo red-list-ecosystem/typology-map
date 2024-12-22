@@ -142,7 +142,7 @@
     "imports-loader": "0.8.0",
     "lint-staged": "15.2.7",
     "memfs": "^4.15.0",
-    "ngrok": "3.4.1",
+    "ngrok": "5.0.0-beta.2",
     "node-polyfill-webpack-plugin": "^4.1.0",
     "postcss-styled-syntax": "^0.6.4",
     "prettier": "3.3.2",
