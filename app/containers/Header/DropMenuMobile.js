@@ -20,32 +20,33 @@ const IconImg = styled(Img)`
   }
 `;
 // prettier-ignore
-const NavGroupTitle = styled(p => <Text {...p} size="xsmall" />)`
+const NavGroupTitleWrapper = styled(p => <Box {...p} />)`
   color: ${({ theme }) => theme.global.colors['dark-grey']};
   padding:
-    ${({ theme }) => theme.global.edgeSize.xsmall}
+    ${({ theme }) => theme.global.edgeSize.small}
     ${({ theme }) => theme.global.edgeSize.medium};
+  padding-bottom: 0;
 `;
 // prettier-ignore
 const NavGroup = styled(p => <Box {...p} />)`
   border-bottom: 1px solid
     ${({ theme, last }) =>
-    last ? 'transparent' : theme.global.colors['dark-grey']};
+    last ? 'transparent' : theme.global.colors['grey']};
 `;
 // prettier-ignore
 const Secondary = styled(props => <Button {...props} plain />)`
   padding:
     ${({ theme }) => theme.global.edgeSize.small}
     ${({ theme }) => theme.global.edgeSize.medium};
-  color: black;
+  color: ${({ theme }) => theme.global.colors['brand-2']};
   background: transparent;
   &:hover {
-    background: ${({ theme }) => theme.global.colors.grey};
+    background: ${({ theme }) => theme.global.colors['hover-grey']};
   }
 `;
 const IconImgWrap = styled.div``;
 
-const MobileMenu = ({ navItems, onSelectItem }) => {
+const DropMenuMobile = ({ navItems, onSelectItem }) => {
   const size = React.useContext(ResponsiveContext);
   return (
     <Layer
@@ -69,30 +70,34 @@ const MobileMenu = ({ navItems, onSelectItem }) => {
               key={group}
               last={index === Object.keys(navItems).length - 1}
             >
-              <NavGroupTitle>
-                <FormattedMessage {...commonMessages[`navGroup_${group}`]} />
-              </NavGroupTitle>
+              <NavGroupTitleWrapper>
+                <Text size="xsmall">
+                  <FormattedMessage {...commonMessages[`navGroup_${group}`]} />
+                </Text>
+              </NavGroupTitleWrapper>
               {pages &&
                 pages.map(p => (
-                  <Secondary
-                    key={p.key}
-                    onClick={() => onSelectItem(p.key)}
-                    label={
-                      <Box direction="row" justify="between">
-                        <Text size="small">
-                          <FormattedMessage
-                            {...commonMessages[`page_${p.key}`]}
-                          />
-                        </Text>
-                        {p.icon && (
-                          <IconImgWrap>
-                            <IconImg src={p.icon} alt="" />
-                          </IconImgWrap>
-                        )}
-                      </Box>
-                    }
-                    active={false}
-                  />
+                  <Box>
+                    <Secondary
+                      key={p.key}
+                      onClick={() => onSelectItem(p.key)}
+                      label={
+                        <Box direction="row" justify="between" align="center">
+                          <Text size="small">
+                            <FormattedMessage
+                              {...commonMessages[`page_${p.key}`]}
+                            />
+                          </Text>
+                          {p.icon && (
+                            <IconImgWrap>
+                              <IconImg src={p.icon} alt="" />
+                            </IconImgWrap>
+                          )}
+                        </Box>
+                      }
+                      active={false}
+                    />
+                  </Box>
                 ))}
             </NavGroup>
           ))}
@@ -101,9 +106,9 @@ const MobileMenu = ({ navItems, onSelectItem }) => {
   );
 };
 
-MobileMenu.propTypes = {
-  navItems: PropTypes.array,
+DropMenuMobile.propTypes = {
+  navItems: PropTypes.object,
   onSelectItem: PropTypes.func,
 };
 
-export default MobileMenu;
+export default DropMenuMobile;

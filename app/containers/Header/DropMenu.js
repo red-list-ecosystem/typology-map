@@ -2,47 +2,42 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { DropButton } from 'grommet';
 import styled from 'styled-components';
-
-const Styled = styled.span``;
 // prettier-ignore
 const MenuButton = styled(props => <DropButton plain {...props} fill="vertical" />)`
   padding:
-    ${({ theme }) => theme.global.edgeSize.xxsmall}
-    ${({ theme }) => theme.global.edgeSize.small};
+    ${({ theme }) => theme.global.edgeSize.small}
+    ${({ theme }) => theme.global.edgeSize.medium};
   color: ${({ theme }) => theme.global.colors.white};
   background: ${({ active, theme }) => (active ? theme.global.colors.brand : 'transparent')};
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
-    padding: 0 ${({ theme }) => theme.global.edgeSize.small};
+    padding: 0 ${({ theme }) => theme.global.edgeSize.medium};
   }
 `;
 
 const DropMenu = ({
   label,
-  children,
   dropContent,
   dropProps = { top: 'bottom', left: 'left' },
 }) => {
   const [open, setOpen] = useState(false);
-
+  const handleClose = () => setOpen(false);
   return (
-    <Styled>
-      <MenuButton
-        active={open}
-        onOpen={() => setOpen(true)}
-        onClose={() => setOpen(false)}
-        dropProps={{ align: { ...dropProps } }}
-        dropContent={dropContent}
-      >
-        {children ? children(open) : label}
-      </MenuButton>
-    </Styled>
+    <MenuButton
+      active={open}
+      open={open}
+      onOpen={() => setOpen(true)}
+      onClose={handleClose}
+      dropProps={{ align: { ...dropProps } }}
+      dropContent={dropContent(handleClose)}
+    >
+      {label ? label({ drop: open }) : null}
+    </MenuButton>
   );
 };
 
 DropMenu.propTypes = {
-  label: PropTypes.node,
-  dropContent: PropTypes.node,
-  children: PropTypes.func,
+  label: PropTypes.func.isRequired,
+  dropContent: PropTypes.func.isRequired,
   dropProps: PropTypes.object,
 };
 
