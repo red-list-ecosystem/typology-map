@@ -12,4 +12,16 @@ export default defineMessages({
     id: `${scope}.en`,
     defaultMessage: 'en',
   },
+  enLong: {
+    id: `${scope}.enLong`,
+    defaultMessage: 'English',
+  },
+  esLong: {
+    id: `${scope}.esLong`,
+    defaultMessage: 'Spanish',
+  },
+  languageTitle: {
+    id: `${scope}.languageTitle`,
+    defaultMessage: 'Choose language',
+  },
 });

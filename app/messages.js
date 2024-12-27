@@ -88,6 +88,22 @@ export default defineMessages({
     id: `${scope}.navGroup_about`,
     defaultMessage: 'About',
   },
+  navGroup_main: {
+    id: `${scope}.navGroup_main`,
+    defaultMessage: 'Main Content',
+  },
+  navGroup_contact: {
+    id: `${scope}.navGroup_contact`,
+    defaultMessage: 'Contact',
+  },
+  navGroup_footer: {
+    id: `${scope}.navGroup_footer`,
+    defaultMessage: 'Footer',
+  },
+  navGroup_language: {
+    id: `${scope}.navGroup_language`,
+    defaultMessage: 'Choose language',
+  },
   page_typology: {
     id: `${scope}.page_typology`,
     defaultMessage: 'Typology',

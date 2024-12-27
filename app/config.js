@@ -66,6 +66,7 @@ export const PAGES = {
     nav: PRIMARY,
     icon: ICON_TYPOLOGY,
     backgroundImage: 'bg_home',
+    mobileGroup: 'main',
   },
   about: {
     path: 'about',
@@ -73,12 +74,14 @@ export const PAGES = {
     backgroundImage: 'bg_home',
     partners: 'true',
     group: 'about',
+    mobileGroup: 'about',
   },
   methods: {
     path: 'methods',
     nav: SECONDARY,
     backgroundImage: 'bg_home',
     group: 'about',
+    mobileGroup: 'about',
   },
   faqs: {
     type: 'faqs',
@@ -86,33 +89,39 @@ export const PAGES = {
     nav: SECONDARY,
     backgroundImage: 'bg_home',
     group: 'about',
+    mobileGroup: 'about',
   },
   resources: {
     path: 'resources',
     nav: SECONDARY,
     backgroundImage: 'bg_home',
     group: 'about',
+    mobileGroup: 'about',
   },
   glossary: {
     path: 'glossary',
     nav: SECONDARY,
     backgroundImage: 'bg_home',
+    mobileGroup: 'about',
   },
   feedback: {
     path: 'feedback',
     nav: SECONDARY,
     backgroundImage: 'bg_home',
     needsConsent: 'true',
+    mobileGroup: 'contact',
   },
   terms: {
     path: 'terms',
     nav: FOOTER,
     backgroundImage: 'bg_home',
+    mobileGroup: 'footer',
   },
   privacy: {
     path: 'privacy',
     nav: FOOTER,
     backgroundImage: 'bg_home',
+    mobileGroup: 'footer',
   },
 };
 
