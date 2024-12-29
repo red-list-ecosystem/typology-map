@@ -15,7 +15,11 @@ import styled from 'styled-components';
 import { Box, Text } from 'grommet';
 import { PATHS, PAGES } from 'config';
 
-import { selectContentByKey, selectConfig } from 'containers/App/selectors';
+import {
+  selectContentByKey,
+  selectConfig,
+  selectLocale,
+} from 'containers/App/selectors';
 import { loadContent, loadConfig } from 'containers/App/actions';
 import { selectCookieConsent } from 'containers/CookieConsent/selectors';
 import { showCookieConsent } from 'containers/CookieConsent/actions';
@@ -101,16 +105,14 @@ export function RoutePage({
       key: id,
     }),
   );
-  const data = useSelector(state =>
-    selectConfig(state),
-  );
+  const data = useSelector(state => selectConfig(state));
+  const locale = useSelector(state => selectLocale(state));
 
   const pageConfig = PAGES[id];
   useEffect(() => {
     // kick off loading of page content
     onLoadContent(id);
   }, [id]);
-
 
   useEffect(() => {
     // kick off loading of data
@@ -170,22 +172,25 @@ export function RoutePage({
             }
           />
         )}
-        {(
-          pageConfig.needsConsent !== 'true' ||
-          (consent === 'true' && content)
-        ) && 
-        data && (
-          <HTMLWrapper
-            innerhtml={content}
-            classNames={['rle-html-page']}
-            inject={[{
-              tag: '[FAQS]',
-              el: () => (
-                <FAQs data={data && data[pageConfig.path]} />
-              ),
-            }]}
-          />
-        )}
+        {(pageConfig.needsConsent !== 'true' ||
+          (consent === 'true' && content)) &&
+          data && (
+            <HTMLWrapper
+              innerhtml={content}
+              classNames={['rle-html-page']}
+              inject={[
+                {
+                  tag: '[FAQS]',
+                  el: () => (
+                    <FAQs
+                      data={data && data[pageConfig.path]}
+                      locale={locale}
+                    />
+                  ),
+                },
+              ]}
+            />
+          )}
         {content && partners && (
           <>
             <HR />
