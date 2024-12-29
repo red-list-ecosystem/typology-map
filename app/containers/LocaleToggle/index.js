@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
-import { appLocales } from 'i18n';
+import { appLocales, appLocaleLabels } from 'i18n';
 
 import styled, { useTheme } from 'styled-components';
 import { Language as LanguageIcon } from 'grommet-icons';
@@ -64,9 +64,7 @@ export function LocaleToggle({ onLocaleToggle, locale }) {
                 align="center"
                 pad={{ horizontal: 'small' }}
               >
-                <Text>
-                  <FormattedMessage {...messages[`${lang}Long`]} />
-                </Text>
+                <Text>{appLocaleLabels[lang]}</Text>
                 <LanguageIcon
                   color={
                     locale === lang
