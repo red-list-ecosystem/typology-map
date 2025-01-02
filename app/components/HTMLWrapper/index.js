@@ -31,68 +31,73 @@ const HTMLWrapper = ({
     <div className={`rle-html ${classNames.join(' ')}`}>
       {!innerhtml && <LoadingIndicator />}
       {innerhtml &&
-        parse(
-          innerhtml,
-          {
-            transform(reactNode, domNode, index) {
-              if (
-                truncate &&
-                !show &&
-                domNode.parent &&
-                !domNode.parent.parent &&
-                index > 0
-              ) {
-                return null;
-              }
-              if (domNode.name === 'a' && domNode.attribs && domNode.attribs.href) {
-                if (domNode.attribs.href.indexOf('/explore') === 0) {
-                  return (
-                    <a
-                      key={index}
-                      href={domNode.attribs.href}
-                      onClick={e => {
-                        e.preventDefault();
-                        onNavigate(
-                          domNode.attribs.href.replace('/explore', 'explore'),
-                        );
-                      }}
-                    >
-                      {domNode.children[0].data}
-                    </a>
-                  );
-                }
+        parse(innerhtml, {
+          transform(reactNode, domNode, index) {
+            if (
+              truncate &&
+              !show &&
+              domNode.parent &&
+              !domNode.parent.parent &&
+              index > 0
+            ) {
+              return null;
+            }
+            if (
+              domNode.name === 'a' &&
+              domNode.attribs &&
+              domNode.attribs.href
+            ) {
+              if (domNode.attribs.href.indexOf('/explore') === 0) {
                 return (
-                  <a key={index} href={domNode.attribs.href} target="_blank">
+                  <a
+                    key={index}
+                    href={domNode.attribs.href}
+                    onClick={e => {
+                      e.preventDefault();
+                      onNavigate(
+                        domNode.attribs.href.replace('/explore', 'explore'),
+                      );
+                    }}
+                  >
                     {domNode.children[0].data}
                   </a>
                 );
               }
-              if (
-                inject &&
-                inject.length > 0 &&
-                inject.find(({ tag }) => reactNode === tag)
-              ) {
-                const inj = inject.find(
-                  ({ tag }) => tag === reactNode,
-                );
-                if (inj && inj.el && typeof inj.el === 'function') {
-                  return <span key={index}>{inj.el()}</span>;
-                }
-                return reactNode;
-              }
-              if (
-                needsConsentClass &&
-                consentPlaceholder &&
-                domNode.attribs &&
-                domNode.attribs.class &&
-                domNode.attribs.class.split(' ').indexOf(needsConsentClass) > -1
-              ) {
-                return <div key={index}>{consentPlaceholder}</div>;
+              return (
+                <a key={index} href={domNode.attribs.href} target="_blank">
+                  {domNode.children[0].data}
+                </a>
+              );
+            }
+            // when the inject tag is child of the current reactNode, replace the whole tag and it's children
+            if (
+              inject &&
+              inject.length > 0 &&
+              inject.find(
+                ({ tag }) =>
+                  reactNode.props && reactNode.props.children === tag,
+              )
+            ) {
+              const inj = inject.find(
+                ({ tag }) => tag === reactNode.props.children,
+              );
+              if (inj && inj.el && typeof inj.el === 'function') {
+                return <span key={index}>{inj.el()}</span>;
               }
               return reactNode;
-            },
+            }
+            if (
+              needsConsentClass &&
+              consentPlaceholder &&
+              domNode.attribs &&
+              domNode.attribs.class &&
+              domNode.attribs.class.split(' ').indexOf(needsConsentClass) > -1
+            ) {
+              return <div key={index}>{consentPlaceholder}</div>;
+            }
+            return reactNode;
           },
-        )}
+        })}
       {truncate && !show && (
         <ButtonTextBold
           onClick={() => setShow(true)}
