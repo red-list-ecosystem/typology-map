@@ -1,37 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { DropButton } from 'grommet';
+import { Drop } from 'grommet';
 import styled from 'styled-components';
+
+import Secondary from './Secondary';
 // prettier-ignore
-const MenuButton = styled(props => <DropButton plain {...props} fill="vertical" />)`
-  padding:
-    ${({ theme }) => theme.global.edgeSize.small}
-    ${({ theme }) => theme.global.edgeSize.medium};
-  color: ${({ theme }) => theme.global.colors.white};
-  background: ${({ active, theme }) => (active ? theme.global.colors.brand : 'transparent')};
-  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
-    padding: 0 ${({ theme }) => theme.global.edgeSize.medium};
-  }
-`;
+const MenuButton = styled(
+  React.forwardRef((props, ref) => (
+    <Secondary plain ref={ref} {...props} fill="vertical" />
+  ))
+)``;
 
 const DropMenu = ({
+  active,
   label,
   dropContent,
   dropProps = { top: 'bottom', left: 'left' },
 }) => {
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
+  const targetRef = useRef();
+
   return (
-    <MenuButton
-      active={open}
-      open={open}
-      onOpen={() => setOpen(true)}
-      onClose={handleClose}
-      dropProps={{ align: { ...dropProps } }}
-      dropContent={dropContent(handleClose)}
-    >
-      {label ? label({ drop: open }) : null}
-    </MenuButton>
+    <>
+      <MenuButton
+        active={open || active}
+        open={open}
+        onClick={() => setOpen(!open)}
+        ref={targetRef}
+      >
+        {label ? label({ drop: open }) : null}
+      </MenuButton>
+      {open && targetRef.current && (
+        <Drop
+          target={targetRef.current}
+          align={dropProps}
+          onClickOutside={handleClose}
+          onEsc={handleClose}
+        >
+          {dropContent(handleClose)}
+        </Drop>
+      )}
+    </>
   );
 };
 

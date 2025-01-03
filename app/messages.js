@@ -44,6 +44,10 @@ export default defineMessages({
     id: `${scope}.biomes`,
     defaultMessage: 'Biomes',
   },
+  close: {
+    id: `${scope}.close`,
+    defaultMessage: 'Close',
+  },
   group: {
     id: `${scope}.group`,
     defaultMessage: 'Functional group',

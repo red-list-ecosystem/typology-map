@@ -5,10 +5,14 @@
  */
 
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
+
+import styled from 'styled-components';
 import { Accordion, AccordionPanel, Box, Button, Text } from 'grommet';
-import { Add as ClosedIcon, FormSubtract as OpenIcon } from 'grommet-icons';
+import { Add, FormSubtract } from 'grommet-icons';
+
+import commonMessages from 'messages';
 
 const AccordionGroupHeader = styled(p => <Text size="small" {...p} />)`
   font-weight: bold;
@@ -19,6 +23,25 @@ const AccordionPanelHeader = styled(p => <Text size="small" {...p} />)`
 `;
 const CloseButton = styled(p => <Button plain {...p} />)`
   font-weight: bold;
+  color: ${({ theme }) => theme.global.colors['brand-2']};
+`;
+const StyledBox = styled(p => <Box {...p} />)`
+  border-bottom: 1px solid ${({ active }) => (active ? 'transparent' : 'black')};
+`;
+const StyledAccordion = styled(p => <Accordion {...p} />)`
+  [role='region'] {
+    border: none;
+  }
+`;
+const ClosedIcon = styled(Add)`
+  path {
+    stroke-width: 3;
+  }
+`;
+const OpenIcon = styled(FormSubtract)`
+  path {
+    stroke-width: 3;
+  }
 `;
 export function FAQs({ data, locale }) {
   const [activeIndices, setActiveIndices] = useState({});
@@ -36,35 +59,39 @@ export function FAQs({ data, locale }) {
           const { title, faqs, id } = section;
           return (
             <Box key={id} margin={{ bottom: 'medium' }}>
-              <Box>
+              <StyledBox pad={{ vertical: 'small' }}>
                 <AccordionGroupHeader>{title[locale]}</AccordionGroupHeader>
-              </Box>
-              <Accordion
+              </StyledBox>
+              <StyledAccordion
+                a11yTitle="Frequently Asked Questions section, expand or collapse topics"
                 activeIndex={activeIndices[id] || []}
                 onActive={newActive => handleAccordionChange(id, newActive)}
               >
                 {faqs &&
                   faqs.map((faq, index) => {
                     const { question, answer } = faq;
+                    const open =
+                      activeIndices[id] &&
+                      Array.isArray(activeIndices[id]) &&
+                      activeIndices[id].includes(index);
                     return (
                       <AccordionPanel
                         header={
-                          <Box
+                          <StyledBox
                             direction="row"
                             justify="between"
-                            pad={{ vertical: 'small' }}
+                            active={open}
+                            pad={{ vertical: 'small', right: 'small' }}
                           >
                             <AccordionPanelHeader>
                               {question[locale]}
                             </AccordionPanelHeader>
-                            {activeIndices[id] &&
-                            Array.isArray(activeIndices[id]) &&
-                            activeIndices[id].includes(index) ? (
-                              <OpenIcon size="small" />
+                            {open ? (
+                              <OpenIcon size="small" color="black" />
                             ) : (
-                              <ClosedIcon size="small" />
+                              <ClosedIcon size="small" color="black" />
                             )}
-                          </Box>
+                          </StyledBox>
                         }
                         key={`${id}-${index}`}
                       >
@@ -77,13 +104,13 @@ export function FAQs({ data, locale }) {
                           <CloseButton
                             onClick={() => handleAccordionChange(id)}
                           >
-                            Close
+                            <FormattedMessage {...commonMessages.close} />
                           </CloseButton>
                         </Box>
                       </AccordionPanel>
                     );
                   })}
-              </Accordion>
+              </StyledAccordion>
             </Box>
           );
         })}

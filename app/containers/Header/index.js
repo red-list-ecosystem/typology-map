@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { filter, groupBy, map } from 'lodash/collection';
+import { filter, groupBy } from 'lodash/collection';
 import styled from 'styled-components';
 
 import { Button, Box, Text, ResponsiveContext } from 'grommet';
@@ -22,15 +22,16 @@ import { PAGES, ICONS, ROUTES } from 'config';
 
 import Img from 'components/Img';
 import Search from 'containers/Search';
-import LocaleToggle from 'containers/LocaleToggle';
 
 import { getHeaderHeight, isMinSize, isMaxSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
 
 import DropMenu from './DropMenu';
+import DropMenuLocale from './DropMenuLocale';
+import DropContentMobile from './DropContentMobile';
 import NavBar from './NavBar';
-import DropMenuMobile from './DropMenuMobile';
+import Secondary from './Secondary';
 
 // prettier-ignore
 const Brand = styled(props => <Button plain color="white" {...props} />)`
@@ -97,17 +98,6 @@ const TitleWrap = styled(Box)`
   }
 `;
 
-// prettier-ignore
-const Secondary = styled(props => <Button {...props} plain />)`
-  padding:
-    ${({ theme }) => theme.global.edgeSize.small}
-    ${({ theme }) => theme.global.edgeSize.medium};
-  color: ${({ theme }) => theme.global.colors.white};
-  background: ${({ active, theme }) => (active ? theme.global.colors.brand : 'transparent')};
-  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
-    padding: 0 ${({ theme }) => theme.global.edgeSize.medium};
-  }
-`;
 const NavPrimary = styled(props => <Box direction="row" {...props} />)`
   height: ${getHeaderHeight('small')}px;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
@@ -145,22 +135,18 @@ const NavSearchSmall = styled(p => (
 const MenuButton = styled(props => <Button plain {...props} fill="vertical" />)`
   width: 100%;
   text-align: center;
-  &:hover {
-    background: ${({ theme }) => theme.global.colors.brand};
-  }
+  &:hover,
   &:focus {
-    background: ${({ theme }) => theme.global.colors.brand};
+    background: ${({ theme }) => theme.global.colors.hover};
   }
 `;
 const SearchButton = styled(props => <Button plain {...props} />)`
   text-align: center;
   border-radius: 9999px;
   padding: ${({ theme }) => theme.global.edgeSize.xsmall};
-  &:hover {
-    background: ${({ theme }) => theme.global.colors.brand};
-  }
+  &:hover,
   &:focus {
-    background: ${({ theme }) => theme.global.colors.brand};
+    background: ${({ theme }) => theme.global.colors.hover};
   }
 `;
 // prettier-ignore
@@ -170,7 +156,7 @@ const DropItem = styled(props => <Button {...props} plain />)`
     ${({ theme }) => theme.global.edgeSize.medium};
   color: ${({ theme }) => theme.global.colors['brand-2']};
   background: transparent;
-  &:hover {
+  &:hover, &:focus {
     background: ${({ theme }) => theme.global.colors['hover-grey']};
   }
 `;
@@ -239,9 +225,7 @@ const PrimaryLabel = styled(props => (
 const SecondaryLabel = styled(p => <Text {...p} size="medium" />)`
   color: ${({ theme }) => theme.global.colors.white};
 `;
-const LocaleTitle = styled(p => <SecondaryLabel {...p} />)`
-  text-transform: uppercase;
-`;
+
 const UpArrowIcon = styled.span`
   color: white;
   width: 0;
@@ -271,12 +255,19 @@ function Header({ nav, navHome, navPage, path, locale }) {
     paths[0] === ''
       ? paths.length > 1 && paths[2]
       : paths.length > 0 && paths[1];
+
   const pagesPrimary = filter(pagesArray, p => p.nav === PRIMARY);
   const pagesSecondary = filter(pagesArray, p => p.nav === SECONDARY);
-  const secondaryPagesGrouped = groupBy(
-    pagesSecondary,
-    option => option.group || 'rest',
-  );
+  const aboutGroupPages = filter(pagesSecondary, p => p.group === 'about');
+  const secondaryPagesUngrouped = filter(pagesSecondary, p => !p.group);
+
+  const secondarySelected =
+    pagesSecondary && pagesSecondary.find(p => p.key === contentId);
+  const activeSecondaryPage =
+    contentType === 'page' &&
+    secondarySelected &&
+    (secondarySelected.group || secondarySelected.key);
+
   return (
     <ResponsiveContext.Consumer>
       {size => (
@@ -384,79 +375,57 @@ function Header({ nav, navHome, navPage, path, locale }) {
                 flex={{ shrink: 0 }}
               >
                 <NavSecondary justify="end">
-                  {secondaryPagesGrouped &&
-                    map(secondaryPagesGrouped, (pages, group) => {
-                      if (pages && group) {
-                        if (group !== 'rest') {
-                          return (
-                            <DropMenu
-                              key={group}
-                              label={({ drop }) => (
-                                <Box direction="row" align="center" gap="small">
-                                  <SecondaryLabel>
-                                    <FormattedMessage
-                                      {...commonMessages[`page_${group}`]}
-                                    />
-                                  </SecondaryLabel>
-                                  {drop ? <DownArrowIcon /> : <UpArrowIcon />}
-                                </Box>
-                              )}
-                              dropContent={handleClose => (
-                                <DropMenuWrapper>
-                                  {pages.map(p => (
-                                    <DropItem
-                                      key={p.key}
-                                      onClick={() => {
-                                        navPage(p.key);
-                                        handleClose();
-                                      }}
-                                    >
-                                      <FormattedMessage
-                                        {...commonMessages[`page_${p.key}`]}
-                                      />
-                                    </DropItem>
-                                  ))}
-                                </DropMenuWrapper>
-                              )}
+                  {aboutGroupPages && (
+                    <DropMenu
+                      active={activeSecondaryPage === 'about'}
+                      label={({ drop }) => (
+                        <Box direction="row" align="center" gap="small">
+                          <SecondaryLabel>
+                            <FormattedMessage
+                              {...commonMessages[`page_about`]}
                             />
-                          );
-                        }
-                        return (
-                          <Box direction="row" key={group}>
-                            {pages.map(p => (
-                              <Secondary
-                                key={group + p.key}
-                                onClick={() => navPage(p.key)}
-                                label={
-                                  <SecondaryLabel>
-                                    <FormattedMessage
-                                      {...commonMessages[`page_${p.key}`]}
-                                    />
-                                  </SecondaryLabel>
-                                }
-                                active={
-                                  contentType === 'page' && contentId === p.key
-                                }
+                          </SecondaryLabel>
+                          {drop ? <DownArrowIcon /> : <UpArrowIcon />}
+                        </Box>
+                      )}
+                      dropContent={handleClose => (
+                        <DropMenuWrapper>
+                          {aboutGroupPages.map(p => (
+                            <DropItem
+                              key={p.key}
+                              onClick={() => {
+                                navPage(p.key);
+                                handleClose();
+                              }}
+                            >
+                              <FormattedMessage
+                                {...commonMessages[`page_${p.key}`]}
                               />
-                            ))}
-                          </Box>
-                        );
-                      }
-                      return null;
-                    })}
-                  <DropMenu
-                    dropContent={() => (
-                      <DropMenuWrapper>
-                        <LocaleToggle />
-                      </DropMenuWrapper>
-                    )}
-                    label={({ drop }) => (
-                      <Box direction="row" align="center" gap="small">
-                        <LocaleTitle>{locale}</LocaleTitle>
-                        {drop ? <DownArrowIcon /> : <UpArrowIcon />}
-                      </Box>
-                    )}
-                  />
+                            </DropItem>
+                          ))}
+                        </DropMenuWrapper>
+                      )}
+                    />
+                  )}
+                  {secondaryPagesUngrouped && (
+                    <Box direction="row">
+                      {secondaryPagesUngrouped.map(p => (
+                        <Secondary
+                          key={p.key}
+                          onClick={() => navPage(p.key)}
+                          label={
+                            <SecondaryLabel>
+                              <FormattedMessage
+                                {...commonMessages[`page_${p.key}`]}
+                              />
+                            </SecondaryLabel>
+                          }
+                          active={activeSecondaryPage === p.key}
+                        />
+                      ))}
+                    </Box>
+                  )}
+                  <DropMenuLocale locale={locale} />
                 </NavSecondary>
                 <NavSearch justify="end" pad={{ horizontal: 'small' }}>
                   {!showSearch && (
@@ -483,21 +452,7 @@ function Header({ nav, navHome, navPage, path, locale }) {
                     <Search onClose={() => setShowSearch(false)} stretch />
                   </NavSearchSmall>
                 )}
-                {!showSearch && (
-                  <DropMenu
-                    dropContent={() => (
-                      <DropMenuWrapper>
-                        <LocaleToggle />
-                      </DropMenuWrapper>
-                    )}
-                    label={({ drop }) => (
-                      <Box direction="row" align="center" gap="small">
-                        <LocaleTitle>{locale}</LocaleTitle>
-                        {drop ? <UpArrowIcon /> : <DownArrowIcon />}
-                      </Box>
-                    )}
-                  />
-                )}
+                {!showSearch && <DropMenuLocale locale={locale} />}
                 {!showSearch && (
                   <Box
                     flex={false}
@@ -514,7 +469,7 @@ function Header({ nav, navHome, navPage, path, locale }) {
                 {!showSearch && (
                   <DropMenu
                     dropContent={handleClose => (
-                      <DropMenuMobile
+                      <DropContentMobile
                         navItems={groupBy(
                           pagesArray,
                           option => option.mobileGroup,
@@ -544,6 +499,7 @@ Header.propTypes = {
   navHome: PropTypes.func,
   navPage: PropTypes.func,
   path: PropTypes.string,
+  locale: PropTypes.string,
   intl: PropTypes.object.isRequired,
 };
 

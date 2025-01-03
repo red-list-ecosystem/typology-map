@@ -20,7 +20,8 @@ import {
   selectConfig,
   selectLocale,
 } from 'containers/App/selectors';
-import { loadContent, loadConfig } from 'containers/App/actions';
+
+import { loadContent, loadConfig, navigatePage } from 'containers/App/actions';
 import { selectCookieConsent } from 'containers/CookieConsent/selectors';
 import { showCookieConsent } from 'containers/CookieConsent/actions';
 
@@ -32,9 +33,11 @@ import Partners from 'components/Partners';
 
 import { getHeaderHeight, getContentMaxWidth } from 'utils/responsive';
 
-// import messages from './messages';
 import commonMessages from 'messages';
+
 import { FAQs } from './FAQs';
+import TabWrapper from './TabWrapper';
+import BackButton from './BackButton';
 
 const Styled = styled.div`
   position: relative;
@@ -44,7 +47,19 @@ const Styled = styled.div`
 const HR = styled.hr`
   margin-top: 40px;
 `;
-
+// prettier-ignore
+const InnerWrapper = styled.div`
+  padding:
+    ${({ theme }) => theme.global.edgeSize.ml}
+    ${({ theme }) => theme.global.edgeSize.small};
+  padding-bottom: ${({ theme, hasPad }) =>
+    hasPad ? '0' : theme.global.edgeSize.small};
+  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+    padding: ${({ theme }) => theme.global.edgeSize.large};
+    padding-bottom: ${({ theme, hasPad }) =>
+    hasPad ? '0' : theme.global.edgeSize.large};
+  }
+`;
 // prettier-ignore
 const ContentWrap = styled.div`
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
@@ -55,19 +70,11 @@ const ContentWrap = styled.div`
   margin-top: ${250 - getHeaderHeight('small')}px;
   margin-right: auto;
   margin-left: auto;
-  padding:
-    ${({ theme }) => theme.global.edgeSize.ml}
-    ${({ theme }) => theme.global.edgeSize.small};
-  padding-bottom: ${({ theme, hasPad }) =>
-    hasPad ? '0' : theme.global.edgeSize.small};
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
     margin-top: ${250 - getHeaderHeight('medium')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
     margin-top: ${250 - getHeaderHeight('large')}px;
-    padding: ${({ theme }) => theme.global.edgeSize.large};
-    padding-bottom: ${({ theme, hasPad }) =>
-    hasPad ? '0' : theme.global.edgeSize.large};
   }
   @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
     margin-top: ${250 - getHeaderHeight('xlarge')}px;
@@ -96,6 +103,7 @@ export function RoutePage({
   onLoadData,
   intl,
   onShowCookieConsent,
+  navPage,
 }) {
   const { id } = useParams();
   const consent = useSelector(state => selectCookieConsent(state));
@@ -109,6 +117,7 @@ export function RoutePage({
   const locale = useSelector(state => selectLocale(state));
 
   const pageConfig = PAGES[id];
+
   useEffect(() => {
     // kick off loading of page content
     onLoadContent(id);
@@ -138,65 +147,74 @@ export function RoutePage({
             intl.formatMessage(commonMessages[`imageCredit_${id}`]),
         }}
       />
+      <BackButton />
       <ContentWrap hasPad={partners}>
-        {pageConfig.needsConsent === 'true' && consent !== 'true' && (
-          <HTMLWrapper
-            innerhtml={content}
-            classNames={['rle-html-page']}
-            needsConsentClass="rle-needs-consent"
-            inject={[{ tag: '[FAQS]', el: <FAQs /> }]}
-            consentPlaceholder={
-              <Box
-                background="light-3"
-                pad={{ horizontal: 'medium', vertical: 'ms' }}
-                margin={{ top: 'medium' }}
-                border
-                round="xsmall"
-              >
-                <Text style={{ fontStyle: 'italic' }}>
-                  <FormattedMessage
-                    {...commonMessages.requireConsent}
-                    values={{
-                      showConsentLink: (
-                        <ButtonTextBold
-                          onClick={() => onShowCookieConsent()}
-                          label={intl.formatMessage(
-                            commonMessages.showConsentLink,
-                          )}
+        <TabWrapper
+          shouldWrap={!!pageConfig.group}
+          pageId={id}
+          tabChange={navPage}
+        >
+          <InnerWrapper>
+            {pageConfig.needsConsent === 'true' && consent !== 'true' && (
+              <HTMLWrapper
+                innerhtml={content}
+                classNames={['rle-html-page']}
+                needsConsentClass="rle-needs-consent"
+                inject={[{ tag: '<p>[FAQS]</p>', el: <FAQs /> }]}
+                consentPlaceholder={
+                  <Box
+                    background="light-3"
+                    pad={{ horizontal: 'medium', vertical: 'ms' }}
+                    margin={{ top: 'medium' }}
+                    border
+                    round="xsmall"
+                  >
+                    <Text style={{ fontStyle: 'italic' }}>
+                      <FormattedMessage
+                        {...commonMessages.requireConsent}
+                        values={{
+                          showConsentLink: (
+                            <ButtonTextBold
+                              onClick={() => onShowCookieConsent()}
+                              label={intl.formatMessage(
+                                commonMessages.showConsentLink,
+                              )}
+                            />
+                          ),
+                        }}
+                      />
+                    </Text>
+                  </Box>
+                }
+              />
+            )}
+            {(pageConfig.needsConsent !== 'true' ||
+              (consent === 'true' && content)) &&
+              data && (
+                <HTMLWrapper
+                  innerhtml={content}
+                  classNames={['rle-html-page']}
+                  inject={[
+                    {
+                      tag: '[FAQS]',
+                      el: () => (
+                        <FAQs
+                          data={data && data[pageConfig.path]}
+                          locale={locale}
                         />
                       ),
-                    }}
-                  />
-                </Text>
-              </Box>
-            }
-          />
-        )}
-        {(pageConfig.needsConsent !== 'true' ||
-          (consent === 'true' && content)) &&
-          data && (
-            <HTMLWrapper
-              innerhtml={content}
-              classNames={['rle-html-page']}
-              inject={[
-                {
-                  tag: '[FAQS]',
-                  el: () => (
-                    <FAQs
-                      data={data && data[pageConfig.path]}
-                      locale={locale}
-                    />
-                  ),
-                },
-              ]}
-            />
-          )}
-        {content && partners && (
-          <>
-            <HR />
-            <Partners />
-          </>
-        )}
+                    },
+                  ]}
+                />
+              )}
+            {content && partners && (
+              <>
+                <HR />
+                <Partners />
+              </>
+            )}
+          </InnerWrapper>
+        </TabWrapper>
       </ContentWrap>
       <Footer elevated />
     </Styled>
@@ -223,6 +241,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(loadConfig(key));
     },
     onShowCookieConsent: () => dispatch(showCookieConsent(true)),
+    navPage: id => dispatch(navigatePage(id)),
   };
 }
 

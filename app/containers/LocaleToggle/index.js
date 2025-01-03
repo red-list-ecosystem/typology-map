@@ -11,8 +11,8 @@ import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { appLocales, appLocaleLabels } from 'i18n';
 
-import styled, { useTheme } from 'styled-components';
-import { Language as LanguageIcon } from 'grommet-icons';
+import styled from 'styled-components';
+import { Language } from 'grommet-icons';
 import { Box, Text, Button } from 'grommet';
 
 import { setLocale } from 'containers/App/actions';
@@ -34,7 +34,7 @@ const Title = styled(p => <Text {...p} size="xsmall" />)`
     ${({ theme }) => theme.global.edgeSize.xsmall} 0;
 `;
 // prettier-ignore
-const Pill = styled(props => <Button {...props} plain />)`
+const PillButton = styled(props => <Button {...props} plain />)`
   padding: ${({ theme }) => theme.global.edgeSize.small}
   ${({ theme }) => theme.global.edgeSize.xsmall};
   color: ${({ theme, active }) =>
@@ -42,13 +42,24 @@ const Pill = styled(props => <Button {...props} plain />)`
   background: ${({ theme, active }) =>
     active ? theme.global.colors['light-grey'] : 'transparent'};
   border-radius: 999px;
-  &:hover {
+  &:hover, &:focus {
     background: ${({ theme }) => theme.global.colors['hover-grey']};
+    color: ${({ theme }) => theme.global.colors['brand-2']};
+    path {
+      stroke: ${({ theme }) => theme.global.colors['brand-2']} !important;
+    }
+  }
+
+`;
+
+const LanguageIcon = styled(p => <Language {...p} />)`
+  path {
+    stroke: ${({ theme, active }) =>
+      active ? theme.global.colors['brand-2'] : 'grey'} !important;
   }
 `;
 
 export function LocaleToggle({ onLocaleToggle, locale }) {
-  const theme = useTheme();
   if (appLocales.length > 1) {
     return (
       <Wrapper direction="column" pad="medium" gap="small">
@@ -57,7 +68,10 @@ export function LocaleToggle({ onLocaleToggle, locale }) {
         </Title>
         {appLocales.map(lang => (
           <Box key={lang}>
-            <Pill active={locale === lang} onClick={() => onLocaleToggle(lang)}>
+            <PillButton
+              active={locale === lang}
+              onClick={() => onLocaleToggle(lang)}
+            >
               <Box
                 direction="row"
                 justify="between"
@@ -65,15 +79,9 @@ export function LocaleToggle({ onLocaleToggle, locale }) {
                 pad={{ horizontal: 'small' }}
               >
                 <Text>{appLocaleLabels[lang]}</Text>
-                <LanguageIcon
-                  color={
-                    locale === lang
-                      ? theme.global.colors['brand-2']
-                      : theme.global.colors['grey']
-                  }
-                />
+                <LanguageIcon active={locale === lang} />
               </Box>
-            </Pill>
+            </PillButton>
           </Box>
         ))}
       </Wrapper>

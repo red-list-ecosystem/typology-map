@@ -34,13 +34,13 @@ const NavGroup = styled(p => <Box {...p} />)`
     last ? 'transparent' : theme.global.colors['grey']};
 `;
 // prettier-ignore
-const Secondary = styled(props => <Button {...props} plain />)`
+const StyledButton = styled(props => <Button {...props} plain />)`
   padding:
     ${({ theme }) => theme.global.edgeSize.small}
     ${({ theme }) => theme.global.edgeSize.medium};
   color: ${({ theme }) => theme.global.colors['brand-2']};
   background: transparent;
-  &:hover {
+  &:hover, &:focus {
     background: ${({ theme }) => theme.global.colors['hover-grey']};
   }
 `;
@@ -78,7 +78,7 @@ const DropMenuMobile = ({ navItems, onSelectItem }) => {
               {pages &&
                 pages.map(p => (
                   <Box>
-                    <Secondary
+                    <StyledButton
                       key={p.key}
                       onClick={() => onSelectItem(p.key)}
                       label={
