@@ -33,7 +33,6 @@ const DropMenu = ({
       </MenuButton>
       {open && targetRef.current && (
         <Drop
-          trapFocus
           target={targetRef.current}
           align={dropProps}
           onClickOutside={handleClose}
