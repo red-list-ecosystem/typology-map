@@ -32,6 +32,7 @@ const StyledTabWrapper = styled(p => <Box {...p} />)`
   background: ${({ theme }) => theme.global.colors.white};
 `;
 const StyledTab = styled(p => <Tab {...p} />)`
+  transform: translateY(-100%);
   div {
     background: ${({ theme, isActive }) =>
       isActive ? theme.global.colors.brand : theme.global.colors['brand-2']};

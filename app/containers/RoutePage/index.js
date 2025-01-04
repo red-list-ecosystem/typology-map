@@ -97,6 +97,25 @@ const ContentWrap = styled.div`
     max-width: ${getContentMaxWidth('xxlarge')}px;
   }
 `;
+const BackWrapper = styled(p => <Box {...p} />)`
+  position: absolute;
+  top: -170px;
+  right: ${({ theme }) => theme.global.edgeSize.medium};
+  top: -${200 - getHeaderHeight('small')}px;
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    right: 0px;
+    top: -${200 - getHeaderHeight('medium')}px;
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+    top: -${200 - getHeaderHeight('large')}px;
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
+    top: -${200 - getHeaderHeight('xlarge')}px;
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.xxlarge.minpx}) {
+    top: -${200 - getHeaderHeight('xxlarge')}px;
+  }
+`;
 
 export function RoutePage({
   onLoadContent,
@@ -147,13 +166,15 @@ export function RoutePage({
             intl.formatMessage(commonMessages[`imageCredit_${id}`]),
         }}
       />
-      <BackButton />
       <ContentWrap hasPad={partners}>
         <TabWrapper
           shouldWrap={!!pageConfig.group}
           pageId={id}
           tabChange={navPage}
         >
+          <BackWrapper fill="horizontal" align="end">
+            <BackButton />
+          </BackWrapper>
           <InnerWrapper>
             {pageConfig.needsConsent === 'true' && consent !== 'true' && (
               <HTMLWrapper

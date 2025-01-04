@@ -10,8 +10,6 @@ const StyledButton = styled(p => <Button {...p} />)`
   border-radius: 9999px;
   color: black;
   background: white;
-  position: absolute;
-  z-index: 1000;
   height: 50px;
   width: 50px;
 `;
