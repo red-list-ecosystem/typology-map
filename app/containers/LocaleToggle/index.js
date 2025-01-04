@@ -54,40 +54,38 @@ const PillButton = styled(props => <Button {...props} plain />)`
 
 const LanguageIcon = styled(p => <Language {...p} />)`
   path {
-    stroke: ${({ theme, active }) =>
-      active ? theme.global.colors['brand-2'] : 'grey'} !important;
+    stroke: ${({ theme, $active }) =>
+    $active ? theme.global.colors['brand-2'] : 'grey'} !important;
   }
 `;
 
 export function LocaleToggle({ onLocaleToggle, locale }) {
-  if (appLocales.length > 1) {
-    return (
-      <Wrapper direction="column" pad="medium" gap="small">
-        <Title>
-          <FormattedMessage {...messages.languageTitle} />
-        </Title>
-        {appLocales.map(lang => (
-          <Box key={lang}>
-            <PillButton
-              active={locale === lang}
-              onClick={() => onLocaleToggle(lang)}
+  if (appLocales.length <= 1) return null;
+  return (
+    <Wrapper direction="column" pad="medium" gap="small">
+      <Title>
+        <FormattedMessage {...messages.languageTitle} />
+      </Title>
+      {appLocales.map(lang => (
+        <Box key={lang}>
+          <PillButton
+            active={locale === lang}
+            onClick={() => onLocaleToggle(lang)}
+          >
+            <Box
+              direction="row"
+              justify="between"
+              align="center"
+              pad={{ horizontal: 'small' }}
             >
-              <Box
-                direction="row"
-                justify="between"
-                align="center"
-                pad={{ horizontal: 'small' }}
-              >
-                <Text>{appLocaleLabels[lang]}</Text>
-                <LanguageIcon active={locale === lang} />
-              </Box>
-            </PillButton>
-          </Box>
-        ))}
-      </Wrapper>
-    );
-  }
-  return null;
+              <Text>{appLocaleLabels[lang]}</Text>
+              <LanguageIcon $active={locale === lang} />
+            </Box>
+          </PillButton>
+        </Box>
+      ))}
+    </Wrapper>
+  );
 }
 
 LocaleToggle.propTypes = {

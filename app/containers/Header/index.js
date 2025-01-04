@@ -7,7 +7,7 @@ import { filter, groupBy } from 'lodash/collection';
 import styled from 'styled-components';
 
 import { Button, Box, Text, ResponsiveContext } from 'grommet';
-import { Search as SearchIcon, Menu as MenuIconClosed } from 'components/Icons';
+import { Search as SearchIcon, Menu } from 'components/Icons';
 
 import { selectRouterPath, selectLocale } from 'containers/App/selectors';
 import {
@@ -30,8 +30,10 @@ import commonMessages from 'messages';
 import DropMenu from './DropMenu';
 import DropMenuLocale from './DropMenuLocale';
 import DropContentMobile from './DropContentMobile';
+import DropContentGeneric from './DropContentGeneric';
 import NavBar from './NavBar';
 import Secondary from './Secondary';
+import ArrowIcon from './ArrowIcon';
 
 // prettier-ignore
 const Brand = styled(props => <Button plain color="white" {...props} />)`
@@ -149,23 +151,6 @@ const SearchButton = styled(props => <Button plain {...props} />)`
     background: ${({ theme }) => theme.global.colors.hover};
   }
 `;
-// prettier-ignore
-const DropItem = styled(props => <Button {...props} plain />)`
-  padding:
-    ${({ theme }) => theme.global.edgeSize.small}
-    ${({ theme }) => theme.global.edgeSize.medium};
-  color: ${({ theme }) => theme.global.colors['brand-2']};
-  background: transparent;
-  &:hover, &:focus {
-    background: ${({ theme }) => theme.global.colors['hover-grey']};
-  }
-`;
-
-const DropMenuWrapper = styled(p => (
-  <Box flex={{ shrink: 0 }} width="small" responsive={false} {...p} />
-))`
-  max-width: none;
-`;
 
 // prettier-ignore
 const Primary = styled(props => (
@@ -226,19 +211,8 @@ const SecondaryLabel = styled(p => <Text {...p} size="medium" />)`
   color: ${({ theme }) => theme.global.colors.white};
 `;
 
-const UpArrowIcon = styled.span`
-  color: white;
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid white;
-`;
-const DownArrowIcon = styled(UpArrowIcon)`
-  transform: rotate(180deg);
-`;
-const MenuIconOpen = styled(MenuIconClosed)`
-  transform: rotate(90deg);
+const MenuIcon = styled(Menu)`
+  transform: ${({ open }) => (open ? 'rotate(90deg)' : 'none')};
 `;
 
 const pagesArray = Object.keys(PAGES).map(key => ({
@@ -385,25 +359,15 @@ function Header({ nav, navHome, navPage, path, locale }) {
                               {...commonMessages[`page_about`]}
                             />
                           </SecondaryLabel>
-                          {drop ? <DownArrowIcon /> : <UpArrowIcon />}
+                          <ArrowIcon open={drop} />
                         </Box>
                       )}
                       dropContent={handleClose => (
-                        <DropMenuWrapper>
-                          {aboutGroupPages.map(p => (
-                            <DropItem
-                              key={p.key}
-                              onClick={() => {
-                                navPage(p.key);
-                                handleClose();
-                              }}
-                            >
-                              <FormattedMessage
-                                {...commonMessages[`page_${p.key}`]}
-                              />
-                            </DropItem>
-                          ))}
-                        </DropMenuWrapper>
+                        <DropContentGeneric
+                          handleClose={handleClose}
+                          pages={aboutGroupPages}
+                          onSelectItem={navPage}
+                        />
                       )}
                     />
                   )}
@@ -481,7 +445,9 @@ function Header({ nav, navHome, navPage, path, locale }) {
                       />
                     )}
                     label={({ drop }) => (
-                      <Box>{drop ? <MenuIconOpen /> : <MenuIconClosed />}</Box>
+                      <Box>
+                        <MenuIcon open={drop} />
+                      </Box>
                     )}
                   />
                 )}

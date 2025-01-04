@@ -12,7 +12,7 @@ const MenuButton = styled(
 )``;
 
 const DropMenu = ({
-  active,
+  active = false,
   label,
   dropContent,
   dropProps = { top: 'bottom', left: 'left' },
@@ -24,15 +24,16 @@ const DropMenu = ({
   return (
     <>
       <MenuButton
-        active={open || active}
+        active={active}
         open={open}
         onClick={() => setOpen(!open)}
         ref={targetRef}
       >
-        {label ? label({ drop: open }) : null}
+        {label && label({ drop: open })}
       </MenuButton>
       {open && targetRef.current && (
         <Drop
+          trapFocus
           target={targetRef.current}
           align={dropProps}
           onClickOutside={handleClose}

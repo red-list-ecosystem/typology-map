@@ -48,6 +48,7 @@ const IconImgWrap = styled.div``;
 
 const DropMenuMobile = ({ navItems, onSelectItem }) => {
   const size = React.useContext(ResponsiveContext);
+  if (!navItems) return null;
   return (
     <Layer
       full="horizontal"
@@ -63,8 +64,9 @@ const DropMenuMobile = ({ navItems, onSelectItem }) => {
         style={{ borderTop: '1px solid white' }}
         pad={{ bottom: 'medium' }}
       >
-        {navItems &&
-          Object.entries(navItems).map(([group, pages], index) => (
+        {Object.entries(navItems).map(([group, pages], index) => {
+          if (!group) return null;
+          return (
             <NavGroup
               direction="column"
               key={group}
@@ -77,9 +79,8 @@ const DropMenuMobile = ({ navItems, onSelectItem }) => {
               </NavGroupTitleWrapper>
               {pages &&
                 pages.map(p => (
-                  <Box>
+                  <Box key={p.key}>
                     <StyledButton
-                      key={p.key}
                       onClick={() => onSelectItem(p.key)}
                       label={
                         <Box direction="row" justify="between" align="center">
@@ -95,12 +96,12 @@ const DropMenuMobile = ({ navItems, onSelectItem }) => {
                           )}
                         </Box>
                       }
-                      active={false}
                     />
                   </Box>
                 ))}
             </NavGroup>
-          ))}
+          );
+        })}
       </Box>
     </Layer>
   );
