@@ -223,7 +223,7 @@ const pagesArray = Object.keys(PAGES).map(key => ({
 function Header({ nav, navHome, navPage, path, locale }) {
   const [showSearch, setShowSearch] = useState(false);
 
-  const paths = path.split('/');
+  const paths = path.split('/').filter(p => p !== locale);
   const contentType = paths[0] === '' ? paths[1] : paths[0];
   const contentId =
     paths[0] === ''
