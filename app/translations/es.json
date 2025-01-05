@@ -96,6 +96,7 @@
   "app.containers.ExploreGroup.metaTitle": "Group: {group}",
   "app.containers.ExploreRealm.metaTitle": "Realm: {realm}",
   "app.containers.LocaleToggle.en": "en",
+  "app.containers.LocaleToggle.languageTitle": "Choose language",
   "app.containers.Map.drawError": "Edges cannot intersect",
   "app.containers.Map.drawToolbarEdit": "Update area",
   "app.containers.Map.drawToolbarPolygon": "Draw a polygon",
