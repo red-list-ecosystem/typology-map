@@ -177,13 +177,20 @@ export const QUERY_REGIONS_LAYER = {
   type: 'topojson',
   path: 'analysis/lme_admin.topo.json',
   featureId: 'region_id',
-  featureTitle: 'title_EN',
+  featureTitle: {
+    en: 'title_EN',
+    es: 'title_EN',
+  },
   featureTypeField: 'regiontype',
   featureIgnoreField: 'ignore',
   featureType: {
     en: {
       LME: 'Marine Area',
       ADM: 'Country',
+    },
+    es: {
+      LME: 'Marine Area (ES)',
+      ADM: 'Country (ES)',
     },
   },
   style: {

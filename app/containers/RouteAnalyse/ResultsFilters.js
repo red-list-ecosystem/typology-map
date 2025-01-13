@@ -110,7 +110,7 @@ export function ResultsFilters({
             <Text truncate>{getOpenArea(area)}</Text>
           )}
           {queryType === 'region' && (
-            <Text>{getRegionFeatureTitle(activeRegion)}</Text>
+            <Text>{getRegionFeatureTitle(activeRegion, locale)}</Text>
           )}
         </FieldWrap>
       </AsideNavSection>
