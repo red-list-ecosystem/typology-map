@@ -36,7 +36,7 @@ import { getHeaderHeight, getContentMaxWidth } from 'utils/responsive';
 import commonMessages from 'messages';
 
 import { FAQs } from './FAQs';
-import TabWrapper from './TabWrapper';
+import Tabs from './Tabs';
 import BackButton from './BackButton';
 
 const Styled = styled.div`
@@ -167,75 +167,72 @@ export function RoutePage({
         }}
       />
       <ContentWrap hasPad={partners}>
-        <TabWrapper
-          shouldWrap={!!pageConfig.group}
-          pageId={id}
-          tabChange={navPage}
-        >
-          <BackWrapper fill="horizontal" align="end">
-            <BackButton />
-          </BackWrapper>
-          <InnerWrapper>
-            {pageConfig.needsConsent === 'true' && consent !== 'true' && (
+        <BackWrapper fill="horizontal" align="end">
+          <BackButton />
+        </BackWrapper>
+        {!!pageConfig.group && (
+          <Tabs pageId={id} onTabChange={navPage} group={pageConfig.group} />
+        )}
+        <InnerWrapper>
+          {pageConfig.needsConsent === 'true' && consent !== 'true' && (
+            <HTMLWrapper
+              innerhtml={content}
+              classNames={['rle-html-page']}
+              needsConsentClass="rle-needs-consent"
+              inject={[{ tag: '<p>[FAQS]</p>', el: <FAQs /> }]}
+              consentPlaceholder={
+                <Box
+                  background="light-3"
+                  pad={{ horizontal: 'medium', vertical: 'ms' }}
+                  margin={{ top: 'medium' }}
+                  border
+                  round="xsmall"
+                >
+                  <Text style={{ fontStyle: 'italic' }}>
+                    <FormattedMessage
+                      {...commonMessages.requireConsent}
+                      values={{
+                        showConsentLink: (
+                          <ButtonTextBold
+                            onClick={() => onShowCookieConsent()}
+                            label={intl.formatMessage(
+                              commonMessages.showConsentLink,
+                            )}
+                          />
+                        ),
+                      }}
+                    />
+                  </Text>
+                </Box>
+              }
+            />
+          )}
+          {(pageConfig.needsConsent !== 'true' ||
+            (consent === 'true' && content)) &&
+            data && (
               <HTMLWrapper
                 innerhtml={content}
                 classNames={['rle-html-page']}
-                needsConsentClass="rle-needs-consent"
-                inject={[{ tag: '<p>[FAQS]</p>', el: <FAQs /> }]}
-                consentPlaceholder={
-                  <Box
-                    background="light-3"
-                    pad={{ horizontal: 'medium', vertical: 'ms' }}
-                    margin={{ top: 'medium' }}
-                    border
-                    round="xsmall"
-                  >
-                    <Text style={{ fontStyle: 'italic' }}>
-                      <FormattedMessage
-                        {...commonMessages.requireConsent}
-                        values={{
-                          showConsentLink: (
-                            <ButtonTextBold
-                              onClick={() => onShowCookieConsent()}
-                              label={intl.formatMessage(
-                                commonMessages.showConsentLink,
-                              )}
-                            />
-                          ),
-                        }}
+                inject={[
+                  {
+                    tag: '[FAQS]',
+                    el: () => (
+                      <FAQs
+                        data={data && data[pageConfig.path]}
+                        locale={locale}
                       />
-                    </Text>
-                  </Box>
-                }
+                    ),
+                  },
+                ]}
               />
             )}
-            {(pageConfig.needsConsent !== 'true' ||
-              (consent === 'true' && content)) &&
-              data && (
-                <HTMLWrapper
-                  innerhtml={content}
-                  classNames={['rle-html-page']}
-                  inject={[
-                    {
-                      tag: '[FAQS]',
-                      el: () => (
-                        <FAQs
-                          data={data && data[pageConfig.path]}
-                          locale={locale}
-                        />
-                      ),
-                    },
-                  ]}
-                />
-              )}
-            {content && partners && (
-              <>
-                <HR />
-                <Partners />
-              </>
-            )}
-          </InnerWrapper>
-        </TabWrapper>
+          {content && partners && (
+            <>
+              <HR />
+              <Partners />
+            </>
+          )}
+        </InnerWrapper>
       </ContentWrap>
       <Footer elevated />
     </Styled>

@@ -10,7 +10,7 @@ const Secondary = styled(React.forwardRef((props, ref) => (
   color: ${({ theme }) => theme.global.colors.white};
   background: ${({ active, theme }) => (active ? theme.global.colors.brand : 'transparent')};
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
-    padding: 0 ${({ theme }) => theme.global.edgeSize.small};
+    padding: 0 ${({ theme }) => theme.global.edgeSize.medium};
   }
   &:focus-visible,
   &:hover {
