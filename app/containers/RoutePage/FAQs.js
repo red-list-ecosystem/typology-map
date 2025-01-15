@@ -11,7 +11,6 @@ import { Box } from 'grommet';
 import FAQGroup from './FAQGroup';
 
 export function FAQs({ faqGroups }) {
-  console.log(faqGroups)
   return (
     <Box direction="column">
       {faqGroups && faqGroups.map(group => (
