@@ -14,6 +14,7 @@ import { createStructuredSelector } from 'reselect';
 import { Box, ResponsiveContext } from 'grommet';
 
 import { ROUTES } from 'config';
+import { DEFAULT_LOCALE } from 'i18n';
 
 import {
   selectContentByKey,
@@ -72,7 +73,7 @@ export function ExploreRealm({
           <Helmet>
             <title>
               {intl.formatMessage(messages.metaTitle, {
-                realm: typology.title[locale],
+                realm: typology.title[locale] || typology.title[DEFAULT_LOCALE],
               })}
             </title>
           </Helmet>
@@ -107,7 +108,7 @@ export function ExploreRealm({
                   )}
                   <AnalysisShortcut
                     type="realm"
-                    name={typology.title[locale]}
+                    name={typology.title[locale] || typology.title[DEFAULT_LOCALE]}
                     onClick={() => navAnalysis(typology.id)}
                   />
                 </TypologyContent>
@@ -122,7 +123,7 @@ export function ExploreRealm({
                   <AsideNavTypologySelected
                     level={0}
                     id={typology.id}
-                    name={typology.title[locale]}
+                    name={typology.title[locale] || typology.title[DEFAULT_LOCALE]}
                     onDismiss={() => navExplore()}
                     active
                   />

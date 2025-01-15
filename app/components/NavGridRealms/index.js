@@ -8,6 +8,7 @@ import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Box } from 'grommet';
+import { DEFAULT_LOCALE } from 'i18n';
 
 import IconRealm from 'components/IconRealm';
 
@@ -33,7 +34,7 @@ function NavGridRealms({ label, items, itemClick, locale, type }) {
               <CardRealm
                 key={r.id}
                 onCardClick={() => itemClick(r.id)}
-                label={r.title[locale]}
+                label={r.title[locale] || r.title[DEFAULT_LOCALE]}
                 realm={r}
                 icon={<IconRealm realmId={r.id} type={type} />}
               />

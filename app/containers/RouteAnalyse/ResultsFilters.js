@@ -12,6 +12,7 @@ import { Box, Text, Button } from 'grommet';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { GROUP_LAYER_PROPERTIES } from 'config';
+import { DEFAULT_LOCALE } from 'i18n';
 
 import { getRegionFeatureTitle } from 'containers/Map/utils';
 
@@ -147,7 +148,7 @@ export function ResultsFilters({
             <Active>
               <LabelWrap align="center">
                 <Id>{realmObject.id}</Id>
-                <Title>{realmObject.title[locale]}</Title>
+                <Title>{realmObject.title[locale] || realmObject.title[DEFAULT_LOCALE]}</Title>
               </LabelWrap>
             </Active>
           </FieldWrap>
@@ -160,7 +161,7 @@ export function ResultsFilters({
             <Active>
               <LabelWrap align="center">
                 <Id>{biomeObject.id}</Id>
-                <Title>{biomeObject.title[locale]}</Title>
+                <Title>{biomeObject.title[locale] || biomeObject.title[DEFAULT_LOCALE]}}</Title>
               </LabelWrap>
             </Active>
           </FieldWrap>

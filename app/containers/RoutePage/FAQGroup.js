@@ -11,6 +11,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import styled from 'styled-components';
 import { Accordion, AccordionPanel, Box, Text } from 'grommet';
 import { Add, FormSubtract } from 'grommet-icons';
+import { DEFAULT_LOCALE } from 'i18n';
 
 import commonMessages from 'messages';
 import messages from './messages';
@@ -39,10 +40,13 @@ export function FAQGroup({ group, intl }) {
   return (
     <Box margin={{ bottom: 'medium' }}>
       <StyledBox pad={{ vertical: 'small' }}>
-        <AccordionGroupHeader>{title[locale]}</AccordionGroupHeader>
+        <AccordionGroupHeader>{title[locale] || title[DEFAULT_LOCALE]}</AccordionGroupHeader>
       </StyledBox>
       <Accordion
-        a11yTitle={intl.formatMessage(messages.accordionA11yTitle, { title: title[locale] })}
+        a11yTitle={intl.formatMessage(
+          messages.accordionA11yTitle,
+          { title: title[locale] || title[DEFAULT_LOCALE]},
+        )}
         activeIndex={activeIndex}
         onActive={newActive => setActiveIndex(newActive[0])}
       >
@@ -60,10 +64,10 @@ export function FAQGroup({ group, intl }) {
                   align="center"
                   active={open}
                   pad={{ vertical: 'small', right: 'small' }}
-                  title={`${a11yTitle}: ${question[locale]}`}
+                  title={`${a11yTitle}: ${question[locale] || question[DEFAULT_LOCALE]}`}
                 >
                   <AccordionPanelHeader>
-                    {question[locale]}
+                    {question[locale] || question[DEFAULT_LOCALE]}
                   </AccordionPanelHeader>
                   {open ? (
                     <CollapseIcon
@@ -82,7 +86,7 @@ export function FAQGroup({ group, intl }) {
               }
             >
               <Box pad={{ top: 'small', bottom: 'large' }}>
-                <Text>{answer[locale]}</Text>
+                <Text>{answer[locale] || answer[DEFAULT_LOCALE]}</Text>
               </Box>
             </AccordionPanel>
           );
