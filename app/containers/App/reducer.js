@@ -8,7 +8,12 @@
  */
 
 import { produce } from 'immer';
-import { CONFIG, PAGES } from 'config';
+import { LOCATION_CHANGE } from 'redux-first-history';
+import {
+  CONFIG,
+  PAGES,
+  ROUTES,
+} from 'config';
 import { appLocales } from 'i18n';
 import {
   CONFIG_REQUESTED,
@@ -90,11 +95,33 @@ export const initialState = {
   queryRegionsActive: false,
   queryType: null,
   analysePanelOpen: true,
+  // the last location to go back to when closing routes
+  closeTarget: {
+    pathname: '',
+    search: '',
+    hash: '',
+  },
 };
 
 const appReducer = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
+      case LOCATION_CHANGE:
+        if (action.payload.location.pathname) {
+          const splitPath = action.payload.location.pathname.split('/');
+          // path is either /{LOCALE}/{ROUTE}/ or /{ROUTE}/
+          let route = splitPath.length > 2 ? splitPath[1] : '';
+          // check if we hace a locale
+          if (appLocales.indexOf(route) > -1) {
+            route = splitPath[2];
+          }
+          // last non-page for pages
+          if (route !== ROUTES.PAGE) {
+            draft.closeTarget = action.payload.location;
+          }
+        }
+        // draft.howToRead = false;
+        break;
       case CONFIG_REQUESTED:
         draft.configRequested[action.key] = action.time;
         break;

@@ -87,6 +87,12 @@ export const selectLocale = createSelector(selectRouterPath, path => {
   return DEFAULT_LOCALE;
 });
 
+
+export const selectCloseTarget = createSelector(
+  selectGlobal,
+  global => global.closeTarget,
+);
+
 export const selectDrawActive = createSelector(
   selectGlobal,
   global => global.drawActive,

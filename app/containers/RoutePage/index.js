@@ -12,16 +12,24 @@ import { Helmet } from 'react-helmet';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import styled from 'styled-components';
-import { Box, Text } from 'grommet';
+import { Box, Text, Button } from 'grommet';
+import { Close } from 'grommet-icons';
+
 import { PATHS, PAGES } from 'config';
 
 import {
   selectContentByKey,
   selectConfig,
   selectLocale,
+  selectCloseTarget,
 } from 'containers/App/selectors';
 
-import { loadContent, loadConfig, navigatePage } from 'containers/App/actions';
+import {
+  loadContent,
+  loadConfig,
+  navigatePage,
+  navigate,
+} from 'containers/App/actions';
 import { selectCookieConsent } from 'containers/CookieConsent/selectors';
 import { showCookieConsent } from 'containers/CookieConsent/actions';
 
@@ -37,7 +45,6 @@ import commonMessages from 'messages';
 
 import { FAQs } from './FAQs';
 import Tabs from './Tabs';
-import BackButton from './BackButton';
 
 const Styled = styled.div`
   position: relative;
@@ -117,12 +124,23 @@ const BackWrapper = styled(p => <Box {...p} />)`
   }
 `;
 
+const BackButton = styled(p => <Button {...p} />)`
+  text-align: center;
+  border-radius: 9999px;
+  color: black;
+  background: white;
+  height: 50px;
+  width: 50px;
+`;
+
 export function RoutePage({
   onLoadContent,
   onLoadData,
+  onNavigate,
   intl,
   onShowCookieConsent,
   navPage,
+  closeTargetPage,
 }) {
   const { id } = useParams();
   const consent = useSelector(state => selectCookieConsent(state));
@@ -134,7 +152,8 @@ export function RoutePage({
   );
   const data = useSelector(state => selectConfig(state));
   const locale = useSelector(state => selectLocale(state));
-
+  const closeTarget = useSelector(state => selectCloseTarget(state));
+console.log('closeTarget', closeTarget)
   const pageConfig = PAGES[id];
 
   useEffect(() => {
@@ -168,7 +187,10 @@ export function RoutePage({
       />
       <ContentWrap hasPad={partners}>
         <BackWrapper fill="horizontal" align="end">
-          <BackButton />
+          <BackButton
+            icon={<Close color="black" />}
+            onClick={() => onNavigate(closeTarget)}
+          />
         </BackWrapper>
         {!!pageConfig.group && (
           <Tabs pageId={id} onTabChange={navPage} group={pageConfig.group} />
@@ -243,6 +265,7 @@ RoutePage.propTypes = {
   onLoadContent: PropTypes.func.isRequired,
   onLoadData: PropTypes.func.isRequired,
   onShowCookieConsent: PropTypes.func,
+  onNavigate: PropTypes.func,
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   consent: PropTypes.string,
   data: PropTypes.object,
@@ -260,6 +283,7 @@ function mapDispatchToProps(dispatch) {
     },
     onShowCookieConsent: () => dispatch(showCookieConsent(true)),
     navPage: id => dispatch(navigatePage(id)),
+    onNavigate: location => dispatch(navigate(location, { needsLocale: false }))
   };
 }
 

@@ -11,6 +11,7 @@ import extend from 'lodash/extend';
 import 'whatwg-fetch';
 import 'url-search-params-polyfill';
 
+
 import {
   CONFIG,
   MAX_LOAD_ATTEMPTS,
@@ -21,6 +22,7 @@ import {
 
 import { DEFAULT_LOCALE } from 'i18n';
 import { areaToPolygonWKT } from 'containers/Map/utils';
+import { startsWith } from 'utils/string';
 
 import {
   LOAD_CONFIG,
@@ -94,7 +96,11 @@ function* navigateSaga({ location, args }) {
   // use as pathname and keep old search
   // note: location path is expected not to contain the locale
   if (typeof location === 'string') {
-    newPathname += location;
+    if (startsWith(location, '/')) {
+      newPathname = location;
+    } else {
+      newPathname += location;
+    }
   }
 
   // if location is object, use pathname and replace or extend search
@@ -103,7 +109,11 @@ function* navigateSaga({ location, args }) {
     typeof location === 'object' &&
     typeof location.pathname !== 'undefined'
   ) {
-    newPathname += location.pathname;
+    if (startsWith(location.pathname, '/')) {
+      newPathname = location.pathname;
+    } else {
+      newPathname += location.pathname;
+    }
   }
 
   // keep old pathname
@@ -329,7 +339,7 @@ function* loadConfigSaga({ key }) {
         // First record that we are requesting
         yield put(setConfigRequested(key, Date.now()));
         const response = yield fetch(url);
-        
+
         const responseOk = yield response.ok;
         if (responseOk && typeof response.json === 'function') {
           const json = yield response.json();
