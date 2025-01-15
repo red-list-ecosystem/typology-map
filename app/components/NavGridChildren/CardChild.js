@@ -65,7 +65,7 @@ export function CardChild({ onCardClick, label, typology, type, ...rest }) {
           <ButtonCard onClick={onCardClick} background="light-2">
             <Box fill align="start">
               {typology.image && (
-                <ImageWrap>
+                <ImageWrap fill>
                   <Image
                     fit="cover"
                     fill

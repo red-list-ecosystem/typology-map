@@ -100,6 +100,7 @@ export const colors = {
   'brand-2-lighter': '#85B6FB', // rle red
   focus: '#333333',
   hover: '#AD190F',
+  'hover-grey': '#EEEEEE',
   // placeholder: '#ffffff',
   inactive: '#adadad',
   secondary: '#6e787d',
@@ -226,6 +227,14 @@ const theme = {
       zIndex: 1200,
     },
   },
+  accordion: {
+    hover: {
+      background: '#F2F2F2',
+    },
+    border: {
+      color: 'transparent',
+    },
+  },
   rangeInput: {
     thumb: {
       color: colors['brand-2'],
@@ -257,9 +266,8 @@ const theme = {
       knob: {
         extend: ({ checked }) => ({
           background: `${colors[checked ? 'brand-2' : 'dark-grey']} !important`,
-          border: `2px solid ${
-            colors[checked ? 'brand-2' : 'dark-grey']
-          } !important`,
+          border: `2px solid ${colors[checked ? 'brand-2' : 'dark-grey']
+            } !important`,
         }),
       },
     },

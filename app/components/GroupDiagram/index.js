@@ -15,6 +15,8 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import ImageInfo from 'components/ImageInfo';
 import MapControl from 'components/MapControl';
 import { PATHS, DIAGRAM_NAME_ENDING } from 'config';
+import { DEFAULT_LOCALE } from 'i18n';
+
 import messages from './messages';
 
 const ImageWrap = styled(Box)`
@@ -96,7 +98,7 @@ function GroupDiagram({ group, intl, fullscreen, onFullscreen }) {
             image.caption[locale].trim() !== ''
               ? image.caption[locale]
               : intl.formatMessage(messages.caption, {
-                title: `${group.id} ${group.title[locale]}`,
+                title: `${group.id} ${group.title[locale] || group.title[DEFAULT_LOCALE]}`,
               })
           }
         />

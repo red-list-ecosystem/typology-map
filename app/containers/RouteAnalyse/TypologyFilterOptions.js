@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Button, Box, Text } from 'grommet';
 import styled from 'styled-components';
+import { DEFAULT_LOCALE } from 'i18n';
 
 import { Close } from 'components/Icons';
 import messages from './messages';
@@ -95,7 +96,7 @@ export function TypologyFilterOptions({
               label={
                 <LabelWrap pad={{ vertical: 'small', horizontal: 'small' }}>
                   <Id>{option.id}</Id>
-                  <Title>{option.title[locale]}</Title>
+                  <Title>{option.title[locale] || option.title[DEFAULT_LOCALE]}</Title>
                 </LabelWrap>
               }
               onClick={() => {

@@ -24,6 +24,7 @@ import { Menu } from 'components/Icons';
 import TooltipOccurrence from 'components/Tooltip/TooltipOccurrence';
 
 import { GROUP_LAYER_PROPERTIES } from 'config';
+import { DEFAULT_LOCALE } from 'i18n';
 
 import { isMinSize } from 'utils/responsive';
 import commonMessages from 'messages';
@@ -181,7 +182,7 @@ export function Settings({
                   <LayerTitle
                     size={isMinSize(size, 'medium') ? 'medium' : 'small'}
                   >
-                    {group.title[locale]}
+                    {group.title[locale] || group.title[DEFAULT_LOCALE]}
                   </LayerTitle>
                 </Box>
               )}
