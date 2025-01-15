@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import { Drop, Box, Text } from 'grommet';
 import styled from 'styled-components';
 
-import DropContentGeneric from './DropContentGeneric';
-import Secondary from './Secondary';
-import ArrowIcon from './ArrowIcon';
+import { Menu } from 'components/Icons';
 
-const SecondaryLabel = styled(p => <Text {...p} size="medium" />)`
-  color: ${({ theme }) => theme.global.colors.white};
+import DropContentMobile from './DropContentMobile';
+import Secondary from './Secondary';
+
+const MenuIcon = styled(Menu)`
+  transform: ${({ open }) => (open ? 'rotate(90deg)' : 'none')};
 `;
 
 // prettier-ignore
@@ -18,10 +19,10 @@ const MenuButton = styled(
   ))
 )``;
 
-const DropMenu = ({
+const DropMenuMobile = ({
   active = false,
   label,
-  dropPages,
+  navGroups,
   onNavPage,
 }) => {
   const [open, setOpen] = useState(false);
@@ -36,9 +37,8 @@ const DropMenu = ({
         onClick={() => setOpen(!open)}
         ref={targetRef}
       >
-        <Box direction="row" align="center" gap="small">
-          <SecondaryLabel>{label}</SecondaryLabel>
-          <ArrowIcon open={open} />
+        <Box>
+          <MenuIcon open={open} />
         </Box>
       </MenuButton>
       {open && targetRef.current && (
@@ -48,10 +48,12 @@ const DropMenu = ({
           onClickOutside={handleClose}
           onEsc={handleClose}
         >
-          <DropContentGeneric
-            handleClose={handleClose}
-            pages={dropPages}
-            onSelectItem={onNavPage}
+          <DropContentMobile
+            navGroups={navGroups}
+            onSelectItem={path => {
+              onNavPage(path);
+              handleClose();
+            }}
           />
         </Drop>
       )}
@@ -59,10 +61,10 @@ const DropMenu = ({
   );
 };
 
-DropMenu.propTypes = {
+DropMenuMobile.propTypes = {
   label: PropTypes.string,
-  dropPages: PropTypes.array,
+  navGroups: PropTypes.object,
   onNavPage: PropTypes.func,
 };
 
-export default DropMenu;
+export default DropMenuMobile;

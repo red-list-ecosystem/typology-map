@@ -6,15 +6,18 @@ import { Button } from 'grommet';
 const Secondary = styled(React.forwardRef((props, ref) => (
   <Button plain ref={ref} {...props} fill="vertical" />
 )))`
-  padding: ${({ theme }) => theme.global.edgeSize.small};
+  padding-top: ${({ theme }) => theme.global.edgeSize.small};
+  padding-bottom: ${({ theme }) => theme.global.edgeSize.small};
+  padding-left: ${({ theme }) => theme.global.edgeSize.xsmall};
+  padding-right: ${({ theme }) => theme.global.edgeSize.xsmall};
   color: ${({ theme }) => theme.global.colors.white};
-  background: ${({ active, theme }) => (active ? theme.global.colors.brand : 'transparent')};
-  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
-    padding: 0 ${({ theme }) => theme.global.edgeSize.medium};
-  }
+  background: ${({ active, open, theme }) => ((active || open) ? theme.global.colors.brand : 'transparent')};
   &:focus-visible,
   &:hover {
     background: ${({ theme }) => theme.global.colors.hover};
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+    padding: 0 ${({ theme }) => theme.global.edgeSize.medium};
   }
 `;
 

@@ -38,7 +38,7 @@ const PillButton = styled(props => <Button {...props} plain />)`
   padding: ${({ theme }) => theme.global.edgeSize.small}
   ${({ theme }) => theme.global.edgeSize.xsmall};
   color: ${({ theme, active }) =>
-    active ? theme.global.colors['brand-2'] : theme.global.colors['grey']};
+    active ? theme.global.colors['brand-2'] : theme.global.colors['secondary']};
   background: ${({ theme, active }) =>
     active ? theme.global.colors['light-grey'] : 'transparent'};
   border-radius: 999px;

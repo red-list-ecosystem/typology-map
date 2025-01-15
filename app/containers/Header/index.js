@@ -29,11 +29,9 @@ import commonMessages from 'messages';
 
 import DropMenu from './DropMenu';
 import DropMenuLocale from './DropMenuLocale';
-import DropContentMobile from './DropContentMobile';
-import DropContentGeneric from './DropContentGeneric';
+import DropMenuMobile from './DropMenuMobile';
 import NavBar from './NavBar';
 import Secondary from './Secondary';
-import ArrowIcon from './ArrowIcon';
 
 // prettier-ignore
 const Brand = styled(props => <Button plain color="white" {...props} />)`
@@ -211,16 +209,12 @@ const SecondaryLabel = styled(p => <Text {...p} size="medium" />)`
   color: ${({ theme }) => theme.global.colors.white};
 `;
 
-const MenuIcon = styled(Menu)`
-  transform: ${({ open }) => (open ? 'rotate(90deg)' : 'none')};
-`;
-
 const pagesArray = Object.keys(PAGES).map(key => ({
   key,
   ...PAGES[key],
 }));
 
-function Header({ nav, navHome, navPage, path, locale }) {
+function Header({ nav, navHome, onNavPage, path, locale, intl }) {
   const [showSearch, setShowSearch] = useState(false);
 
   const paths = path.split('/').filter(p => p !== locale);
@@ -232,8 +226,8 @@ function Header({ nav, navHome, navPage, path, locale }) {
 
   const pagesPrimary = filter(pagesArray, p => p.nav === PRIMARY);
   const pagesSecondary = filter(pagesArray, p => p.nav === SECONDARY);
-  const aboutGroupPages = filter(pagesSecondary, p => p.group === 'about');
-  const secondaryPagesUngrouped = filter(pagesSecondary, p => !p.group);
+  const pagesSecondaryUngrouped = filter(pagesSecondary, p => !p.group);
+  const pagesSecondaryGrouped = groupBy(filter(pagesSecondary, p => !!p.group), p => p.group);
 
   const secondarySelected =
     pagesSecondary && pagesSecondary.find(p => p.key === contentId);
@@ -315,7 +309,7 @@ function Header({ nav, navHome, navPage, path, locale }) {
                   pagesPrimary.map(p => (
                     <Primary
                       key={p.key}
-                      onClick={() => navPage(p.key)}
+                      onClick={() => onNavPage(p.key)}
                       label={
                         <PrimaryLabel
                           gap={isMinSize(size, 'large') ? 'xsmall' : 'hair'}
@@ -349,34 +343,25 @@ function Header({ nav, navHome, navPage, path, locale }) {
                 flex={{ shrink: 0 }}
               >
                 <NavSecondary justify="end">
-                  {aboutGroupPages && (
-                    <DropMenu
-                      active={activeSecondaryPage === 'about'}
-                      label={({ drop }) => (
-                        <Box direction="row" align="center" gap="small">
-                          <SecondaryLabel>
-                            <FormattedMessage
-                              {...commonMessages[`page_about`]}
-                            />
-                          </SecondaryLabel>
-                          <ArrowIcon open={drop} />
-                        </Box>
-                      )}
-                      dropContent={handleClose => (
-                        <DropContentGeneric
-                          handleClose={handleClose}
-                          pages={aboutGroupPages}
-                          onSelectItem={navPage}
-                        />
-                      )}
-                    />
-                  )}
-                  {secondaryPagesUngrouped && (
+                  {pagesSecondaryGrouped && (
                     <Box direction="row">
-                      {secondaryPagesUngrouped.map(p => (
+                      {Object.entries(pagesSecondaryGrouped).map(([group, pages]) => (
+                        <DropMenu
+                          key={group}
+                          active={activeSecondaryPage === group}
+                          dropPages={pages}
+                          label={intl.formatMessage(commonMessages[`navGroup_${group}`])}
+                          onNavPage={onNavPage}
+                        />
+                      ))}
+                    </Box>
+                  )}
+                  {pagesSecondaryUngrouped && (
+                    <Box direction="row">
+                      {pagesSecondaryUngrouped.map(p => (
                         <Secondary
                           key={p.key}
-                          onClick={() => navPage(p.key)}
+                          onClick={() => onNavPage(p.key)}
                           label={
                             <SecondaryLabel>
                               <FormattedMessage
@@ -416,7 +401,6 @@ function Header({ nav, navHome, navPage, path, locale }) {
                     <Search onClose={() => setShowSearch(false)} stretch />
                   </NavSearchSmall>
                 )}
-                {!showSearch && <DropMenuLocale locale={locale} />}
                 {!showSearch && (
                   <Box
                     flex={false}
@@ -430,24 +414,13 @@ function Header({ nav, navHome, navPage, path, locale }) {
                     />
                   </Box>
                 )}
+                {!showSearch && <DropMenuLocale locale={locale} />}
                 {!showSearch && (
-                  <DropMenu
-                    dropContent={handleClose => (
-                      <DropContentMobile
-                        navItems={groupBy(
-                          pagesArray,
-                          option => option.mobileGroup,
-                        )}
-                        onSelectItem={path => {
-                          navPage(path);
-                          handleClose();
-                        }}
-                      />
-                    )}
-                    label={({ drop }) => (
-                      <Box>
-                        <MenuIcon open={drop} />
-                      </Box>
+                  <DropMenuMobile
+                    onNavPage={onNavPage}
+                    navGroups={groupBy(
+                      pagesArray,
+                      option => option.mobileGroup,
                     )}
                   />
                 )}
@@ -460,10 +433,13 @@ function Header({ nav, navHome, navPage, path, locale }) {
   );
 }
 
+// <DropMenuLocale locale={locale} />
+
+
 Header.propTypes = {
   nav: PropTypes.func,
   navHome: PropTypes.func,
-  navPage: PropTypes.func,
+  onNavPage: PropTypes.func,
   path: PropTypes.string,
   locale: PropTypes.string,
   intl: PropTypes.object.isRequired,
@@ -486,7 +462,7 @@ export function mapDispatchToProps(dispatch) {
       dispatch(resetGroupsQueryNav());
       dispatch(navigateHome());
     },
-    navPage: id => dispatch(navigatePage(id)),
+    onNavPage: id => dispatch(navigatePage(id)),
   };
 }
 

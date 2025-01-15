@@ -10,9 +10,12 @@ import { FormattedMessage } from 'react-intl';
 import { filter } from 'lodash';
 
 import styled from 'styled-components';
-import { Box, Button, Text } from 'grommet';
+import { Box, Button, Text, ResponsiveContext } from 'grommet';
 
 import { PAGES } from 'config';
+
+import { isMinSize } from 'utils/responsive';
+
 import { SECONDARY } from 'containers/App/constants';
 
 import commonMessages from 'messages';
@@ -39,29 +42,24 @@ const pagesArray = Object.keys(PAGES).map(key => ({
 const Tabs = ({ pageId, onTabChange, group }) => {
   const pagesSecondary = filter(pagesArray, p => p.nav === SECONDARY);
   const tabs = pagesSecondary.filter(p => p.group === group);
-
+  const size = React.useContext(ResponsiveContext);
   return (
     <StyledTabs direction="row" justify="start">
-      {tabs &&
-        tabs.map(
-          tab =>
-            tab &&
-            tab.key && (
-              <TabButton
-                key={tab.key}
-                isActive={tab.key === pageId}
-                onClick={() => {
-                  onTabChange(tab.key);
-                }}
-              >
-                <Box pad={{ vertical: 'small', horizontal: 'medium' }}>
-                  <Text>
-                    <FormattedMessage {...commonMessages[`page_${tab.key}`]} />
-                  </Text>
-                </Box>
-              </TabButton>
-            ),
-        )}
+      {tabs && tabs.map(tab => (
+        <TabButton
+          key={tab.key}
+          isActive={tab.key === pageId}
+          onClick={() => {
+            onTabChange(tab.key);
+          }}
+        >
+          <Box pad={{ vertical: 'small', horizontal: 'medium' }}>
+            <Text size={isMinSize(size, 'medium') ? 'medium' : 'small'}>
+              <FormattedMessage {...commonMessages[`page_${tab.key}`]} />
+            </Text>
+          </Box>
+        </TabButton>
+      ))}
     </StyledTabs>
   );
 };

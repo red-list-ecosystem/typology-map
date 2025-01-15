@@ -19,9 +19,9 @@ const DropItem = styled(props => <Button {...props} plain />)`
 `;
 
 const DropMenuWrapper = styled(p => (
-  <Box flex={{ shrink: 0 }} width="small" responsive={false} {...p} />
+  <Box flex={{ shrink: 0 }} responsive={false} {...p} />
 ))`
-  max-width: none;
+  min-width: 200px;
 `;
 
 const DropContentGeneric = ({ handleClose, onSelectItem, pages }) => (

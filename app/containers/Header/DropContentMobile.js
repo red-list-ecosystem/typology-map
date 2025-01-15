@@ -46,9 +46,9 @@ const StyledButton = styled(props => <Button {...props} plain />)`
 `;
 const IconImgWrap = styled.div``;
 
-const DropMenuMobile = ({ navItems, onSelectItem }) => {
+const DropContentMobile = ({ navGroups, onSelectItem }) => {
   const size = React.useContext(ResponsiveContext);
-  if (!navItems) return null;
+  if (!navGroups) return null;
   return (
     <Layer
       full="horizontal"
@@ -57,20 +57,23 @@ const DropMenuMobile = ({ navItems, onSelectItem }) => {
       modal={false}
       animate={false}
       position="top"
-      style={{ zIndex: 1300 }}
+      style={{ zIndex: 1300, overflowX: 'auto' }}
+      plain
     >
       <Box
         elevation="medium"
         style={{ borderTop: '1px solid white' }}
         pad={{ bottom: 'medium' }}
+        flex={false}
+        background="white"
       >
-        {Object.entries(navItems).map(([group, pages], index) => {
+        {Object.entries(navGroups).map(([group, pages], index) => {
           if (!group) return null;
           return (
             <NavGroup
               direction="column"
               key={group}
-              last={index === Object.keys(navItems).length - 1}
+              last={index === Object.keys(navGroups).length - 1}
             >
               <NavGroupTitleWrapper>
                 <Text size="xsmall">
@@ -107,9 +110,9 @@ const DropMenuMobile = ({ navItems, onSelectItem }) => {
   );
 };
 
-DropMenuMobile.propTypes = {
-  navItems: PropTypes.object,
+DropContentMobile.propTypes = {
+  navGroups: PropTypes.object,
   onSelectItem: PropTypes.func,
 };
 
-export default DropMenuMobile;
+export default DropContentMobile;

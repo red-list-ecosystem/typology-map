@@ -102,26 +102,26 @@ export const PAGES = {
     path: 'glossary',
     nav: SECONDARY,
     backgroundImage: 'bg_home',
-    mobileGroup: 'about',
+    mobileGroup: 'other',
   },
   feedback: {
     path: 'feedback',
     nav: SECONDARY,
     backgroundImage: 'bg_home',
     needsConsent: 'true',
-    mobileGroup: 'contact',
+    mobileGroup: 'other',
   },
   terms: {
     path: 'terms',
     nav: FOOTER,
     backgroundImage: 'bg_home',
-    mobileGroup: 'footer',
+    mobileGroup: 'other',
   },
   privacy: {
     path: 'privacy',
     nav: FOOTER,
     backgroundImage: 'bg_home',
-    mobileGroup: 'footer',
+    mobileGroup: 'other',
   },
 };
 
