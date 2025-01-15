@@ -35,8 +35,16 @@ import Secondary from './Secondary';
 
 // prettier-ignore
 const Brand = styled(props => <Button plain color="white" {...props} />)`
-  /* responsive height */
   height: ${getHeaderHeight('small')}px;
+  color: ${({ theme }) => theme.global.colors.white};
+  background: transparent;
+  &:hover {
+    background: ${({ theme }) => theme.global.colors.brand};
+  }
+  &:focus {
+    background: ${({ theme, active }) =>
+    active ? 'transparent' : theme.global.colors['brand-dark']};
+  }
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
     padding-right: ${({ theme }) => theme.global.edgeSize.small};
     height: ${getHeaderHeight('medium')}px;
@@ -50,15 +58,6 @@ const Brand = styled(props => <Button plain color="white" {...props} />)`
   }
   @media (min-width: ${({ theme }) => theme.sizes.xxlarge.minpx}) {
     height: ${getHeaderHeight('xxlarge')}px;
-  }
-  color: ${({ theme }) => theme.global.colors.white};
-  background: transparent;
-  &:hover {
-    background: ${({ theme }) => theme.global.colors.brand};
-  }
-  &:focus {
-    background: ${({ theme, active }) =>
-    active ? 'transparent' : theme.global.colors['brand-dark']};
   }
 `;
 
@@ -214,27 +213,30 @@ const pagesArray = Object.keys(PAGES).map(key => ({
   ...PAGES[key],
 }));
 
-function Header({ nav, navHome, onNavPage, path, locale, intl }) {
+function Header({ nav, navHome, onNavPage, path, intl }) {
   const [showSearch, setShowSearch] = useState(false);
-
-  const paths = path.split('/').filter(p => p !== locale);
-  const contentType = paths[0] === '' ? paths[1] : paths[0];
-  const contentId =
-    paths[0] === ''
-      ? paths.length > 1 && paths[2]
-      : paths.length > 0 && paths[1];
+  const { locale } = intl;
+  const paths = path.split('/').filter(p => p !== locale && p !== '');
+  let contentType = 'home';
+  let contentId;
+  if (paths.length > 1) {
+    // we have a page
+    contentType = paths[0];
+    contentId = paths[1];
+  } else {
+    contentId = paths[0];
+    contentType = contentId;
+  };
 
   const pagesPrimary = filter(pagesArray, p => p.nav === PRIMARY);
   const pagesSecondary = filter(pagesArray, p => p.nav === SECONDARY);
   const pagesSecondaryUngrouped = filter(pagesSecondary, p => !p.group);
   const pagesSecondaryGrouped = groupBy(filter(pagesSecondary, p => !!p.group), p => p.group);
 
-  const secondarySelected =
-    pagesSecondary && pagesSecondary.find(p => p.key === contentId);
-  const activeSecondaryPage =
-    contentType === 'page' &&
-    secondarySelected &&
-    (secondarySelected.group || secondarySelected.key);
+  const secondaryActive =
+    contentType === 'page' && pagesSecondary && pagesSecondary.find(p => p.key === contentId);
+
+  const secondaryActiveId = secondaryActive && (secondaryActive.group || secondaryActive.key);
 
   return (
     <ResponsiveContext.Consumer>
@@ -251,7 +253,7 @@ function Header({ nav, navHome, onNavPage, path, locale, intl }) {
                   onClick={() => {
                     navHome();
                   }}
-                  active={contentType === ''}
+                  active={contentType === 'home'}
                   label={
                     <Box direction="row" fill="vertical" align="center">
                       <LogoWrap>
@@ -305,35 +307,34 @@ function Header({ nav, navHome, onNavPage, path, locale, intl }) {
                   }
                   active={contentType === ROUTES.ANALYSE}
                 />
-                {isMinSize(size, 'medium') &&
-                  pagesPrimary.map(p => (
-                    <Primary
-                      key={p.key}
-                      onClick={() => onNavPage(p.key)}
-                      label={
-                        <PrimaryLabel
-                          gap={isMinSize(size, 'large') ? 'xsmall' : 'hair'}
+                {isMinSize(size, 'medium') && pagesPrimary.map(p => (
+                  <Primary
+                    key={p.key}
+                    onClick={() => onNavPage(p.key)}
+                    label={
+                      <PrimaryLabel
+                        gap={isMinSize(size, 'large') ? 'xsmall' : 'hair'}
+                      >
+                        <IconImgWrap>
+                          <IconImgHelper />
+                          <IconImg src={p.icon} alt="" />
+                        </IconImgWrap>
+                        <Text
+                          size={
+                            isMinSize(size, 'medium') ? 'medium' : 'xxsmall'
+                          }
                         >
-                          <IconImgWrap>
-                            <IconImgHelper />
-                            <IconImg src={p.icon} alt="" />
-                          </IconImgWrap>
-                          <Text
-                            size={
-                              isMinSize(size, 'medium') ? 'medium' : 'xxsmall'
-                            }
-                          >
-                            {commonMessages[`page_${p.key}`] && (
-                              <FormattedMessage
-                                {...commonMessages[`page_${p.key}`]}
-                              />
-                            )}
-                          </Text>
-                        </PrimaryLabel>
-                      }
-                      active={contentType === 'page' && contentId === p.key}
-                    />
-                  ))}
+                          {commonMessages[`page_${p.key}`] && (
+                            <FormattedMessage
+                              {...commonMessages[`page_${p.key}`]}
+                            />
+                          )}
+                        </Text>
+                      </PrimaryLabel>
+                    }
+                    active={contentType === 'page' && contentId === p.key}
+                  />
+                ))}
               </NavPrimary>
             )}
             {isMinSize(size, 'large') && (
@@ -348,10 +349,11 @@ function Header({ nav, navHome, onNavPage, path, locale, intl }) {
                       {Object.entries(pagesSecondaryGrouped).map(([group, pages]) => (
                         <DropMenu
                           key={group}
-                          active={activeSecondaryPage === group}
+                          active={secondaryActiveId === group}
                           dropPages={pages}
                           label={intl.formatMessage(commonMessages[`navGroup_${group}`])}
                           onNavPage={onNavPage}
+                          activePageId={contentId}
                         />
                       ))}
                     </Box>
@@ -369,7 +371,7 @@ function Header({ nav, navHome, onNavPage, path, locale, intl }) {
                               />
                             </SecondaryLabel>
                           }
-                          active={activeSecondaryPage === p.key}
+                          active={secondaryActiveId === p.key}
                         />
                       ))}
                     </Box>
@@ -432,9 +434,6 @@ function Header({ nav, navHome, onNavPage, path, locale, intl }) {
     </ResponsiveContext.Consumer>
   );
 }
-
-// <DropMenuLocale locale={locale} />
-
 
 Header.propTypes = {
   nav: PropTypes.func,

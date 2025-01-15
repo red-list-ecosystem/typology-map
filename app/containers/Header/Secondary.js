@@ -17,6 +17,9 @@ const Secondary = styled(React.forwardRef((props, ref) => (
     background: ${({ theme }) => theme.global.colors.hover};
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+    padding: 0 ${({ theme }) => theme.global.edgeSize.ms};
+  }
+  @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
     padding: 0 ${({ theme }) => theme.global.edgeSize.medium};
   }
 `;

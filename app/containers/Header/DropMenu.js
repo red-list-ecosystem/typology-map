@@ -23,6 +23,7 @@ const DropMenu = ({
   label,
   dropPages,
   onNavPage,
+  activePageId,
 }) => {
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
@@ -52,6 +53,7 @@ const DropMenu = ({
             handleClose={handleClose}
             pages={dropPages}
             onSelectItem={onNavPage}
+            activePageId={activePageId}
           />
         </Drop>
       )}
@@ -63,6 +65,7 @@ DropMenu.propTypes = {
   label: PropTypes.string,
   dropPages: PropTypes.array,
   onNavPage: PropTypes.func,
+  activePageId: PropTypes.string,
 };
 
 export default DropMenu;
