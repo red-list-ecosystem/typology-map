@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 
 import styled from 'styled-components';
-import { Accordion, AccordionPanel, Box, Button, Text } from 'grommet';
+import { Accordion, AccordionPanel, Box, Text } from 'grommet';
 import { Add, FormSubtract } from 'grommet-icons';
 
 import commonMessages from 'messages';
@@ -21,27 +21,16 @@ const AccordionGroupHeader = styled(p => <Text size="small" {...p} />)`
 const AccordionPanelHeader = styled(p => <Text size="small" {...p} />)`
   font-weight: bold;
 `;
-const CloseButton = styled(p => <Button plain {...p} />)`
-  font-weight: bold;
-  color: ${({ theme }) => theme.global.colors['brand-2']};
-`;
+
 const StyledBox = styled(p => <Box {...p} />)`
   border-bottom: 1px solid ${({ active }) => (active ? 'transparent' : 'black')};
 `;
-const StyledAccordion = styled(p => <Accordion {...p} />)`
-  [role='region'] {
-    border: none;
-  }
+const StyledAccordion = styled(p => <Accordion {...p} />)``;
+const ExpandIcon = styled(Add)`
+  stroke-width: 3 !important;
 `;
-const ClosedIcon = styled(Add)`
-  path {
-    stroke-width: 3;
-  }
-`;
-const OpenIcon = styled(FormSubtract)`
-  path {
-    stroke-width: 3;
-  }
+const CollapseIcon = styled(FormSubtract)`
+  stroke-width: 3 !important;
 `;
 export function FAQs({ data, locale }) {
   const [activeIndices, setActiveIndices] = useState({});
@@ -67,49 +56,44 @@ export function FAQs({ data, locale }) {
                 activeIndex={activeIndices[id] || []}
                 onActive={newActive => handleAccordionChange(id, newActive)}
               >
-                {faqs &&
-                  faqs.map((faq, index) => {
-                    const { question, answer } = faq;
-                    const open =
-                      activeIndices[id] &&
-                      Array.isArray(activeIndices[id]) &&
-                      activeIndices[id].includes(index);
-                    return (
-                      <AccordionPanel
-                        header={
-                          <StyledBox
-                            direction="row"
-                            justify="between"
-                            active={open}
-                            pad={{ vertical: 'small', right: 'small' }}
-                          >
-                            <AccordionPanelHeader>
-                              {question[locale]}
-                            </AccordionPanelHeader>
-                            {open ? (
-                              <OpenIcon size="small" color="black" />
-                            ) : (
-                              <ClosedIcon size="small" color="black" />
-                            )}
-                          </StyledBox>
-                        }
-                        key={`${id}-${index}`}
-                      >
-                        <Box
-                          direction="column"
-                          gap="small"
-                          pad={{ vertical: 'small' }}
+                {faqs && faqs.map((faq, index) => {
+                  const { question, answer } = faq;
+                  const open =
+                    activeIndices[id] &&
+                    Array.isArray(activeIndices[id]) &&
+                    activeIndices[id].includes(index);
+                  return (
+                    <AccordionPanel
+                      header={
+                        <StyledBox
+                          direction="row"
+                          justify="between"
+                          active={open}
+                          pad={{ vertical: 'small', right: 'small' }}
                         >
-                          <Text>{answer[locale]}</Text>
-                          <CloseButton
-                            onClick={() => handleAccordionChange(id)}
-                          >
-                            <FormattedMessage {...commonMessages.close} />
-                          </CloseButton>
-                        </Box>
-                      </AccordionPanel>
-                    );
-                  })}
+                          <AccordionPanelHeader>
+                            {question[locale]}
+                          </AccordionPanelHeader>
+                          {open ? (
+                            <CollapseIcon size="small" color="black" />
+                          ) : (
+                            <ExpandIcon size="small" color="black" />
+                          )}
+                        </StyledBox>
+                      }
+                      key={`${id}-${index}`}
+                    >
+                      <Box
+                        direction="column"
+                        gap="small"
+                        pad={{ vertical: 'small' }}
+                        margin={{ bottom: 'medium' }}
+                      >
+                        <Text>{answer[locale]}</Text>
+                      </Box>
+                    </AccordionPanel>
+                  );
+                })}
               </StyledAccordion>
             </Box>
           );

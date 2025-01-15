@@ -227,6 +227,14 @@ const theme = {
       zIndex: 1200,
     },
   },
+  accordion: {
+    hover: {
+      background: '#F2F2F2',
+    },
+    border: {
+      color: 'transparent',
+    },
+  },
   rangeInput: {
     thumb: {
       color: colors['brand-2'],

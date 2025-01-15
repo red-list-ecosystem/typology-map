@@ -73,34 +73,25 @@ const ContentWrap = styled.div`
   position: relative;
   margin-bottom: 150px;
   min-height: 100vh;
-  background: ${({ theme }) => theme.global.colors['light-2']};
+  background: white;
   margin-top: ${250 - getHeaderHeight('small')}px;
   margin-right: auto;
   margin-left: auto;
+  max-width: ${getContentMaxWidth('small')}px;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
     margin-top: ${250 - getHeaderHeight('medium')}px;
-  }
-  @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
-    margin-top: ${250 - getHeaderHeight('large')}px;
-  }
-  @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
-    margin-top: ${250 - getHeaderHeight('xlarge')}px;
-  }
-  @media (min-width: ${({ theme }) => theme.sizes.xxlarge.minpx}) {
-    margin-top: ${250 - getHeaderHeight('xxlarge')}px;
-  }
-  max-width: ${getContentMaxWidth('small')}px;
-  /* responsive height */
-  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
     max-width: ${getContentMaxWidth('medium')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
+    margin-top: ${250 - getHeaderHeight('large')}px;
     max-width: ${getContentMaxWidth('large')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
+    margin-top: ${250 - getHeaderHeight('xlarge')}px;
     max-width: ${getContentMaxWidth('xlarge')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.xxlarge.minpx}) {
+    margin-top: ${250 - getHeaderHeight('xxlarge')}px;
     max-width: ${getContentMaxWidth('xxlarge')}px;
   }
 `;
