@@ -121,7 +121,7 @@ function* navigateSaga({ location, args }) {
     newPathname = currentLocation.pathname;
   }
   // add locale
-  const path = myArgs.needsLocale
+  const path = (myArgs.needsLocale && !startsWith(newPathname, `/${currentLocale}`))
     ? `/${currentLocale}${newPathname}`
     : newPathname;
 

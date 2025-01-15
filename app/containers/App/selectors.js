@@ -69,7 +69,7 @@ export const selectRouterPathNamed = createSelector(
     const path = startsWith(location.pathname, '/')
       ? location.pathname.substr(1)
       : location.pathname;
-    const [route, level, id] = path.split('/');
+    const [route, level, id] = path.split('/').filter(p => appLocales.indexOf(p) === -1);
     return { route, level, id };
   },
 );
