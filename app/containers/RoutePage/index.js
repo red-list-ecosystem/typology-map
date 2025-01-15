@@ -43,7 +43,7 @@ import { getHeaderHeight, getContentMaxWidth } from 'utils/responsive';
 
 import commonMessages from 'messages';
 
-import { FAQs } from './FAQs';
+import FAQs from './FAQs';
 import Tabs from './Tabs';
 
 const Styled = styled.div`
@@ -192,7 +192,14 @@ export function RoutePage({
               innerhtml={content}
               classNames={['rle-html-page']}
               needsConsentClass="rle-needs-consent"
-              inject={[{ tag: '<p>[FAQS]</p>', el: <FAQs /> }]}
+              inject={[
+                {
+                  tag: '[FAQS]',
+                  el: () => (
+                    <FAQs faqGroups={data && data[pageConfig.path]} />
+                  ),
+                },
+              ]}
               consentPlaceholder={
                 <Box
                   background="light-3"
@@ -220,25 +227,20 @@ export function RoutePage({
               }
             />
           )}
-          {(pageConfig.needsConsent !== 'true' ||
-            (consent === 'true' && content)) &&
-            data && (
-              <HTMLWrapper
-                innerhtml={content}
-                classNames={['rle-html-page']}
-                inject={[
-                  {
-                    tag: '[FAQS]',
-                    el: () => (
-                      <FAQs
-                        data={data && data[pageConfig.path]}
-                        locale={locale}
-                      />
-                    ),
-                  },
-                ]}
-              />
-            )}
+          {(pageConfig.needsConsent !== 'true' || (consent === 'true' && content)) && (
+            <HTMLWrapper
+              innerhtml={content}
+              classNames={['rle-html-page']}
+              inject={[
+                {
+                  tag: '[FAQS]',
+                  el: () => (
+                    <FAQs faqGroups={data && data[pageConfig.path]} />
+                  ),
+                },
+              ]}
+            />
+          )}
           {content && partners && (
             <>
               <HR />
