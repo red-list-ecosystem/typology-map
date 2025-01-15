@@ -21,7 +21,9 @@ import { SECONDARY } from 'containers/App/constants';
 import commonMessages from 'messages';
 
 const StyledTabs = styled(p => <Box {...p} />)`
-  transform: translateY(-100%);
+  position: absolute;
+  bottom: 100%;
+}
 `;
 const TabButton = styled(p => <Button {...p} />)`
   font-weight: bold;
