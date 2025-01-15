@@ -153,7 +153,7 @@ export function RoutePage({
   const data = useSelector(state => selectConfig(state));
   const locale = useSelector(state => selectLocale(state));
   const closeTarget = useSelector(state => selectCloseTarget(state));
-console.log('closeTarget', closeTarget)
+
   const pageConfig = PAGES[id];
 
   useEffect(() => {
