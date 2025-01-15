@@ -223,6 +223,11 @@ const GlobalStyle = createGlobalStyle`
   .rle-content ol li blockquote {
     margin: 0;
   }
+  .leaflet-interactive {
+    &:focus {
+      outline: none;
+    }
+  }
 `;
 
 export default GlobalStyle;
