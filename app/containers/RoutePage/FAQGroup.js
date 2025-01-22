@@ -4,7 +4,7 @@
  *
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 
@@ -23,12 +23,12 @@ const PanelTitle = styled(p => <Text size="small" {...p} />)`
   font-weight: bold;
 `;
 const AccordionPanelHeader = styled(p => <Button {...p} />)`
-  &:focus-visible {
+  width: 100%;
+  border-top: 1px solid black;
+  border-bottom: ${({ open, last }) => (last && !open) ? '1px solid black' : 'none'};
+  &:hover, &:focus-visible {
     background: ${({ theme }) => theme.global.colors['hover-grey']};
   }
-`;
-const StyledBox = styled(p => <Box {...p} />)`
-  border-bottom: 1px solid ${({ active }) => (active ? 'transparent' : 'black')};
 `;
 const ExpandIcon = styled(Add)`
   stroke-width: 3 !important;
@@ -64,44 +64,44 @@ const opened = keyframes`
   }
 `;
 const AccordionPanel = styled(Box)`
-  display: ${({ open }) => (open ? 'block' : 'none')};
   animation: ${({ open }) => (open ? opened : closed)} 0.5s ease forwards;
 `;
 
-export function FAQGroup({ group, intl }) {
+export function FAQGroup({ group, intl, activePanelId, setActivePanelId }) {
   const { locale } = intl;
-  const [activeIndex, setActiveIndex] = useState(null);
   const { id, title, faqs } = group;
   return (
     <Box margin={{ bottom: 'medium' }}>
-      <StyledBox pad={{ vertical: 'small' }}>
+      <Box pad={{ vertical: 'small', left: 'xxsmall' }}>
         <AccordionGroupHeader>
           {title[locale] || title[DEFAULT_LOCALE]}
         </AccordionGroupHeader>
-      </StyledBox>
+      </Box>
       {faqs &&
         faqs.map((faq, index) => {
           const { question, answer } = faq;
-          const open = activeIndex === index;
+          const panelId = `${id}-${index}`;
+          const open = activePanelId === panelId;
           const a11yTitle = intl.formatMessage(
             messages[open ? 'collapseA11yTitle' : 'expandA11yTitle'],
           );
           return (
-            <Box fill key={`${id}-${index}`}>
+            <div key={panelId}>
               <AccordionPanelHeader
+                id={`accordion-header-${panelId}`}
                 onClick={() =>
-                  open ? setActiveIndex(null) : setActiveIndex(index)
+                  open ? setActivePanelId(null) : setActivePanelId(panelId)
                 }
                 aria-expanded={open}
-                aria-controls={`accordion-panel-${id}`}
-                id={`accordion-header-${id}`}
+                aria-controls={`accordion-panel-${panelId}`}
+                open={open}
+                last={index === (faqs.length - 1)}
               >
-                <StyledBox
+                <Box
                   direction="row"
                   justify="between"
                   align="center"
-                  active={open}
-                  pad={{ vertical: 'small', right: 'small' }}
+                  pad={{ vertical: 'small', right: 'small', left: 'xxsmall' }}
                   title={`${a11yTitle}: ${question[locale] || question[DEFAULT_LOCALE]}`}
                 >
                   <PanelTitle>
@@ -120,18 +120,20 @@ export function FAQGroup({ group, intl }) {
                       a11yTitle={a11yTitle}
                     />
                   )}
-                </StyledBox>
+                </Box>
               </AccordionPanelHeader>
-              <AccordionPanel
-                pad={{ top: 'small', bottom: 'large' }}
-                open={open}
-                id={`accordion-panel-${id}`}
-                aria-labelledby={`accordion-header-${id}`}
-                role="region"
-              >
-                <Text>{answer[locale] || answer[DEFAULT_LOCALE]}</Text>
-              </AccordionPanel>
-            </Box>
+              {open && (
+                <AccordionPanel
+                  id={`accordion-panel-${panelId}`}
+                  pad={{ top: 'small', bottom: 'large', left: 'xxsmall' }}
+                  open={open}
+                  aria-labelledby={`accordion-header-${panelId}`}
+                  role="region"
+                >
+                  <Text>{answer[locale] || answer[DEFAULT_LOCALE]}</Text>
+                </AccordionPanel>
+              )}
+          </div>
           );
         })}
     </Box>
@@ -141,6 +143,8 @@ export function FAQGroup({ group, intl }) {
 FAQGroup.propTypes = {
   group: PropTypes.object,
   intl: PropTypes.object,
+  activePanelId: PropTypes.string,
+  setActivePanelId: PropTypes.func,
 };
 
 export default injectIntl(FAQGroup);
