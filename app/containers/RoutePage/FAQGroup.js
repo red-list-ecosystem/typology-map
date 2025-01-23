@@ -7,10 +7,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
-
 import styled, { keyframes } from 'styled-components';
 import { Button, Box, Text } from 'grommet';
 import { Add, FormSubtract } from 'grommet-icons';
+import MarkdownWrapper from 'containers/MarkdownWrapper';
+
 import { DEFAULT_LOCALE } from 'i18n';
 
 import messages from './messages';
@@ -66,7 +67,9 @@ const opened = keyframes`
 const AccordionPanel = styled(Box)`
   animation: ${({ open }) => (open ? opened : closed)} 0.5s ease forwards;
 `;
-
+const mdOptions = {
+  linkTarget: '_blank',
+};
 export function FAQGroup({ group, intl, activePanelId, setActivePanelId }) {
   const { locale } = intl;
   const { id, title, faqs } = group;
@@ -130,7 +133,11 @@ export function FAQGroup({ group, intl, activePanelId, setActivePanelId }) {
                   aria-labelledby={`accordion-header-${panelId}`}
                   role="region"
                 >
-                  <Text>{answer[locale] || answer[DEFAULT_LOCALE]}</Text>
+                  <Text className="rle-faqs-markdown">
+                    <MarkdownWrapper
+                      content={answer[locale] || answer[DEFAULT_LOCALE]}
+                    />
+                  </Text>
                 </AccordionPanel>
               )}
           </div>

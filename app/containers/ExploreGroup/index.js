@@ -139,7 +139,7 @@ export function ExploreGroup({
                     inject={[
                       {
                         tag: '[DIAGRAM]',
-                        el: (
+                        el: () => (
                           <GroupDiagram
                             group={typology}
                             onFullscreen={() =>

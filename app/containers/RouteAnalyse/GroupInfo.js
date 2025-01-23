@@ -154,7 +154,7 @@ export function GroupInfo({
             inject={[
               {
                 tag: '[DIAGRAM]',
-                el: (
+                el: () => (
                   <GroupDiagram
                     group={group}
                     onFullscreen={() =>
