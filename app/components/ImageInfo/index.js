@@ -34,10 +34,6 @@ const Credit = styled(Caption)`
   padding: 0px 4px;
 `;
 
-// const mdOptions = {
-//   linkTarget: '_blank',
-// };
-
 function ImageInfo({ caption, credit, intl, below }) {
   return (
     <figcaption>

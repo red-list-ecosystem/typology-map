@@ -67,9 +67,7 @@ const opened = keyframes`
 const AccordionPanel = styled(Box)`
   animation: ${({ open }) => (open ? opened : closed)} 0.5s ease forwards;
 `;
-const mdOptions = {
-  linkTarget: '_blank',
-};
+
 export function FAQGroup({ group, intl, activePanelId, setActivePanelId }) {
   const { locale } = intl;
   const { id, title, faqs } = group;
