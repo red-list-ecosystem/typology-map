@@ -1,7 +1,6 @@
 // Important modules this config uses
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WebpackPwaManifest = require('webpack-pwa-manifest');
 const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const { GitRevisionPlugin } = require('git-revision-webpack-plugin');
@@ -87,27 +86,6 @@ module.exports = require('./webpack.base.babel')({
       test: /\.js$|\.css$|\.html$/,
       threshold: 10240,
       minRatio: 0.8,
-    }),
-
-    new WebpackPwaManifest({
-      name: 'Global Ecosystem Typology',
-      short_name: 'Ecosystem Typology',
-      description: "A Global Typology for Earth's Ecosystems",
-      background_color: '#ffffff',
-      theme_color: '#000000',
-      inject: true,
-      ios: true,
-      icons: [
-        {
-          src: path.resolve('app/images/icon-256x256.png'),
-          sizes: [72, 96, 128, 144, 192, 256],
-        },
-        {
-          src: path.resolve('app/images/icon-256x256.png'),
-          sizes: [120, 152, 167, 180],
-          ios: true,
-        },
-      ],
     }),
   ],
 
