@@ -24,6 +24,7 @@ const DropMenuMobile = ({
   label,
   navGroups,
   onNavPage,
+  activePageId,
 }) => {
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
@@ -54,6 +55,7 @@ const DropMenuMobile = ({
               onNavPage(path);
               handleClose();
             }}
+            activePageId={activePageId}
           />
         </Drop>
       )}
@@ -63,6 +65,7 @@ const DropMenuMobile = ({
 
 DropMenuMobile.propTypes = {
   label: PropTypes.string,
+  activePageId: PropTypes.string,
   navGroups: PropTypes.object,
   onNavPage: PropTypes.func,
 };

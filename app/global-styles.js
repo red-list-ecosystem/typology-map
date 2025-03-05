@@ -78,6 +78,9 @@ const GlobalStyle = createGlobalStyle`
     vertical-align: initial;
   }
 
+  .rle-content img {
+    max-width: 100%;
+  }
   .rle-content a {
     font-weight: 600;
   }

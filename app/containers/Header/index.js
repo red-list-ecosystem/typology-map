@@ -23,7 +23,7 @@ import { PAGES, ICONS, ROUTES } from 'config';
 import Img from 'components/Img';
 import Search from 'containers/Search';
 
-import { getHeaderHeight, isMinSize, isMaxSize } from 'utils/responsive';
+import { getHeaderHeight, isMinSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
 
@@ -391,7 +391,7 @@ function Header({ nav, navHome, onNavPage, path, intl }) {
                 </NavSearch>
               </Box>
             )}
-            {isMaxSize(size, 'medium') && (
+            {!isMinSize(size, 'large') && (
               <Box
                 direction="row"
                 justify="center"
@@ -407,7 +407,7 @@ function Header({ nav, navHome, onNavPage, path, intl }) {
                   <Box
                     flex={false}
                     style={{
-                      width: isMaxSize(size, 'small') ? '40px' : '50px',
+                      width: isMinSize(size, 'medium') ? '50px' : '40px',
                     }}
                   >
                     <MenuButton
@@ -424,6 +424,7 @@ function Header({ nav, navHome, onNavPage, path, intl }) {
                       pagesArray,
                       option => option.mobileGroup,
                     )}
+                    activePageId={contentId}
                   />
                 )}
               </Box>

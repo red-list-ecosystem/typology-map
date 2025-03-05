@@ -12,7 +12,7 @@ import { Helmet } from 'react-helmet';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import styled from 'styled-components';
-import { Box, Text, Button } from 'grommet';
+import { Box, Text, Button, ResponsiveContext } from 'grommet';
 import { Close } from 'grommet-icons';
 
 import { PATHS, PAGES } from 'config';
@@ -39,7 +39,7 @@ import PageBackground from 'components/PageBackground';
 import Footer from 'containers/Footer';
 import Partners from 'components/Partners';
 
-import { getHeaderHeight, getContentMaxWidth } from 'utils/responsive';
+import { getHeaderHeight, getContentMaxWidth, isMinSize } from 'utils/responsive';
 
 import commonMessages from 'messages';
 
@@ -56,6 +56,8 @@ const HR = styled.hr`
 `;
 // prettier-ignore
 const InnerWrapper = styled.div`
+  background: white;
+  min-height: 80vh;
   padding:
     ${({ theme }) => theme.global.edgeSize.ml}
     ${({ theme }) => theme.global.edgeSize.small};
@@ -72,56 +74,64 @@ const ContentWrap = styled.div`
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
   position: relative;
   margin-bottom: 150px;
-  min-height: 100vh;
-  background: white;
-  margin-top: ${250 - getHeaderHeight('small')}px;
+  margin-top: ${180 - getHeaderHeight('small')}px;
   margin-right: auto;
   margin-left: auto;
   max-width: ${getContentMaxWidth('small')}px;
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
-    margin-top: ${250 - getHeaderHeight('medium')}px;
+    margin-top: ${200 - getHeaderHeight('medium')}px;
     max-width: ${getContentMaxWidth('medium')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
-    margin-top: ${250 - getHeaderHeight('large')}px;
+    margin-top: ${220 - getHeaderHeight('large')}px;
     max-width: ${getContentMaxWidth('large')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
-    margin-top: ${250 - getHeaderHeight('xlarge')}px;
+    margin-top: ${220 - getHeaderHeight('xlarge')}px;
     max-width: ${getContentMaxWidth('xlarge')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.xxlarge.minpx}) {
-    margin-top: ${250 - getHeaderHeight('xxlarge')}px;
+    margin-top: ${220 - getHeaderHeight('xxlarge')}px;
     max-width: ${getContentMaxWidth('xxlarge')}px;
   }
 `;
-const BackWrapper = styled(p => <Box {...p} />)`
-  position: absolute;
-  top: -170px;
-  right: ${({ theme }) => theme.global.edgeSize.medium};
-  top: -${200 - getHeaderHeight('small')}px;
+const BackWrapper = styled.div`
+  position: fixed;
+  z-index: 1;
+  pointer-events: none;
+  text-align: right;
+  width: 100%;
+  top: ${getHeaderHeight('small') + 30}px;
+  padding-right: ${({ theme }) => theme.global.edgeSize.xsmall};
   @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
-    right: 0px;
-    top: -${200 - getHeaderHeight('medium')}px;
+    top: ${getHeaderHeight('medium') + 40}px;
+    max-width: ${getContentMaxWidth('medium')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.large.minpx}) {
-    top: -${200 - getHeaderHeight('large')}px;
+    top: ${getHeaderHeight('large') + 40}px;
+    max-width: ${getContentMaxWidth('large')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.xlarge.minpx}) {
-    top: -${200 - getHeaderHeight('xlarge')}px;
+    top: ${getHeaderHeight('xlarge') + 40}px;
+    max-width: ${getContentMaxWidth('xlarge')}px;
   }
   @media (min-width: ${({ theme }) => theme.sizes.xxlarge.minpx}) {
-    top: -${200 - getHeaderHeight('xxlarge')}px;
+    top: ${getHeaderHeight('xxlarge') + 40}px;
+    max-width: ${getContentMaxWidth('xxlarge')}px;
   }
 `;
 
 const BackButton = styled(p => <Button {...p} />)`
+  pointer-events: all;
   text-align: center;
   border-radius: 9999px;
   color: black;
   background: white;
-  height: 50px;
-  width: 50px;
+  padding: ${({ theme }) => theme.global.edgeSize.small};
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.20);
+  @media (min-width: ${({ theme }) => theme.sizes.medium.minpx}) {
+    padding: ${({ theme }) => theme.global.edgeSize.ms};
+  }
 `;
 
 export function RoutePage({
@@ -134,6 +144,7 @@ export function RoutePage({
   closeTargetPage,
 }) {
   const { id } = useParams();
+  const size = React.useContext(ResponsiveContext);
   const consent = useSelector(state => selectCookieConsent(state));
   const content = useSelector(state =>
     selectContentByKey(state, {
@@ -177,9 +188,13 @@ export function RoutePage({
         }}
       />
       <ContentWrap hasPad={partners}>
-        <BackWrapper fill="horizontal" align="end">
+        <BackWrapper hasTabs={hasTabs}>
           <BackButton
-            icon={<Close color="black" />}
+            icon={
+              <Close
+                color="black"
+                size={isMinSize(size, 'medium') ? 'medium' : 'small'}
+              />}
             onClick={() => onNavigate(closeTarget)}
           />
         </BackWrapper>

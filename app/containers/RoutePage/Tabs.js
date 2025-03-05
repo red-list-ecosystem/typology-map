@@ -21,9 +21,7 @@ import { SECONDARY } from 'containers/App/constants';
 import commonMessages from 'messages';
 
 const StyledTabs = styled(p => <Box {...p} />)`
-  position: absolute;
-  bottom: 100%;
-}
+  overflow-x: auto;
 `;
 const TabButton = styled(p => <Button {...p} />)`
   font-weight: bold;
@@ -32,6 +30,7 @@ const TabButton = styled(p => <Button {...p} />)`
   color: white;
   border: none;
   margin: 0;
+  white-space: nowrap;
   &:hover {
     background: ${({ theme }) => theme.global.colors.hover};
   }
@@ -55,8 +54,14 @@ const Tabs = ({ pageId, onTabChange, group }) => {
             onTabChange(tab.key);
           }}
         >
-          <Box pad={{ vertical: 'small', horizontal: 'medium' }}>
-            <Text size={isMinSize(size, 'medium') ? 'medium' : 'small'}>
+          <Box
+            pad={
+              isMinSize(size, 'medium')
+                ? { vertical: 'small', horizontal: 'medium' }
+                : { vertical: 'small', horizontal: '13px' }
+            }
+          >
+            <Text size={isMinSize(size, 'medium') ? 'medium' : 'xxsmall'}>
               <FormattedMessage {...commonMessages[`page_${tab.key}`]} />
             </Text>
           </Box>
