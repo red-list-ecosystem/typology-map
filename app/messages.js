@@ -112,6 +112,10 @@ export default defineMessages({
     id: `${scope}.page_methods`,
     defaultMessage: 'Methods',
   },
+  page_impacts: {
+    id: `${scope}.page_impacts`,
+    defaultMessage: 'Policy impacts',
+  },
   page_glossary: {
     id: `${scope}.page_glossary`,
     defaultMessage: 'Glossary',

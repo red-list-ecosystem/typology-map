@@ -83,6 +83,13 @@ export const PAGES = {
     group: 'about',
     mobileGroup: 'about',
   },
+  impacts: {
+    path: 'impacts',
+    nav: SECONDARY,
+    backgroundImage: 'bg_home',
+    group: 'about',
+    mobileGroup: 'about',
+  },
   faqs: {
     type: 'faqs',
     path: 'faqs',
