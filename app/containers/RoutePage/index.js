@@ -188,7 +188,7 @@ export function RoutePage({
         }}
       />
       <ContentWrap hasPad={partners}>
-        <BackWrapper hasTabs={hasTabs}>
+        <BackWrapper>
           <BackButton
             icon={
               <Close
