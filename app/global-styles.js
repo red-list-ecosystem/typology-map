@@ -78,6 +78,9 @@ const GlobalStyle = createGlobalStyle`
     vertical-align: initial;
   }
 
+  .rle-content img {
+    max-width: 100%;
+  }
   .rle-content a {
     font-weight: 600;
   }
@@ -149,11 +152,11 @@ const GlobalStyle = createGlobalStyle`
     vertical-align: baseline;
     background: transparent;
     quotes: none;
-    &:after {
+    &::after {
       content: '';
       content: none;
     }
-    &:before {
+    &::before {
       content: '';
       content: none;
     }
@@ -222,6 +225,11 @@ const GlobalStyle = createGlobalStyle`
   .rle-content ul li blockquote,
   .rle-content ol li blockquote {
     margin: 0;
+  }
+  .leaflet-interactive {
+    &:focus {
+      outline: none;
+    }
   }
 `;
 

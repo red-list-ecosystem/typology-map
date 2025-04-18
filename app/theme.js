@@ -64,7 +64,8 @@ export const dimensions = {
   mainContent: {
     zIndex: 1100,
     // by breakpoint
-    maxWidth: [700, 700, 700, 800, 900],
+    maxWidth: [700, 700, 900, 900, 900],
+    // bps: [0, 721, 993, 1153, 900]
   },
   home: {
     maxWidth: [700, 900, 1000, 1100, 1200],
@@ -100,6 +101,7 @@ export const colors = {
   'brand-2-lighter': '#85B6FB', // rle red
   focus: '#333333',
   hover: '#AD190F',
+  'hover-grey': '#EEEEEE',
   // placeholder: '#ffffff',
   inactive: '#adadad',
   secondary: '#6e787d',
@@ -257,9 +259,8 @@ const theme = {
       knob: {
         extend: ({ checked }) => ({
           background: `${colors[checked ? 'brand-2' : 'dark-grey']} !important`,
-          border: `2px solid ${
-            colors[checked ? 'brand-2' : 'dark-grey']
-          } !important`,
+          border: `2px solid ${colors[checked ? 'brand-2' : 'dark-grey']
+            } !important`,
         }),
       },
     },

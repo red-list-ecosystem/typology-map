@@ -44,6 +44,10 @@ export default defineMessages({
     id: `${scope}.biomes`,
     defaultMessage: 'Biomes',
   },
+  close: {
+    id: `${scope}.close`,
+    defaultMessage: 'Close',
+  },
   group: {
     id: `${scope}.group`,
     defaultMessage: 'Functional group',
@@ -84,6 +88,18 @@ export default defineMessages({
     id: `${scope}.navAnalyse`,
     defaultMessage: 'By Area',
   },
+  navGroup_about: {
+    id: `${scope}.navGroup_about`,
+    defaultMessage: 'About',
+  },
+  navGroup_main: {
+    id: `${scope}.navGroup_main`,
+    defaultMessage: 'Main Content',
+  },
+  navGroup_other: {
+    id: `${scope}.navGroup_other`,
+    defaultMessage: 'Other',
+  },
   page_typology: {
     id: `${scope}.page_typology`,
     defaultMessage: 'Typology',
@@ -95,6 +111,10 @@ export default defineMessages({
   page_methods: {
     id: `${scope}.page_methods`,
     defaultMessage: 'Methods',
+  },
+  page_impacts: {
+    id: `${scope}.page_impacts`,
+    defaultMessage: 'Policy impacts',
   },
   page_glossary: {
     id: `${scope}.page_glossary`,
@@ -111,6 +131,14 @@ export default defineMessages({
   page_terms: {
     id: `${scope}.page_terms`,
     defaultMessage: 'Terms of use',
+  },
+  page_resources: {
+    id: `${scope}.page_resources`,
+    defaultMessage: 'Resources',
+  },
+  page_faqs: {
+    id: `${scope}.page_faqs`,
+    defaultMessage: 'FAQs',
   },
   imageCreditBy: {
     id: `${scope}.imageCreditBy`,
