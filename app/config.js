@@ -8,7 +8,9 @@ import ICON_ANALYSIS from 'images/analysis.svg';
 import ICON_LOGO from 'images/logo_RLE_icon.svg';
 import LOGO_0 from 'images/logo_RLE.png';
 import LOGO_1 from 'images/logo_IUCN.jpg';
+import LOGO_1_ES from 'images/logo_IUCN-es.svg';
 import LOGO_2 from 'images/logo_CEM.jpg';
+import LOGO_2_ES from 'images/logo_CEM-es.jpg';
 import LOGO_3 from 'images/logo_CES.png';
 import LOGO_4 from 'images/logo_UNSW.png';
 
@@ -286,11 +288,17 @@ export const LOGOS = [
   },
   {
     id: '1',
-    src: LOGO_1,
+    src: {
+      en: LOGO_1,
+      es: LOGO_1_ES,
+    },
   },
   {
     id: '2',
-    src: LOGO_2,
+    src: {
+      en: LOGO_2,
+      es: LOGO_2_ES,
+    },
   },
   {
     id: '4',
