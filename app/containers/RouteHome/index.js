@@ -111,7 +111,7 @@ export function HomePage({
             />
             <SectionOuter background="light-2">
               <SectionInner>
-                <Partners />
+                <Partners locale={locale} />
               </SectionInner>
             </SectionOuter>
             <Footer />
