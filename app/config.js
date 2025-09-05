@@ -107,6 +107,13 @@ export const PAGES = {
     group: 'about',
     mobileGroup: 'about',
   },
+  governance: {
+    path: 'governance',
+    nav: SECONDARY,
+    backgroundImage: 'bg_home',
+    group: 'about',
+    mobileGroup: 'about',
+  },
   glossary: {
     path: 'glossary',
     nav: SECONDARY,

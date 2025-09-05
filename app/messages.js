@@ -136,6 +136,10 @@ export default defineMessages({
     id: `${scope}.page_resources`,
     defaultMessage: 'Resources',
   },
+  page_governance: {
+    id: `${scope}.page_governance`,
+    defaultMessage: 'Governance',
+  },
   page_faqs: {
     id: `${scope}.page_faqs`,
     defaultMessage: 'FAQs',
