@@ -47,7 +47,7 @@ const SectionTitle = styled.h3`
   margin: 20px 0;
 `;
 
-export function Partners({ intl }) {
+export function Partners({ intl, locale }) {
   return (
     <>
       <Box>
@@ -60,6 +60,10 @@ export function Partners({ intl }) {
           Object.values(LOGOS).map(logo => {
             const alt = `partner_${logo.id}`;
             const url = `partner_${logo.id}_url`;
+            const src = typeof logo.src === 'object'
+              ? logo.src[locale]
+              : logo.src;
+            console.log(src)
             return (
               <ImageWrap
                 key={logo.id}
@@ -72,7 +76,7 @@ export function Partners({ intl }) {
                   as="a"
                   href={intl.formatMessage(coreMessages[url])}
                   target="_blank"
-                  src={logo.src}
+                  src={src}
                   title={intl.formatMessage(coreMessages[alt])}
                   fill="vertical"
                 />
@@ -85,6 +89,7 @@ export function Partners({ intl }) {
 }
 Partners.propTypes = {
   intl: PropTypes.object.isRequired,
+  locale: PropTypes.string,
 };
 
 export default injectIntl(Partners);
