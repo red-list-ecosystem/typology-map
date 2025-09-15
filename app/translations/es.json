@@ -164,7 +164,7 @@
   "app.containers.RouteAnalyse.downloadResultsLabel": "Descargar (CSV)",
   "app.containers.RouteAnalyse.filterRegions": "Filtrar regiones",
   "app.containers.RouteAnalyse.filters": "Filtros",
-  "app.containers.RouteAnalyse.filtersAdd": "Añadir filtos",
+  "app.containers.RouteAnalyse.filtersAdd": "Añadir filtros",
   "app.containers.RouteAnalyse.filtersChange": "Cambiar filtros",
   "app.containers.RouteAnalyse.hintResultsArea": "Tenga en cuenta que la lista generada pretende ser sólo indicativa. ",
   "app.containers.RouteAnalyse.hintResultsGraph": "Las barras muestran el porcentaje de presencia global para cada tipo",
