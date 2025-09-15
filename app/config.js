@@ -196,6 +196,7 @@ export const QUERY_REGIONS_LAYER = {
   featureTitle: {
     en: 'title_EN',
     es: 'title_EN',
+    fr: 'title_EN',
   },
   featureTypeField: 'regiontype',
   featureIgnoreField: 'ignore',
@@ -205,8 +206,12 @@ export const QUERY_REGIONS_LAYER = {
       ADM: 'Country',
     },
     es: {
-      LME: 'Marine Area (ES)',
-      ADM: 'Country (ES)',
+      LME: 'Área marina',
+      ADM: 'País o territorio',
+    },
+    fr: {
+      LME: 'Espace marin',
+      ADM: 'Pays ou territoire',
     },
   },
   style: {
@@ -298,6 +303,7 @@ export const LOGOS = [
     src: {
       en: LOGO_1,
       es: LOGO_1_ES,
+      fr: LOGO_1_ES,
     },
   },
   {
@@ -305,6 +311,7 @@ export const LOGOS = [
     src: {
       en: LOGO_2,
       es: LOGO_2_ES,
+      fr: LOGO_2_ES,
     },
   },
   {
