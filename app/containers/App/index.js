@@ -80,7 +80,7 @@ function App({
   onLoadTypology,
   showDisclaimer,
   onDismissDisclaimer,
-  onNavigateAbout,
+  onNavigateGovernance,
   fullscreenImage,
   path,
   intl,
@@ -115,7 +115,7 @@ function App({
       {showDisclaimer && (
         <Disclaimer
           onDismiss={() => onDismissDisclaimer()}
-          onMore={() => onNavigateAbout()}
+          onMore={() => onNavigateGovernance()}
         />
       )}
       <Header />
@@ -164,7 +164,7 @@ function App({
 App.propTypes = {
   onLoadTypology: PropTypes.func,
   onDismissDisclaimer: PropTypes.func,
-  onNavigateAbout: PropTypes.func,
+  onNavigateGovernance: PropTypes.func,
   showDisclaimer: PropTypes.bool,
   path: PropTypes.object,
   fullscreenImage: PropTypes.object,
@@ -189,6 +189,7 @@ export function mapDispatchToProps(dispatch) {
     },
     onDismissDisclaimer: () => dispatch(dismissDisclaimer()),
     onNavigateAbout: () => dispatch(navigatePage(PAGES.about.path)),
+    onNavigateGovernance: () => dispatch(navigatePage(PAGES.governance.path)),
   };
 }
 
