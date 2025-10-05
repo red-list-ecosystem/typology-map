@@ -72,7 +72,7 @@
   "app.components.AsideNavTypologyButton.not_available": "Cálculos de área no disponibles para esta consulta",
   "app.components.Disclaimer.disclaimer": "Una propuesta de actualizaciones a la Tipología Global de Ecosistemas está abierta para consulta pública. ",
   "app.components.Disclaimer.dismiss": "¡Entendido!",
-  "app.components.Disclaimer.more": "Léa más acerca de la gobernanza y las actulizaciones propuestas.",
+  "app.components.Disclaimer.more": "Léa más acerca de la gobernanza y las actualizaciones propuestas.",
   "app.components.Disclaimer.title": "Mensaje importante del comité científico",
   "app.components.GroupDiagram.caption": "{title} - Propiedades del ecosistema y Factores Ecológicos",
   "app.components.HTMLWrapper.showMore": "Leer más",
